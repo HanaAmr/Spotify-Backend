@@ -1,0 +1,30 @@
+{
+  "name": "spotify-backend",
+  "version": "1.0.0",
+  "description": "Spotify's api backend, using nodejs, express and MongoDB.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HanaAmr/Spotify-Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HanaAmr/Spotify-Backend/issues"
+  },
+  "homepage": "https://github.com/HanaAmr/Spotify-Backend#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.4",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "standard": "^14.3.1"
+  }
+}
