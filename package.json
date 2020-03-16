@@ -4,7 +4,7 @@
   "description": "Spotify's api backend, using nodejs, express and MongoDB.",
   "main": "app.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand",
     "start": "node server.js"
   },
   "repository": {
@@ -29,10 +29,16 @@
     "mockgoose": "^8.0.4",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.4",
+    "node-mocks-http": "^1.8.1",
     "nodemailer": "^6.4.5",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "standard": "^14.3.1"
+    "sinon": "^9.0.1",
+    "standard": "^14.3.1",
+    "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
