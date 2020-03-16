@@ -43,14 +43,16 @@ const userController = require('../../../controllers/userController')
 dotenv.config()
 const mongoDB = process.env.MONGO_URI
 // Connecting to the database
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-
+if (process.env.TEST === '1') {
+  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+} else {
+  throw new Error('Can\'t connect to db, make sure you run in test environment!')
+}
 // Testing userController create token string function
 describe('userController create token string functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     await mongoose.connection.dropCollection('users', () => {
-      console.log('Started with an empty users collection')
     })
 
     // Creating the valid user to assign the token to him
@@ -66,7 +68,6 @@ describe('userController create token string functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.dropCollection('users', () => {
-      console.log('Ended with an empty users collection')
     })
   })
 
@@ -96,7 +97,6 @@ describe('userController assigning token string to user functionality', () => {
   beforeEach(async () => {
     sinon.restore()
     await mongoose.connection.dropCollection('users', () => {
-      console.log('Started with an empty users collection')
     })
 
     // Creating the valid user to assign the token to him
@@ -113,7 +113,6 @@ describe('userController assigning token string to user functionality', () => {
   afterAll(async () => {
     sinon.restore()
     await mongoose.connection.dropCollection('users', () => {
-      console.log('Ended with an empty users collection')
     })
   })
 
@@ -190,7 +189,6 @@ describe('userController assigning token string to user functionality', () => {
     beforeEach(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Started with an empty users collection')
       })
 
       // Creating the valid user to assign the token to him
@@ -207,7 +205,6 @@ describe('userController assigning token string to user functionality', () => {
     afterAll(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Ended with an empty users collection')
       })
     })
 
@@ -234,7 +231,7 @@ describe('userController assigning token string to user functionality', () => {
       })
     })
 
-    // Testing failing to send the email
+    // Testing failing to send the email with no problems
     it('Shouldn\'t send the email successfully', done => {
       const request = httpMocks.createRequest({
         method: 'POST',
@@ -244,12 +241,19 @@ describe('userController assigning token string to user functionality', () => {
         }
       })
 
+      const transport = {
+        sendMail: (data, callback) => {
+          const err = new Error('Error with sendMail from transport!')
+          callback(err, null)
+        }
+      }
+      sinon.stub(userController.nodemailer, 'createTransport').returns(transport)
       const user = { email: 'omar@email.com' }
       const token = 'atoken'
       const response = httpMocks.createResponse()
       userController.sendResetPasswordEmail(request, response, token, user, (err) => {
         try {
-          expect(err).toEqual(expect.anything())
+          expect(response.statusCode).toEqual(502)
           done()
         } catch (error) {
           done(error)
@@ -264,7 +268,6 @@ describe('userController assigning token string to user functionality', () => {
     beforeEach(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Started with an empty users collection')
       })
 
       // Creating the valid user to assign the token to him
@@ -283,7 +286,6 @@ describe('userController assigning token string to user functionality', () => {
     afterAll(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Ended with an empty users collection')
       })
     })
 
@@ -399,7 +401,6 @@ describe('userController assigning token string to user functionality', () => {
     beforeEach(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Started with an empty users collection')
       })
 
       // Creating the valid user to assign the token to him
@@ -416,7 +417,6 @@ describe('userController assigning token string to user functionality', () => {
     afterAll(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Ended with an empty users collection')
       })
     })
 
@@ -441,6 +441,35 @@ describe('userController assigning token string to user functionality', () => {
         }
       })
     })
+
+    // Testing failing to send the email confirming password reset with no problems
+    it('Shouldn\'t send the email successfully', done => {
+      const request = httpMocks.createRequest({
+        method: 'POST',
+        url: '/resetPassword',
+        headers: {
+          host: 'dummyhost'
+        }
+      })
+
+      const transport = {
+        sendMail: (data, callback) => {
+          const err = new Error('Error with sendMail from transport!')
+          callback(err, null)
+        }
+      }
+      sinon.stub(userController.nodemailer, 'createTransport').returns(transport)
+      const user = { email: 'omar@email.com' }
+      const response = httpMocks.createResponse()
+      userController.sendSuccPassResetEmail(request, response, user, (err) => {
+        try {
+          expect(response.statusCode).toEqual(502)
+          done()
+        } catch (error) {
+          done(error)
+        }
+      })
+    })
   })
 
   // Testing userController whole send reset password email functionality
@@ -449,7 +478,6 @@ describe('userController assigning token string to user functionality', () => {
     beforeEach(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Started with an empty users collection')
       })
 
       // Creating the valid user to assign the token to him
@@ -466,7 +494,6 @@ describe('userController assigning token string to user functionality', () => {
     afterAll(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Ended with an empty users collection')
       })
     })
 
@@ -519,7 +546,6 @@ describe('userController assigning token string to user functionality', () => {
     beforeEach(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Started with an empty users collection')
       })
 
       // Creating the valid user to assign the token to him
@@ -538,7 +564,6 @@ describe('userController assigning token string to user functionality', () => {
     afterAll(async () => {
       sinon.restore()
       await mongoose.connection.dropCollection('users', () => {
-        console.log('Ended with an empty users collection')
       })
     })
 
