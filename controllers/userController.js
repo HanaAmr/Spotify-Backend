@@ -243,7 +243,7 @@ const sendSuccPassResetEmail = function (req, res, user, done) {
       res.status(502)
       const ErrorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the confirming email.' })
       res.json(ErrorObjectToSend)
-      return res
+      done(new Error('Couldn\'t send the email : ' + err))
     } else console.log('Reset confirming Email sent\n')
     done(null)
   })
@@ -257,3 +257,4 @@ exports.sendResetPasswordEmail = sendResetPasswordEmail
 exports.resetPassword = resetPassword
 exports.changePasswordReset = changePasswordReset
 exports.sendSuccPassResetEmail = sendSuccPassResetEmail
+exports.nodemailer = nodemailer
