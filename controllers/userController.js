@@ -54,9 +54,6 @@ const resetPasswordSendMail = function (req, res, next) {
   async.waterfall([async.apply(createTokenString, req, res), assignUserResetToken, sendResetPasswordEmail], (err) => {
     // If we catch an internal server error, update the resond and create error object to send
     if (err) {
-      res.status(500)
-      const ErrorObjectToSend = new ErrorObject({ status: 500, message: 'Internal server Error.' })
-      res.json(ErrorObjectToSend)
       next(err)
     } else { // If everything is fine, send an empty body code 204.
       res.status(204).send()
@@ -94,8 +91,8 @@ const assignUserResetToken = function (req, res, token, done) {
       done(err)
     } else if (!user) { // If user doesn't exist
       res.status(404)
-      const ErrorObjectToSend = new ErrorObject({ status: 404, message: 'No user with this email exists.' })
-      res.json(ErrorObjectToSend)
+      const errorObjectToSend = new ErrorObject({ status: 404, message: 'No user with this email exists.' })
+      res.json(errorObjectToSend)
       done(new Error('No user with this email exists : ' + req.body.email)) // Throw an error to the next function in the middleware
     } else {
     // Update the user resetPassword token and save changes
@@ -138,8 +135,8 @@ const sendResetPasswordEmail = function (req, res, token, user, done) {
     if (err) {
       console.log('Couldn\'t send email')
       res.status(502)
-      const ErrorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the email. Try again.' })
-      res.json(ErrorObjectToSend)
+      const errorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the email. Try again.' })
+      res.json(errorObjectToSend)
       done(new Error('Couldn\'t send the email : ' + err))
     } else console.log('Reset Email sent\n')
     done(null)
@@ -156,12 +153,9 @@ const sendResetPasswordEmail = function (req, res, token, user, done) {
 const resetPassword = function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(this.changePasswordReset, req, res), sendSuccPassResetEmail], (err) => {
+  async.waterfall([async.apply(changePasswordReset, req, res), sendSuccPassResetEmail], (err) => {
     // If we catch an internal server error
     if (err) {
-      res.status(500)
-      const ErrorObjectToSend = new ErrorObject({ status: 500, message: 'Internal server Error.' })
-      res.json(ErrorObjectToSend)
       next(err)
     } else {
       res.status(204).send()
@@ -186,8 +180,8 @@ const changePasswordReset = function (req, res, done) {
       done(err)
     } else if (!user) { // If no user with this token is found (token is invalid)
       res.status(404)
-      const ErrorObjectToSend = new ErrorObject({ status: 404, message: 'The token provided is not valid.' })
-      res.json(ErrorObjectToSend)
+      const errorObjectToSend = new ErrorObject({ status: 404, message: 'The token provided is not valid.' })
+      res.json(errorObjectToSend)
       done(new Error('Token provided is not valid.'))
     } else if (req.body.newPassword === req.body.passwordConfirmation) {
       // TODO: call the function that sets the password when done
@@ -199,13 +193,18 @@ const changePasswordReset = function (req, res, done) {
 
       // Save the user account after changing the password.
       user.save((err) => {
+        if(err) { //If error, means if database refused password as it is too short.
+          res.status(403)
+          const errorObjectToSend = new ErrorObject({status: 403, message: 'Your password is too weak/short.'})
+           res.json(errorObjectToSend);
+        }
         done(err, req, res, user)
         // TODO: should be logged in with the login function
       })
     } else {
       res.status(403)
-      const ErrorObjectToSend = new ErrorObject({ status: 403, message: 'Passwords don\'t match.' })
-      res.json(ErrorObjectToSend)
+      const errorObjectToSend = new ErrorObject({ status: 403, message: 'Passwords don\'t match' })
+      res.json(errorObjectToSend)
       done(new Error('Passwords don\'t match'))
     }
   })
@@ -241,8 +240,8 @@ const sendSuccPassResetEmail = function (req, res, user, done) {
     if (err) {
       console.log('Couldn\'t send email')
       res.status(502)
-      const ErrorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the confirming email.' })
-      res.json(ErrorObjectToSend)
+      const errorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the confirming email.' })
+      res.json(errorObjectToSend)
       done(new Error('Couldn\'t send the email : ' + err))
     } else console.log('Reset confirming Email sent\n')
     done(null)
