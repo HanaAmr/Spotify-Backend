@@ -2,10 +2,11 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const app = require('./app');
 
-//dotenv.config({ path: './config.env' });
+dotenv.config({ path: './config.env' });
 
-mongoose.connect('mongodb://localhost:27017/spotify', {
+mongoose.connect(process.env.DATABASE_LOCAL, {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
     useCreateIndex: true,
     useFindAndModify: false
 }).then(con => {
@@ -13,6 +14,6 @@ mongoose.connect('mongodb://localhost:27017/spotify', {
     console.log('DB is connected successfuly!');
 });
 
-app.listen(3000, () => {
-    console.log(`App is running on port 3000`);
+app.listen(process.env.PORT, () => {
+    console.log(`App is running on port ${process.env.PORT}`);
 })

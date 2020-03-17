@@ -1,14 +1,44 @@
+/** Express controller providing user model
+ * @module controllers/users
+ * @requires express
+ */
+
+ /**
+ * express module
+ * @const
+ */
 const mongoose = require('mongoose');
+
+/**
+ * express module
+ * validator to validate properties
+ * @const
+ */
 const validator = require('validator');
+
+/**
+ * express module
+ * bcrypt to encrypt password
+ * @const
+ */
 const bcrypt = require('bcryptjs');
 
-var Schema = mongoose.Schema;
+/**
+ * express module
+ * @const
+ */
+const Schema = mongoose.Schema;
 
-var userSchema = new Schema({
+/**
+ * EUser schema
+ * @type {object}
+ * @const
+ */
+const userSchema = new Schema({
     id: {
       type: String,
       required: [true, 'Please provide your id'],
-      unique: true   
+      unique: [true, 'id already exist']   
     },           
     name: { 
       type: String,
@@ -38,12 +68,12 @@ var userSchema = new Schema({
       format: Date
     },       
     uri: {
-      type: String,
-      required: [true, 'Please provide a uri']
+      type: String
+      //required: [true, 'Please provide a uri']
     },      
     href: {
-      type: String,
-      required: [true, 'Please provide a href']
+      type: String
+      //required: [true, 'Please provide a href']
     },      
     externalUrls: [{
       //type: Schema.Types.ObjectId, ref: 'externalUrl'
@@ -67,9 +97,22 @@ var userSchema = new Schema({
     },       
     userStats: [{
       //type: Schema.Types.ObjectId, ref: 'userStats'
-    }]    
+    }],
+    role: {
+      type: String,
+      enum: ['user', 'artist', 'premium'],
+      default: 'user'
+    }    
 });
 
+/**
+* Encrypting password before saving
+* @function
+* @memberof module:models/userModel
+* @inner
+* @param {string} save - encrypt password before saving in database.
+* @param {callback} middleware - function encrypts password.
+*/
 userSchema.pre('save', async function(next) {  
     if (!this.isModified('password')) return next();
 
@@ -78,6 +121,14 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+/**
+* Encrypting password before saving
+* @function
+* @memberof module:models/userModel
+* @inner
+* @param {string} candidate password - the input password.
+* @param {string} user password - the user's password saved in database.
+*/
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
     return await bcrypt.compare(candidatePassword, userPassword);
 };
