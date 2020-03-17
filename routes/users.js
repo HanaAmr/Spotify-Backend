@@ -14,6 +14,13 @@ const express = require('express');
  * @type {object}
  * @const
  */
+const userController = require('../controllers/userController')
+
+/**
+ * Auth controller to call when routing.
+ * @type {object}
+ * @const
+ */
 const authController = require('../controllers/authController');
 
 /**
@@ -48,4 +55,30 @@ router.post('/signUp', authController.signUp);
 router.post('/signIn', authController.protect, authController.signIn);
 //router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
 
-module.exports = router;
+
+// POST request to reset the password by email.
+
+/**
+ * Route for requesting to reset password
+ * @name post/resetPassword
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Resetting password path
+ * @param {callback} middleware - Reset Password middleware.
+ */
+router.post('/resetPassword', userController.resetPasswordSendMail)
+
+/**
+ * Route for resetting password
+ * @name post/resetPassword/:token
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Resetting password path
+ * @param {string} token - The reset password token
+ * @param {callback} middleware - Reset Password middleware.
+ */
+router.post('/resetPassword/:token', userController.resetPassword)
+
+module.exports = router

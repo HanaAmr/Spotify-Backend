@@ -102,7 +102,9 @@ const userSchema = new Schema({
       type: String,
       enum: ['user', 'artist', 'premium'],
       default: 'user'
-    }    
+    },    
+    resetPasswordToken: String,
+    resetPasswordExpires: Date // Date of expiration of reset password token
 });
 
 /**
