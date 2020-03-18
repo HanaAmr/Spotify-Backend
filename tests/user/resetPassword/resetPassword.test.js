@@ -52,8 +52,7 @@ if (process.env.TEST === '1') {
 describe('userController create token string functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -67,8 +66,7 @@ describe('userController create token string functionality', () => {
 
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing creating the token string without problems
@@ -96,8 +94,7 @@ describe('userController assigning token string to user functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -112,8 +109,7 @@ describe('userController assigning token string to user functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing successfully assigning the token to a user
@@ -152,8 +148,7 @@ describe('userController assigning token string to user functionality', () => {
     userController.assignUserResetToken(request, response, token, (err, req, res, token, user) => {
       try {
         expect(err).toEqual(expect.anything())
-        expect(user).not.toBeDefined()
-        expect(response.statusCode).toEqual(404)
+        expect(err.statusCode).toEqual(404)
         done()
       } catch (error) {
         done(error)
@@ -176,6 +171,7 @@ describe('userController assigning token string to user functionality', () => {
     userController.assignUserResetToken(request, response, token, (err, req, res, token, user) => {
       try {
         expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(500)
         done()
       } catch (error) {
         done(error)
@@ -188,8 +184,7 @@ describe('userController send reset password functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -204,8 +199,7 @@ describe('userController send reset password functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing sending the email with no problems
@@ -253,7 +247,7 @@ describe('userController send reset password functionality', () => {
     const response = httpMocks.createResponse()
     userController.sendResetPasswordEmail(request, response, token, user, (err) => {
       try {
-        expect(response.statusCode).toEqual(502)
+        expect(err.statusCode).toEqual(502)
         done()
       } catch (error) {
         done(error)
@@ -267,8 +261,7 @@ describe('userController change password after reset functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -285,8 +278,7 @@ describe('userController change password after reset functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing changing the password with no problems
@@ -333,7 +325,7 @@ describe('userController change password after reset functionality', () => {
     userController.changePasswordReset(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
-        expect(response.statusCode).toEqual(404)
+        expect(err.statusCode).toEqual(404)
         done()
       } catch (error) {
         done(error)
@@ -359,7 +351,7 @@ describe('userController change password after reset functionality', () => {
     userController.changePasswordReset(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
-        expect(response.statusCode).toEqual(403)
+        expect(err.statusCode).toEqual(403)
         done()
       } catch (error) {
         done(error)
@@ -385,7 +377,7 @@ describe('userController change password after reset functionality', () => {
     userController.changePasswordReset(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
-        expect(response.statusCode).toEqual(403)
+        expect(err.statusCode).toEqual(403)
         done()
       } catch (error) {
         done(error)
@@ -412,7 +404,7 @@ describe('userController change password after reset functionality', () => {
     userController.changePasswordReset(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
-        expect(response.statusCode).toEqual(500)
+        expect(err.statusCode).toEqual(500)
         done()
       } catch (error) {
         done(error)
@@ -426,8 +418,7 @@ describe('userController send successfull reset password functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -442,8 +433,7 @@ describe('userController send successfull reset password functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing sending the email with no problems
@@ -489,7 +479,7 @@ describe('userController send successfull reset password functionality', () => {
     const response = httpMocks.createResponse()
     userController.sendSuccPassResetEmail(request, response, user, (err) => {
       try {
-        expect(response.statusCode).toEqual(502)
+        expect(err.statusCode).toEqual(502)
         done()
       } catch (error) {
         done(error)
@@ -503,8 +493,7 @@ describe('userController whole send reset password email functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -519,8 +508,7 @@ describe('userController whole send reset password email functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing successful email to reset password
@@ -558,6 +546,7 @@ describe('userController whole send reset password email functionality', () => {
     userController.resetPasswordSendMail(request, response, (err) => {
       try {
         expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(404) // We're sending an unvalid email, so 404 not found would be returned from one of the middlewares.
         done()
       } catch (error) {
         done(error)
@@ -571,8 +560,7 @@ describe('userController whole reset password changing functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -589,8 +577,7 @@ describe('userController whole reset password changing functionality', () => {
   // Drop the whole users collection after finishing testing
   afterAll(async () => {
     sinon.restore()
-    await mongoose.connection.dropCollection('users', () => {
-    })
+    await mongoose.connection.collection('users').deleteMany({})
   })
 
   // Testing successfully changing password via reset email
@@ -632,6 +619,7 @@ describe('userController whole reset password changing functionality', () => {
     userController.resetPassword(request, response, (err) => {
       try {
         expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(404)// We're sending an invalid email, so 404 not found would be returned from one of the middlewares.
         done()
       } catch (error) {
         done(error)
