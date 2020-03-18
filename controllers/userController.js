@@ -36,10 +36,10 @@ const nodemailer = require('nodemailer')
 const crypto = require('crypto')
 /**
  * express module
- * ErrorObject schema to create ErrorObjects to send
+ * error object
  * @const
  */
-const ErrorObject = require('../models/error')
+const AppError = require('../utils/appError')
 
 /**
  * A function that is used to reset password for users by sending them emails to change the password.
@@ -54,7 +54,7 @@ const resetPasswordSendMail = function (req, res, next) {
   async.waterfall([async.apply(createTokenString, req, res), assignUserResetToken, sendResetPasswordEmail], (err) => {
     // If we catch an internal server error, update the resond and create error object to send
     if (err) {
-      next(err)
+      return next(err)
     } else { // If everything is fine, send an empty body code 204.
       res.status(204).send()
       next(null)
@@ -87,13 +87,9 @@ const assignUserResetToken = function (req, res, token, done) {
   // Search for the user with the provided email in the db.
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) {
-      console.log(err)
-      done(err)
+      return done(new AppError('An unexpected error has occured : ' + req.body.email, 500))
     } else if (!user) { // If user doesn't exist
-      res.status(404)
-      const errorObjectToSend = new ErrorObject({ status: 404, message: 'No user with this email exists.' })
-      res.json(errorObjectToSend)
-      done(new Error('No user with this email exists : ' + req.body.email)) // Throw an error to the next function in the middleware
+      return done(new AppError('No user with this email exists : ' + req.body.email, 404))
     } else {
     // Update the user resetPassword token and save changes
       user.resetPasswordToken = token
@@ -133,11 +129,8 @@ const sendResetPasswordEmail = function (req, res, token, user, done) {
   // Sending the email
   smtpTransport.sendMail(mailOptions, (err) => {
     if (err) {
-      console.log('Couldn\'t send email')
-      res.status(502)
-      const errorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the email. Try again.' })
-      res.json(errorObjectToSend)
-      done(new Error('Couldn\'t send the email : ' + err))
+      console.log('Couldn\'t send the reset password email')
+      return done(new AppError('Couldn\'t send the email ', 502))
     } else console.log('Reset Email sent\n')
     done(null)
   })
@@ -156,7 +149,7 @@ const resetPassword = function (req, res, next) {
   async.waterfall([async.apply(changePasswordReset, req, res), sendSuccPassResetEmail], (err) => {
     // If we catch an internal server error
     if (err) {
-      next(err)
+      return next(err)
     } else {
       res.status(204).send()
       next(null)
@@ -175,37 +168,27 @@ const changePasswordReset = function (req, res, done) {
   // Searching for the user with this reset token if not expired.
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
     if (err) {
-      res.status(500)
-      console.log(err)
-      done(err)
+      console.log('Unexpected internal server error : ' + err)
+      return done(new AppError('An internal server error has occurred.', 500))
     } else if (!user) { // If no user with this token is found (token is invalid)
-      res.status(404)
-      const errorObjectToSend = new ErrorObject({ status: 404, message: 'The token provided is not valid.' })
-      res.json(errorObjectToSend)
-      done(new Error('Token provided is not valid.'))
+      return done(new AppError('The token provided is not valid.', 404))
     } else if (req.body.newPassword === req.body.passwordConfirmation) {
       // TODO: call the function that sets the password when done
       user.password = req.body.newPassword
-
       // Reset token no longer exists
       user.resetPasswordToken = undefined
       user.resetPasswordExpires = undefined
 
       // Save the user account after changing the password.
       user.save((err) => {
-        if(err) { //If error, means if database refused password as it is too short.
-          res.status(403)
-          const errorObjectToSend = new ErrorObject({status: 403, message: 'Your password is too weak/short.'})
-           res.json(errorObjectToSend);
+        if (err) { // If error, means if database refused password as it is too short.
+          return done(new AppError('Your password is too weak/short', 403))
         }
         done(err, req, res, user)
         // TODO: should be logged in with the login function
       })
     } else {
-      res.status(403)
-      const errorObjectToSend = new ErrorObject({ status: 403, message: 'Passwords don\'t match' })
-      res.json(errorObjectToSend)
-      done(new Error('Passwords don\'t match'))
+      return done(new AppError('Passwords don\'t match.', 403))
     }
   })
 }
@@ -238,11 +221,8 @@ const sendSuccPassResetEmail = function (req, res, user, done) {
   // Sending the email
   smtpTransport.sendMail(mailOptions, (err) => {
     if (err) {
-      console.log('Couldn\'t send email')
-      res.status(502)
-      const errorObjectToSend = new ErrorObject({ status: 502, message: 'Couldn\'t send the confirming email.' })
-      res.json(errorObjectToSend)
-      done(new Error('Couldn\'t send the email : ' + err))
+      console.log('Couldn\'t send confirming email')
+      return done(new AppError('Couldn\'t send the confirming email.', 502))
     } else console.log('Reset confirming Email sent\n')
     done(null)
   })
