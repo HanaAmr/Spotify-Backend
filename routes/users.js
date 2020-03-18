@@ -7,7 +7,7 @@
  * express module
  * @const
  */
-const express = require('express');
+const express = require('express')
 
 /**
  * User controller to call when routing.
@@ -21,7 +21,7 @@ const userController = require('../controllers/userController')
  * @type {object}
  * @const
  */
-const authController = require('../controllers/authController');
+const authController = require('../controllers/authController')
 
 /**
  * Express router to mount user related functions on.
@@ -29,7 +29,7 @@ const authController = require('../controllers/authController');
  * @const
  * @namespace usersRouter
  */
-const router = express.Router();
+const router = express.Router()
 
 /**
  * Route for requesting to sign up
@@ -40,7 +40,7 @@ const router = express.Router();
  * @param {string} path - Sign up path
  * @param {callback} middleware - Sign up middleware.
  */
-router.post('/signUp', authController.signUp);
+router.post('/signUp', authController.signUp)
 
 /**
 * Route for requesting to sign in
@@ -52,9 +52,8 @@ router.post('/signUp', authController.signUp);
 * @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - Sign in middleware.
 */
-router.post('/signIn', authController.protect, authController.signIn);
-//router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
-
+router.post('/signIn', authController.protect, authController.signIn)
+// router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
 
 // POST request to reset the password by email.
 
