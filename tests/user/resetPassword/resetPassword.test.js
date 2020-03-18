@@ -41,7 +41,7 @@ const userController = require('../../../controllers/userController')
 
 // Configuring environment variables to use them
 dotenv.config()
-const mongoDB = process.env.MONGO_URI
+const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
