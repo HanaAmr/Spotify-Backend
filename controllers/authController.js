@@ -146,3 +146,15 @@ exports.restrictTo = (...roles) => {
       next();
     };
 };
+
+
+/**
+* A function that returns the database document id of the user that has the token passed to it.
+* @function
+* @memberof module:controllers/authController
+* @param {String} token - The token string.
+*/
+exports.getUserId = (async (token) => {
+  const userId = jwt.decode(token)
+  return userId
+})
