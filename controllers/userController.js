@@ -175,5 +175,5 @@ nodemailer: nodemailer
 }
 
 
-const exported = process.env.TEST ==='1' ? userController.testExports : userController.prodExports
+const exported = process.env.NODE_ENV==='test' ? userController.testExports : userController.prodExports
 module.exports = exported

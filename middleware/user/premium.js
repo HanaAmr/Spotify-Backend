@@ -73,12 +73,13 @@ exports.createTokenString = function (req, res, size, next) {
 exports.assignPremiumConfirmCode = function (req, res, code, next) {
     // Get passed user id from token
     const userId = jwt.decode(req.headers.authorization,process.env.JWT_SECRET)
+    console.log('the user id is : ' + userId)
     // Search for the user with the provided email in the db.
     User.findOne({ _id: userId }, (err, user) => {
       if (err) {
         return next(new AppError('An unexpected error has occured : ' + req.body.email, 500))
       } else if (!user) { // If user doesn't exist
-        return next(new AppError('No user with this email exists : ' + req.body.email, 404))
+        return next(new AppError('Couldn\'t find the user', 404))
       } else {
         //Check that user isn't already premium
         if(user.role==='premium') return next(new AppError('User is already premium!', 400))

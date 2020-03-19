@@ -51,7 +51,7 @@ const resetPasswordMiddleware = require('../../../middleware/user/resetPassword'
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
-if (process.env.TEST === '1') {
+if (process.env.NODE_ENV === 'test') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 } else {
   throw new Error('Can\'t connect to db, make sure you run in test environment!')
