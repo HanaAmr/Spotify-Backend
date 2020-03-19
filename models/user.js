@@ -35,11 +35,6 @@ const Schema = mongoose.Schema;
  * @const
  */
 const userSchema = new Schema({
-    id: {
-      type: String,
-      required: [true, 'Please provide your id'],
-      unique: [true, 'id already exist']   
-    },           
     name: { 
       type: String,
       required: [true, 'Please provide your name'],
