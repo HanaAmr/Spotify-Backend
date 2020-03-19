@@ -23,6 +23,8 @@ const validator = require('validator');
  */
 const bcrypt = require('bcryptjs');
 
+
+
 /**
  * express module
  * @const
@@ -34,7 +36,7 @@ const Schema = mongoose.Schema;
  * @type {object}
  * @const
  */
-const userSchema = new Schema({          
+const userSchema = new Schema({
     name: { 
       type: String,
       required: [true, 'Please provide your name'],
@@ -145,6 +147,6 @@ userSchema.methods.correctPassword = async function(candidatePassword, userPassw
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const user = mongoose.model('user', userSchema);
+const User = mongoose.model('user', userSchema);
 
-module.exports = user;
+module.exports = User;

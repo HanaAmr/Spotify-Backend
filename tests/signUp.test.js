@@ -79,5 +79,6 @@ describe('authController send signing up user', () => {
 
       expect(response.statusCode).toBe(200);
 
+      done();
     });
 });  

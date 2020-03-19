@@ -1,10 +1,12 @@
-class APIFeatures {
-  constructor (query, queryString) {
-    this.query = query
-    this.queryString = queryString
-  }
-  
-  filter(){
+class APIFeatures{
+    //query => mongoose query object
+    //querty string => requests's query
+    constructor(query,queryString){
+        this.query=query;
+        this.queryString=queryString;
+    }
+
+    filter(){
         const queryObj={...this.queryString};
         const excludedFields=['page','sort','limit','fields'];
         excludedFields.forEach(el=> delete queryObj[el]);
@@ -13,9 +15,7 @@ class APIFeatures {
         
         //using regular expression
         queryStr=queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match=> `$${match}`);
-        console.log(queryStr);
         this.query=this.query.find(JSON.parse(queryStr));
-        console.log(this.query);
 
          //to be able to chain methods!!
         return this;
@@ -39,10 +39,8 @@ class APIFeatures {
     } else {
       this.query = this.query.select('-_v')
     }
-
-    return this
   }
-
+  
   paginate () {
     const page = this.queryString.offset * 1 || 1
     const limit = this.queryString.limit * 1 || 20
