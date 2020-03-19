@@ -66,7 +66,7 @@ router.post('/signIn', authController.protect, authController.signIn)
  * @param {string} path - Resetting password path
  * @param {callback} middleware - Reset Password middleware.
  */
-router.post('/resetPassword', userController.resetPasswordSendMail)
+router.post('/resetPassword', userController.requestResetPassword)
 
 /**
  * Route for resetting password
@@ -90,7 +90,7 @@ router.post('/resetPassword/:token', userController.resetPassword)
  * @param {string} path - Becoming premium path
  * @param {callback} middleware - Become premium middleware.
  */
-router.post('/me/premium', userController.becomePremium)
+router.post('/me/premium', userController.requestBecomePremium)
 
 
 module.exports = router

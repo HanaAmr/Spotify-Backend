@@ -57,10 +57,10 @@ const AppError = require('../utils/appError')
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const resetPasswordSendMail = function (req, res, next) {
+const requestResetPassword = function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a random token then assign it to a user and send him an email with the link to reset the password.
-  async.waterfall([async.apply(createTokenString, req, res, process.env.RESET_PASSWORD_TOKEN_SIZE), assignUserResetToken, sendResetPasswordEmail], (err) => {
+  async.waterfall([async.apply(createTokenString, req, res, process.env.RESET_PASSWORD_TOKEN_SIZE), assignResetToken, sendResetPasswordMail], (err) => {
     // If we catch an internal server error, update the resond and create error object to send
     if (err) {
       return next(err)
@@ -92,7 +92,7 @@ const createTokenString = function (req, res, size, done) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const assignUserResetToken = function (req, res, token, done) {
+const assignResetToken = function (req, res, token, done) {
   // Search for the user with the provided email in the db.
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) {
@@ -117,7 +117,7 @@ const assignUserResetToken = function (req, res, token, done) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const sendResetPasswordEmail = function (req, res, token, user, done) {
+const sendResetPasswordMail = function (req, res, token, user, done) {
   // Creating transporting method for nodemailer
   const smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -155,7 +155,7 @@ const sendResetPasswordEmail = function (req, res, token, user, done) {
 const resetPassword = function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(changePasswordReset, req, res), sendSuccPassResetEmail], (err) => {
+  async.waterfall([async.apply(resetChangePassword, req, res), sendSuccPasswordResetMail], (err) => {
     // If we catch an internal server error
     if (err) {
       return next(err)
@@ -173,7 +173,7 @@ const resetPassword = function (req, res, next) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const changePasswordReset = function (req, res, done) {
+const resetChangePassword = function (req, res, done) {
   if(req.params.token === undefined) return done(new AppError('No token is provided', 404))
   // Searching for the user with this reset token if not expired.
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, (err, user) => {
@@ -211,7 +211,7 @@ const changePasswordReset = function (req, res, done) {
  * @param {next} - The next function in the middleware
  */
 
-const sendSuccPassResetEmail = function (req, res, user, done) {
+const sendSuccPasswordResetMail = function (req, res, user, done) {
   // Creating the email transporting method
   const smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -245,10 +245,10 @@ const sendSuccPassResetEmail = function (req, res, user, done) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const becomePremium  = function (req, res, next) {
+const requestBecomePremium = function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
-  async.waterfall([async.apply(createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE), assignUserPremConfigCode, sendPremiumConfigCodeEmail], (err) => {
+  async.waterfall([async.apply(createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE), assignPremiumConfirmCode, sendPremiumConfirmCodeMail], (err) => {
     // If we catch an internal server error, update the resond and create error object to send
     if (err) {
       return next(err)
@@ -267,7 +267,7 @@ const becomePremium  = function (req, res, next) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const assignUserPremConfigCode = function (req, res, code, done) {
+const assignPremiumConfirmCode = function (req, res, code, done) {
   // Get passed user id from token
   const userId = jwt.decode(req.headers.authorization,process.env.JWT_SECRET)
   // Search for the user with the provided email in the db.
@@ -297,7 +297,7 @@ const assignUserPremConfigCode = function (req, res, code, done) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const sendPremiumConfigCodeEmail = function (req, res, code, user, done) {
+const sendPremiumConfirmCodeMail = function (req, res, code, user, done) {
   // Creating transporting method for nodemailer
   const smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -332,10 +332,10 @@ const sendPremiumConfigCodeEmail = function (req, res, code, user, done) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const confirmBePremium = function (req, res, next) {
+const confirmBecomePremium = function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(makeUserRolePrem, req, res), sendSuccPremReqEmail], (err) => {
+  async.waterfall([async.apply(changeRoleToPremium, req, res), sendSuccPremiumMail], (err) => {
     // If we catch an internal server error
     if (err) {
       return next(err)
@@ -353,7 +353,7 @@ const confirmBePremium = function (req, res, next) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const makeUserRolePrem = function (req, res, done) {
+const changeRoleToPremium = function (req, res, done) {
   if(req.params.confirmationCode === undefined) return done(new AppError('No confirmation code is provided', 404))
   // Searching for the user with this confirmation code if not expired.
   User.findOne({ becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
@@ -383,7 +383,7 @@ const makeUserRolePrem = function (req, res, done) {
  * @param {next} - The next function in the middleware
  */
 
-const sendSuccPremReqEmail = function (req, res, user, done) {
+const sendSuccPremiumMail = function (req, res, user, done) {
   // Creating the email transporting method
   const smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
@@ -418,22 +418,22 @@ const userController = {}
 
 //Functions needed for production only
 userController.prodExports = {
-resetPasswordSendMail : resetPasswordSendMail,
+requestResetPassword : requestResetPassword,
 resetPassword : resetPassword,
-becomePremium : becomePremium
+requestBecomePremium: requestBecomePremium
 }
 // Exporting the functions needed for unit testing
 userController.testExports = {
 resetPassword : resetPassword,
-resetPasswordSendMail: resetPasswordSendMail,
+requestResetPassword: requestResetPassword,
 createTokenString : createTokenString,
-assignUserResetToken : assignUserResetToken,
-sendResetPasswordEmail : sendResetPasswordEmail,
-changePasswordReset : changePasswordReset,
-sendSuccPassResetEmail : sendSuccPassResetEmail,
-becomePremium : becomePremium,
-assignUserPremConfigCode : assignUserPremConfigCode,
-sendPremiumConfigCodeEmail : sendPremiumConfigCodeEmail,
+assignResetToken : assignResetToken,
+sendResetPasswordMail : sendResetPasswordMail,
+resetChangePassword : resetChangePassword,
+sendSuccPasswordResetMail : sendSuccPasswordResetMail,
+requestBecomePremium: requestBecomePremium,
+assignPremiumConfirmCode : assignPremiumConfirmCode,
+sendPremiumConfirmCodeMail : sendPremiumConfirmCodeMail,
 nodemailer : nodemailer,
 }
 
