@@ -1,57 +1,100 @@
-const mongoose=require('mongoose')
+/** Express controller providing track model
+ * @module controllers/track
+ * @requires express
+ */
 
-//TODO:: add track reference
+/**
+ * express module
+ * @const
+ */
+const mongoose = require('mongoose')
 
-const trackSchema=mongoose.Schema({
-    name:{
-        type:String,
-        required: [true, "Track must have a name"]
+/**
+ * Track schema
+ * @type {object}
+ * @const
+ */
 
-    },
-    album:{ //refernce to album containing track
-        type: String,
-        required: [true, "A track must have an album"]
-    },
-    trackNumber:{
-        type: Number,
-        required: [true, "A track must be ordered in the album (track Number)"]
-    },
-    artists :{//refernce to artists producing the track
-        type:   [String],
-        required: [true, "A track must have artists"]
-    },
-    genres:{
-        type: [String],
-        required:[true,"A track must have at list one genre"]
-    },
-    isLocal:{
-        type: Boolean,
-        required: [true, "A track must have an isLocal bit"]
-    },
-    durationMs:{
-        type: Number,
-        required: [true, "A track must contain its duration"]
-    },
-    previewUrl: {
-        type: String,
-        //required: [true, "A track must have a preview URL"]
-    },
-    popularity:{    //total number of likes for a track    
-        type: Number,
-        default:0
-    },
-    uri:{
-        type: String,
-        //required: [true, "A track must have a spotify URI"]
-    },
-    href:{
-        type: String,
-        required: [true, "A track must have a refernce"]
-    },
-    externalUrls:{
-        type: [String]
+const trackSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'The name of the track'],
+    unique: true
+  },
+  image: String,
+  type: {
+    description: 'The object type  “track” ',
+    type: String
+  },
+  uri: {
+    type: String,
+    required: true,
+    description: 'The Spotify URI for the track.'
+  },
+  href: {
+    type: String,
+    required: true,
+    description: 'A link to the Web API endpoint providing full details of the track.'
+  },
+  external_urls: {
+    description: 'an external URL object  Known external URLs for this track.',
+    type: String
+  },
+  external_ID: {
+    description: 'Known external IDs for the track.',
+    type: String
+  },
+  trackNumber: {
+    type: Number,
+    description: 'The number of the track in the album.'
+  },
+  isLocal: {
+    type: Boolean,
+    description: 'A boolean that describes if the track is local or not.'
+  },
+  durationMs: {
+    type: Number,
+    description: 'The duration of the track in milliseconds.'
+  },
+  popularity: {
+    type: Number,
+    description: 'The number of likes of the track.',
+	  default:0
+  },
+  previewUrl: {
+    type: String,
+    description: 'A link to 30 second preview of the track.'
+  },
+  album: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Album'
+  },
+  artist: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Artist'
     }
+  ]
 })
 
-const track=mongoose.model('tracks',trackSchema)
-module.exports=track
+/**
+* Populating the album object
+* @function
+* @memberof module:models/trackModel
+* @inner
+* @param {string} find - populate the database before any find function
+*/
+trackSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'album'
+  })
+  // this.populate({
+  //   path: 'artists',
+  // })
+
+  next()
+})
+
+const Track = mongoose.model('Track', trackSchema)
+
+module.exports = Track

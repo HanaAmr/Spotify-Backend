@@ -15,7 +15,7 @@ const { promisify } = require('util');
  * user object
  * @const
  */
-const user = require('../models/user');
+const User = require('../models/user');
 
 /**
  * express module
@@ -52,7 +52,7 @@ const signToken = id => {
 * @param {next} - The next function in the middleware
 */
 exports.signUp = catchAsync (async (req, res, next) => {
- const newUser = await user.create(req.body);   //edit body
+ const newUser = await User.create(req.body);   //edit body
  
  const token = signToken(newUser._id);
 
@@ -60,8 +60,28 @@ exports.signUp = catchAsync (async (req, res, next) => {
     status: 'Success',
     token,
     data: {
-      user: newUser,
       success: true
+    }    
+  });
+});
+
+/**
+* A function to check if a user signed up with facebook
+* @function
+* @memberof module:controllers/authController
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.checkSignedupWithFacebook = catchAsync (async (req, res, next) => {
+  const checkUser = await User.findOne({email: req.body.email});  
+  
+  const exist = checkUser ? true : false;
+ 
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      exist
     }    
   });
 });
@@ -82,7 +102,7 @@ exports.signIn = catchAsync(async (req, res, next) => {
         return next(new AppError('Please provide email or password!', 400));
     }
     
-    const tempUser = await user.findOne({email}).select('+password');
+    const tempUser = await User.findOne({email}).select('+password');
     const correct = await tempUser.correctPassword(password, tempUser.password);
     
     //check if email and password are correct
@@ -95,7 +115,10 @@ exports.signIn = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
         status: 'Success',
-        token   
+        token,
+        data: {
+          success: true
+        }   
     });
 });
 
@@ -123,7 +146,7 @@ exports.protect = catchAsync (async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     
     //check if user still exists
-    const freshUser = await user.findById(decoded.id);
+    const freshUser = await User.findById(decoded.id);
     if (!freshUser) {
       return next(new AppError('The user belonging to this token does no longer exists', 401));
     }
@@ -146,3 +169,15 @@ exports.restrictTo = (...roles) => {
       next();
     };
 };
+
+
+/**
+* A function that returns the database document id of the user that has the token passed to it.
+* @function
+* @memberof module:controllers/authController
+* @param {String} token - The token string.
+*/
+exports.getUserId = (async (token) => {
+  const userId = jwt.decode(token)
+  return userId
+})

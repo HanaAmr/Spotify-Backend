@@ -23,6 +23,8 @@ const validator = require('validator');
  */
 const bcrypt = require('bcryptjs');
 
+
+
 /**
  * express module
  * @const
@@ -34,7 +36,7 @@ const Schema = mongoose.Schema;
  * @type {object}
  * @const
  */
-const userSchema = new Schema({          
+const userSchema = new Schema({
     name: { 
       type: String,
       required: [true, 'Please provide your name'],
@@ -109,7 +111,12 @@ const userSchema = new Schema({
       }
     },
     resetPasswordToken: String,
-    resetPasswordExpires: Date // Date of expiration of reset password token
+    resetPasswordExpires: Date, // Date of expiration of reset password token
+    becomePremiumToken: String,
+    becomePremiumExpires: Date, // Date of expiration of become premium token
+    becomeArtistToken: String,
+    becomeArtistExpires: Date, // Date of expiration of become artist verification code
+    
 });
 
 /**
@@ -140,6 +147,6 @@ userSchema.methods.correctPassword = async function(candidatePassword, userPassw
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const user = mongoose.model('users', userSchema);
+const User = mongoose.model('user', userSchema);
 
-module.exports = user;
+module.exports = User;
