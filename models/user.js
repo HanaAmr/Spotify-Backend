@@ -98,6 +98,16 @@ const userSchema = new Schema({
       enum: ['user', 'artist', 'premium'],
       default: 'user'
     },    
+    artistInfo: {
+      type: {
+        biography: String,
+        popularity: Number,
+        genres: [String] ,  //Array of genres
+        albums: [String],   //Contains Albums IDs
+        popularSong: [String],  //contains songs IDs
+        
+      }
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date, // Date of expiration of reset password token
     becomePremiumToken: String,
@@ -135,6 +145,6 @@ userSchema.methods.correctPassword = async function(candidatePassword, userPassw
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const user = mongoose.model('user', userSchema);
+const user = mongoose.model('users', userSchema);
 
 module.exports = user;
