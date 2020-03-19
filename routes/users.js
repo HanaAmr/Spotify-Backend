@@ -7,7 +7,7 @@
  * express module
  * @const
  */
-const express = require('express');
+const express = require('express')
 
 /**
  * User controller to call when routing.
@@ -21,7 +21,7 @@ const userController = require('../controllers/userController')
  * @type {object}
  * @const
  */
-const authController = require('../controllers/authController');
+const authController = require('../controllers/authController')
 
 /**
  * Express router to mount user related functions on.
@@ -29,7 +29,7 @@ const authController = require('../controllers/authController');
  * @const
  * @namespace usersRouter
  */
-const router = express.Router();
+const router = express.Router()
 
 /**
  * Route for requesting to sign up
@@ -40,7 +40,29 @@ const router = express.Router();
  * @param {string} path - Sign up path
  * @param {callback} middleware - Sign up middleware.
  */
-router.post('/signUp', authController.signUp);
+router.post('/signUp', authController.signUp)
+
+/**
+ * Route for checking if a user signed up with facebook before
+ * @name post/checkSignedupWithFacebook
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - check sign up with facebook path
+ * @param {callback} middleware - check sign up middleware.
+ */
+router.post('/checkSignedupWithFacebook', authController.checkSignedupWithFacebook)
+
+/**
+ * Route for requesting to sign up with facebook
+ * @name post/signupWithFacebook
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Sign up with facebook path
+ * @param {callback} middleware - Sign up middleware.
+ */
+router.post('/signupWithFacebook', authController.signUp)
 
 /**
 * Route for requesting to sign in
@@ -67,7 +89,7 @@ router.post('/signIn', authController.signIn);
  * @param {string} path - Resetting password path
  * @param {callback} middleware - Reset Password middleware.
  */
-router.post('/resetPassword', userController.resetPasswordSendMail)
+router.post('/resetPassword', userController.requestResetPassword)
 
 /**
  * Route for resetting password
@@ -80,5 +102,28 @@ router.post('/resetPassword', userController.resetPasswordSendMail)
  * @param {callback} middleware - Reset Password middleware.
  */
 router.post('/resetPassword/:token', userController.resetPassword)
+
+
+/**
+ * Route for requesting to become premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Becoming premium path
+ * @param {callback} middleware - Become premium middleware.
+ */
+router.post('/me/premium', userController.requestBecomePremium)
+
+/**
+ * Route for confirming to become premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Becoming premium path
+ * @param {callback} middleware - Become premium middleware.
+ */
+router.post('/me/premium/confirm', userController.confirmBecomePremium)
 
 module.exports = router

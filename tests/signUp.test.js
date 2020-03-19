@@ -34,7 +34,7 @@ const user = require('./../models/user');
  */
 const authController = require('./../controllers/authController')
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: '.env' });
 
 mongoose.connect(process.env.DATABASE_LOCAL, {
     useNewUrlParser: true,
@@ -79,5 +79,6 @@ describe('authController send signing up user', () => {
 
       expect(response.statusCode).toBe(200);
 
+      done();
     });
 });  
