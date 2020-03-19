@@ -1,25 +1,29 @@
 const dotenv = require('dotenv') //  we write the cofigurations we need i.e. the environment variables in config.env file
-dotenv.config({ path: './config.env' }) // set the path of the config property of dotenv to the file created
+dotenv.config({ path: '.env' }) // set the path of the config property of dotenv to the file created
+const app = require('./app')
+const mongoose = require('mongoose')
 
 process.on('uncaughtException', err => {
-  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...')
+  console.log('UNCAUGHT EXCEPTION! Shutting down...')
   console.log(err.name, err.message)
   process.exit(1)
 })
 
-const mongoose = require('mongoose') //    download mongoose and put it in config
+ //    download mongoose and put it in config
 mongoose.connect(process.env.DATABASE_LOCAL, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
 }).then(con => {
-  console.log('Connection is successful')
+    //console.log(con.connections);
+    console.log('DB is connected successfuly!')
 })
 
-const app = require('./app')
+
 
 const server = app.listen(process.env.PORT, () => {
-  console.log('Running Server..')
+    console.log(`App is running on port ${process.env.PORT}`);
 })
 
 process.on('unhandledRejection', err => {
@@ -30,8 +34,3 @@ process.on('unhandledRejection', err => {
   })
 })
 
-/// images in album or playlist will they be hrefs or what
-
-/// check category id ---> is it neccessary
-
-/// Notes: playlist/id/tracks and albums/id/tracks are now meaningless sice the tracks attribute in the the album or playlist will now be enough

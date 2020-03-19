@@ -58,7 +58,8 @@ const trackSchema = new mongoose.Schema({
   },
   popularity: {
     type: Number,
-    description: 'The number of likes of the track.'
+    description: 'The number of likes of the track.',
+	  default:0
   },
   previewUrl: {
     type: String,
