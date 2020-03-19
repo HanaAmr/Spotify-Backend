@@ -1,5 +1,5 @@
 const dotenv = require('dotenv') //  we write the cofigurations we need i.e. the environment variables in config.env file
-dotenv.config({ path: './config.env' }) // set the path of the config property of dotenv to the file created
+dotenv.config() 
 
 process.on('uncaughtException', err => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...')
