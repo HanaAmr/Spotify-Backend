@@ -80,4 +80,17 @@ router.post('/resetPassword', userController.resetPasswordSendMail)
  */
 router.post('/resetPassword/:token', userController.resetPassword)
 
+
+/**
+ * Route for requesting to become premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Becoming premium path
+ * @param {callback} middleware - Become premium middleware.
+ */
+router.post('/me/premium', userController.becomePremium)
+
+
 module.exports = router

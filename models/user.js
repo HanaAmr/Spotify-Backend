@@ -99,7 +99,12 @@ const userSchema = new Schema({
       default: 'user'
     },    
     resetPasswordToken: String,
-    resetPasswordExpires: Date // Date of expiration of reset password token
+    resetPasswordExpires: Date, // Date of expiration of reset password token
+    becomePremiumToken: String,
+    becomePremiumExpires: Date, // Date of expiration of become premium token
+    becomeArtistToken: String,
+    becomeArtistExpires: Date, // Date of expiration of become artist verification code
+    
 });
 
 /**
