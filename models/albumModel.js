@@ -32,7 +32,7 @@ const albumSchema = new mongoose.Schema({
     description: 'The type of the album, one of "album" , "single" , or "compilation".',
     type: String
   },
-  external_urls: {
+  externalUrls: {
     description: 'an external URL object  Known external URLs for this album',
     type: [String]
   },
@@ -45,7 +45,7 @@ const albumSchema = new mongoose.Schema({
     required: true,
     description: 'The Spotify URI for the album.'
   },
-  genres: {
+  genre: {
     description: 'An array of strings. A list of the genres used to classify the album. For example, "Prog Rock" , "Post-Grunge". (If not yet classified, the array is empty.)',
     type: [String]
   },
@@ -55,7 +55,8 @@ const albumSchema = new mongoose.Schema({
   },
   popularity: {
     description: 'The popularity of the album. The value will be equal to the sum of the likes of the album’s individual tracks.',
-    type: Number
+    type: Number,
+	  default:0
   },
   copyrights: {
     description: 'Array of copyrights objects. The copyright statements of the album.',
