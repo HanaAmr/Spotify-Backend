@@ -1,6 +1,6 @@
 class APIFeatures{
-    //query is the actual query os mongoose
-    //querty string => el fl request
+    //query => mongoose query object
+    //querty string => requests's query
     constructor(query,queryString){
         this.query=query;
         this.queryString=queryString;
@@ -15,9 +15,7 @@ class APIFeatures{
         
         //using regular expression
         queryStr=queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match=> `$${match}`);
-        console.log(queryStr);
         this.query=this.query.find(JSON.parse(queryStr));
-        console.log(this.query);
 
          //to be able to chain methods!!
         return this;
@@ -47,7 +45,7 @@ class APIFeatures{
 
     paginate(){
         const page= this.queryString.page*1 || 1;
-        const limit= this.queryString.limit*1 || 100;
+        const limit= this.queryString.limit*1 || 10;
         const skip= (page-1) * limit;
 
         this.query=this.query.skip(skip).limit(limit);
