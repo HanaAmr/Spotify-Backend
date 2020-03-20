@@ -177,7 +177,7 @@ exports.restrictTo = (...roles) => {
 * @memberof module:controllers/authController
 * @param {String} token - The token string.
 */
-exports.getUserId = catchAsync( async (async (req, next) => {
+exports.getUserId = catchAsync( (async (req, next) => {
   //get token and check if it exists
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
