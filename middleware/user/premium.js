@@ -40,6 +40,13 @@ const jwt = require('jsonwebtoken')
 
 /**
  * express module
+ * Authroization controller
+ * @const
+ */
+const authController = require('../../controllers/authController')
+
+/**
+ * express module
  * error object
  * @const
  */
@@ -67,19 +74,14 @@ exports.createTokenString = function (req, res, size, next) {
  * @param {next} - The next function in the middleware
  */
 exports.assignPremiumConfirmCode = function (req, res, code, next) {
-  if (req.headers.authorization === undefined) {return next(new AppError('Unauthorized access!',401))}
-  // Get decoded authorization token
-  const authDecoded = jwt.decode(req.headers.authorization, process.env.JWT_SECRET)
-  // Search for the user with the provided email in the db.
-  User.findOne({ _id: authDecoded.id }, (err, user) => {
+  //Get the user ID using authorization controller
+  authController.getUserId(req, (userId) => {
+  User.findById(userId , (err, user) => {
     if (err) {
-      return next(new AppError('An unexpected error has occured : ' + req.body.email, 500))
+      return next(new AppError('An unexpected error has occured : ', 500))
     } else if (!user) { // If user doesn't exist
       return next(new AppError('Couldn\'t find the user', 404))
     } else {
-      // Check that user isn't already premium
-      if (user.role === 'premium') {
-      return next(new AppError('User is already premium!', 400)) }
       // Update the user premium verification code and save changes
       user.becomePremiumToken = code
       user.becomePremiumExpires = Date.now() + parseInt(process.env.PREM_CONF_CODE_TIME, 10) * 1000 // 10 minutes (*1000 to be in ms)
@@ -88,6 +90,7 @@ exports.assignPremiumConfirmCode = function (req, res, code, next) {
       })
     }
   })
+})
 }
 
 /**
@@ -133,14 +136,9 @@ exports.sendPremiumConfirmCodeMail = function (req, res, code, user, next) {
  * @param {next} - The next function in the middleware
  */
 exports.changeRoleToPremium = function (req, res, next) {
-  if (req.headers.authorization === undefined) {
-    return next(new AppError('Unauthorized access!', 401))}
-  if (req.params.confirmationCode === undefined) {
-    return next(new AppError('No confirmation code is provided', 404))}
-  // Get decoded authorization token
-  const authDecoded = jwt.decode(req.headers.authorization, process.env.JWT_SECRET)
-  // Searching for the user with this confirmation code if not expired.
-  User.findOne({ _id: authDecoded.id, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
+  //Get the user ID using authorization controller
+  authController.getUserId(req, (userId) => {    // Searching for the user with this confirmation code if not expired.
+    User.findOne({ _id: userId, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
     if (err) {
       console.log('Unexpected internal server error : ' + err)
       return next(new AppError('An internal server error has occurred.', 500))
@@ -157,6 +155,7 @@ exports.changeRoleToPremium = function (req, res, next) {
       })
     }
   })
+})
 }
 
 /**
@@ -204,19 +203,15 @@ exports.sendSuccPremiumMail = function (req, res, user, next) {
  * @param {next} - The next function in the middleware
  */
 exports.assignPremiumCancelCode = function (req, res, code, next) {
-  if (req.headers.authorization === undefined) {return next(new AppError('Unauthorized access!',401))}
-  // Get decoded authorization token
-  const authDecoded = jwt.decode(req.headers.authorization, process.env.JWT_SECRET)
+ //Get the user ID using authorization controller
+ authController.getUserId(req, (userId) => {
   // Search for the user with the provided email in the db.
-  User.findOne({ _id: authDecoded.id }, (err, user) => {
+  User.findById(userId, (err, user) => {
     if (err) {
-      return next(new AppError('An unexpected error has occured : ' + req.body.email, 500))
+      return next(new AppError('An unexpected error has occured : ' , 500))
     } else if (!user) { // If user doesn't exist
       return next(new AppError('Couldn\'t find the user', 404))
     } else {
-      // Check that user is premium
-      if (user.role !== 'premium') {
-      return next(new AppError('User isn\'t premium!', 400)) }
       // Update the user premium verification code and save changes
       user.becomePremiumToken = code
       user.becomePremiumExpires = Date.now() + parseInt(process.env.PREM_CONF_CODE_TIME, 10) * 1000 // 10 minutes (*1000 to be in ms)
@@ -225,6 +220,7 @@ exports.assignPremiumCancelCode = function (req, res, code, next) {
       })
     }
   })
+})
 }
 
 /**
@@ -247,7 +243,7 @@ exports.sendPremiumCancelCodeMail = function (req, res, code, user, next) {
   const mailOptions = {
     to: user.email,
     from: process.env.GMAILUSR,
-    subject: 'Cencel premium subscription mail!',
+    subject: 'Cancel premium subscription mail!',
     text: 'Hello.\n\nHere is the verification code that you need to cancel your premium subscription: ' +
              code + '\n\n' +
             ' If you didn\'t request to become premium, delete this email and change your password!\n All the best,\nSystem 424 Team \n'
@@ -270,14 +266,9 @@ exports.sendPremiumCancelCodeMail = function (req, res, code, user, next) {
  * @param {next} - The next function in the middleware
  */
 exports.changeRoleToUser = function (req, res, next) {
-  if (req.headers.authorization === undefined) {
-    return next(new AppError('Unauthorized access!', 401))}
-  if (req.params.confirmationCode === undefined) {
-    return next(new AppError('No confirmation code is provided', 404))}
-  // Get decoded authorization token
-  const authDecoded = jwt.decode(req.headers.authorization, process.env.JWT_SECRET)
-  // Searching for the user with this confirmation code if not expired.
-  User.findOne({ _id: authDecoded.id, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
+  //Get the user ID using authorization controller
+  authController.getUserId(req, (userId) => { // Searching for the user with this confirmation code if not expired.
+  User.findOne({ _id: userId, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
     if (err) {
       console.log('Unexpected internal server error : ' + err)
       return next(new AppError('An internal server error has occurred.', 500))
@@ -294,6 +285,7 @@ exports.changeRoleToUser = function (req, res, next) {
       })
     }
   })
+})
 }
 
 /**

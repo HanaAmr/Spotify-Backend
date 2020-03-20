@@ -177,7 +177,18 @@ exports.restrictTo = (...roles) => {
 * @memberof module:controllers/authController
 * @param {String} token - The token string.
 */
-exports.getUserId = (async (token) => {
-  const userId = jwt.decode(token)
-  return userId
+exports.getUserId = (async (req, next) => {
+  //get token and check if it exists
+  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  
+  if(!token) {
+    return next(new AppError('You are not logged in! Please log in to access.', 401));
+  }
+  
+  //verification of token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  userId = decoded.id
+  next(userId)
 })
