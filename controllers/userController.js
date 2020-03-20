@@ -87,8 +87,7 @@ const requestResetPassword = catchAsync( async function (req, res, next) {
     if (err) {
       return next(err)
     } else { // If everything is fine, send an empty body code 204.
-      res.status(204)
-      next()
+      res.status(204).send()
     }
   })
 })
@@ -110,8 +109,7 @@ const resetPassword = catchAsync( async function (req, res, next) {
     if (err) {
       return next(err)
     } else {
-      res.status(204)
-      next()
+      res.status(204).send()
     }
   })
 })
@@ -132,8 +130,7 @@ const requestBecomePremium = catchAsync( async function (req, res, next) {
     if (err) {
       return next(err)
     } else { // If everything is fine, send an empty body code 204.
-      res.status(204)
-      next()
+      res.status(204).send()
     }
   })
 })
@@ -153,8 +150,7 @@ const confirmBecomePremium = catchAsync( async function (req, res, next) {
     if (err) {
       return next(err)
     } else {
-      res.status(204)
-      next()
+      res.status(204).send()
     }
   })
 })
@@ -174,8 +170,7 @@ const requestCancelPremium = catchAsync( async function (req, res, next) {
     if (err) {
       return next(err)
     } else { // If everything is fine, send an empty body code 204.
-      res.status(204)
-      next()
+      res.status(204).send()
     }
   })
 })
@@ -195,8 +190,7 @@ const confirmCancelPremium = catchAsync( async function (req, res, next) {
     if (err) {
       return next(err)
     } else {
-      res.status(204)
-      next()
+      res.status(204).send()
     }
   })
 })
