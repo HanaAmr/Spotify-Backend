@@ -3,19 +3,18 @@
  * @requires express
  */
 
-
- /**
+/**
  * express module
  * @const
  */
-const express=require('express')
+const express = require('express')
 
 /**
  * ArtistViewing controller to call when routing.
  * @type {object}
  * @const
  */
-const artistViewingController=require('./../controllers/artistViewingController')
+const artistViewingController = require('./../controllers/artistViewingController')
 
 /**
  * Authorization controller to call when routing.
@@ -30,7 +29,7 @@ const authController = require('./../controllers/authController')
  * @const
  * @namespace usersRouter
  */
-const router=express.Router()
+const router = express.Router()
 /**
  * Middleware to check authorization
  * @function
@@ -38,7 +37,6 @@ const router=express.Router()
  * @inner
  */
 router.use(authController.protect)
-
 
 /**
  * Route for requesting artists
@@ -48,8 +46,8 @@ router.use(authController.protect)
  * @inner
  */
 router
-    .route('/')
-    .get(artistViewingController.getArtists)
+  .route('/')
+  .get(artistViewingController.getArtists)
 
 /**
  * Route for requesting a specific album
@@ -60,9 +58,8 @@ router
  * @param {string} artistId - artist ID
  */
 router
-    .route('/:id')
-    .get(artistViewingController.getArtist)
-
+  .route('/:id')
+  .get(artistViewingController.getArtist)
 
 /**
  * Route for requesting a specific album
@@ -73,9 +70,8 @@ router
  * @param {string} artistId - artist ID
  */
 router
-    .route('/:id/related-artists')
-    .get(artistViewingController.getRelatedArtists)
-
+  .route('/:id/related-artists')
+  .get(artistViewingController.getRelatedArtists)
 
 /**
  * Route for requesting a specific album
@@ -86,8 +82,8 @@ router
  * @param {string} artistId - artist ID
  */
 router
-    .route('/:id/albums')
-    .get(artistViewingController.getArtistAlbums)
+  .route('/:id/albums')
+  .get(artistViewingController.getArtistAlbums)
 
 /**
  * Route for requesting a specific album
@@ -98,7 +94,7 @@ router
  * @param {string} artistId - artist ID
  */
 router
-    .route('/:id/top-tracks')
-    .get(artistViewingController.getArtistTopTracks)
+  .route('/:id/top-tracks')
+  .get(artistViewingController.getArtistTopTracks)
 
-module.exports=router
+module.exports = router

@@ -493,7 +493,7 @@ describe('userController send successfull reset password functionality', () => {
   })
 })
 
-//TODO:
+// TODO:
 // Testing userController whole send reset password email functionality
 // describe('userController whole send reset password email functionality', () => {
 //   // Drop the whole users collection before testing and add a simple user to test with
@@ -554,7 +554,7 @@ describe('userController send successfull reset password functionality', () => {
 //   })
 // })
 
-// // TODO: Testing userController whole reset password changing functionality 
+// // TODO: Testing userController whole reset password changing functionality
 // describe('userController whole reset password changing functionality', () => {
 //   // Drop the whole users collection before testing and add a simple user to test with
 //   beforeEach(async () => {

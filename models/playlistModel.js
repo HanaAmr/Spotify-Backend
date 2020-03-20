@@ -61,11 +61,11 @@ const playlistSchema = new mongoose.Schema({
     ref: 'Category'
   },
   owner: [
-      {
-        type: String,
-        required: true,
-        description: 'link to the owner/s of the playlist'
-      }
+    {
+      type: String,
+      required: true,
+      description: 'link to the owner/s of the playlist'
+    }
   ],
   // owner: [
   //   {
@@ -73,7 +73,7 @@ const playlistSchema = new mongoose.Schema({
   //     ref: 'User'
   //   }
   // ],
-  tracks: { 
+  tracks: {
     type: {
       href: String,
       total: Number
@@ -82,8 +82,8 @@ const playlistSchema = new mongoose.Schema({
   trackObjects: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Track',
-      
+      ref: 'Track'
+
     }
   ],
   noOfFollowers: {
@@ -113,8 +113,6 @@ const playlistSchema = new mongoose.Schema({
 
 //   next()
 // })
-
-
 
 const Playlist = mongoose.model('Playlist', playlistSchema)
 

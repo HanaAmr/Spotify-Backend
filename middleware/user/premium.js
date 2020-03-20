@@ -74,23 +74,23 @@ exports.createTokenString = function (req, res, size, next) {
  * @param {next} - The next function in the middleware
  */
 exports.assignPremiumConfirmCode = function (req, res, code, next) {
-  //Get the user ID using authorization controller
+  // Get the user ID using authorization controller
   authController.getUserId(req, (userId) => {
-  User.findById(userId , (err, user) => {
-    if (err) {
-      return next(new AppError('An unexpected error has occured : ', 500))
-    } else if (!user) { // If user doesn't exist
-      return next(new AppError('Couldn\'t find the user', 404))
-    } else {
+    User.findById(userId, (err, user) => {
+      if (err) {
+        return next(new AppError('An unexpected error has occured : ', 500))
+      } else if (!user) { // If user doesn't exist
+        return next(new AppError('Couldn\'t find the user', 404))
+      } else {
       // Update the user premium verification code and save changes
-      user.becomePremiumToken = code
-      user.becomePremiumExpires = Date.now() + parseInt(process.env.PREM_CONF_CODE_TIME, 10) * 1000 // 10 minutes (*1000 to be in ms)
-      user.save((err) => {
-        next(err, req, res, code, user)
-      })
-    }
+        user.becomePremiumToken = code
+        user.becomePremiumExpires = Date.now() + parseInt(process.env.PREM_CONF_CODE_TIME, 10) * 1000 // 10 minutes (*1000 to be in ms)
+        user.save((err) => {
+          next(err, req, res, code, user)
+        })
+      }
+    })
   })
-})
 }
 
 /**
@@ -136,26 +136,26 @@ exports.sendPremiumConfirmCodeMail = function (req, res, code, user, next) {
  * @param {next} - The next function in the middleware
  */
 exports.changeRoleToPremium = function (req, res, next) {
-  //Get the user ID using authorization controller
-  authController.getUserId(req, (userId) => {    // Searching for the user with this confirmation code if not expired.
+  // Get the user ID using authorization controller
+  authController.getUserId(req, (userId) => { // Searching for the user with this confirmation code if not expired.
     User.findOne({ _id: userId, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
-    if (err) {
-      console.log('Unexpected internal server error : ' + err)
-      return next(new AppError('An internal server error has occurred.', 500))
-    } else if (!user) { // If no user with this token is found (token is invalid)
-      return next(new AppError('The code provided is not valid.', 404))
-    } else {
-      user.role = 'premium'
-      // Reset token no longer exists
-      user.becomePremiumToken = undefined
-      user.becomePremiumExpires = undefined
-      // Save the user account after changing the role to premium.
-      user.save((err) => {
-        next(err, req, res, user)
-      })
-    }
+      if (err) {
+        console.log('Unexpected internal server error : ' + err)
+        return next(new AppError('An internal server error has occurred.', 500))
+      } else if (!user) { // If no user with this token is found (token is invalid)
+        return next(new AppError('The code provided is not valid.', 404))
+      } else {
+        user.role = 'premium'
+        // Reset token no longer exists
+        user.becomePremiumToken = undefined
+        user.becomePremiumExpires = undefined
+        // Save the user account after changing the role to premium.
+        user.save((err) => {
+          next(err, req, res, user)
+        })
+      }
+    })
   })
-})
 }
 
 /**
@@ -193,8 +193,6 @@ exports.sendSuccPremiumMail = function (req, res, user, next) {
   })
 }
 
-
-
 /**
  * A function that is used to assign cancellation code for premium subscription
  * @memberof module:controllers/users~userController
@@ -203,24 +201,24 @@ exports.sendSuccPremiumMail = function (req, res, user, next) {
  * @param {next} - The next function in the middleware
  */
 exports.assignPremiumCancelCode = function (req, res, code, next) {
- //Get the user ID using authorization controller
- authController.getUserId(req, (userId) => {
+  // Get the user ID using authorization controller
+  authController.getUserId(req, (userId) => {
   // Search for the user with the provided email in the db.
-  User.findById(userId, (err, user) => {
-    if (err) {
-      return next(new AppError('An unexpected error has occured : ' , 500))
-    } else if (!user) { // If user doesn't exist
-      return next(new AppError('Couldn\'t find the user', 404))
-    } else {
+    User.findById(userId, (err, user) => {
+      if (err) {
+        return next(new AppError('An unexpected error has occured : ', 500))
+      } else if (!user) { // If user doesn't exist
+        return next(new AppError('Couldn\'t find the user', 404))
+      } else {
       // Update the user premium verification code and save changes
-      user.becomePremiumToken = code
-      user.becomePremiumExpires = Date.now() + parseInt(process.env.PREM_CONF_CODE_TIME, 10) * 1000 // 10 minutes (*1000 to be in ms)
-      user.save((err) => {
-        next(err, req, res, code, user)
-      })
-    }
+        user.becomePremiumToken = code
+        user.becomePremiumExpires = Date.now() + parseInt(process.env.PREM_CONF_CODE_TIME, 10) * 1000 // 10 minutes (*1000 to be in ms)
+        user.save((err) => {
+          next(err, req, res, code, user)
+        })
+      }
+    })
   })
-})
 }
 
 /**
@@ -266,26 +264,26 @@ exports.sendPremiumCancelCodeMail = function (req, res, code, user, next) {
  * @param {next} - The next function in the middleware
  */
 exports.changeRoleToUser = function (req, res, next) {
-  //Get the user ID using authorization controller
+  // Get the user ID using authorization controller
   authController.getUserId(req, (userId) => { // Searching for the user with this confirmation code if not expired.
-  User.findOne({ _id: userId, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
-    if (err) {
-      console.log('Unexpected internal server error : ' + err)
-      return next(new AppError('An internal server error has occurred.', 500))
-    } else if (!user) { // If no user with this token is found (token is invalid)
-      return next(new AppError('The code provided is not valid.', 404))
-    } else {
-      user.role = 'user'
-      // Reset token no longer exists
-      user.becomePremiumToken = undefined
-      user.becomePremiumExpires = undefined
-      // Save the user account after changing the role to premium.
-      user.save((err) => {
-        next(err, req, res, user)
-      })
-    }
+    User.findOne({ _id: userId, becomePremiumToken: req.params.confirmationCode, becomePremiumExpires: { $gt: Date.now() } }, (err, user) => {
+      if (err) {
+        console.log('Unexpected internal server error : ' + err)
+        return next(new AppError('An internal server error has occurred.', 500))
+      } else if (!user) { // If no user with this token is found (token is invalid)
+        return next(new AppError('The code provided is not valid.', 404))
+      } else {
+        user.role = 'user'
+        // Reset token no longer exists
+        user.becomePremiumToken = undefined
+        user.becomePremiumExpires = undefined
+        // Save the user account after changing the role to premium.
+        user.save((err) => {
+          next(err, req, res, user)
+        })
+      }
+    })
   })
-})
 }
 
 /**
