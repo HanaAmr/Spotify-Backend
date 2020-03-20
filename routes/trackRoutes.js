@@ -21,6 +21,20 @@ const router = express.Router()
  * @const
  */
 const trackController = require('./../controllers/trackController')
+/**
+ * Authorization controller to call when routing.
+ * @type {object}
+ * @const
+ */
+const authController = require('./../controllers/authController')
+
+/**
+ * Middleware to check authorization
+ * @function
+ * @memberof module:routes/tracks~tracksRouter
+ * @inner
+ */
+router.use(authController.protect)
 
 /**
  * Route for requesting to get a track

@@ -21,7 +21,19 @@ const router = express.Router()
  * @const
  */
 const playlistController = require('./../controllers/playlistController')
-
+/**
+ * Authorization controller to call when routing.
+ * @type {object}
+ * @const
+ */
+const authController = require('./../controllers/authController')
+/**
+ * Middleware to check authorization
+ * @function
+ * @memberof module:routes/tracks~tracksRouter
+ * @inner
+ */
+router.use(authController.protect)
 //  router.param('categoryId', categoryController.checkcategoryID)
 
 /**

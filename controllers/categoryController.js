@@ -58,7 +58,6 @@ exports.getAllCategories = catchAsync(async (req, res, next) => {
   const categories = await features.query
   res.status(200).json({
     status: 'success',
-    result: categories.length,
     data: {
       categories
     }
@@ -82,7 +81,6 @@ exports.getCategoryPlaylist = catchAsync(async (req, res, next) => {
   }
   res.status(200).json({
     status: 'success',
-    result: playlists.length,
     data: {
       playlists
     }
