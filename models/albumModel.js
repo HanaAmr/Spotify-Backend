@@ -17,20 +17,20 @@ const mongoose = require('mongoose')
 const albumSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'The name of the category'],
+    required: [true,'An album must have a name'],
     unique: true
   },
-  href: {
+  href:{
     type: String,
-    required: [true, ' A link to the Web API endpoint returning full details of the category.']
+    //required: [true,'An Album must have a ref']
   },
   images: {
     type: [String],
-    required: [true, 'An array of images objects. The cover art for the album in various sizes, widest first.']
+    //required: [true, 'An album must have at least one image']
   },
-  albumType: {
-    description: 'The type of the album, one of "album" , "single" , or "compilation".',
-    type: String
+  albumType:{
+    type: String,
+    required: [true, 'An Album must have a type']
   },
   externalUrls: {
     description: 'an external URL object  Known external URLs for this album',
@@ -42,12 +42,13 @@ const albumSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    required: true,
     description: 'The Spotify URI for the album.'
+    //required: [true,'An album must have a uri']
   },
-  genre: {
-    description: 'An array of strings. A list of the genres used to classify the album. For example, "Prog Rock" , "Post-Grunge". (If not yet classified, the array is empty.)',
-    type: [String]
+  genres: {
+    description: 'An array of strings. A list of the genres used to classify the album.',
+    type: [String],
+    required: [true,'An album must have at least one genre']
   },
   label: {
     description: 'The label for the album.',
@@ -67,15 +68,16 @@ const albumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  artsits: [
+  artists: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Artist'
+      ref: 'user'
     }
   ],
-  total_tracks: {
+  totalTracks: {
     description: 'The total number of tracks inside the album',
-    type: Number
+    type: Number ,
+    required:[true, 'An Album must include the total number of']
   }
 })
 
@@ -86,14 +88,14 @@ const albumSchema = new mongoose.Schema({
 // * @inner
 // * @param {string} find - populate the database before any find function
 // */
-// albumSchema.pre(/^find/, function(next) {
-//   this.populate({
-//     path: 'artists',
-//   })
+albumSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'artists',
+  })
 
-//   next()
-// })
+  next()
+})
 
-const Album = mongoose.model('Album', albumSchema)
+const Album = mongoose.model('album', albumSchema)
 
 module.exports = Album

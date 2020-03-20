@@ -18,27 +18,24 @@ const mongoose = require('mongoose')
 const trackSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'The name of the track'],
+    required: [true, "A track must have an album"],
     unique: true
   },
-  image: String,
-  type: {
-    description: 'The object type  “track” ',
-    type: String
-  },
-  uri: {
+  image: {
     type: String,
-    required: true,
-    description: 'The Spotify URI for the track.'
+    //required: [true, "A track must have an image"]
   },
-  href: {
+  type: String,
+  uri:{
     type: String,
-    required: true,
-    description: 'A link to the Web API endpoint providing full details of the track.'
+    //required: [true, "A track must have a spotify URI"]
   },
-  external_urls: {
-    description: 'an external URL object  Known external URLs for this track.',
-    type: String
+  href:{
+      type: String,
+      required: [true, "A track must have a refernce"]
+  },
+  externalUrls:{
+      type: [String]
   },
   external_ID: {
     description: 'Known external IDs for the track.',
@@ -46,33 +43,33 @@ const trackSchema = new mongoose.Schema({
   },
   trackNumber: {
     type: Number,
-    description: 'The number of the track in the album.'
+    required: [true, "A track must be ordered in the album (track Number)"]
   },
   isLocal: {
     type: Boolean,
-    description: 'A boolean that describes if the track is local or not.'
+    required: [true, "A track must have an isLocal bit"]
   },
   durationMs: {
     type: Number,
-    description: 'The duration of the track in milliseconds.'
+    required: [true, "A track must contain its duration"]
   },
   popularity: {
     type: Number,
-    description: 'The number of likes of the track.',
 	  default:0
   },
   previewUrl: {
     type: String,
     description: 'A link to 30 second preview of the track.'
+    //required: [true, "A track must have a preview URL"]
   },
   album: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Album'
+    ref: 'album'
   },
-  artist: [
+  artists: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Artist'
+      ref: 'user'
     }
   ]
 })
@@ -82,15 +79,15 @@ const trackSchema = new mongoose.Schema({
 * @function
 * @memberof module:models/trackModel
 * @inner
-* @param {string} find - populate the database before any find function
+* @param {string} find - populate the documents before any find function
 */
 trackSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'album'
   })
-  // this.populate({
-  //   path: 'artists',
-  // })
+    this.populate({    
+     path: 'artists',
+    })
 
   next()
 })

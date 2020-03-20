@@ -20,7 +20,7 @@ const APIFeatures= require('./../utils/apiFeatures')
  * mongoose model for user
  * @const
  */
-const User=require('./../models/user')
+const User=require('./../models/userModel')
 
 /**
  * mongoose module
@@ -59,13 +59,16 @@ const catchAsync=require('./../utils/catchAsync')
 exports.getArtists=catchAsync( async(req,res,next)=>{
 
     const features=new APIFeatures(User.find({artistInfo:{$exists: true}},
-        {type:0,password:0,email:0,type:0 ,resetPasswordToken:0,resetPasswordExpires:0}),req.query)
+        {type:0,password:0,email:0,resetPasswordToken:0,resetPasswordExpires:0,
+        resetPasswordToken:0, esetPasswordExpires:0,becomePremiumToken:0,becomePremiumExpires:0,
+        becomeArtistToken:0,becomeArtistExpires:0}),req.query)
         .filter()
         .sort()
         .limitFields()
         .paginate();
 
     const artists= await features.query;
+    
     res.status(200).json({
         status: "success",
         data: artists
@@ -83,8 +86,10 @@ exports.getArtists=catchAsync( async(req,res,next)=>{
 exports.getArtist= catchAsync(async (req,res,next)=>{
 
     const artist=await User.findById(req.params.id,
-        {type:0,password:0,email:0,type:0 ,resetPasswordToken:0,resetPasswordExpires:0})
-    
+        {type:0,password:0,email:0,resetPasswordToken:0,resetPasswordExpires:0,
+            resetPasswordToken:0, esetPasswordExpires:0,becomePremiumToken:0,
+            becomePremiumExpires:0,ecomeArtistToken:0,becomeArtistExpires:0})
+        
     if(artist==null || artist.artistInfo==null)
         throw (new AppError("No artist with such an ID",484))
 
@@ -115,6 +120,9 @@ exports.getRelatedArtists= catchAsync(async (req,res)=>{
 
     //removing current artist
     relatedArtists=relatedArtists.filter(el=>el.id!==artist.id)
+
+    if(relatedArtists.length==0)
+        throw (new AppError("No related artists found for this artist!",484))
     
     res.status(200).json({
         status:"sucsess",
@@ -136,15 +144,16 @@ exports.getArtistAlbums= catchAsync(async (req,res,next)=>{
     const artist=await User.findById(req.params.id)
     if(artist==null || artist.artistInfo==null)
         throw (new AppError("No artist with such an ID",484))
-
-    const features= new APIFeatures(Album.find({artists: req.params.id}),req.query)
+    
+    const features= new APIFeatures(Album.find({"artists": req.params.id}),req.query)
         .filter()
         .sort()
         .limitFields()
         .paginate()
     
     const albums=await features.query
-    if(albums==null)
+
+    if(albums.length==0)
         throw (new AppError("No albums for this artist!",484))
 
     res.status(200).json({
@@ -168,6 +177,7 @@ exports.getArtistTopTracks= catchAsync(async (req,res,next)=>{
     if(artist==null || artist.artistInfo==null)
         throw (new AppError("No artist with such an ID",484))
 
+    
     req.query.sort='-popularity'
     const features= new APIFeatures(Track.find({artists: req.params.id}),req.query)
         .filter()
@@ -177,7 +187,7 @@ exports.getArtistTopTracks= catchAsync(async (req,res,next)=>{
 
     const tracks=await features.query
 
-    if(tracks==null)
+    if(tracks.length==0)
         throw (new AppError("No tracks for artist",484))
 
     res.status(200).json({
