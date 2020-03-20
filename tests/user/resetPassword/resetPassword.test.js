@@ -64,7 +64,6 @@ describe('userController create token string functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'password'
@@ -78,14 +77,14 @@ describe('userController create token string functionality', () => {
   })
 
   // Testing creating the token string without problems
-  it('Should create the token string successfully', done => {
+  it('Should create the token string successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword'
     })
 
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.createTokenString(request, response,process.env.RESET_PASSWORD_TOKEN_SIZE, (err, req, res, token) => {
+    resetPasswordMiddleware.createTokenString(request, response, process.env.RESET_PASSWORD_TOKEN_SIZE, (err, req, res, token) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(token).toBeDefined()
@@ -106,7 +105,6 @@ describe('userController assigning token string to user functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'password'
@@ -121,7 +119,7 @@ describe('userController assigning token string to user functionality', () => {
   })
 
   // Testing successfully assigning the token to a user
-  it('Should assign the token string to an existing user successfully', done => {
+  it('Should assign the token string to an existing user successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -143,7 +141,7 @@ describe('userController assigning token string to user functionality', () => {
     })
   })
   // Testing assigning the token to a non existent user
-  it('Shouldn\'t assign the token string as it\'s an non-existent user', done => {
+  it('Shouldn\'t assign the token string as it\'s an non-existent user', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -165,7 +163,7 @@ describe('userController assigning token string to user functionality', () => {
   })
 
   // Testing getting an error when searching for user with email in db
-  it('Should receive an error when not able to search the db', done => {
+  it('Should receive an error when not able to search the db', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -196,7 +194,6 @@ describe('userController send reset password functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'password'
@@ -211,7 +208,7 @@ describe('userController send reset password functionality', () => {
   })
 
   // Testing sending the email with no problems
-  it('Should send the email successfully', done => {
+  it('Should send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -234,7 +231,7 @@ describe('userController send reset password functionality', () => {
   })
 
   // Testing failing to send the email with no problems
-  it('Shouldn\'t send the email successfully', done => {
+  it('Shouldn\'t send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -273,7 +270,6 @@ describe('userController change password after reset functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'password',
@@ -290,7 +286,7 @@ describe('userController change password after reset functionality', () => {
   })
 
   // Testing changing the password with no problems
-  it('Should change the password successfully', done => {
+  it('Should change the password successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword/atoken',
@@ -316,7 +312,7 @@ describe('userController change password after reset functionality', () => {
   })
 
   // Testing changing the password with non valid token
-  it('Shouldn\'t change the password as token in invalid', done => {
+  it('Shouldn\'t change the password as token in invalid', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword/atoken',
@@ -342,7 +338,7 @@ describe('userController change password after reset functionality', () => {
   })
 
   // Testing changing the password with non matching passwords
-  it('Shouldn\'t change passwords as passwords mismatch', done => {
+  it('Shouldn\'t change passwords as passwords mismatch', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword/atoken',
@@ -368,7 +364,7 @@ describe('userController change password after reset functionality', () => {
   })
 
   // Testing changing the password with very short passwords
-  it('Shouldn\'t change passwords as password is very short', done => {
+  it('Shouldn\'t change passwords as password is very short', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword/atoken',
@@ -394,7 +390,7 @@ describe('userController change password after reset functionality', () => {
   })
 
   // Testing changing the password with error happening searching for user
-  it('Shouldn\'t change password as error occurs when doing so', done => {
+  it('Shouldn\'t change password as error occurs when doing so', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword/atoken',
@@ -430,7 +426,6 @@ describe('userController send successfull reset password functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'password'
@@ -445,7 +440,7 @@ describe('userController send successfull reset password functionality', () => {
   })
 
   // Testing sending the email with no problems
-  it('Should send the email successfully', done => {
+  it('Should send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -467,7 +462,7 @@ describe('userController send successfull reset password functionality', () => {
   })
 
   // Testing failing to send the email confirming password reset with no problems
-  it('Shouldn\'t send the email successfully', done => {
+  it('Shouldn\'t send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -505,7 +500,6 @@ describe('userController whole send reset password email functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'password'
@@ -520,7 +514,7 @@ describe('userController whole send reset password email functionality', () => {
   })
 
   // Testing successful email to reset password
-  it('Should send 204 upon emailing to reset password', done => {
+  it('Should send 204 upon emailing to reset password', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -541,7 +535,7 @@ describe('userController whole send reset password email functionality', () => {
   })
 
   // Testing unsuccessful reset password email request
-  it('Should send error upon failing to email to reset password', done => {
+  it('Should send error upon failing to email to reset password', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -572,7 +566,6 @@ describe('userController whole reset password changing functionality', () => {
 
     // Creating the valid user to assign the token to him
     const validUser = new User({
-      id: 'idvalid',
       name: 'omar',
       email: 'omar@email.com',
       password: 'oldpassword',
@@ -589,7 +582,7 @@ describe('userController whole reset password changing functionality', () => {
   })
 
   // Testing successfully changing password via reset email
-  it('Should send 204 upon changing password (reset)', done => {
+  it('Should send 204 upon changing password (reset)', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword/atoken',
@@ -614,7 +607,7 @@ describe('userController whole reset password changing functionality', () => {
   })
 
   // Testing unsuccessful change password by reset
-  it('Should send error upon failing to change password via reset email', done => {
+  it('Should send error upon failing to change password via reset email', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
