@@ -113,7 +113,7 @@ router.post('/resetPassword/:token', userController.resetPassword)
  * @param {string} path - Becoming premium path
  * @param {callback} middleware - Become premium middleware.
  */
-router.post('/me/premium', userController.requestBecomePremium)
+router.post('/me/premium', authController.protect, authController.restrictTo('user'), userController.requestBecomePremium)
 
 /**
  * Route for confirming to become premium
@@ -124,6 +124,28 @@ router.post('/me/premium', userController.requestBecomePremium)
  * @param {string} path - Becoming premium path
  * @param {callback} middleware - Become premium middleware.
  */
-router.post('/me/premium/confirm', userController.confirmBecomePremium)
+router.post('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmBecomePremium)
+
+/**
+ * Route for requesting to cancel premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - cancel premium path
+ * @param {callback} middleware - cancel premium middleware.
+ */
+router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.requestCancelPremium)
+
+/**
+ * Route for confirming to cancel premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - cancel premium path
+ * @param {callback} middleware - cancel premium middleware.
+ */
+router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelPremium)
 
 module.exports = router
