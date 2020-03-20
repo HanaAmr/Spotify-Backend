@@ -21,6 +21,19 @@ const router = express.Router()
  * @const
  */
 const albumController = require('./../controllers/albumController')
+/**
+ * Authorization controller to call when routing.
+ * @type {object}
+ * @const
+ */
+const authController = require('./../controllers/authController')
+/**
+ * Middleware to check authorization
+ * @function
+ * @memberof module:routes/tracks~tracksRouter
+ * @inner
+ */
+router.use(authController.protect)
 
 /**
  * Route for requesting a specific album

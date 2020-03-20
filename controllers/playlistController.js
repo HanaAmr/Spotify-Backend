@@ -55,10 +55,12 @@ const AppError = require('./../utils/appError')
  * @return {JSON} The details of the playlist in a json form.
  */
 exports.getOnePlaylist = catchAsync(async (req, res, next) => {
+  
   const features = new APIFeatures(Playlist.findById(req.params.playlistId), req.query).limitField()
-  const playlist = await features.query.select('-tracks').populate({
-    path: 'trackObjects'
-  })
+  const playlist = await features.query.select('-trackObjects')//.select('-tracks').populate({
+  //   path: 'trackObjects'
+  // })
+  
 
   if (!playlist) {
     return next(new AppError('No playlist found with that ID', 404))
@@ -66,9 +68,9 @@ exports.getOnePlaylist = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
+    //data: {
       playlist
-    }
+    //}
   })
 })
 
@@ -82,18 +84,18 @@ exports.getOnePlaylist = catchAsync(async (req, res, next) => {
  */
 exports.getPlaylistImage = catchAsync(async (req, res, next) => {
   const query = Playlist.findById(req.params.playlistId)
-  const images = await query.select('images')
+  const images = await query.select('images').select('-_id')//, '-_id')
   // const images = await query
 
   if (!images) {
     return next(new AppError('This playlist has no images', 404))
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
-    data: {
+    // data: {
       images
-    }
+    //}
   })
 })
 

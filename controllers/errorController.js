@@ -1,10 +1,40 @@
-const AppError = require('./../utils/appError')
+/**
+ * errorController module.
+ * @module errorController
+ * @requires express
+ */
 
+/**
+ * Category controller to call when routing.
+ * @type {object}
+ * @const
+ * @namespace errorController
+ */
+
+/**
+ * express module
+ * AppError class file
+ * @const
+ */
+const AppError = require('./../utils/appError')
+/**
+* A function for handling Cast Errors  in production environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
 const handleCastErrorDB = err => {
   const message = `Invalid ${err.path}: ${err.value}.`
-  return new AppError(message, 400)
+  return new AppError(message, 404)
 }
-
+/**
+* A function for handling mongoose validation errors in production environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
 const handleValidationErrorDB = err => {
   const errors = Object.values(err.errors).map(el => el.message)
 
@@ -12,6 +42,13 @@ const handleValidationErrorDB = err => {
   return new AppError(message, 400)
 }
 
+/**
+* A function for handling errors in development environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -21,6 +58,13 @@ const sendErrorDev = (err, res) => {
   })
 }
 
+/**
+* A function for handling errors in production environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
 const sendErrorProd = (err, res) => { //    Operational, trusted error: send message to client
   if (err.isOperational) {
     res.status(err.statusCode).json({
@@ -28,7 +72,7 @@ const sendErrorProd = (err, res) => { //    Operational, trusted error: send mes
       message: err.message
     })
   } else {
-    console.error('ERROR ', err)
+    //console.error('ERROR ', err)
     res.status(500).json({
       status: 'error',
       message: 'Something went wrong!'
@@ -55,13 +99,13 @@ module.exports = (err, req, res, next) => {
 
     if (error.name === 'CastError') {
       error = handleCastErrorDB(error)
-      sendErrorProd(error, res)
+      return sendErrorProd(error, res)
     }
     if (error.name === 'ValidationError') {
       error = handleValidationErrorDB(error)
-      sendErrorProd(error, res)
+      return sendErrorProd(error, res)
     }
 
-    sendErrorProd(err, res)
+    return sendErrorProd(err, res)
   }
 }
