@@ -17,8 +17,8 @@ const albumRouter = require('./routes/albumRoutes.js')
 
 
 // Mounting the Routers
-app.use('/', userRouter)
-app.use('Artists', artistRouter)
+app.use('/api/v1/', userRouter)
+app.use('/api/v1/artists', artistRouter)
 app.use('/api/v1/browse/categories', categoryRouter) //   act as middleware for this route only
 app.use('/api/v1/playlists', playlistRouter)
 app.use('/api/v1/tracks', trackRouter)
