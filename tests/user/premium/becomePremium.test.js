@@ -1,4 +1,4 @@
-/** Jest unit testing for resettig the password
+/** Jest unit testing for becoming premium
  * @module routes/users
  * @requires express
  */
@@ -30,6 +30,13 @@ const mongoose = require('mongoose')
 
 /**
  * express module
+ * jwt for tokens
+ * @const
+ */
+const jwt = require('jsonwebtoken')
+
+/**
+ * express module
  * User model from the database
  * @const
  */
@@ -44,20 +51,19 @@ const userController = require('../../../controllers/userController')
 
 /**
  * express module
- * User middleware: reset password
+ * User middleware: Premium
  * @const
  */
-const resetPasswordMiddleware = require('../../../middleware/user/resetPassword')
+const premiumMiddleware = require('../../../middleware/user/premium')
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
 if (process.env.NODE_ENV === 'test') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 } else {
-  throw new Error('Can\'t connect to db, make sure you run in test environment!')
+  throw new Error('Can\'t connect to db, make sure you run in test environment!' + process.env.NODE_ENV)
 }
 
-sinon.stub('')
 // Testing userController create token string function
 describe('userController create token string functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
@@ -82,11 +88,11 @@ describe('userController create token string functionality', () => {
   it('Should create the token string successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword'
+      url: '/me/premium'
     })
 
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.createTokenString(request, response, process.env.RESET_PASSWORD_TOKEN_SIZE, (err, req, res, token) => {
+    premiumMiddleware.createTokenString(request, response, process.env.PREM_CONF_CODE_SIZE, (err, req, res, token) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(token).toBeDefined()
@@ -98,13 +104,14 @@ describe('userController create token string functionality', () => {
   })
 })
 
-// Testing assigning the token string for resetting password to a user
-describe('userController assigning token string to user functionality', () => {
+// Testing assigning the config code for becoming premium to user
+describe('userController assigning config code to user functionality', () => {
+  // the authorization token needed to test
+  var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
     await mongoose.connection.collection('users').deleteMany({})
-
     // Creating the valid user to assign the token to him
     const validUser = new User({
       name: 'omar',
@@ -120,63 +127,71 @@ describe('userController assigning token string to user functionality', () => {
     await mongoose.connection.collection('users').deleteMany({})
   })
 
-  // Testing successfully assigning the token to a user
-  it('Should assign the token string to an existing user successfully', async (done) => {
+  // Testing successfully assigning the config code to a user
+  it('Should assign the confiramtion code to an existing user successfully', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword',
-      body: {
-        email: 'omar@email.com'
+      url: '/me/premium',
+      headers: {
+        authorization: 'Bearer '+authToken
       }
     })
     const response = httpMocks.createResponse()
-    const token = 'atoken'
-    resetPasswordMiddleware.assignResetToken(request, response, token, (err, req, res, token, user) => {
+    const code = 'atoken'
+    premiumMiddleware.assignPremiumConfirmCode(request, response, code, (err, req, res, code, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(user).toBeDefined()
-        expect(user.resetPasswordToken).toEqual(token)
+        expect(user.becomePremiumToken).toEqual(code)
         done()
       } catch (error) {
         done(error)
       }
     })
   })
-  // Testing assigning the token to a non existent user
-  it('Shouldn\'t assign the token string as it\'s an non-existent user', async (done) => {
-    const request = httpMocks.createRequest({
-      method: 'POST',
-      url: '/resetPassword',
-      body: {
-        email: 'omar22@email.com'
-      }
-    })
-    const response = httpMocks.createResponse()
-    const token = 'atoken'
-    resetPasswordMiddleware.assignResetToken(request, response, token, (err, req, res, token, user) => {
-      try {
-        expect(err).toEqual(expect.anything())
-        expect(err.statusCode).toEqual(404)
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-  })
+  // TODO: Testing assigning the config code to a non existent user
+  // it('Shouldn\'t assign the code as it\'s an non-existent user', async (done) => {
+  //   // Creating a fake string to use instead of ID in sign function
+  //   const randomString = 'not a valid token'
+  //   authToken = jwt.sign({ randomString }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+  //   const request = httpMocks.createRequest({
+  //     method: 'POST',
+  //     url: '/me/premium',
+  //     headers: {
+  //       authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNzRkOGZjMzY4NWM0NDBmMWNjYjg1ZiIsImlhdCI6MTU4NDcxNjAyOCwiZXhwIjoxNTg3MzA4MDI4fQ.Bi_HC9WLnRcniqiFNV1w9zApK0KvbFc1aHcHabTtFg0' //fake token
+  //     }
+  //   })
+  //   const response = httpMocks.createResponse()
+  //   const code = 'atoken'
+  //   premiumMiddleware.assignPremiumConfirmCode(request, response, code, (err, req, res, code, user) => {
+  //     try {
+  //       expect(err).toEqual(expect.anything())
+  //       expect(err.statusCode).toEqual(404)
+  //       done()
+  //     } catch (error) {
+  //       done(error)
+  //     }
+  //   })
+  // })
 
-  // Testing getting an error when searching for user with email in db
+  // Testing getting an error when searching for user with auth token in db
   it('Should receive an error when not able to search the db', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword',
-      body: {
-        email: 'omar@email.com'
+      url: '/me/premium',
+      headers: {
+        authorization: 'Bearer '+authToken
       }
     })
     const response = httpMocks.createResponse()
-    const token = 'atoken'
+    const code = 'atoken'
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    resetPasswordMiddleware.assignResetToken(request, response, token, (err, req, res, token, user) => {
+    premiumMiddleware.assignPremiumConfirmCode(request, response, code, (err, req, res, code, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(500)
@@ -186,9 +201,13 @@ describe('userController assigning token string to user functionality', () => {
       }
     })
   })
+
 })
-// Testing userController send reset password email
-describe('userController send reset password functionality', () => {
+
+// Testing userController send premium confirmation code email
+describe('userController send premium confirmation code mail functionality', () => {
+  // the authorization token needed to test
+  var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
@@ -213,16 +232,16 @@ describe('userController send reset password functionality', () => {
   it('Should send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword',
+      url: '/me/premium',
       headers: {
-        host: 'dummyhost'
+        authorization: 'Bearer '+authToken
       }
     })
 
     const user = { email: 'omar@email.com' }
     const token = 'atoken'
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.sendResetPasswordMail(request, response, token, user, (err) => {
+    premiumMiddleware.sendPremiumConfirmCodeMail(request, response, token, user, (err) => {
       try {
         expect(err).not.toEqual(expect.anything())
         done()
@@ -236,9 +255,9 @@ describe('userController send reset password functionality', () => {
   it('Shouldn\'t send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword',
+      url: '/me/premium',
       headers: {
-        host: 'dummyhost'
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -252,7 +271,7 @@ describe('userController send reset password functionality', () => {
     const user = { email: 'omar@email.com' }
     const token = 'atoken'
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.sendResetPasswordMail(request, response, token, user, (err) => {
+    premiumMiddleware.sendPremiumConfirmCodeMail(request, response, token, user, (err) => {
       try {
         expect(err.statusCode).toEqual(502)
         done()
@@ -263,8 +282,11 @@ describe('userController send reset password functionality', () => {
   })
 })
 
-// Testing userController change password after reset
-describe('userController change password after reset functionality', () => {
+
+// Testing userController change user role after confirming premium code
+describe('userController change user role after confirming premium code', () => {
+  // the authorization token needed to test
+  var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
@@ -275,8 +297,8 @@ describe('userController change password after reset functionality', () => {
       name: 'omar',
       email: 'omar@email.com',
       password: 'password',
-      resetPasswordToken: 'atoken',
-      resetPasswordExpires: Date.now() + 360000
+      becomePremiumToken: 'atoken',
+      becomePremiumExpires: Date.now() + 360000
     })
     await validUser.save()
   })
@@ -287,25 +309,29 @@ describe('userController change password after reset functionality', () => {
     await mongoose.connection.collection('users').deleteMany({})
   })
 
-  // Testing changing the password with no problems
-  it('Should change the password successfully', async (done) => {
+  // Testing changing the role with valid confirmation code
+  it('Should change the role to premium successfully', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword/atoken',
+      url: '/me/premium/atoken',
       params: {
-        token: 'atoken'
+        confirmationCode: 'atoken'
       },
-      body: {
-        newPassword: 'password',
-        passwordConfirmation: 'password'
+      headers: {
+        authorization: 'Bearer '+authToken
       }
     })
 
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.resetChangePassword(request, response, (err, req, res, user) => {
+    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
-        expect(user.resetPasswordToken).not.toEqual(expect.anything)
+        expect(user.becomePremiumToken).not.toEqual(expect.anything)
         done()
       } catch (error) {
         done(error)
@@ -313,22 +339,26 @@ describe('userController change password after reset functionality', () => {
     })
   })
 
-  // Testing changing the password with non valid token
-  it('Shouldn\'t change the password as token in invalid', async (done) => {
+  // Testing changing the role to premium with non valid confirmation code
+  it('Shouldn\'t change the role as confirmation code is invalid', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword/atoken',
+      url: '/me/premium/atoken',
       params: {
-        token: 'atokensdsd'
+        confirmationCode: 'atokensdsd'
       },
-      body: {
-        newPassword: 'password',
-        passwordConfirmation: 'password'
+      headers: {
+        authorization: 'Bearer '+authToken
       }
     })
 
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.resetChangePassword(request, response, (err, req, res, user) => {
+    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(404)
@@ -339,25 +369,27 @@ describe('userController change password after reset functionality', () => {
     })
   })
 
-  // Testing changing the password with non matching passwords
-  it('Shouldn\'t change passwords as passwords mismatch', async (done) => {
+  // Testing changing the role to premium with no confirmation code
+  it('Shouldn\'t change the role as no code is provided', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword/atoken',
-      params: {
-        token: 'atoken'
-      },
-      body: {
-        newPassword: 'passwordsss',
-        passwordConfirmation: 'password'
+      url: '/me/premium/atoken',
+      params: {      },
+      headers: {
+        authorization: 'Bearer '+authToken
       }
     })
 
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.resetChangePassword(request, response, (err, req, res, user) => {
+    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
-        expect(err.statusCode).toEqual(403)
+        expect(err.statusCode).toEqual(404)
         done()
       } catch (error) {
         done(error)
@@ -365,50 +397,29 @@ describe('userController change password after reset functionality', () => {
     })
   })
 
-  // Testing changing the password with very short passwords
-  it('Shouldn\'t change passwords as password is very short', async (done) => {
+  // Testing changing the role with error happening searching for user
+  it('Shouldn\'t change role as error occurs when doing so', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword/atoken',
+      url: '/me/premium/atoken',
       params: {
-        token: 'atoken'
+        confirmationCode: 'atoken'
       },
-      body: {
-        newPassword: 'ok',
-        passwordConfirmation: 'ok'
-      }
-    })
-
-    const response = httpMocks.createResponse()
-    resetPasswordMiddleware.resetChangePassword(request, response, (err, req, res, user) => {
-      try {
-        expect(err).toEqual(expect.anything())
-        expect(err.statusCode).toEqual(403)
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-  })
-
-  // Testing changing the password with error happening searching for user
-  it('Shouldn\'t change password as error occurs when doing so', async (done) => {
-    const request = httpMocks.createRequest({
-      method: 'POST',
-      url: '/resetPassword/atoken',
-      params: {
-        token: 'atoken'
-      },
-      body: {
-        newPassword: 'passwordsss',
-        passwordConfirmation: 'password'
+      headers: {
+        authorization: 'Bearer '+authToken
       }
     })
 
     const response = httpMocks.createResponse()
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    resetPasswordMiddleware.resetChangePassword(request, response, (err, req, res, user) => {
+    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
       try {
+        console.log(err)
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(500)
         done()
@@ -417,10 +428,15 @@ describe('userController change password after reset functionality', () => {
       }
     })
   })
+
+
 })
 
-// Testing userController send password successfull reset email
-describe('userController send successfull reset password functionality', () => {
+
+// Testing userController send successfull premium confirmation email
+describe('userController send successfull premium confirmation email', () => {
+  // the authorization token needed to test
+  var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     sinon.restore()
@@ -445,7 +461,8 @@ describe('userController send successfull reset password functionality', () => {
   it('Should send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword',
+      url: '/me/premium/atoken',
+      params : { confirmationCode : 'atoken'},
       headers: {
         host: 'dummyhost'
       }
@@ -453,7 +470,7 @@ describe('userController send successfull reset password functionality', () => {
 
     const user = { email: 'omar@email.com' }
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.sendSuccPasswordResetMail(request, response, user, (err) => {
+    premiumMiddleware.sendSuccPremiumMail(request, response, user, (err) => {
       try {
         expect(err).not.toEqual(expect.anything())
         done()
@@ -463,11 +480,12 @@ describe('userController send successfull reset password functionality', () => {
     })
   })
 
-  // Testing failing to send the email confirming password reset with no problems
+  // Testing failing to send the email confirming becoming premium
   it('Shouldn\'t send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
-      url: '/resetPassword',
+      url: '/me/premium/atoken',
+      params: { confirmationCode: 'atoken'},
       headers: {
         host: 'dummyhost'
       }
@@ -482,7 +500,7 @@ describe('userController send successfull reset password functionality', () => {
     sinon.stub(userController.nodemailer, 'createTransport').returns(transport)
     const user = { email: 'omar@email.com' }
     const response = httpMocks.createResponse()
-    resetPasswordMiddleware.sendSuccPasswordResetMail(request, response, user, (err) => {
+    premiumMiddleware.sendSuccPremiumMail(request, response, user, (err) => {
       try {
         expect(err.statusCode).toEqual(502)
         done()
@@ -494,8 +512,10 @@ describe('userController send successfull reset password functionality', () => {
 })
 
 //TODO:
-// Testing userController whole send reset password email functionality
-// describe('userController whole send reset password email functionality', () => {
+// Testing userController whole request to become premium functionality
+// describe('userController whole request to become premium functionality', () => {
+//   // the authorization token needed to test
+//   var authToken = 'testToken'
 //   // Drop the whole users collection before testing and add a simple user to test with
 //   beforeEach(async () => {
 //     sinon.restore()
@@ -516,46 +536,38 @@ describe('userController send successfull reset password functionality', () => {
 //     await mongoose.connection.collection('users').deleteMany({})
 //   })
 
-//   // Testing successful email to reset password
-//   it('Should send 204 upon emailing to reset password', async (done) => {
+//   // Testing successful email with premium confirmation code
+//   it('Should send 204 upon emailing user with confirmation code for premium role', async (done) => {
+//     // get the id of the document in the db to use it to get authorization token
+//     await User.findOne({}, (err, user) => {
+//       const id = user._id
+//       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+//     })
 //     const request = httpMocks.createRequest({
 //       method: 'POST',
-//       url: '/resetPassword',
-//       body: {
-//         email: 'omar@email.com'
+//       url: '/me/premium',
+//       headers: {
+//         authorization: 'Bearer '+authToken 
 //       }
 //     })
 
 //     const response = httpMocks.createResponse()
-//      await userController.requestResetPassword(request, response)
-//      expect(response.statusCode).toEqual(204)
-//   })
-
-//   // Testing unsuccessful reset password email request
-//   it('Should send error upon failing to email to reset password', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'POST',
-//       url: '/resetPassword',
-//       body: {
-//         email: 'omar22@email.com'
-//       }
-//     })
-
-//     const response = httpMocks.createResponse()
-//     userController.requestResetPassword(request, response, (err) => {
+//     userController.requestBecomePremium(request, response, (err) => {
 //       try {
-//         expect(err).toEqual(expect.anything())
-//         expect(err.statusCode).toEqual(404) // We're sending an unvalid email, so 404 not found would be returned from one of the middlewares.
+//         expect(response.statusCode).toEqual(204)
 //         done()
 //       } catch (error) {
 //         done(error)
 //       }
 //     })
 //   })
+
 // })
 
-// // TODO: Testing userController whole reset password changing functionality 
-// describe('userController whole reset password changing functionality', () => {
+// // Testing userController whole request to confirm premium with code functionality
+// describe('userController whole request to confirm premium with code functionality', () => {
+//   // the authorization token needed to test
+//   var authToken = 'testToken'
 //   // Drop the whole users collection before testing and add a simple user to test with
 //   beforeEach(async () => {
 //     sinon.restore()
@@ -565,9 +577,9 @@ describe('userController send successfull reset password functionality', () => {
 //     const validUser = new User({
 //       name: 'omar',
 //       email: 'omar@email.com',
-//       password: 'oldpassword',
-//       resetPasswordToken: 'atoken',
-//       resetPasswordExpires: Date.now() + 36000
+//       password: 'password',
+//       becomePremiumToken: 'atoken',
+//       becomePremiumExpires: Date.now() + 360000
 //     })
 //     await validUser.save()
 //   })
@@ -578,40 +590,53 @@ describe('userController send successfull reset password functionality', () => {
 //     await mongoose.connection.collection('users').deleteMany({})
 //   })
 
-//   // Testing successfully changing password via reset email
-//   it('Should send 204 upon changing password (reset)', async (done) => {
+//   // Testing successful email with premium confirmation code
+//   it('Should send 204 upon emailing user with confirmation code for premium role', async (done) => {
+//     // get the id of the document in the db to use it to get authorization token
+//     await User.findOne({}, (err, user) => {
+//       const id = user._id
+//       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+//     })
 //     const request = httpMocks.createRequest({
 //       method: 'POST',
-//       url: '/resetPassword/atoken',
+//       url: '/me/premium/atoken',
 //       params: {
-//         token: 'atoken'
+//         confirmationCode: 'atoken'
 //       },
-//       body: {
-//         newPassword: 'password',
-//         passwordConfirmation: 'password'
+//       headers: {
+//         authorization: 'Bearer '+authToken
 //       }
 //     })
 
 //     const response = httpMocks.createResponse()
-//     userController.resetPassword(request, response)
-//     expect(response.statusCode).toEqual(204)
+//     userController.confirmBecomePremium(request, response, (err) => {
+//       try {
+//         expect(response.statusCode).toEqual(204)
+//         done()
+//       } catch (error) {
+//         done(error)
+//       }
+//     })
 //   })
 
-//   // Testing unsuccessful change password by reset
-//   it('Should send error upon failing to change password via reset email', async (done) => {
+//   // Testing unsuccessful become premium request (wrong code is sent is reason for error here)
+//   it('Should send error upon failing to email to become premium', async (done) => {
 //     const request = httpMocks.createRequest({
 //       method: 'POST',
-//       url: '/resetPassword',
-//       body: {
-//         email: 'omar22@email.com'
+//       url: '/me/premium/atoken',
+//       params: {
+//         confirmationCode: 'atsoken'
+//       },
+//       headers: {
+//         authorization: 'Bearer '+authToken
 //       }
 //     })
 
 //     const response = httpMocks.createResponse()
-//     userController.resetPassword(request, response, (err) => {
+//     userController.confirmBecomePremium(request, response, (err) => {
 //       try {
 //         expect(err).toEqual(expect.anything())
-//         expect(err.statusCode).toEqual(404)// We're sending an invalid email, so 404 not found would be returned from one of the middlewares.
+//         expect(err.statusCode).toEqual(404) // We're sending without an authorization token, so we get 401 unauthorized error code.
 //         done()
 //       } catch (error) {
 //         done(error)

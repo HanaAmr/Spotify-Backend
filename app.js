@@ -8,21 +8,21 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'get is successful el7', app: 'spotifycufe' })
 })
 
+const userRouter = require('./routes/userRouters')
+const artistRouter = require('./routes/artistRouters')
 const categoryRouter = require('./routes/categoryRoutes')
 const playlistRouter = require('./routes/playlistRoutes')
 const trackRouter = require('./routes/trackRoutes')
 const albumRouter = require('./routes/albumRoutes.js')
-const usersRouter = require('./routes/users');
-const artistRouter=require('./routes/artistRouters')
 
 
 // Mounting the Routers
+app.use('/api/v1/', userRouter)
+app.use('/api/v1/artists', artistRouter)
 app.use('/api/v1/browse/categories', categoryRouter) //   act as middleware for this route only
 app.use('/api/v1/playlists', playlistRouter)
 app.use('/api/v1/tracks', trackRouter)
 app.use('/api/v1/albums', albumRouter)
-app.use('/', usersRouter)
-app.use('/Artists',artistRouter)
 
 //Middlewares
 //after all handeled routes
