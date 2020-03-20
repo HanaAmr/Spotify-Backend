@@ -152,6 +152,48 @@ const confirmBecomePremium = function (req, res, next) {
   })
 }
 
+/**
+ * A function that is used to cancel premium subscription.
+ * @memberof module:controllers/users~userController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ */
+const requestCancelPremium = function (req, res, next) {
+  // Calling asynchronous functions one after another
+  // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
+  async.waterfall([async.apply(premiumMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE), premiumMiddleware.assignPremiumCancelCode, premiumMiddleware.sendPremiumCancelCodeMail], (err) => {
+    // If we catch an internal server error, update the resond and create error object to send
+    if (err) {
+      return next(err)
+    } else { // If everything is fine, send an empty body code 204.
+      res.status(204).send()
+      next(null)
+    }
+  })
+}
+
+/**
+ * A function that is used to check for the cancellation code to make the user a normal one.
+ * @memberof module:controllers/users~userController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ */
+const confirmCancelPremium = function (req, res, next) {
+  // Calling asynchronous functions one after another
+  // At first we change the password if valid, then send an email informing the user.
+  async.waterfall([async.apply(premiumMiddleware.changeRoleToUser, req, res), premiumMiddleware.sendSuccPremiumCancelMail], (err) => {
+    // If we catch an internal server error
+    if (err) {
+      return next(err)
+    } else {
+      res.status(204).send()
+      next(null)
+    }
+  })
+}
+
 
 
 
@@ -163,7 +205,9 @@ userController.prodExports = {
 requestResetPassword : requestResetPassword,
 resetPassword : resetPassword,
 requestBecomePremium: requestBecomePremium,
-confirmBecomePremium: confirmBecomePremium
+confirmBecomePremium: confirmBecomePremium,
+requestCancelPremium: requestCancelPremium,
+confirmCancelPremium: confirmCancelPremium
 }
 // Exporting the functions needed for unit testing
 userController.testExports = {
@@ -171,9 +215,10 @@ resetPassword : resetPassword,
 requestResetPassword: requestResetPassword,
 requestBecomePremium: requestBecomePremium,
 confirmBecomePremium: confirmBecomePremium,
+requestCancelPremium: requestCancelPremium,
+confirmCancelPremium: confirmCancelPremium,
 nodemailer: nodemailer
 }
-
 
 const exported = process.env.NODE_ENV==='test' ? userController.testExports : userController.prodExports
 module.exports = exported
