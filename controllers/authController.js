@@ -177,7 +177,7 @@ exports.restrictTo = (...roles) => {
 * @memberof module:controllers/authController
 * @param {String} token - The token string.
 */
-exports.getUserId = (async (req, next) => {
+exports.getUserId = catchAsync( async (async (req, next) => {
   //get token and check if it exists
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
@@ -191,4 +191,4 @@ exports.getUserId = (async (req, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   userId = decoded.id
   next(userId)
-})
+}))
