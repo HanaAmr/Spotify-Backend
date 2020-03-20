@@ -8,7 +8,7 @@
  * User model from the database
  * @const
  */
-const User = require('../../models/user')
+const User = require('../../models/userModel')
 
 /**
  * express module

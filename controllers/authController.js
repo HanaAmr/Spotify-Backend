@@ -15,7 +15,7 @@ const { promisify } = require('util');
  * user object
  * @const
  */
-const User = require('../models/user');
+const User = require('../models/userModel');
 
 /**
  * express module

@@ -15,7 +15,7 @@
  * User model from the database
  * @const
  */
-const User = require('../models/user')
+const User = require('../models/userModel')
 /**
  * express module
  * Async functions
@@ -80,8 +80,8 @@ const requestResetPassword = function (req, res, next) {
     if (err) {
       return next(err)
     } else { // If everything is fine, send an empty body code 204.
-      res.status(204).send()
-      next(null)
+      res.status(204)
+      next()
     }
   })
 }
@@ -103,8 +103,8 @@ const resetPassword = function (req, res, next) {
     if (err) {
       return next(err)
     } else {
-      res.status(204).send()
-      next(null)
+      res.status(204)
+      next()
     }
   })
 }
@@ -125,8 +125,8 @@ const requestBecomePremium = function (req, res, next) {
     if (err) {
       return next(err)
     } else { // If everything is fine, send an empty body code 204.
-      res.status(204).send()
-      next(null)
+      res.status(204)
+      next()
     }
   })
 }
@@ -146,8 +146,8 @@ const confirmBecomePremium = function (req, res, next) {
     if (err) {
       return next(err)
     } else {
-      res.status(204).send()
-      next(null)
+      res.status(204)
+      next()
     }
   })
 }
@@ -167,8 +167,8 @@ const requestCancelPremium = function (req, res, next) {
     if (err) {
       return next(err)
     } else { // If everything is fine, send an empty body code 204.
-      res.status(204).send()
-      next(null)
+      res.status(204)
+      next()
     }
   })
 }
@@ -188,8 +188,8 @@ const confirmCancelPremium = function (req, res, next) {
     if (err) {
       return next(err)
     } else {
-      res.status(204).send()
-      next(null)
+      res.status(204)
+      next()
     }
   })
 }
