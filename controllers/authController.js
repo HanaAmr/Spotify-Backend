@@ -15,7 +15,7 @@ const { promisify } = require('util');
  * user object
  * @const
  */
-const User = require('../models/user');
+const User = require('../models/userModel');
 
 /**
  * express module
@@ -52,17 +52,17 @@ const signToken = id => {
 * @param {next} - The next function in the middleware
 */
 exports.signUp = catchAsync (async (req, res, next) => {
- const newUser = await User.create(req.body);   //edit body
- 
- const token = signToken(newUser._id);
-
+  const newUser = await User.create(req.body);   //edit body
+  
+  const token = signToken(newUser._id);
+    
   res.status(200).json({
     status: 'Success',
     token,
     data: {
       success: true
     }    
-  });
+ });
 });
 
 /**
@@ -102,12 +102,14 @@ exports.signIn = catchAsync(async (req, res, next) => {
         return next(new AppError('Please provide email or password!', 400));
     }
     
-    const tempUser = await User.findOne({email}).select('+password');
-    const correct = await tempUser.correctPassword(password, tempUser.password);
-    
     //check if email and password are correct
-    if(!tempUser || !correct){
-      return next(new AppError('Incorrect email or password!', 401));
+    const tempUser = await User.findOne({email}).select('+password');
+    if(!tempUser){
+      return next(new AppError('Incorrect email!', 401));
+    }
+    const correct = await tempUser.correctPassword(password, tempUser.password);
+    if(!correct){
+      return next(new AppError('Incorrect password!', 401));
     }
     
     //generate and send token
@@ -143,7 +145,7 @@ exports.protect = catchAsync (async (req, res, next) => {
     }
     
     //verification of token
-    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);  //error handling
     
     //check if user still exists
     const freshUser = await User.findById(decoded.id);
@@ -177,7 +179,27 @@ exports.restrictTo = (...roles) => {
 * @memberof module:controllers/authController
 * @param {String} token - The token string.
 */
-exports.getUserId = (async (token) => {
-  const userId = jwt.decode(token)
-  return userId
+
+exports.createUser = catchAsync (async (name, email, password) => {
+  const newUser = await User.create({
+    name: name,
+    email: email,
+    password: password
+  });
+  return newUser
 })
+exports.getUserId = catchAsync( (async (req, next) => {
+  //get token and check if it exists
+  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  
+  if(!token) {
+    return next(new AppError('You are not logged in! Please log in to access.', 401));
+  }
+  
+  //verification of token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  userId = decoded.id
+  next(userId)
+}))

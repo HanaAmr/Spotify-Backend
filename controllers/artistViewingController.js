@@ -20,7 +20,7 @@ const APIFeatures= require('./../utils/apiFeatures')
  * mongoose model for user
  * @const
  */
-const User=require('./../models/user')
+const User=require('./../models/userModel')
 
 /**
  * mongoose module
