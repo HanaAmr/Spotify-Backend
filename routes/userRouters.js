@@ -74,8 +74,9 @@ router.post('/signupWithFacebook', authController.signUp)
 * @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - Sign in middleware.
 */
-router.post('/signIn', authController.signIn)
-// router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
+router.post('/signIn', authController.signIn);
+//router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
+
 
 // POST request to reset the password by email.
 
@@ -101,6 +102,7 @@ router.post('/resetPassword', userController.requestResetPassword)
  * @param {callback} middleware - Reset Password middleware.
  */
 router.post('/resetPassword/:token', userController.resetPassword)
+
 
 /**
  * Route for requesting to become premium

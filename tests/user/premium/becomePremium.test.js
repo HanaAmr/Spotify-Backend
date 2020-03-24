@@ -138,7 +138,7 @@ describe('userController assigning config code to user functionality', () => {
       method: 'POST',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
     const response = httpMocks.createResponse()
@@ -185,7 +185,7 @@ describe('userController assigning config code to user functionality', () => {
       method: 'POST',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
     const response = httpMocks.createResponse()
@@ -201,6 +201,7 @@ describe('userController assigning config code to user functionality', () => {
       }
     })
   })
+
 })
 
 // Testing userController send premium confirmation code email
@@ -233,7 +234,7 @@ describe('userController send premium confirmation code mail functionality', () 
       method: 'POST',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -256,7 +257,7 @@ describe('userController send premium confirmation code mail functionality', () 
       method: 'POST',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -280,6 +281,7 @@ describe('userController send premium confirmation code mail functionality', () 
     })
   })
 })
+
 
 // Testing userController change user role after confirming premium code
 describe('userController change user role after confirming premium code', () => {
@@ -321,7 +323,7 @@ describe('userController change user role after confirming premium code', () => 
         confirmationCode: 'atoken'
       },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -351,7 +353,7 @@ describe('userController change user role after confirming premium code', () => 
         confirmationCode: 'atokensdsd'
       },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -377,9 +379,9 @@ describe('userController change user role after confirming premium code', () => 
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/premium/atoken',
-      params: { },
+      params: {      },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -409,7 +411,7 @@ describe('userController change user role after confirming premium code', () => 
         confirmationCode: 'atoken'
       },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -426,7 +428,10 @@ describe('userController change user role after confirming premium code', () => 
       }
     })
   })
+
+
 })
+
 
 // Testing userController send successfull premium confirmation email
 describe('userController send successfull premium confirmation email', () => {
@@ -457,7 +462,7 @@ describe('userController send successfull premium confirmation email', () => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/premium/atoken',
-      params: { confirmationCode: 'atoken' },
+      params : { confirmationCode : 'atoken'},
       headers: {
         host: 'dummyhost'
       }
@@ -480,7 +485,7 @@ describe('userController send successfull premium confirmation email', () => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/premium/atoken',
-      params: { confirmationCode: 'atoken' },
+      params: { confirmationCode: 'atoken'},
       headers: {
         host: 'dummyhost'
       }
@@ -506,7 +511,7 @@ describe('userController send successfull premium confirmation email', () => {
   })
 })
 
-// TODO:
+//TODO:
 // Testing userController whole request to become premium functionality
 // describe('userController whole request to become premium functionality', () => {
 //   // the authorization token needed to test
@@ -542,7 +547,7 @@ describe('userController send successfull premium confirmation email', () => {
 //       method: 'POST',
 //       url: '/me/premium',
 //       headers: {
-//         authorization: 'Bearer '+authToken
+//         authorization: 'Bearer '+authToken 
 //       }
 //     })
 

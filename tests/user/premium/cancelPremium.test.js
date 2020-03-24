@@ -133,14 +133,14 @@ describe('userController assigning cancellation code to user functionality', () 
     await User.findOne({}, async (err, user) => {
       const id = user._id
       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      user.role = 'premium' // make the test user premium
-      await user.save() // save change to become premium
+      user.role = 'premium' //make the test user premium
+      await user.save() //save change to become premium
     })
     const request = httpMocks.createRequest({
       method: 'DELETE',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
     const response = httpMocks.createResponse()
@@ -188,7 +188,7 @@ describe('userController assigning cancellation code to user functionality', () 
       method: 'DELETE',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+ authToken
       }
     })
     const response = httpMocks.createResponse()
@@ -205,6 +205,8 @@ describe('userController assigning cancellation code to user functionality', () 
     })
   })
 })
+
+
 
 // Testing userController send premium cancellation code email
 describe('userController send premium cancellation code mail functionality', () => {
@@ -236,7 +238,7 @@ describe('userController send premium cancellation code mail functionality', () 
       method: 'DELETE',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -259,7 +261,7 @@ describe('userController send premium cancellation code mail functionality', () 
       method: 'DELETE',
       url: '/me/premium',
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -284,7 +286,8 @@ describe('userController send premium cancellation code mail functionality', () 
   })
 })
 
-// Testing userController change user role after cancellation premium
+
+// Testing userController change user role after cancellation premium 
 describe('userController change user role after cancellation premium ', () => {
   // the authorization token needed to test
   var authToken = 'testToken'
@@ -324,7 +327,7 @@ describe('userController change user role after cancellation premium ', () => {
         confirmationCode: 'atoken'
       },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -354,7 +357,7 @@ describe('userController change user role after cancellation premium ', () => {
         confirmationCode: 'atokensdsd'
       },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -380,9 +383,9 @@ describe('userController change user role after cancellation premium ', () => {
     const request = httpMocks.createRequest({
       method: 'DELETE',
       url: '/me/premium/atoken',
-      params: { },
+      params: {      },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -412,7 +415,7 @@ describe('userController change user role after cancellation premium ', () => {
         confirmationCode: 'atoken'
       },
       headers: {
-        authorization: 'Bearer ' + authToken
+        authorization: 'Bearer '+authToken
       }
     })
 
@@ -430,6 +433,7 @@ describe('userController change user role after cancellation premium ', () => {
     })
   })
 })
+
 
 // Testing userController send successfull premium cancellation email
 describe('userController send successfull premium cancellation email', () => {
@@ -460,7 +464,7 @@ describe('userController send successfull premium cancellation email', () => {
     const request = httpMocks.createRequest({
       method: 'DELETE',
       url: '/me/premium/atoken',
-      params: { confirmationCode: 'atoken' },
+      params : { confirmationCode : 'atoken'},
       headers: {
         host: 'dummyhost'
       }
@@ -483,7 +487,7 @@ describe('userController send successfull premium cancellation email', () => {
     const request = httpMocks.createRequest({
       method: 'DELETE',
       url: '/me/premium/atoken',
-      params: { confirmationCode: 'atoken' },
+      params: { confirmationCode: 'atoken'},
       headers: {
         host: 'dummyhost'
       }
@@ -509,7 +513,7 @@ describe('userController send successfull premium cancellation email', () => {
   })
 })
 
-// TODO:
+//TODO:
 // Testing userController whole request to cancel premium functionality
 // describe('userController whole request to cancel premium functionality', () => {
 //   // the authorization token needed to test
@@ -547,7 +551,7 @@ describe('userController send successfull premium cancellation email', () => {
 //       method: 'DELETE',
 //       url: '/me/premium',
 //       headers: {
-//         authorization: authToken
+//         authorization: authToken 
 //       }
 //     })
 

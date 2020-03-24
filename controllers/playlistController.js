@@ -55,10 +55,12 @@ const AppError = require('./../utils/appError')
  * @return {JSON} The details of the playlist in a json form.
  */
 exports.getOnePlaylist = catchAsync(async (req, res, next) => {
+  
   const features = new APIFeatures(Playlist.findById(req.params.playlistId), req.query).limitField()
-  const playlist = await features.query.select('-trackObjects')// .select('-tracks').populate({
+  const playlist = await features.query.select('-trackObjects')//.select('-tracks').populate({
   //   path: 'trackObjects'
   // })
+  
 
   if (!playlist) {
     return next(new AppError('No playlist found with that ID', 404))
@@ -66,9 +68,9 @@ exports.getOnePlaylist = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    // data: {
-    playlist
-    // }
+    //data: {
+      playlist
+    //}
   })
 })
 
@@ -92,8 +94,8 @@ exports.getPlaylistImage = catchAsync(async (req, res, next) => {
   return res.status(200).json({
     status: 'success',
     // data: {
-    images
-    // }
+      images
+    //}
   })
 })
 

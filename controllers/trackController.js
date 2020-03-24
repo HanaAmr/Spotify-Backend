@@ -32,6 +32,7 @@ const APIFeatures = require('./../utils/apiFeatures')
  */
 const catchAsync = require('./../utils/catchAsync')
 
+
 /**
  * Get one Track given its ID
  * @memberof module:controllers/track~trackController
@@ -45,9 +46,9 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    // data: {
-    track
-    // }
+    //data: {
+      track
+    //}
   })
 })
 
@@ -66,8 +67,8 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
 
   res.status(200).json({
     status: 'success',
-    // data: {
-    tracks
-    // }
+    //data: {
+      tracks
+    //}
   })
 })
