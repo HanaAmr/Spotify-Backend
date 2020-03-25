@@ -112,10 +112,12 @@ const userSchema = new Schema({
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date, // Date of expiration of reset password token
-    becomePremiumToken: String,
-    becomePremiumExpires: Date, // Date of expiration of become premium token
-    becomeArtistToken: String,
-    becomeArtistExpires: Date, // Date of expiration of become artist verification code
+    upgradeToken: String,
+    upgradeTokenExpires: Date, // Date of expiration of Upgrade token
+    upgradeRole: { //Role to upgrade to
+      type: String,
+      enum: ['premium', 'artist']
+    }
     
 });
 

@@ -124,7 +124,7 @@ router.post('/me/premium', authController.protect, authController.restrictTo('us
  * @param {string} path - Becoming premium path
  * @param {callback} middleware - Become premium middleware.
  */
-router.post('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmBecomePremium)
+router.post('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmUpgrade)
 
 /**
  * Route for requesting to cancel premium
@@ -135,7 +135,7 @@ router.post('/me/premium/:confirmationCode', authController.protect, authControl
  * @param {string} path - cancel premium path
  * @param {callback} middleware - cancel premium middleware.
  */
-router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.requestCancelPremium)
+router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
 
 /**
  * Route for confirming to cancel premium
@@ -146,6 +146,6 @@ router.delete('/me/premium', authController.protect, authController.restrictTo('
  * @param {string} path - cancel premium path
  * @param {callback} middleware - cancel premium middleware.
  */
-router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelPremium)
+router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
 
 module.exports = router

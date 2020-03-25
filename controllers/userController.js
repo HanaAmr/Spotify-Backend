@@ -67,10 +67,10 @@ const resetPasswordMiddleware = require('../middleware/user/resetPassword')
 
 /**
  * express module
- * Premium user middleware
+ * Upgrade user middleware
  * @const
  */
-const premiumMiddleware = require('../middleware/user/premium')
+const upgradeMiddleware = require('../middleware/user/upgrade')
 
 /**
  * A function that is used to reset password for users by sending them emails to change the password.
@@ -114,7 +114,6 @@ const resetPassword = catchAsync( async function (req, res, next) {
   })
 })
 
-
 /**
  * A function that is used to become a premium user.
  * @memberof module:controllers/users~userController
@@ -123,9 +122,21 @@ const resetPassword = catchAsync( async function (req, res, next) {
  * @param {next} - The next function in the middleware
  */
 const requestBecomePremium = catchAsync( async function (req, res, next) {
+  // Calling the ugrade user function with premium as upgrade role.
+  await upgradeUser(req,res,'premium',next)
+})
+
+/**
+ * A function that is used to upgrade user.
+ * @memberof module:controllers/users~userController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ */
+const upgradeUser = catchAsync( async function (req, res, upgradeRole , next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
-  async.waterfall([async.apply(premiumMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE), premiumMiddleware.assignPremiumConfirmCode, premiumMiddleware.sendPremiumConfirmCodeMail], (err) => {
+  async.waterfall([async.apply(upgradeMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE, upgradeRole), upgradeMiddleware.assignUpgradeConfirmCode, upgradeMiddleware.sendUpgradeConfirmCodeMail], (err) => {
     // If we catch an internal server error, update the resond and create error object to send
     if (err) {
       return next(err)
@@ -142,10 +153,10 @@ const requestBecomePremium = catchAsync( async function (req, res, next) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const confirmBecomePremium = catchAsync( async function (req, res, next) {
+const confirmUpgrade = catchAsync( async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(premiumMiddleware.changeRoleToPremium, req, res), premiumMiddleware.sendSuccPremiumMail], (err) => {
+  async.waterfall([async.apply(upgradeMiddleware.upgradeUserRole, req, res), upgradeMiddleware.sendSuccUpgradeMail], (err) => {
     // If we catch an internal server error
     if (err) {
       return next(err)
@@ -162,10 +173,10 @@ const confirmBecomePremium = catchAsync( async function (req, res, next) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const requestCancelPremium = catchAsync( async function (req, res, next) {
+const cancelUpgrade = catchAsync( async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
-  async.waterfall([async.apply(premiumMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE), premiumMiddleware.assignPremiumCancelCode, premiumMiddleware.sendPremiumCancelCodeMail], (err) => {
+  async.waterfall([async.apply(upgradeMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE , 'premium'), upgradeMiddleware.assignUpgradeCancelCode, upgradeMiddleware.sendPremiumCancelCodeMail], (err) => {
     // If we catch an internal server error, update the resond and create error object to send
     if (err) {
       return next(err)
@@ -182,10 +193,10 @@ const requestCancelPremium = catchAsync( async function (req, res, next) {
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
  */
-const confirmCancelPremium = catchAsync( async function (req, res, next) {
+const confirmCancelUpgrade = catchAsync( async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(premiumMiddleware.changeRoleToUser, req, res), premiumMiddleware.sendSuccPremiumCancelMail], (err) => {
+  async.waterfall([async.apply(upgradeMiddleware.changeRoleToUser, req, res), upgradeMiddleware.sendSuccCancelMail], (err) => {
     // If we catch an internal server error
     if (err) {
       return next(err)
@@ -206,18 +217,18 @@ userController.prodExports = {
 requestResetPassword : requestResetPassword,
 resetPassword : resetPassword,
 requestBecomePremium: requestBecomePremium,
-confirmBecomePremium: confirmBecomePremium,
-requestCancelPremium: requestCancelPremium,
-confirmCancelPremium: confirmCancelPremium
+confirmUpgrade: confirmUpgrade,
+cancelUpgrade: cancelUpgrade,
+confirmCancelUpgrade: confirmCancelUpgrade
 }
 // Exporting the functions needed for unit testing
 userController.testExports = {
 resetPassword : resetPassword,
 requestResetPassword: requestResetPassword,
 requestBecomePremium: requestBecomePremium,
-confirmBecomePremium: confirmBecomePremium,
-requestCancelPremium: requestCancelPremium,
-confirmCancelPremium: confirmCancelPremium,
+confirmUpgrade: confirmUpgrade,
+cancelUpgrade: cancelUpgrade,
+confirmCancelUpgrade: confirmCancelUpgrade,
 nodemailer: nodemailer
 }
 
