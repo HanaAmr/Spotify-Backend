@@ -54,7 +54,7 @@ const userController = require('../../../controllers/userController')
  * User middleware: Premium
  * @const
  */
-const premiumMiddleware = require('../../../middleware/user/premium')
+const upgradeMiddleware = require('../../../middleware/user/upgrade')
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
@@ -92,7 +92,7 @@ describe('userController create token string functionality', () => {
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.createTokenString(request, response, process.env.PREM_CONF_CODE_SIZE, (err, req, res, token) => {
+    upgradeMiddleware.createTokenString(request, response, process.env.PREM_CONF_CODE_SIZE, 'premium', (err, req, res, token) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(token).toBeDefined()
@@ -143,11 +143,11 @@ describe('userController assigning config code to user functionality', () => {
     })
     const response = httpMocks.createResponse()
     const code = 'atoken'
-    premiumMiddleware.assignPremiumConfirmCode(request, response, code, (err, req, res, code, user) => {
+    upgradeMiddleware.assignUpgradeConfirmCode(request, response, code, 'premium',(err, req, res, code, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(user).toBeDefined()
-        expect(user.becomePremiumToken).toEqual(code)
+        expect(user.upgradeToken).toEqual(code)
         done()
       } catch (error) {
         done(error)
@@ -168,7 +168,7 @@ describe('userController assigning config code to user functionality', () => {
   //   })
   //   const response = httpMocks.createResponse()
   //   const code = 'atoken'
-  //   premiumMiddleware.assignPremiumConfirmCode(request, response, code, (err, req, res, code, user) => {
+  //   upgradeMiddleware.assignUpgradeConfirmCode(request, response, code, (err, req, res, code, user) => {
   //     try {
   //       expect(err).toEqual(expect.anything())
   //       expect(err.statusCode).toEqual(404)
@@ -191,7 +191,7 @@ describe('userController assigning config code to user functionality', () => {
     const response = httpMocks.createResponse()
     const code = 'atoken'
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    premiumMiddleware.assignPremiumConfirmCode(request, response, code, (err, req, res, code, user) => {
+    upgradeMiddleware.assignUpgradeConfirmCode(request, response, code, 'premium', (err, req, res, code, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(500)
@@ -241,7 +241,7 @@ describe('userController send premium confirmation code mail functionality', () 
     const user = { email: 'omar@email.com' }
     const token = 'atoken'
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendPremiumConfirmCodeMail(request, response, token, user, (err) => {
+    upgradeMiddleware.sendUpgradeConfirmCodeMail(request, response, token, user, (err) => {
       try {
         expect(err).not.toEqual(expect.anything())
         done()
@@ -271,7 +271,7 @@ describe('userController send premium confirmation code mail functionality', () 
     const user = { email: 'omar@email.com' }
     const token = 'atoken'
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendPremiumConfirmCodeMail(request, response, token, user, (err) => {
+    upgradeMiddleware.sendUpgradeConfirmCodeMail(request, response, token, user, (err) => {
       try {
         expect(err.statusCode).toEqual(502)
         done()
@@ -297,8 +297,9 @@ describe('userController change user role after confirming premium code', () => 
       name: 'omar',
       email: 'omar@email.com',
       password: 'password',
-      becomePremiumToken: 'atoken',
-      becomePremiumExpires: Date.now() + 360000
+      upgradeToken: 'atoken',
+      upgradeTokenExpires: Date.now() + 360000,
+      upgradeRole: 'premium'
     })
     await validUser.save()
   })
@@ -328,10 +329,10 @@ describe('userController change user role after confirming premium code', () => 
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
-        expect(user.becomePremiumToken).not.toEqual(expect.anything)
+        expect(user.upgradeToken).not.toEqual(expect.anything)
         done()
       } catch (error) {
         done(error)
@@ -358,7 +359,7 @@ describe('userController change user role after confirming premium code', () => 
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(404)
@@ -386,7 +387,7 @@ describe('userController change user role after confirming premium code', () => 
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(404)
@@ -417,7 +418,7 @@ describe('userController change user role after confirming premium code', () => 
 
     const response = httpMocks.createResponse()
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    premiumMiddleware.changeRoleToPremium(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         console.log(err)
         expect(err).toEqual(expect.anything())
@@ -470,7 +471,7 @@ describe('userController send successfull premium confirmation email', () => {
 
     const user = { email: 'omar@email.com' }
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendSuccPremiumMail(request, response, user, (err) => {
+    upgradeMiddleware.sendSuccUpgradeMail(request, response, user, (err) => {
       try {
         expect(err).not.toEqual(expect.anything())
         done()
@@ -500,7 +501,7 @@ describe('userController send successfull premium confirmation email', () => {
     sinon.stub(userController.nodemailer, 'createTransport').returns(transport)
     const user = { email: 'omar@email.com' }
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendSuccPremiumMail(request, response, user, (err) => {
+    upgradeMiddleware.sendSuccUpgradeMail(request, response, user, (err) => {
       try {
         expect(err.statusCode).toEqual(502)
         done()
@@ -578,8 +579,8 @@ describe('userController send successfull premium confirmation email', () => {
 //       name: 'omar',
 //       email: 'omar@email.com',
 //       password: 'password',
-//       becomePremiumToken: 'atoken',
-//       becomePremiumExpires: Date.now() + 360000
+//       upgradeToken: 'atoken',
+//       upgradeTokenExpires: Date.now() + 360000
 //     })
 //     await validUser.save()
 //   })
@@ -609,7 +610,7 @@ describe('userController send successfull premium confirmation email', () => {
 //     })
 
 //     const response = httpMocks.createResponse()
-//     userController.confirmBecomePremium(request, response, (err) => {
+//     userController.confirmUpgrade(request, response, (err) => {
 //       try {
 //         expect(response.statusCode).toEqual(204)
 //         done()
@@ -633,7 +634,7 @@ describe('userController send successfull premium confirmation email', () => {
 //     })
 
 //     const response = httpMocks.createResponse()
-//     userController.confirmBecomePremium(request, response, (err) => {
+//     userController.confirmUpgrade(request, response, (err) => {
 //       try {
 //         expect(err).toEqual(expect.anything())
 //         expect(err.statusCode).toEqual(404) // We're sending without an authorization token, so we get 401 unauthorized error code.
