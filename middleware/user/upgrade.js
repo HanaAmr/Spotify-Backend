@@ -114,10 +114,10 @@ exports.sendUpgradeConfirmCodeMail = function (req, res, code, user, next) {
   const mailOptions = {
     to: user.email,
     from: process.env.GMAILUSR,
-    subject: `Become a ${user.upgradeRole} user verification email!`,
-    text: `Hello.\n\nHere is the verification code that you need to become a ${user.upgradeRole} user: ` +
+    subject: `${user.upgradeRole} upgrade verification email!`,
+    text: `Hello.\n\nHere is the verification code that you need for ${user.upgradeRole} upgrade: ` +
              code + '\n\n' +
-            ` If you didn\'t request to become ${user.upgradeRole}, delete this email and change your password!\n All the best,\nSystem 424 Team \n`
+            ` If you didn\'t request to upgrade to ${user.upgradeRole}, delete this email and change your password!\n All the best,\nSystem 424 Team \n`
   }
   // Sending the email
   smtpTransport.sendMail(mailOptions, (err) => {
@@ -182,7 +182,7 @@ exports.sendSuccUpgradeMail = function (req, res, user, next) {
     from: process.env.GMAILUSR,
     subject: `Welcome to Spotify ${user.upgradeRole}!`,
     text: 'Hello,\n\n' +
-          `This is a confirmation that you are now a ${user.upgradeRole} user! \n\nHave fun, enjoy our music :)\n All the best, System-424 team\n`
+          `This is a confirmation that you are now ${user.upgradeRole}! \n\nHave fun, enjoy our music :)\n All the best, System-424 team\n`
   }
   // Sending the email
   smtpTransport.sendMail(mailOptions, (err) => {

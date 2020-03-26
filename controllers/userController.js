@@ -123,6 +123,18 @@ const requestBecomePremium = catchAsync(async function (req, res, next) {
 })
 
 /**
+ * A function that is used to become an artist user.
+ * @memberof module:controllers/users~userController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ */
+const requestBecomeArtist = catchAsync(async function (req, res, next) {
+  // Calling the ugrade user function with premium as upgrade role.
+  await upgradeUser(req, res, 'artist', next)
+})
+
+/**
  * A function that is used to upgrade user.
  * @memberof module:controllers/users~userController
  * @param {Request}  - The function takes the request as a parameter to access its body.
@@ -210,6 +222,7 @@ userController.prodExports = {
   requestResetPassword: requestResetPassword,
   resetPassword: resetPassword,
   requestBecomePremium: requestBecomePremium,
+  requestBecomeArtist: requestBecomeArtist,
   confirmUpgrade: confirmUpgrade,
   cancelUpgrade: cancelUpgrade,
   confirmCancelUpgrade: confirmCancelUpgrade
@@ -219,6 +232,7 @@ userController.testExports = {
   resetPassword: resetPassword,
   requestResetPassword: requestResetPassword,
   requestBecomePremium: requestBecomePremium,
+  requestBecomeArtist: requestBecomeArtist,
   confirmUpgrade: confirmUpgrade,
   cancelUpgrade: cancelUpgrade,
   confirmCancelUpgrade: confirmCancelUpgrade,
