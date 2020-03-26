@@ -74,9 +74,8 @@ router.post('/signupWithFacebook', authController.signUp)
 * @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - Sign in middleware.
 */
-router.post('/signIn', authController.signIn);
-//router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
-
+router.post('/signIn', authController.signIn)
+// router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
 
 // POST request to reset the password by email.
 
@@ -103,7 +102,6 @@ router.post('/resetPassword', userController.requestResetPassword)
  */
 router.post('/resetPassword/:token', userController.resetPassword)
 
-
 /**
  * Route for requesting to become premium
  * @name post/me/premium
@@ -111,20 +109,20 @@ router.post('/resetPassword/:token', userController.resetPassword)
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - Becoming premium path
- * @param {callback} middleware - Become premium middleware.
+ * @param {callback} middleware - Upgrade user middleware
  */
 router.post('/me/premium', authController.protect, authController.restrictTo('user'), userController.requestBecomePremium)
 
 /**
- * Route for confirming to become premium
- * @name post/me/premium
+ * Route for confirming upgrade
+ * @name post/me/upgrade
  * @function
  * @memberof module:routes/users~usersRouter
  * @inner
- * @param {string} path - Becoming premium path
- * @param {callback} middleware - Become premium middleware.
+ * @param {string} path - Upgrade user path
+ * @param {callback} middleware - Upgrade user middleware
  */
-router.post('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmUpgrade)
+router.post('/me/upgrade/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmUpgrade)
 
 /**
  * Route for requesting to cancel premium
@@ -133,7 +131,7 @@ router.post('/me/premium/:confirmationCode', authController.protect, authControl
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - cancel premium path
- * @param {callback} middleware - cancel premium middleware.
+ * @param {callback} middleware - Cancel upgrade middleware
  */
 router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
 
@@ -144,8 +142,41 @@ router.delete('/me/premium', authController.protect, authController.restrictTo('
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - cancel premium path
- * @param {callback} middleware - cancel premium middleware.
+ * @param {callback} middleware - Cancel upgrade middleware
  */
 router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
+
+/**
+ * Route for requesting to become artist
+ * @name post/me/meArtist
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Becoming artist path
+ * @param {callback} middleware - Upgrade user middleware
+ */
+router.post('/me/meArtist', authController.protect, authController.restrictTo('user'), userController.requestBecomeArtist)
+
+/**
+ * Route for requesting to cancel artist
+ * @name post/me/meArtist
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - cancel ugrade path
+ * @param {callback} middleware - Cancel upgrade middleware
+ */
+router.delete('/me/meArtist', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
+
+/**
+ * Route for confirming to cancel artist
+ * @name post/me/meArtist
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - cancel upgrade path
+ * @param {callback} middleware - Cancel upgrade middleware
+ */
+router.delete('/me/meArtist/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
 
 module.exports = router
