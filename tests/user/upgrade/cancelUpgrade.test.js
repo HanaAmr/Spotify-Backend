@@ -145,7 +145,7 @@ describe('userController assigning cancellation code to user functionality', () 
     })
     const response = httpMocks.createResponse()
     const code = 'atoken'
-    upgradeMiddleware.assignUpgradeCancelCode(request, response, code, (err, req, res, code, user) => {
+    upgradeMiddleware.assignUpgradeCancelCode(request, response, code, 'premium', (err, req, res, code, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(user).toBeDefined()
@@ -194,7 +194,7 @@ describe('userController assigning cancellation code to user functionality', () 
     const response = httpMocks.createResponse()
     const code = 'atoken'
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    upgradeMiddleware.assignUpgradeCancelCode(request, response, code, (err, req, res, code, user) => {
+    upgradeMiddleware.assignUpgradeCancelCode(request, response, code, 'premium', (err, req, res, code, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(500)
