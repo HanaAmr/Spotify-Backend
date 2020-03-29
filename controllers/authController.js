@@ -188,7 +188,7 @@ exports.createUser = catchAsync (async (name, email, password) => {
   });
   return newUser
 })
-exports.getUserId = catchAsync( (async (req, next) => {
+exports.getUserId = (async (req, next) => { //Not putting catchAsync as we need this function to be async to be able to wait for it in other controllers
   //get token and check if it exists
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
@@ -201,5 +201,11 @@ exports.getUserId = catchAsync( (async (req, next) => {
   //verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   userId = decoded.id
-  next(userId)
-}))
+
+  if(typeof next === 'function') {
+    return Promise.resolve(next(userId))
+  }
+  return new Promise(resolve => {
+      resolve(userId)
+  })
+})
