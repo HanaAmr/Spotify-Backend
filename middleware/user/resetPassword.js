@@ -136,7 +136,6 @@ exports.resetChangePassword = function (req, res, next) {
     } else if (!user) { // If no user with this token is found (token is invalid)
       return next(new AppError('The token provided is not valid.', 404))
     } else if (req.body.newPassword === req.body.passwordConfirmation) {
-      // TODO: call the function that sets the password when done
       user.password = req.body.newPassword
       // Reset token no longer exists
       user.resetPasswordToken = undefined
