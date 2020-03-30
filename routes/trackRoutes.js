@@ -34,7 +34,7 @@ const authController = require('./../controllers/authController')
  * @memberof module:routes/tracks~tracksRouter
  * @inner
  */
-router.use(authController.protect)
+//TODO: uncomment router.use(authController.protect)
 
 /**
  * Route for requesting to get a track
@@ -58,5 +58,17 @@ router
 router
   .route('/')
   .get(trackController.getTracks)
+
+  /**
+ * Route for requesting to get a track mp3 file
+ * @name get/tracks/:trackId
+ * @function
+ * @memberof module:routes/tracks~tracksRouter
+ * @inner
+ * @param {string} trackId - Track ID
+ */
+router
+.route('/:trackId/audio')
+.get(trackController.getOneTrackAudioFile)
 
 module.exports = router

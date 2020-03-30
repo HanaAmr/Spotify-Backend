@@ -71,7 +71,11 @@ const trackSchema = new mongoose.Schema({
       type: mongoose.Schema.ObjectId,
       ref: 'user'
     }
-  ]
+  ],
+  audioFilePath: {
+    type: String,
+    required: [true, 'A track must have a path for its audio file to play.']
+  }
 })
 
 /**

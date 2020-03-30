@@ -72,3 +72,24 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
     //}
   })
 })
+
+
+/**
+ * Get one Track mp3 file given its ID
+ * @memberof module:controllers/track~trackController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ * @return {JSON} The details of the track in a json form.
+ */
+exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
+  const track = await Track.findById(req.params.trackId)
+  //Check authorization first
+  const authorized = await require('../models/playerModel').validateTrack(req)
+  if(authorized){  //Send file if authorize
+  res.download(track.audioFilePath)
+  }
+  else {
+    res.status(403).send();
+  }
+})
