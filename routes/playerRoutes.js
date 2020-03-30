@@ -40,4 +40,16 @@ router
   .route('/recentlyPlayed')
   .post(playerController.addToRecentlyPlayed)
 
+  /**
+ * Route for getting recently played tracks (play history)
+ * @name get/me/player/recentlyPlayed
+ * @function
+ * @memberof module:routes/player~playerRouter
+ * @inner
+ */
+router
+.route('/recentlyPlayed')
+.get(playerController.getRecentlyPlayed)
+
+
 module.exports = router

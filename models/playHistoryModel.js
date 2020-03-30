@@ -70,6 +70,7 @@ playHistorySchema.pre('save', function (next) {
     next()
   })
 
+
   const PlayHistory = mongoose.model('PlayHistory', playHistorySchema)
 
   module.exports = PlayHistory

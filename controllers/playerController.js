@@ -85,7 +85,9 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
         .where('userId').equals(userId)
         .sort('playedAt')
         .limit(1)
-        await PlayHistory.remove({_id: {$in: oldestPlayHistory}}) //Remove the oldest play history object for this user
+        //Delete the context object first
+        await Context.deleteOne({_id: {$in: oldestPlayHistory[0]    .context}})
+        await PlayHistory.deleteOne({_id: {$in: oldestPlayHistory}}) //Remove the oldest play history object for this user
     }
 
     //TODO: Instead of getting the context from the request, we should have it saved 
@@ -105,4 +107,25 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
     
     res.status(204).send()
 })
+
+
+/**
+ * A function that is used to get the recently played list
+ * @memberof module:controllers/player~playerController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {done} - The next function in the middleware
+ */
+exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
+    const userId = await authController.getUserId(req)
+    const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
+    const items = await features.query
+    res.status(200).json({
+        status: 'success', 
+        data: {
+        items
+        }
+    })
+})
+
 
