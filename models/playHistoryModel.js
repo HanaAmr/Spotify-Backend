@@ -37,24 +37,20 @@ const playHistorySchema = new mongoose.Schema({
 })
 
 /**
-* Populating the track, context object
+* Populating the playHistory
 * @function
 * @memberof module:models/playHistoryModel
 * @inner
 * @param {string} find - populate the documents before any find function
 */
 playHistorySchema.pre(/^find/, function (next) {
-    this.populate({
-      path: 'context'
-    })
-    this.populate({    
-       path: 'track',
-    })
+    this.populate('context','-_id -__v')
+    this.populate( 'track' ,'-_id -__v')
     next()
   })
 
   /**
-* Populating the track, context object
+* Populating the playHistory object
 * @function
 * @memberof module:models/playHistoryModel
 * @inner

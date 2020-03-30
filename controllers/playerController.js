@@ -72,7 +72,7 @@ const AppError = require('../utils/appError')
  * @memberof module:controllers/player~playerController
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
- * @param {done} - The next function in the middleware
+ * @param {next} - The next function in the middleware
  */
 exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
     const userId = await authController.getUserId(req)
@@ -114,7 +114,7 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
  * @memberof module:controllers/player~playerController
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
- * @param {done} - The next function in the middleware
+ * @param {next} - The next function in the middleware
  */
 exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
     const userId = await authController.getUserId(req)
