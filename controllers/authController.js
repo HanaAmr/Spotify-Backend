@@ -188,6 +188,13 @@ exports.createUser = catchAsync (async (name, email, password) => {
   });
   return newUser
 })
+/**
+* A function that returns the userId of the current user
+* @function
+* @memberof module:controllers/authController
+* @param {Request} req - The request which contains the token string.
+*/
+
 exports.getUserId = (async (req, next) => { //Not putting catchAsync as we need this function to be async to be able to wait for it in other controllers
   //get token and check if it exists
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -207,5 +214,34 @@ exports.getUserId = (async (req, next) => { //Not putting catchAsync as we need 
   }
   return new Promise(resolve => {
       resolve(userId)
+  })
+})
+
+/**
+* A function that returns the role of the current user
+* @function
+* @memberof module:controllers/authController
+* @param {Request} req - The request which contains the token string.
+*/
+
+exports.getUserRole = (async (req, next) => { //Not putting catchAsync as we need this function to be async to be able to wait for it in other controllers
+  //get token and check if it exists
+  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  
+  if(!token) {
+    return next(new AppError('You are not logged in! Please log in to access.', 401));
+  }
+  
+  //verification of token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  userId = decoded.id
+  userRole = User.findById(userId).select('-_id role')
+  if(typeof next === 'function') {
+    return Promise.resolve(next(userRole))
+  }
+  return new Promise(resolve => {
+      resolve(userRole)
   })
 })
