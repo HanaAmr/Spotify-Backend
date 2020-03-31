@@ -80,7 +80,7 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
- * @return {JSON} The details of the track in a json form.
+ * @return {File} The mp3 file of the track.
  */
 exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
   const track = await Track.findById(req.params.trackId)
