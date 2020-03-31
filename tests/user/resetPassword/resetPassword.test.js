@@ -493,129 +493,144 @@ describe('userController send successfull reset password functionality', () => {
   })
 })
 
-//TODO:
+// TODO:
 // Testing userController whole send reset password email functionality
-// describe('userController whole send reset password email functionality', () => {
-//   // Drop the whole users collection before testing and add a simple user to test with
-//   beforeEach(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
+describe('userController whole send reset password email functionality', () => {
+  // Drop the whole users collection before testing and add a simple user to test with
+  beforeEach(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
 
-//     // Creating the valid user to assign the token to him
-//     const validUser = new User({
-//       name: 'omar',
-//       email: 'omar@email.com',
-//       password: 'password'
-//     })
-//     await validUser.save()
-//   })
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
+    })
+    await validUser.save()
+  })
 
-//   // Drop the whole users collection after finishing testing
-//   afterAll(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
-//   })
+  // Drop the whole users collection after finishing testing
+  afterAll(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+  })
 
-//   // Testing successful email to reset password
-//   it('Should send 204 upon emailing to reset password', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'POST',
-//       url: '/resetPassword',
-//       body: {
-//         email: 'omar@email.com'
-//       }
-//     })
+  // Testing successful email to reset password
+  it('Should send 204 upon emailing to reset password', async (done) => {
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/resetPassword',
+      body: {
+        email: 'omar@email.com'
+      }
+    })
 
-//     const response = httpMocks.createResponse()
-//      await userController.requestResetPassword(request, response)
-//      expect(response.statusCode).toEqual(204)
-//   })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    await userController.requestResetPassword(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 
-//   // Testing unsuccessful reset password email request
-//   it('Should send error upon failing to email to reset password', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'POST',
-//       url: '/resetPassword',
-//       body: {
-//         email: 'omar22@email.com'
-//       }
-//     })
+  // Testing unsuccessful reset password email request
+  it('Should send error upon failing to email to reset password', async (done) => {
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/resetPassword',
+      body: {
+        email: 'omar22@email.com'
+      }
+    })
 
-//     const response = httpMocks.createResponse()
-//     userController.requestResetPassword(request, response, (err) => {
-//       try {
-//         expect(err).toEqual(expect.anything())
-//         expect(err.statusCode).toEqual(404) // We're sending an unvalid email, so 404 not found would be returned from one of the middlewares.
-//         done()
-//       } catch (error) {
-//         done(error)
-//       }
-//     })
-//   })
-// })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.requestResetPassword(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(404) // We're sending an unvalid email, so 404 not found would be returned from one of the middlewares.
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+})
 
-// // TODO: Testing userController whole reset password changing functionality 
-// describe('userController whole reset password changing functionality', () => {
-//   // Drop the whole users collection before testing and add a simple user to test with
-//   beforeEach(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
+// // TODO: Testing userController whole reset password changing functionality
+describe('userController whole reset password changing functionality', () => {
+  // Drop the whole users collection before testing and add a simple user to test with
+  beforeEach(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
 
-//     // Creating the valid user to assign the token to him
-//     const validUser = new User({
-//       name: 'omar',
-//       email: 'omar@email.com',
-//       password: 'oldpassword',
-//       resetPasswordToken: 'atoken',
-//       resetPasswordExpires: Date.now() + 36000
-//     })
-//     await validUser.save()
-//   })
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'oldpassword',
+      resetPasswordToken: 'atoken',
+      resetPasswordExpires: Date.now() + 36000
+    })
+    await validUser.save()
+  })
 
-//   // Drop the whole users collection after finishing testing
-//   afterAll(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
-//   })
+  // Drop the whole users collection after finishing testing
+  afterAll(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+  })
 
-//   // Testing successfully changing password via reset email
-//   it('Should send 204 upon changing password (reset)', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'POST',
-//       url: '/resetPassword/atoken',
-//       params: {
-//         token: 'atoken'
-//       },
-//       body: {
-//         newPassword: 'password',
-//         passwordConfirmation: 'password'
-//       }
-//     })
+  // Testing successfully changing password via reset email
+  it('Should send 204 upon changing password (reset)', async (done) => {
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/resetPassword/atoken',
+      params: {
+        token: 'atoken'
+      },
+      body: {
+        newPassword: 'password',
+        passwordConfirmation: 'password'
+      }
+    })
 
-//     const response = httpMocks.createResponse()
-//     userController.resetPassword(request, response)
-//     expect(response.statusCode).toEqual(204)
-//   })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.resetPassword(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 
-//   // Testing unsuccessful change password by reset
-//   it('Should send error upon failing to change password via reset email', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'POST',
-//       url: '/resetPassword',
-//       body: {
-//         email: 'omar22@email.com'
-//       }
-//     })
+  // Testing unsuccessful change password by reset
+  it('Should send error upon failing to change password via reset email', async (done) => {
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/resetPassword',
+      body: {
+        email: 'omar22@email.com'
+      }
+    })
 
-//     const response = httpMocks.createResponse()
-//     userController.resetPassword(request, response, (err) => {
-//       try {
-//         expect(err).toEqual(expect.anything())
-//         expect(err.statusCode).toEqual(404)// We're sending an invalid email, so 404 not found would be returned from one of the middlewares.
-//         done()
-//       } catch (error) {
-//         done(error)
-//       }
-//     })
-//   })
-// })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+
+    userController.resetPassword(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(404)// We're sending an invalid email, so 404 not found would be returned from one of the middlewares.
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+})

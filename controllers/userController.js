@@ -233,6 +233,7 @@ userController.testExports = {
   requestResetPassword: requestResetPassword,
   requestBecomePremium: requestBecomePremium,
   requestBecomeArtist: requestBecomeArtist,
+  upgradeUser: upgradeUser,
   confirmUpgrade: confirmUpgrade,
   cancelUpgrade: cancelUpgrade,
   confirmCancelUpgrade: confirmCancelUpgrade,
