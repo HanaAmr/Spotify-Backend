@@ -29,7 +29,8 @@ const mongoose = require('mongoose')
      uri: {
          type: String,
          requried: [true, 'Context must have a URI']
-     }
+     },
+     playHistoryId: String //Not required, only if context was created for playHistoryModel to be able to delete it
  })
 
  const Context = mongoose.model('Context', contextSchema)

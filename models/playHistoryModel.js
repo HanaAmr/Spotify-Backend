@@ -44,8 +44,8 @@ const playHistorySchema = new mongoose.Schema({
 * @param {string} find - populate the documents before any find function
 */
 playHistorySchema.pre(/^find/, function (next) {
-    this.populate('context','-_id -__v')
-    this.populate( 'track' ,'-_id -__v')
+    this.populate('context', '-__v -_id -playHistoryId')
+    this.populate( 'track', '-_id' )
     next()
   })
 
@@ -65,6 +65,16 @@ playHistorySchema.pre('save', function (next) {
     })
     next()
   })
+
+  /**
+* Before deleting the playHistoryModel, delete the context it refrenced.
+* @function
+* @memberof module:models/playHistoryModel
+* @inner
+*/
+playHistorySchema.post('findOneAndDelete',function (doc) {
+    require('./contextModel').deleteMany({playHistoryId: doc._id}).exec()
+})
 
 
   const PlayHistory = mongoose.model('PlayHistory', playHistorySchema)

@@ -85,9 +85,7 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
         .where('userId').equals(userId)
         .sort('playedAt')
         .limit(1)
-        //Delete the context object first
-        await Context.deleteOne({_id: {$in: oldestPlayHistory[0]    .context}})
-        await PlayHistory.deleteOne({_id: {$in: oldestPlayHistory}}) //Remove the oldest play history object for this user
+        await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
     }
 
     //TODO: Instead of getting the context from the request, we should have it saved 
@@ -104,7 +102,10 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
         'track': track[0]._id
     })
     await newPlayHistory.save()
-    
+    //Update the context's playHistoryId
+    newContext.playHistoryId = newPlayHistory._id
+    await newContext.save()
+
     res.status(204).send()
 })
 
