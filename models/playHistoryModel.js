@@ -16,24 +16,24 @@ const mongoose = require('mongoose')
  */
 
 const playHistorySchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: [true, 'Play history must belong to a certain user']
-    },
-    context: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Context',
-        required: [true, 'Play history must know the context the track was played in.']
-    },
-    playedAt: {
-        type: Date,
-        required: [true, 'Play history object must have the time the track was played at.']
-    },
-    track: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Track',
-        required: [true, 'Play history object must contain the track played!']
-    }
+  userId: {
+    type: String,
+    required: [true, 'Play history must belong to a certain user']
+  },
+  context: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Context',
+    required: [true, 'Play history must know the context the track was played in.']
+  },
+  playedAt: {
+    type: Date,
+    required: [true, 'Play history object must have the time the track was played at.']
+  },
+  track: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Track',
+    required: [true, 'Play history object must contain the track played!']
+  }
 })
 
 /**
@@ -44,12 +44,12 @@ const playHistorySchema = new mongoose.Schema({
 * @param {string} find - populate the documents before any find function
 */
 playHistorySchema.pre(/^find/, function (next) {
-    this.populate('context', '-__v -_id -playHistoryId')
-    this.populate( 'track', '-_id' )
-    next()
-  })
+  this.populate('context', '-__v -_id -playHistoryId')
+  this.populate('track', '-_id -__v')
+  next()
+})
 
-  /**
+/**
 * Populating the playHistory object
 * @function
 * @memberof module:models/playHistoryModel
@@ -57,26 +57,25 @@ playHistorySchema.pre(/^find/, function (next) {
 * @param {string} find - populate the documents before save function
 */
 playHistorySchema.pre('save', function (next) {
-    this.populate({
-      path: 'context'
-    })
-    this.populate({    
-       path: 'track',
-    })
-    next()
+  this.populate({
+    path: 'context'
   })
+  this.populate({
+    path: 'track'
+  })
+  next()
+})
 
-  /**
+/**
 * Before deleting the playHistoryModel, delete the context it refrenced.
 * @function
 * @memberof module:models/playHistoryModel
 * @inner
 */
-playHistorySchema.post('findOneAndDelete',function (doc) {
-    require('./contextModel').deleteMany({playHistoryId: doc._id}).exec()
+playHistorySchema.post('findOneAndDelete', function (doc) {
+  require('./contextModel').deleteMany({ playHistoryId: doc._id }).exec()
 })
 
+const PlayHistory = mongoose.model('PlayHistory', playHistorySchema)
 
-  const PlayHistory = mongoose.model('PlayHistory', playHistorySchema)
-
-  module.exports = PlayHistory
+module.exports = PlayHistory
