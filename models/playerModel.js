@@ -39,6 +39,30 @@ const authController = require('../controllers/authController')
      queueOffset: Number
  })
 
+ /**
+* Populating the player object
+* @function
+* @memberof module:models/playerModel
+* @inner
+* @param {string} find - populate the documents before any find function
+*/
+playerSchema.pre(/^find/, function (next) {
+    this.populate('context')
+    next()
+  })
+
+  /**
+* Populating the player object
+* @function
+* @memberof module:models/playerModel
+* @inner
+* @param {string} find - populate the documents before save function
+*/
+playerSchema.pre('save', function (next) {
+    this.populate('context')
+    next()
+  })
+
 /**
 * Checking if track requested can be played by user or not
 * @function
