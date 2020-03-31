@@ -11,7 +11,7 @@
  * @namespace playerController
  */
 
- /**
+/**
  * express module
  * Context model from the database
  * @const
@@ -51,14 +51,12 @@ const catchAsync = require('../utils/catchAsync')
  */
 const APIFeatures = require('../utils/apiFeatures')
 
-
 /**
  * express module
  * Authroization controller
  * @const
  */
 const authController = require('../controllers/authController')
-
 
 /**
  * express module
@@ -75,40 +73,39 @@ const AppError = require('../utils/appError')
  * @param {next} - The next function in the middleware
  */
 exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
-    const userId = await authController.getUserId(req)
+  const userId = await authController.getUserId(req)
 
-    //Check if we reached the limit for this user
-    const count = await PlayHistory.countDocuments({'userId':userId})
-    if(count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT,10)){ //If we reached the limit of playHistory for this user
-        const oldestPlayHistory = await PlayHistory
-        .find()
-        .where('userId').equals(userId)
-        .sort('playedAt')
-        .limit(1)
-        await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
-    }
+  // Check if we reached the limit for this user
+  const count = await PlayHistory.countDocuments({ userId: userId })
+  if (count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)) { // If we reached the limit of playHistory for this user
+    const oldestPlayHistory = await PlayHistory
+      .find()
+      .where('userId').equals(userId)
+      .sort('playedAt')
+      .limit(1)
+    await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
+  }
 
-    //TODO: Instead of getting the context from the request, we should have it saved 
-    // when the user started playing
-    const newContext = await Context.create(req.body.context)
-    const track = await Track.find().where('uri').equals(req.body.trackUri).select('_id')
-    if(!track){
-        return next(new AppError('No track with this uri was found!',404))
-    }
-    const newPlayHistory = new PlayHistory({
-        'userId':userId,
-        'context': newContext._id,
-        'playedAt': Date.now(),
-        'track': track[0]._id
-    })
-    await newPlayHistory.save()
-    //Update the context's playHistoryId
-    newContext.playHistoryId = newPlayHistory._id
-    await newContext.save()
+  // TODO: Instead of getting the context from the request, we should have it saved
+  // when the user started playing
+  const newContext = await Context.create(req.body.context)
+  const track = await Track.find().where('uri').equals(req.body.trackUri).select('_id')
+  if (track.length === 0) {
+    return next(new AppError('No track with this uri was found!', 404))
+  }
+  const newPlayHistory = new PlayHistory({
+    userId: userId,
+    context: newContext._id,
+    playedAt: Date.now(),
+    track: track[0]._id
+  })
+  await newPlayHistory.save()
+  // Update the context's playHistoryId
+  newContext.playHistoryId = newPlayHistory._id
+  await newContext.save()
 
-    res.status(204).send()
+  res.status(204).send()
 })
-
 
 /**
  * A function that is used to get the recently played list
@@ -118,15 +115,13 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
  * @param {next} - The next function in the middleware
  */
 exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
-    const userId = await authController.getUserId(req)
-    const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
-    const items = await features.query
-    res.status(200).json({
-        status: 'success', 
-        data: {
-        items
-        }
-    })
+  const userId = await authController.getUserId(req)
+  const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
+  const items = await features.query
+  res.status(200).json({
+    status: 'success',
+    data: {
+      items
+    }
+  })
 })
-
-
