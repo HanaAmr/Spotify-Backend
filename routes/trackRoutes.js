@@ -34,7 +34,7 @@ const authController = require('./../controllers/authController')
  * @memberof module:routes/tracks~tracksRouter
  * @inner
  */
-//TODO: uncomment router.use(authController.protect)
+router.use(authController.protect)
 
 /**
  * Route for requesting to get a track
