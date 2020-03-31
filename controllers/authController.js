@@ -237,11 +237,11 @@ exports.getUserRole = (async (req, next) => { //Not putting catchAsync as we nee
   //verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   userId = decoded.id
-  userRole = User.findById(userId).select('-_id role')
+  userRole = await User.findById(userId).select('-_id role')
   if(typeof next === 'function') {
-    return Promise.resolve(next(userRole))
+    return Promise.resolve(next(userRole.role))
   }
   return new Promise(resolve => {
-      resolve(userRole)
+      resolve(userRole.role)
   })
 })

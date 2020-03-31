@@ -73,10 +73,11 @@ playerSchema.pre('save', function (next) {
 playerSchema.statics.validateTrack = async function(req) {
     const userId = await authController.getUserId(req)
     const userRole = await authController.getUserRole(req)
-    if(userRole.role === 'user') {
+    if(userRole === 'user') {
         return false //TODO: Instead of returning false, compare with the current queue for this user.
     }
-    return true;
+    return true
+    
 }
 
 const Player = mongoose.model('Player', playerSchema)
