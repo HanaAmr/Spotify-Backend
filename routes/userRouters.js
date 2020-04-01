@@ -148,35 +148,35 @@ router.delete('/me/premium/:confirmationCode', authController.protect, authContr
 
 /**
  * Route for requesting to become artist
- * @name post/me/meArtist
+ * @name post/me/artist
  * @function
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - Becoming artist path
  * @param {callback} middleware - Upgrade user middleware
  */
-router.post('/me/meArtist', authController.protect, authController.restrictTo('user'), userController.requestBecomeArtist)
+router.post('/me/artist', authController.protect, authController.restrictTo('user'), userController.requestBecomeArtist)
 
 /**
  * Route for requesting to cancel artist
- * @name post/me/meArtist
+ * @name post/me/artist
  * @function
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - cancel ugrade path
  * @param {callback} middleware - Cancel upgrade middleware
  */
-router.delete('/me/meArtist', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
+router.delete('/me/artist', authController.protect, authController.restrictTo('artist'), userController.cancelUpgrade)
 
 /**
  * Route for confirming to cancel artist
- * @name post/me/meArtist
+ * @name post/me/artist
  * @function
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - cancel upgrade path
  * @param {callback} middleware - Cancel upgrade middleware
  */
-router.delete('/me/meArtist/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
+router.delete('/me/artist/:confirmationCode', authController.protect, authController.restrictTo('artist'), userController.confirmCancelUpgrade)
 
 module.exports = router
