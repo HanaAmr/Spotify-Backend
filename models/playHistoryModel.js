@@ -50,23 +50,6 @@ playHistorySchema.pre(/^find/, function (next) {
 })
 
 /**
-* Populating the playHistory object
-* @function
-* @memberof module:models/playHistoryModel
-* @inner
-* @param {string} find - populate the documents before save function
-*/
-playHistorySchema.pre('save', function (next) {
-  this.populate({
-    path: 'context'
-  })
-  this.populate({
-    path: 'track'
-  })
-  next()
-})
-
-/**
 * Before deleting the playHistoryModel, delete the context it refrenced.
 * @function
 * @memberof module:models/playHistoryModel
