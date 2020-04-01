@@ -122,7 +122,7 @@ router.post('/me/premium', authController.protect, authController.restrictTo('us
  * @param {string} path - Upgrade user path
  * @param {callback} middleware - Upgrade user middleware
  */
-router.post('/me/upgrade/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmUpgrade)
+router.post('/me/upgrade/:confirmationCode', authController.protect, userController.confirmUpgrade)
 
 /**
  * Route for requesting to cancel premium
@@ -155,7 +155,7 @@ router.delete('/me/premium/:confirmationCode', authController.protect, authContr
  * @param {string} path - Becoming artist path
  * @param {callback} middleware - Upgrade user middleware
  */
-router.post('/me/artist', authController.protect, authController.restrictTo('user'), userController.requestBecomeArtist)
+router.post('/me/artist', authController.protect, userController.requestBecomeArtist)
 
 /**
  * Route for requesting to cancel artist
