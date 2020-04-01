@@ -12,38 +12,6 @@
 
 /**
  * express module
- * User model from the database
- * @const
- */
-const User = require('../models/userModel')
-/**
- * express module
- * Async functions
- * @const
- */
-const async = require('async')
-/**
- * express module
- * Nodemailer to send emails
- * @const
- */
-const nodemailer = require('nodemailer')
-/**
- * express module
- * Crypto to generate random secure tokens
- * @const
- */
-const crypto = require('crypto')
-
-/**
- * express module
- * jwt for tokens
- * @const
- */
-const jwt = require('jsonwebtoken')
-
-/**
- * express module
  * catch async for async functions
  * @const
  */
@@ -51,24 +19,20 @@ const catchAsync = require('../utils/catchAsync')
 
 /**
  * express module
- * error object
+ * User services
  * @const
  */
-const AppError = require('../utils/appError')
+const userServices = require('../services/userService')
+const userService = new userServices()
 
 /**
  * express module
- * Reset password middleware
+ * Mailer services
  * @const
  */
-const resetPasswordMiddleware = require('../middleware/user/resetPassword')
+const mailerServices = require('../services/mailerService')
+const mailerService = new mailerServices()
 
-/**
- * express module
- * Upgrade user middleware
- * @const
- */
-const upgradeMiddleware = require('../middleware/user/upgrade')
 
 /**
  * A function that is used to reset password for users by sending them emails to change the password.
@@ -80,14 +44,18 @@ const upgradeMiddleware = require('../middleware/user/upgrade')
 const requestResetPassword = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a random token then assign it to a user and send him an email with the link to reset the password.
-  async.waterfall([async.apply(resetPasswordMiddleware.createTokenString, req, res, process.env.RESET_PASSWORD_TOKEN_SIZE), resetPasswordMiddleware.assignResetToken, resetPasswordMiddleware.sendResetPasswordMail], (err) => {
-    // If we catch an internal server error, update the resond and create error object to send
-    if (err) {
-      return next(err)
-    } else { // If everything is fine, send an empty body code 204.
-      res.status(204).send()
-    }
-  })
+  const token = await userService.createTokenString(parseInt(process.env.RESET_PASSWORD_TOKEN_SIZE, 10))
+  await userService.assignResetToken(token, req.body.email)
+  // E-Mail subject and text to be sent
+  const subject = 'Reset your Spotify password'
+
+  const text = 'Hello.\n\nNo need to worry, you can reset your Spotify password by clicking the link below: ' +
+    'http://' + req.headers.host + '/resetPassword/' + token + '\n\n' +
+    ' If you didn\'t request a password reset, feel free to delete this email and carry on enjoying your music!\n All the best,\nSystem 424 Team \n'
+
+  await mailerService.sendMail(req.body.email, subject, text)
+  // If everything is fine, send an empty body code 204.
+  res.status(204).send()
 })
 
 /**
@@ -100,14 +68,18 @@ const requestResetPassword = catchAsync(async function (req, res, next) {
 const resetPassword = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(resetPasswordMiddleware.resetChangePassword, req, res), resetPasswordMiddleware.sendSuccPasswordResetMail], (err) => {
-    // If we catch an internal server error
-    if (err) {
-      return next(err)
-    } else {
-      res.status(204).send()
-    }
-  })
+  if (req.params.token === undefined) return next(new AppError('No token is provided', 404))
+  await userService.resetChangePassword(req.params.token, req.body.newPassword, req.body.passwordConfirmation)
+
+  //E-mail subject and text
+  const subject = 'Your password has been changed'
+  const text = 'Hello,\n\n' +
+    'This is a confirmation that the password for your account has just been changed.\n'
+
+  await mailerService.sendMail(req.body.email, subject, text)
+
+  // If everything is fine, send empty body with status 204
+  res.status(204).send()
 })
 
 /**
@@ -144,14 +116,22 @@ const requestBecomeArtist = catchAsync(async function (req, res, next) {
 const upgradeUser = catchAsync(async function (req, res, upgradeRole, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
-  async.waterfall([async.apply(upgradeMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE, upgradeRole), upgradeMiddleware.assignUpgradeConfirmCode, upgradeMiddleware.sendUpgradeConfirmCodeMail], (err) => {
-    // If we catch an internal server error, update the resond and create error object to send
-    if (err) {
-      return next(err)
-    } else { // If everything is fine, send an empty body code 204.
-      res.status(204).send()
-    }
-  })
+  //async.waterfall([async.apply(upgradeMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE, upgradeRole), upgradeMiddleware.assignUpgradeConfirmCode, upgradeMiddleware.sendUpgradeConfirmCodeMail], (err) => {
+  const token = await userService.createTokenString(parseInt(process.env.PREM_CONF_CODE_SIZE, 10))
+  await userService.assignUpgradeConfirmCode(req.headers.authorization, token, upgradeRole)
+
+  // E-Mail subject and text to be sent
+  const email = await userService.getUserMail(req.headers.authorization)
+  const subject = `${upgradeRole} upgrade verification email!`
+  const text = `Hello.\n\nHere is the verification code that you need for ${upgradeRole} upgrade: ` +
+    token + '\n\n' +
+    ` If you didn\'t request to upgrade to ${upgradeRole}, delete this email and change your password!\n All the best,\nSystem 424 Team \n`
+  await mailerService.sendMail(email, subject, text)
+
+  // If everything is fine, send an empty body code 204.
+  res.status(204).send()
+
+
 })
 
 /**
@@ -164,14 +144,18 @@ const upgradeUser = catchAsync(async function (req, res, upgradeRole, next) {
 const confirmUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(upgradeMiddleware.upgradeUserRole, req, res), upgradeMiddleware.sendSuccUpgradeMail], (err) => {
-    // If we catch an internal server error
-    if (err) {
-      return next(err)
-    } else {
-      res.status(204).send()
-    }
-  })
+  await userService.upgradeUserRole(req.headers.authorization, req.params.confirmationCode)
+  // E-Mail subject and text to be sent
+  const email = await userService.getUserMail(req.headers.authorization)
+  const role = await userService.getUserRole(req.headers.authorization)
+  const subject = `Welcome to Spotify ${role}!`
+  const text = 'Hello,\n\n' +
+    `This is a confirmation that you are now ${role}! \n\nHave fun, enjoy our music :)\n All the best, System-424 team\n`
+  await mailerService.sendMail(email, subject, text)
+
+  // If no error happens
+  res.status(204).send()
+
 })
 
 /**
@@ -184,14 +168,20 @@ const confirmUpgrade = catchAsync(async function (req, res, next) {
 const cancelUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
-  async.waterfall([async.apply(upgradeMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE, 'premium'), upgradeMiddleware.assignUpgradeCancelCode, upgradeMiddleware.sendPremiumCancelCodeMail], (err) => {
-    // If we catch an internal server error, update the resond and create error object to send
-    if (err) {
-      return next(err)
-    } else { // If everything is fine, send an empty body code 204.
+  const token = await userService.createTokenString(parseInt(process.env.PREM_CONF_CODE_SIZE, 10))
+  await userService.assignUpgradeConfirmCode(req.headers.authorization, token, 'premium')
+  // E-Mail subject and text to be sent]
+  const role = await userService.getUserRole(req.headers.authorization)
+  const email = await userService.getUserMail(req.headers.authorization)
+  const subject = `Cancel ${role} subscription mail!`
+  const text = `Hello.\n\nHere is the verification code that you need to cancel your ${role} subscription: ` +
+  token + '\n\n' +
+ ` If you didn\'t request to cancel ${role}, delete this email and change your password!\n All the best,\nSystem 424 Team \n`
+  await mailerService.sendMail(email, subject, text)
+
+  // If everything is fine, send an empty body code 204.
       res.status(204).send()
-    }
-  })
+    
 })
 
 /**
@@ -204,17 +194,21 @@ const cancelUpgrade = catchAsync(async function (req, res, next) {
 const confirmCancelUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
-  async.waterfall([async.apply(upgradeMiddleware.changeRoleToUser, req, res), upgradeMiddleware.sendSuccCancelMail], (err) => {
-    // If we catch an internal server error
-    if (err) {
-      return next(err)
-    } else {
+ // async.waterfall([async.apply(upgradeMiddleware.changeRoleToUser, req, res), upgradeMiddleware.sendSuccCancelMail], (err) => {
+  await userService.changeRoleToUser(req.headers.authorization, req.params.confirmationCode)
+ // E-Mail subject and text to be sent
+ const email = await userService.getUserMail(req.headers.authorization)
+ const subject = 'You\'re now a normal user!'
+ const text = 'Hello,\n\n' +
+ 'This is a confirmation that you are now a normal user like before! \n\nHave fun, enjoy our music :)\n All the best, System-424 team\n'
+ await mailerService.sendMail(email, subject, text)
+
+  // If no error
       res.status(204).send()
-    }
-  })
+    
 })
 
-// Handling which module to export, to be able to export private functions when testing
+// Handling which module to export
 const userController = {}
 
 // Functions needed for production only
@@ -227,18 +221,6 @@ userController.prodExports = {
   cancelUpgrade: cancelUpgrade,
   confirmCancelUpgrade: confirmCancelUpgrade
 }
-// Exporting the functions needed for unit testing
-userController.testExports = {
-  resetPassword: resetPassword,
-  requestResetPassword: requestResetPassword,
-  requestBecomePremium: requestBecomePremium,
-  requestBecomeArtist: requestBecomeArtist,
-  upgradeUser: upgradeUser,
-  confirmUpgrade: confirmUpgrade,
-  cancelUpgrade: cancelUpgrade,
-  confirmCancelUpgrade: confirmCancelUpgrade,
-  nodemailer: nodemailer
-}
 
-const exported = process.env.NODE_ENV === 'test' ? userController.testExports : userController.prodExports
+const exported = userController.prodExports
 module.exports = exported
