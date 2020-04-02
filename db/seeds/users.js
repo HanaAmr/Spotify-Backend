@@ -18,7 +18,7 @@ const express = require('express')
  * @const
  */
 const User = require('../../models/userModel')
-const app = express()
+const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -32,9 +32,9 @@ const dotenv = require('dotenv')
  */
 const mongoose= require('mongoose')
 // Configuring environment variables to use them
-dotenv.config()
-const mongoDB = process.env.MONGO_URI
-mongoose.connect(mongoDB, { useNewUrlParser : true, useUnifiedTopology : true})
+dotenv.config({ path: '../../.env' })
+const mongoDB = process.env.DATABASE_LOCAL
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection
 db.once('open', url => {
@@ -77,7 +77,7 @@ createUsers = async() => {
     
     const user4 = new User({
         id: "id4",
-        name: "user4",
+        name: "user3",
         email: "user4@email.com",
         password: "password",
         resetPasswordToken: "abcdefghijklmnopqrstuvwxyz",
