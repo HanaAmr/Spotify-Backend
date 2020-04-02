@@ -77,9 +77,6 @@ const userSchema = new Schema({
     type: Array
     // items: [{type: Schema.Types.ObjectId, ref: 'image'}]
   },
-  country: {
-    type: String
-  },
   type: {
     type: String
   },
@@ -145,6 +142,6 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
   return await bcrypt.compare(candidatePassword, userPassword)
 }
 
-const User = mongoose.model('user', userSchema)
+const User = mongoose.model('User', userSchema)
 
 module.exports = User

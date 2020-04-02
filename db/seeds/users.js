@@ -16,7 +16,7 @@ const express = require('express')
  * User model from the database
  * @const
  */
-const User = require('../../models/user')
+const User = require('../../models/userModel')
 const app = express()
 /**
  * express module
@@ -31,8 +31,8 @@ const dotenv = require('dotenv')
  */
 const mongoose = require('mongoose')
 // Configuring environment variables to use them
-dotenv.config()
-const mongoDB = process.env.MONGO_URI
+dotenv.config({ path: '../../.env' })
+const mongoDB = process.env.DATABASE_LOCAL
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection

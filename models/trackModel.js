@@ -21,10 +21,6 @@ const trackSchema = new mongoose.Schema({
     required: [true, 'A track must have an album'],
     unique: true
   },
-  image: {
-    type: String
-    // required: [true, "A track must have an image"]
-  },
   type: String,
   uri: {
     type: String
@@ -57,19 +53,14 @@ const trackSchema = new mongoose.Schema({
     type: Number,
 	  default: 0
   },
-  previewUrl: {
-    type: String,
-    description: 'A link to 30 second preview of the track.'
-    // required: [true, "A track must have a preview URL"]
-  },
   album: {
     type: mongoose.Schema.ObjectId,
-    ref: 'album'
+    ref: 'Album',
   },
   artists: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'user'
+      ref: 'User'
     }
   ]
 })
@@ -81,16 +72,22 @@ const trackSchema = new mongoose.Schema({
 * @inner
 * @param {string} find - populate the documents before any find function
 */
-trackSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'album'
-  })
-  this.populate({
-    path: 'artists'
-  })
+// trackSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'album'
+//   })
+//   this.populate({
+//     path: 'artists',
+//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
+//   })
 
-  next()
-})
+//   next()
+// })
+
+// trackSchema.pre(/^find/, function (next) {
+//   this.updateMany( {}, { $rename: { "_id": "id" } } )
+//   next()
+// })
 
 const Track = mongoose.model('Track', trackSchema)
 

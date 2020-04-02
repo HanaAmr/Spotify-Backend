@@ -21,12 +21,11 @@ const albumSchema = new mongoose.Schema({
     unique: true
   },
   href: {
-    type: String
-    // required: [true,'An Album must have a ref']
+    type: String,
+    required: [true, 'An Album must have a ref']
   },
   images: {
     type: [String]
-    // required: [true, 'An album must have at least one image']
   },
   albumType: {
     type: String,
@@ -42,10 +41,10 @@ const albumSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    description: 'The Spotify URI for the album.'
-    // required: [true,'An album must have a uri']
+    description: 'The Spotify URI for the album.',
+    required: [true, 'An album must have a uri']
   },
-  genres: {
+  genre: {
     description: 'An array of strings. A list of the genres used to classify the album.',
     type: [String],
     required: [true, 'An album must have at least one genre']
@@ -88,14 +87,16 @@ const albumSchema = new mongoose.Schema({
 // * @inner
 // * @param {string} find - populate the database before any find function
 // */
-albumSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'artists'
-  })
+// albumSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'artists',
+//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
 
-  next()
-})
+//   })
 
-const Album = mongoose.model('album', albumSchema)
+//   next()
+// })
+
+const Album = mongoose.model('Album', albumSchema)
 
 module.exports = Album
