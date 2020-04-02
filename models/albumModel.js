@@ -17,17 +17,18 @@ const mongoose = require('mongoose')
 const albumSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'An album must have a name'],
+    required: [true,'An album must have a name'],
     unique: true
   },
-  href: {
+  href:{
     type: String,
-    required: [true, 'An Album must have a ref']
+    //required: [true,'An Album must have a ref']
   },
   images: {
-    type: [String]
+    type: [String],
+    //required: [true, 'An album must have at least one image']
   },
-  albumType: {
+  albumType:{
     type: String,
     required: [true, 'An Album must have a type']
   },
@@ -41,13 +42,13 @@ const albumSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    description: 'The Spotify URI for the album.',
-    required: [true, 'An album must have a uri']
+    description: 'The Spotify URI for the album.'
+    //required: [true,'An album must have a uri']
   },
   genre: {
     description: 'An array of strings. A list of the genres used to classify the album.',
     type: [String],
-    required: [true, 'An album must have at least one genre']
+    required: [true,'An album must have at least one genre']
   },
   label: {
     description: 'The label for the album.',
@@ -56,7 +57,7 @@ const albumSchema = new mongoose.Schema({
   popularity: {
     description: 'The popularity of the album. The value will be equal to the sum of the likes of the album’s individual tracks.',
     type: Number,
-	  default: 0
+	  default:0
   },
   copyrights: {
     description: 'Array of copyrights objects. The copyright statements of the album.',
@@ -75,8 +76,8 @@ const albumSchema = new mongoose.Schema({
   ],
   totalTracks: {
     description: 'The total number of tracks inside the album',
-    type: Number,
-    required: [true, 'An Album must include the total number of']
+    type: Number ,
+    required:[true, 'An Album must include the total number of']
   }
 })
 

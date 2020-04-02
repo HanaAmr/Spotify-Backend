@@ -18,20 +18,20 @@ const mongoose = require('mongoose')
 const trackSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A track must have an album'],
+    required: [true, "A track must have an album"],
     unique: true
   },
   type: String,
-  uri: {
-    type: String
-    // required: [true, "A track must have a spotify URI"]
-  },
-  href: {
+  uri:{
     type: String,
-    required: [true, 'A track must have a refernce']
+    //required: [true, "A track must have a spotify URI"]
   },
-  externalUrls: {
-    type: [String]
+  href:{
+      type: String,
+      required: [true, "A track must have a refernce"]
+  },
+  externalUrls:{
+      type: [String]
   },
   external_ID: {
     description: 'Known external IDs for the track.',
@@ -39,19 +39,19 @@ const trackSchema = new mongoose.Schema({
   },
   trackNumber: {
     type: Number,
-    required: [true, 'A track must be ordered in the album (track Number)']
+    required: [true, "A track must be ordered in the album (track Number)"]
   },
   isLocal: {
     type: Boolean,
-    required: [true, 'A track must have an isLocal bit']
+    required: [true, "A track must have an isLocal bit"]
   },
   durationMs: {
     type: Number,
-    required: [true, 'A track must contain its duration']
+    required: [true, "A track must contain its duration"]
   },
   popularity: {
     type: Number,
-	  default: 0
+	  default:0
   },
   album: {
     type: mongoose.Schema.ObjectId,
@@ -62,7 +62,11 @@ const trackSchema = new mongoose.Schema({
       type: mongoose.Schema.ObjectId,
       ref: 'User'
     }
-  ]
+  ],
+  audioFilePath: {
+    type: String,
+    required: [true, 'A track must have a path for its audio file to play.']
+  }
 })
 
 /**

@@ -109,20 +109,20 @@ router.post('/resetPassword/:token', userController.resetPassword)
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - Becoming premium path
- * @param {callback} middleware - Become premium middleware.
+ * @param {callback} middleware - Upgrade user middleware
  */
 router.post('/me/premium', authController.protect, authController.restrictTo('user'), userController.requestBecomePremium)
 
 /**
- * Route for confirming to become premium
- * @name post/me/premium
+ * Route for confirming upgrade
+ * @name post/me/upgrade
  * @function
  * @memberof module:routes/users~usersRouter
  * @inner
- * @param {string} path - Becoming premium path
- * @param {callback} middleware - Become premium middleware.
+ * @param {string} path - Upgrade user path
+ * @param {callback} middleware - Upgrade user middleware
  */
-router.post('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('user'), userController.confirmBecomePremium)
+router.post('/me/upgrade/:confirmationCode', authController.protect, userController.confirmUpgrade)
 
 /**
  * Route for requesting to cancel premium
@@ -131,9 +131,9 @@ router.post('/me/premium/:confirmationCode', authController.protect, authControl
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - cancel premium path
- * @param {callback} middleware - cancel premium middleware.
+ * @param {callback} middleware - Cancel upgrade middleware
  */
-router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.requestCancelPremium)
+router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
 
 /**
  * Route for confirming to cancel premium
@@ -142,8 +142,41 @@ router.delete('/me/premium', authController.protect, authController.restrictTo('
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - cancel premium path
- * @param {callback} middleware - cancel premium middleware.
+ * @param {callback} middleware - Cancel upgrade middleware
  */
-router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelPremium)
+router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
+
+/**
+ * Route for requesting to become artist
+ * @name post/me/artist
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - Becoming artist path
+ * @param {callback} middleware - Upgrade user middleware
+ */
+router.post('/me/artist', authController.protect, userController.requestBecomeArtist)
+
+/**
+ * Route for requesting to cancel artist
+ * @name post/me/artist
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - cancel ugrade path
+ * @param {callback} middleware - Cancel upgrade middleware
+ */
+router.delete('/me/artist', authController.protect, authController.restrictTo('artist'), userController.cancelUpgrade)
+
+/**
+ * Route for confirming to cancel artist
+ * @name post/me/artist
+ * @function
+ * @memberof module:routes/users~usersRouter
+ * @inner
+ * @param {string} path - cancel upgrade path
+ * @param {callback} middleware - Cancel upgrade middleware
+ */
+router.delete('/me/artist/:confirmationCode', authController.protect, authController.restrictTo('artist'), userController.confirmCancelUpgrade)
 
 module.exports = router

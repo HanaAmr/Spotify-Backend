@@ -27,17 +27,19 @@ class APIFeatures {
       const sortBy = this.queryString.sort.split(',').join(' ')
       this.query = this.query.sort(sortBy)
     }
-    return this
   }
 
-  limitFields () {
-    if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(',').join(' ')
-      this.query = this.query.select(fields)
-    } else {
-      this.query = this.query.select('-__v')
-    }
-    return this
+   
+
+  limitFields(){
+      if(this.queryString.fields)
+      {
+          const fields= this.queryString.fields.split(',').join(' ');
+          this.query=this.query.select(fields);
+      } else{
+          this.query=this.query.select('-__v');
+      }
+      return this; 
   }
 
   limitFieldsPlaylist () {
@@ -113,9 +115,9 @@ class APIFeatures {
     const limit = this.queryString.limit * 1 || 100
     const skip = (page - 1) * limit
 
-    this.query = this.query.skip(skip).limit(limit)
-    return this
-  }
+        this.query=this.query.skip(skip).limit(limit);
+        return this;
+    }
 }
 
-module.exports = APIFeatures
+module.exports=APIFeatures;

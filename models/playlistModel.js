@@ -83,8 +83,8 @@ const playlistSchema = new mongoose.Schema({
   trackObjects: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Track'
-
+      ref: 'Track',
+      
     }
   ],
   noOfFollowers: {
@@ -117,6 +117,8 @@ const playlistSchema = new mongoose.Schema({
 
 //   next()
 // })
+
+
 
 const Playlist = mongoose.model('Playlist', playlistSchema)
 

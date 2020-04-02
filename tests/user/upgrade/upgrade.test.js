@@ -1,4 +1,4 @@
-/** Jest unit testing for cancelling premium subscription
+/** Jest unit testing for becoming premium
  * @module routes/users
  * @requires express
  */
@@ -37,6 +37,13 @@ const jwt = require('jsonwebtoken')
 
 /**
  * express module
+ * Async functions
+ * @const
+ */
+const async = require('async')
+
+/**
+ * express module
  * User model from the database
  * @const
  */
@@ -51,10 +58,24 @@ const userController = require('../../../controllers/userController')
 
 /**
  * express module
+ * Authorization controller
+ * @const
+ */
+const authController = require('../../../controllers/authController')
+
+/**
+ * express module
  * User middleware: Premium
  * @const
  */
-const premiumMiddleware = require('../../../middleware/user/premium')
+const upgradeMiddleware = require('../../../middleware/user/upgrade')
+
+/**
+ * express module
+ * error object
+ * @const
+ */
+const AppError = require('../../../utils/appError')
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
@@ -87,12 +108,12 @@ describe('userController create token string functionality', () => {
   // Testing creating the token string without problems
   it('Should create the token string successfully', async (done) => {
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium'
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.createTokenString(request, response, process.env.PREM_CONF_CODE_SIZE, (err, req, res, token) => {
+    upgradeMiddleware.createTokenString(request, response, process.env.PREM_CONF_CODE_SIZE, 'premium', (err, req, res, token) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(token).toBeDefined()
@@ -104,8 +125,8 @@ describe('userController create token string functionality', () => {
   })
 })
 
-// Testing assigning the cancellation code for cancelling premium to user
-describe('userController assigning cancellation code to user functionality', () => {
+// Testing assigning the config code for becoming premium to user
+describe('userController assigning config code to user functionality', () => {
   // the authorization token needed to test
   var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
@@ -127,17 +148,15 @@ describe('userController assigning cancellation code to user functionality', () 
     await mongoose.connection.collection('users').deleteMany({})
   })
 
-  // Testing successfully assigning the cancellation code to a user
-  it('Should assign the cancellation code to an existing user successfully', async (done) => {
+  // Testing successfully assigning the config code to a user
+  it('Should assign the confiramtion code to an existing user successfully', async (done) => {
     // get the id of the document in the db to use it to get authorization token
-    await User.findOne({}, async (err, user) => {
+    await User.findOne({}, (err, user) => {
       const id = user._id
       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      user.role = 'premium' // make the test user premium
-      await user.save() // save change to become premium
     })
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium',
       headers: {
         authorization: 'Bearer ' + authToken
@@ -145,33 +164,32 @@ describe('userController assigning cancellation code to user functionality', () 
     })
     const response = httpMocks.createResponse()
     const code = 'atoken'
-    premiumMiddleware.assignPremiumCancelCode(request, response, code, (err, req, res, code, user) => {
+    upgradeMiddleware.assignUpgradeConfirmCode(request, response, code, 'premium', (err, req, res, code, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
         expect(user).toBeDefined()
-        expect(user.becomePremiumToken).toEqual(code)
+        expect(user.upgradeToken).toEqual(code)
         done()
       } catch (error) {
         done(error)
       }
     })
   })
-
-  // TODO :Testing assigning the cancellation code to a non existent user
-  // it('Shouldn\'t assign the cancellation code as it\'s an non-existent user', async (done) => {
+  // TODO: Testing assigning the config code to a non existent user
+  // it('Shouldn\'t assign the code as it\'s an non-existent user', async (done) => {
   //   // Creating a fake string to use instead of ID in sign function
   //   const randomString = 'not a valid token'
   //   authToken = jwt.sign({ randomString }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
   //   const request = httpMocks.createRequest({
-  //     method: 'DELETE',
+  //     method: 'POST',
   //     url: '/me/premium',
   //     headers: {
-  //       authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNzRkOGZjMzY4NWM0NDBmMWNjYjg1ZiIsImlhdCI6MTU4NDcxNjAyOCwiZXhwIjoxNTg3MzA4MDI4fQ.Bi_HC9WLnRcniqiFNV1w9zApK0KvbFc1aHcHabTtFg0'
+  //       authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNzRkOGZjMzY4NWM0NDBmMWNjYjg1ZiIsImlhdCI6MTU4NDcxNjAyOCwiZXhwIjoxNTg3MzA4MDI4fQ.Bi_HC9WLnRcniqiFNV1w9zApK0KvbFc1aHcHabTtFg0' //fake token
   //     }
   //   })
   //   const response = httpMocks.createResponse()
   //   const code = 'atoken'
-  //   premiumMiddleware.assignPremiumCancelCode(request, response, code, (err, req, res, code, user) => {
+  //   upgradeMiddleware.assignUpgradeConfirmCode(request, response, code, (err, req, res, code, user) => {
   //     try {
   //       expect(err).toEqual(expect.anything())
   //       expect(err.statusCode).toEqual(404)
@@ -185,7 +203,7 @@ describe('userController assigning cancellation code to user functionality', () 
   // Testing getting an error when searching for user with auth token in db
   it('Should receive an error when not able to search the db', async (done) => {
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium',
       headers: {
         authorization: 'Bearer ' + authToken
@@ -194,7 +212,7 @@ describe('userController assigning cancellation code to user functionality', () 
     const response = httpMocks.createResponse()
     const code = 'atoken'
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    premiumMiddleware.assignPremiumCancelCode(request, response, code, (err, req, res, code, user) => {
+    upgradeMiddleware.assignUpgradeConfirmCode(request, response, code, 'premium', (err, req, res, code, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(500)
@@ -206,8 +224,8 @@ describe('userController assigning cancellation code to user functionality', () 
   })
 })
 
-// Testing userController send premium cancellation code email
-describe('userController send premium cancellation code mail functionality', () => {
+// Testing userController send premium confirmation code email
+describe('userController send premium confirmation code mail functionality', () => {
   // the authorization token needed to test
   var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
@@ -233,7 +251,7 @@ describe('userController send premium cancellation code mail functionality', () 
   // Testing sending the email with no problems
   it('Should send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium',
       headers: {
         authorization: 'Bearer ' + authToken
@@ -243,7 +261,7 @@ describe('userController send premium cancellation code mail functionality', () 
     const user = { email: 'omar@email.com' }
     const token = 'atoken'
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendPremiumCancelCodeMail(request, response, token, user, (err) => {
+    upgradeMiddleware.sendUpgradeConfirmCodeMail(request, response, token, user, (err) => {
       try {
         expect(err).not.toEqual(expect.anything())
         done()
@@ -256,7 +274,7 @@ describe('userController send premium cancellation code mail functionality', () 
   // Testing failing to send the email with no problems
   it('Shouldn\'t send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium',
       headers: {
         authorization: 'Bearer ' + authToken
@@ -273,7 +291,7 @@ describe('userController send premium cancellation code mail functionality', () 
     const user = { email: 'omar@email.com' }
     const token = 'atoken'
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendPremiumCancelCodeMail(request, response, token, user, (err) => {
+    upgradeMiddleware.sendUpgradeConfirmCodeMail(request, response, token, user, (err) => {
       try {
         expect(err.statusCode).toEqual(502)
         done()
@@ -284,8 +302,8 @@ describe('userController send premium cancellation code mail functionality', () 
   })
 })
 
-// Testing userController change user role after cancellation premium
-describe('userController change user role after cancellation premium ', () => {
+// Testing userController change user role after confirming premium code
+describe('userController change user role after confirming premium code', () => {
   // the authorization token needed to test
   var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
@@ -298,8 +316,9 @@ describe('userController change user role after cancellation premium ', () => {
       name: 'omar',
       email: 'omar@email.com',
       password: 'password',
-      becomePremiumToken: 'atoken',
-      becomePremiumExpires: Date.now() + 360000
+      upgradeToken: 'atoken',
+      upgradeTokenExpires: Date.now() + 360000,
+      upgradeRole: 'premium'
     })
     await validUser.save()
   })
@@ -310,15 +329,15 @@ describe('userController change user role after cancellation premium ', () => {
     await mongoose.connection.collection('users').deleteMany({})
   })
 
-  // Testing changing the role with valid cancellation code
-  it('Should change the role to normal user successfully', async (done) => {
+  // Testing changing the role with valid confirmation code
+  it('Should change the role to premium successfully', async (done) => {
     // get the id of the document in the db to use it to get authorization token
     await User.findOne({}, (err, user) => {
       const id = user._id
       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
     })
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium/atoken',
       params: {
         confirmationCode: 'atoken'
@@ -329,10 +348,10 @@ describe('userController change user role after cancellation premium ', () => {
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.changeRoleToUser(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         expect(err).not.toEqual(expect.anything())
-        expect(user.becomePremiumToken).not.toEqual(expect.anything)
+        expect(user.upgradeToken).not.toEqual(expect.anything)
         done()
       } catch (error) {
         done(error)
@@ -340,15 +359,15 @@ describe('userController change user role after cancellation premium ', () => {
     })
   })
 
-  // Testing changing the role to user with non valid cancellation code
-  it('Shouldn\'t change the role as cancellation code is invalid', async (done) => {
+  // Testing changing the role to premium with non valid confirmation code
+  it('Shouldn\'t change the role as confirmation code is invalid', async (done) => {
     // get the id of the document in the db to use it to get authorization token
     await User.findOne({}, (err, user) => {
       const id = user._id
       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
     })
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium/atoken',
       params: {
         confirmationCode: 'atokensdsd'
@@ -359,7 +378,7 @@ describe('userController change user role after cancellation premium ', () => {
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.changeRoleToUser(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(404)
@@ -370,7 +389,7 @@ describe('userController change user role after cancellation premium ', () => {
     })
   })
 
-  // Testing changing the role to normal user with no cancellation code
+  // Testing changing the role to premium with no confirmation code
   it('Shouldn\'t change the role as no code is provided', async (done) => {
     // get the id of the document in the db to use it to get authorization token
     await User.findOne({}, (err, user) => {
@@ -378,7 +397,7 @@ describe('userController change user role after cancellation premium ', () => {
       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
     })
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium/atoken',
       params: { },
       headers: {
@@ -387,7 +406,7 @@ describe('userController change user role after cancellation premium ', () => {
     })
 
     const response = httpMocks.createResponse()
-    premiumMiddleware.changeRoleToUser(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         expect(err).toEqual(expect.anything())
         expect(err.statusCode).toEqual(404)
@@ -406,7 +425,7 @@ describe('userController change user role after cancellation premium ', () => {
       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
     })
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium/atoken',
       params: {
         confirmationCode: 'atoken'
@@ -418,7 +437,7 @@ describe('userController change user role after cancellation premium ', () => {
 
     const response = httpMocks.createResponse()
     sinon.stub(User, 'findOne').yields(new Error('Couldn\'t search for user in db.'))
-    premiumMiddleware.changeRoleToUser(request, response, (err, req, res, user) => {
+    upgradeMiddleware.upgradeUserRole(request, response, (err, req, res, user) => {
       try {
         console.log(err)
         expect(err).toEqual(expect.anything())
@@ -431,8 +450,8 @@ describe('userController change user role after cancellation premium ', () => {
   })
 })
 
-// Testing userController send successfull premium cancellation email
-describe('userController send successfull premium cancellation email', () => {
+// Testing userController send successfull premium confirmation email
+describe('userController send successfull premium confirmation email', () => {
   // the authorization token needed to test
   var authToken = 'testToken'
   // Drop the whole users collection before testing and add a simple user to test with
@@ -458,7 +477,7 @@ describe('userController send successfull premium cancellation email', () => {
   // Testing sending the email with no problems
   it('Should send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium/atoken',
       params: { confirmationCode: 'atoken' },
       headers: {
@@ -468,7 +487,7 @@ describe('userController send successfull premium cancellation email', () => {
 
     const user = { email: 'omar@email.com' }
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendSuccPremiumCancelMail(request, response, user, (err) => {
+    upgradeMiddleware.sendSuccUpgradeMail(request, response, user, (err) => {
       try {
         expect(err).not.toEqual(expect.anything())
         done()
@@ -478,10 +497,10 @@ describe('userController send successfull premium cancellation email', () => {
     })
   })
 
-  // Testing failing to send the email confirming cancellation of premium subscription
+  // Testing failing to send the email confirming becoming premium
   it('Shouldn\'t send the email successfully', async (done) => {
     const request = httpMocks.createRequest({
-      method: 'DELETE',
+      method: 'POST',
       url: '/me/premium/atoken',
       params: { confirmationCode: 'atoken' },
       headers: {
@@ -498,7 +517,7 @@ describe('userController send successfull premium cancellation email', () => {
     sinon.stub(userController.nodemailer, 'createTransport').returns(transport)
     const user = { email: 'omar@email.com' }
     const response = httpMocks.createResponse()
-    premiumMiddleware.sendSuccPremiumCancelMail(request, response, user, (err) => {
+    upgradeMiddleware.sendSuccUpgradeMail(request, response, user, (err) => {
       try {
         expect(err.statusCode).toEqual(502)
         done()
@@ -509,157 +528,223 @@ describe('userController send successfull premium cancellation email', () => {
   })
 })
 
-// TODO:
-// Testing userController whole request to cancel premium functionality
-// describe('userController whole request to cancel premium functionality', () => {
-//   // the authorization token needed to test
-//   var authToken = 'testToken'
-//   // Drop the whole users collection before testing and add a simple user to test with
-//   beforeEach(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
+// Testing userController whole request to become premium functionality
+describe('userController whole request to become premium functionality', () => {
+  // Drop the whole users collection before testing and add a simple user to test with
+  beforeEach(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
+    })
+    await validUser.save()
+    // Mock the authController get user id function to return the testing user id.
+    sinon.stub(authController, 'getUserId').yields(validUser._id)
+    sinon.stub(jwt, 'verify').callsFake(() => {
+      return Promise.resolve({ success: 'Token is valid' })
+    })
+  })
 
-//     // Creating the valid user to assign the token to him
-//     const validUser = new User({
-//       name: 'omar',
-//       email: 'omar@email.com',
-//       password: 'password'
-//     })
-//     await validUser.save()
-//   })
+  // Drop the whole users collection after finishing testing
+  afterAll(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+  })
 
-//   // Drop the whole users collection after finishing testing
-//   afterAll(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
-//   })
+  // Testing successful email with premium confirmation code
+  it('Should send 204 upon emailing user with confirmation code for premium role', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/premium',
+      headers: {
+        authorization: 'Bearer ' + authToken
+      }
+    })
 
-//   // Testing successful email with premium confirmation code
-//   it('Should send 204 upon emailing user with cancellation code for premium role', async (done) => {
-//     // get the id of the document in the db to use it to get authorization token
-//     await User.findOne({}, async (err, user) => {
-//       const id = user._id
-//       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-//       user.role = 'premium' //make the test user premium
-//       await user.save() //save change to become premium
-//     })
-//     const request = httpMocks.createRequest({
-//       method: 'DELETE',
-//       url: '/me/premium',
-//       headers: {
-//         authorization: authToken
-//       }
-//     })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.requestBecomePremium(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 
-//     const response = httpMocks.createResponse()
-//     userController.requestCancelPremium(request, response, (err) => {
-//       try {
-//         expect(response.statusCode).toEqual(204)
-//         done()
-//       } catch (error) {
-//         done(error)
-//       }
-//     })
-//   })
+  // Testing successful email with artist confirmation code
+  it('Should send 204 upon emailing user with confirmation code for premium role', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/meArtist',
+      headers: {
+        authorization: 'Bearer ' + authToken
+      }
+    })
 
-//   // Testing unsuccessful cancel premium request (no authorization code for error here)
-//   it('Should send error upon failing to email to cancel premium', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'DELETE',
-//       url: '/me/premium',
-//       headers: {}
-//     })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.requestBecomeArtist(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 
-//     const response = httpMocks.createResponse()
-//     userController.requestCancelPremium(request, response, (err) => {
-//       try {
-//         expect(err).toEqual(expect.anything())
-//         expect(err.statusCode).toEqual(401) // We're sending without an authorization token, so we get 401 unauthorized error code.
-//         done()
-//       } catch (error) {
-//         done(error)
-//       }
-//     })
-//   })
-// })
+  // Testing failing to request premium confirmation code
+  it('Should send 500 upon failing to request to be premium', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/premium',
+      headers: {
+        authorization: 'Bearer ' + authToken
+      }
+    })
+    sinon.stub(upgradeMiddleware, 'createTokenString').yields(new AppError('Couldn\'t search for user in db.', 500))
 
-// Testing userController whole request to confirm cancellation with code functionality
-// describe('userController whole request to confirm premium cancellation with code functionality', () => {
-//   // the authorization token needed to test
-//   var authToken = 'testToken'
-//   // Drop the whole users collection before testing and add a simple user to test with
-//   beforeEach(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.requestBecomePremium(request, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(500)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+  // Testing failing in async.waterfall
+  it('Should send 500 upon failing in async.waterfall', async (done) => {
+  // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
+    const request = httpMocks.createRequest({
+      method: 'DELETE',
+      url: '/me/premium',
+      headers: {
+        authorization: 'Bearer ' + authToken
+      }
+    })
+    sinon.stub(async, 'waterfall').yields(new AppError('Couldn\'t search for user in db.', 500))
 
-//     // Creating the valid user to assign the token to him
-//     const validUser = new User({
-//       name: 'omar',
-//       email: 'omar@email.com',
-//       password: 'password',
-//       becomePremiumToken: 'atoken',
-//       becomePremiumExpires: Date.now() + 360000
-//     })
-//     await validUser.save()
-//   })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.upgradeUser(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+})
 
-//   // Drop the whole users collection after finishing testing
-//   afterAll(async () => {
-//     sinon.restore()
-//     await mongoose.connection.collection('users').deleteMany({})
-//   })
+// // Testing userController whole request to confirm premium with code functionality
+describe('userController whole request to confirm premium with code functionality', () => {
+  // the authorization token needed to test
+  var authToken = 'testToken'
+  // Drop the whole users collection before testing and add a simple user to test with
+  beforeEach(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password',
+      upgradeToken: 'atoken',
+      upgradeTokenExpires: Date.now() + 360000
+    })
+    await validUser.save()
+    // Mock the authController get user id function to return the testing user id.
+    sinon.stub(authController, 'getUserId').yields(validUser._id)
+    sinon.stub(jwt, 'verify').callsFake(() => {
+      return Promise.resolve({ success: 'Token is valid' })
+    })
+  })
 
-//   // Testing successful email with premium cancellation code
-//   it('Should send 204 upon emailing user with cancellation code for premium role', async (done) => {
-//     // get the id of the document in the db to use it to get authorization token
-//     await User.findOne({}, (err, user) => {
-//       const id = user._id
-//       authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-//     })
-//     const request = httpMocks.createRequest({
-//       method: 'DELETE',
-//       url: '/me/premium/atoken',
-//       params: {
-//         confirmationCode: 'atoken'
-//       },
-//       headers: {
-//         authorization: 'Bearer '+authToken
-//       }
-//     })
+  // Drop the whole users collection after finishing testing
+  afterAll(async () => {
+    sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+  })
 
-//     const response = httpMocks.createResponse()
-//     userController.confirmCancelPremium(request, response, (err) => {
-//       try {
-//         expect(response.statusCode).toEqual(204)
-//         done()
-//       } catch (error) {
-//         done(error)
-//       }
-//     })
-//   })
+  // Testing successful email with premium confirmation code
+  it('Should send 204 upon emailing user with confirmation code for premium role', async (done) => {
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      const id = user._id
+      authToken = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/premium/atoken',
+      params: {
+        confirmationCode: 'atoken'
+      },
+      headers: {
+        authorization: 'Bearer ' + authToken
+      }
+    })
 
-//   // Testing unsuccessful cancel premium request (wrong code is sent is reason for error here)
-//   it('Should send error upon failing to email to become premium', async (done) => {
-//     const request = httpMocks.createRequest({
-//       method: 'DELETE',
-//       url: '/me/premium/atoken',
-//       params: {
-//         confirmationCode: 'atsoken'
-//       },
-//       headers: {
-//         authorization: 'Bearer '+authToken
-//       }
-//     })
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.confirmUpgrade(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 
-//     const response = httpMocks.createResponse()
-//     userController.confirmCancelPremium(request, response, (err) => {
-//       try {
-//         expect(err).toEqual(expect.anything())
-//         expect(err.statusCode).toEqual(404) // We're sending without an authorization token, so we get 401 unauthorized error code.
-//         done()
-//       } catch (error) {
-//         done(error)
-//       }
-//     })
-//   })
-// })
+  // Testing unsuccessful become premium request (wrong code is sent is reason for error here)
+  it('Should send error upon failing to email to become premium', async (done) => {
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/premium/atoken',
+      params: {
+        confirmationCode: 'atsoken'
+      },
+      headers: {
+        authorization: 'Bearer ' + authToken
+      }
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    userController.confirmUpgrade(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(404) // We're sending without an authorization token, so we get 401 unauthorized error code.
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+})
