@@ -35,12 +35,12 @@ const playlistSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    required: true,
+    //required: true,
     description: 'The Spotify URI for the playlist.'
   },
   href: {
     type: String,
-    required: true,
+    //required: true,
     description: 'A link to the Web API endpoint providing full details of the playlist.'
   },
   public: {
@@ -60,20 +60,21 @@ const playlistSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Category'
   },
-  owner: [
-      {
-        type: String,
-        required: true,
-        description: 'link to the owner/s of the playlist'
-      }
-  ],
   // owner: [
   //   {
-  //     type: mongoose.Schema.ObjectId,
-  //     ref: 'User'
+  //     type: String,
+  //     required: true,
+  //     description: 'link to the owner/s of the playlist'
   //   }
   // ],
-  tracks: { 
+  owner: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: true
+    }
+  ],
+  tracks: {
     type: {
       href: String,
       total: Number
@@ -93,22 +94,25 @@ const playlistSchema = new mongoose.Schema({
   popularity: {
     description: 'The number of likes to this playlist',
     type: Number
+  },
+  createdAt: {
+    description: 'The date the playlist was created',
+    type: Date,
+    default: Date.now()
   }
 
 })
 
 // playlistSchema.pre(/^find/, function (next) {
 //   this.populate({
-//     path: 'trackObjects'
+//     path: 'owner',
+//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
 //   })
-//   // this.populate({
-//   //   path: 'owner',
-//   // })
 
 //   next()
 // })
 
-// playlistSchema.pre('*', function (next) {
+// playlistSchema.pre(/^find/, function (next) {
 //   this.select('-trackObjects')
 
 //   next()

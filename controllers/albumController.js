@@ -56,7 +56,11 @@ const Track = require('./../models/trackModel')
 exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
   const ids = req.query._id.split(',')
   const features = new APIFeatures(Album.find().where('_id').in(ids), req.query)
-  const albums = await features.query
+  const albums = await features.query.populate({
+    path: 'artists',
+    select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
+
+  })
 
   res.status(200).json({
     status: 'success',
@@ -75,7 +79,11 @@ exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns an album a json form.
  */
 exports.getOneAlbum = catchAsync(async (req, res, next) => {
-  const album = await Album.findById(req.params.albumId)
+  const album = await Album.findById(req.params.albumId).populate({
+    path: 'artists',
+    select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+
+  })
 
   if (!album) {
     return next(new AppError('No album found with that ID', 404))
@@ -99,12 +107,28 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
  */
 exports.getAlbumTracks = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId), req.query).paginate()
-  const tracksArray = await features.query
+  const tracksArray = await features.query.select('-album').populate('artists')
 
   res.status(200).json({
     status: 'success',
     data: {
       tracksArray
+    }
+  })
+})
+
+exports.getSortedAlbums = catchAsync(async (req, res, next) => {
+  const features = new APIFeatures(Album.find(), req.query).sort().paginate()
+  const albums = await features.query.populate({
+    path: 'artists',
+    select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+
+  })
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      albums
     }
   })
 })

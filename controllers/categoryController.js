@@ -73,8 +73,8 @@ exports.getAllCategories = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns an array of playlists in a json form.
  */
 exports.getCategoryPlaylist = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(Playlist.find({ category: req.params.categoryId }), req.query).paginate()
-  const playlists = await features.query.select('-trackObjects')
+  const features = new APIFeatures(Playlist.find({ category: req.params.categoryId }), req.query).paginate().limitFieldsPlaylist()
+  const playlists = await features.query// .select('-trackObjects')
 
   if (playlists.length === 0) {
     return next(new AppError('This category has no playlists', 404))

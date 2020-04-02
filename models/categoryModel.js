@@ -22,11 +22,7 @@ const categorySchema = new mongoose.Schema({
   },
   href: {
     type: String,
-    required: [true, ' A link to the Web API endpoint returning full details of the category.']
-  },
-  images: {
-    type: String,
-    required: [true, 'A category must have an image']
+    //required: [true, ' A link to the Web API endpoint returning full details of the category.']
   }
 })
 
