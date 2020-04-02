@@ -48,7 +48,7 @@ const catchAsync = require('../utils/catchAsync')
  * error object
  * @const
  */
-const AppError = require('../utils/appError')
+const appError = require('../utils/appError')
 
 class userService {
   // Constructor with dependency injection
@@ -71,7 +71,7 @@ class userService {
        token = authToken.split(' ')[1];
     }
     if(!token) {
-      throw(new AppError('You are not logged in! Please log in to access.', 401));
+      throw(new appError('You are not logged in! Please log in to access.', 401));
     }
     //verification of token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
@@ -94,7 +94,7 @@ class userService {
     }
     
     if(!token) {
-      throw(new AppError('You are not logged in! Please log in to access.', 401));
+      throw(new appError('You are not logged in! Please log in to access.', 401));
     }
     
     //verification of token
@@ -122,7 +122,7 @@ class userService {
   }
   
   if(!token) {
-    throw(new AppError('You are not logged in! Please log in to access.', 401));
+    throw(new appError('You are not logged in! Please log in to access.', 401));
   }
   
   //verification of token
@@ -141,7 +141,7 @@ class userService {
      * @param {token} - The token generated
      */
   async createTokenString(size) {
-    const buff = crypto.randomBytes(size)
+    const buff = crypto.randomBytes(size/2) //Divide by 2 as 1 byte = 2 hex digits
     const token = buff.toString('hex')
     return token;
   }
@@ -156,7 +156,7 @@ class userService {
     // Search for the user with the provided email in the db.
     const user = await User.findOne({ email: email })
     if (!user) { // If user doesn't exist
-      throw new AppError('No user with this email exists : ' + email, 404)
+      throw new appError('No user with this email exists : ' + email, 404)
     } else {
       // Update the user resetPassword token and save changes
       user.resetPasswordToken = token
@@ -175,7 +175,7 @@ class userService {
     // Searching for the user with this reset token if not expired.
     const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } })
     if(!user) {
-      throw new AppError('Invalid token !', 404)
+      throw new appError('Invalid token !', 404)
     }
     if (newPassword === passwordConfirmation) {
       user.password = newPassword
@@ -185,7 +185,7 @@ class userService {
       // Save the user account after changing the password.
       await user.save()
     } else {
-      throw new AppError('Passwords don\'t match.', 403)
+      throw new appError('Passwords don\'t match.', 403)
     }
   }
 
@@ -200,7 +200,7 @@ async assignUpgradeConfirmCode (authToken,token, upgradeRole) {
   const userId = await this.getUserId(authToken)
     const user = await User.findById(userId)
       if (!user) { // If user doesn't exist
-        throw (new AppError('Couldn\'t find the user', 404))
+        throw (new appError('Couldn\'t find the user', 404))
       } else {
       // Update the user premium verification code and save changes
         user.upgradeToken = token
@@ -222,7 +222,7 @@ async upgradeUserRole (authToken,confirmationCode ) {
   const userId = await this.getUserId(authToken)
     const user = await User.findOne({ _id: userId, upgradeToken: confirmationCode, upgradeTokenExpires: { $gt: Date.now() } })
       if (!user) { // If no user with this token is found (token is invalid)
-        throw (new AppError('The code provided is not valid.', 404))
+        throw (new appError('The code provided is not valid.', 404))
       } else {
         user.role = user.upgradeRole
         // Reset token no longer exists
@@ -244,7 +244,7 @@ async changeRoleToUser(authToken, confirmationCode) {
   const userId = await this.getUserId(authToken)
     const user = await User.findOne({ _id: userId, upgradeToken: confirmationCode, upgradeTokenExpires: { $gt: Date.now() } })
       if (!user) { // If no user with this token is found (token is invalid)
-        throw (new AppError('The code provided is not valid.', 404))
+        throw (new appError('The code provided is not valid.', 404))
       } else {
         user.role = 'user'
         // Reset token no longer exists
