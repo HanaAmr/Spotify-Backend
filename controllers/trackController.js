@@ -17,6 +17,13 @@
  * @const
  */
 const Track = require('./../models/trackModel')
+/**
+ * express module
+ * Player services
+ * @const
+ */
+const playerServices = require('../services/playerService')
+const playerService = new playerServices()
 
 /**
  * express module
@@ -32,6 +39,7 @@ const APIFeatures = require('./../utils/apiFeatures')
  */
 const catchAsync = require('./../utils/catchAsync')
 
+
 /**
  * Get one Track given its ID
  * @memberof module:controllers/track~trackController
@@ -41,13 +49,14 @@ const catchAsync = require('./../utils/catchAsync')
  * @return {JSON} The details of the track in a json form.
  */
 exports.getOneTrack = catchAsync(async (req, res, next) => {
-  const track = await Track.findById(req.params.trackId)
 
+  const features = new APIFeatures(Track.findById(req.params.trackId), req.query).limitFieldsTracks()
+  const track = await features.query
   res.status(200).json({
     status: 'success',
-    // data: {
-    track
-    // }
+    data: {
+     track
+    }
   })
 })
 
@@ -61,13 +70,35 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
  */
 exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href for tracks in playlist but basicly can work for anything
   const ids = req.query._id.split(',')
-  const features = new APIFeatures(Track.find().where('_id').in(ids), req.query)// .limitField().paginate()
+  const features = new APIFeatures(Track.find().where('_id').in(ids), req.query).limitFieldsTracks()
   const tracks = await features.query
 
   res.status(200).json({
     status: 'success',
-    // data: {
-    tracks
-    // }
+    data: {
+     tracks
+    }
   })
+})
+
+
+/**
+ * Get one Track mp3 file given its ID
+ * @memberof module:controllers/track~trackController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ * @return {File} The mp3 file of the track.
+ */
+exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
+  const track = await Track.findById(req.params.trackId)
+  console.log(track)
+  //Check authorization first
+  const authorized = await playerService.validateTrack(req.headers.authorization)
+  if(authorized){  //Send file if authorize
+  res.download(track.audioFilePath)
+  }
+  else {
+    res.status(403).send();
+  }
 })
