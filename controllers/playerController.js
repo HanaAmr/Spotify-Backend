@@ -58,6 +58,24 @@ const APIFeatures = require('../utils/apiFeatures')
  */
 const authController = require('../controllers/authController')
 
+
+/**
+ * express module
+ * User services
+ * @const
+ */
+const userServices = require('../services/userService')
+const userService = new userServices()
+
+
+/**
+ * express module
+ * Player services
+ * @const
+ */
+const playerServices = require('../services/playerService')
+const playerService = new playerServices()
+
 /**
  * express module
  * error object
@@ -73,18 +91,11 @@ const AppError = require('../utils/appError')
  * @param {next} - The next function in the middleware
  */
 exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
-  const userId = await authController.getUserId(req)
+  const userId = await userService.getUserId(req.headers.authorization)
 
-  // Check if we reached the limit for this user
-  const count = await PlayHistory.countDocuments({ userId: userId })
-  if (count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)) { // If we reached the limit of playHistory for this user
-    const oldestPlayHistory = await PlayHistory
-      .find()
-      .where('userId').equals(userId)
-      .sort('playedAt')
-      .limit(1)
-    await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
-  }
+  // Make sure list of recently played is freed if it has reached the limit
+  await playerService.deleteOneRecentlyPlayedIfFull(req.headers.authorization)
+  
 
   // TODO: Instead of getting the context from the request, we should have it saved
   // when the user started playing
@@ -115,7 +126,7 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
  * @param {next} - The next function in the middleware
  */
 exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
-  const userId = await authController.getUserId(req)
+  const userId = await userService.getUserId(req.headers.authorization)
   const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
   const items = await features.query
   res.status(200).json({

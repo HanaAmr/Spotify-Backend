@@ -49,12 +49,7 @@ class mailerService {
       text: text
     }
     // Sending the email
-    smtpTransport.sendMail(mailOptions, (err) => {
-      if (err) {
-        return (new AppError('Couldn\'t send the email ', 502))
-      } 
-      return null
-    })
+    await smtpTransport.sendMail(mailOptions)
   }
 }
 
