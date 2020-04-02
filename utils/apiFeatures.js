@@ -27,6 +27,7 @@ class APIFeatures {
       const sortBy = this.queryString.sort.split(',').join(' ')
       this.query = this.query.sort(sortBy)
     }
+    return this
   }
 
    
@@ -62,7 +63,7 @@ class APIFeatures {
         //select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
         select: 'name'
       })
-      console.log('here')
+    
     }
     return this
   }
@@ -103,7 +104,7 @@ class APIFeatures {
         this.query = this.query.select(fields)
       }
     } else {
-      this.query = this.query.select('-__v')
+      this.query = this.query.select('-__v -audioFilePath')
       this.query.populate({ path: 'album' , select: '-artists'})
       this.query.populate({ path: 'artists' })
     }
@@ -112,12 +113,13 @@ class APIFeatures {
 
   paginate () {
     const page = this.queryString.page * 1 || 1
-    const limit = this.queryString.limit * 1 || 100
+    const limit = this.queryString.limit * 1 || 2
     const skip = (page - 1) * limit
 
         this.query=this.query.skip(skip).limit(limit);
         return this;
     }
+
 }
 
 module.exports=APIFeatures;

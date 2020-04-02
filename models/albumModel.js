@@ -71,7 +71,7 @@ const albumSchema = new mongoose.Schema({
   artists: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'user'
+      ref: 'User'
     }
   ],
   totalTracks: {

@@ -79,7 +79,7 @@ createTracks = async () => {
     start = album1.indexOf(':')      
     const album1Id = album1.substring(start + 2, start+26)
 
-    let album2=Album.find({'name':'Happiness Begins'}).select('_id')
+    let album2=Album.find({'name':'Divide'}).select('_id')
     album2= (await album2).toString()
     start = album2.indexOf(':')      
     const album2Id = album2.substring(start + 2, start+26)
@@ -167,8 +167,8 @@ createTracks = async () => {
   await track4.updateOne({uri:`spotify:tracks:${track4._id}`})
 
   const track5 = new Track({
-    name:"What A Man Gotta Do",
-    description:"Jonas Brothers song",
+    name:"Perfect",
+    description:"Ed Sheeran song",
     "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",

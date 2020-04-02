@@ -75,7 +75,7 @@ createAlbums = async () => {
 
   const album1 = new Album({
     name:"Evolve",
-    "images":"this should be an href to images probably",
+    images:["Evolve.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
@@ -92,15 +92,15 @@ createAlbums = async () => {
   await album1.updateOne({uri:`spotify:albums:${album1._id}`})
 
   const album2 = new Album({
-    name:"Happiness Begins",
-    "images":"this should be an href to images probably",
+    name:"Divide",
+    images:["Divide.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
     genre:"Pop-rock",
-    label:"Jonas Brothers Album",
-    copyrights:"© 2019 Jonas Brothers Recording, Limited Liability Company, under exclusive license to Republic Records, a division of UMG Recordings, Inc.",
-    releaseDate:"2019-01-01",
+    label:"Ed Sheeran Album",
+    copyrights:"© 2017 Asylum Records UK, a division of Atlantic Records UK, a Warner Music Group company.",
+    releaseDate:"2017-01-01",
     artists:user2Id,
     totalTracks:1,
     popularity:700000
@@ -111,7 +111,7 @@ createAlbums = async () => {
 
   const album3 = new Album({
     name:"Sahran",
-    "images":"this should be an href to images probably",
+    images:["Sahran.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",

@@ -20,6 +20,13 @@ const Track = require('./../models/trackModel')
 
 /**
  * express module
+ * AppError class file
+ * @const
+ */
+const AppError = require('./../utils/appError')
+
+/**
+ * express module
  * API features utils file
  * @const
  */
@@ -45,6 +52,12 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
 
   const features = new APIFeatures(Track.findById(req.params.trackId), req.query).limitFieldsTracks()
   const track = await features.query
+  
+  if(!track){
+    return next(new AppError('No track found with that ID', 404))
+  }
+
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -65,6 +78,10 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
   const ids = req.query._id.split(',')
   const features = new APIFeatures(Track.find().where('_id').in(ids), req.query).limitFieldsTracks()
   const tracks = await features.query
+
+  if(tracks.length===0){
+    return next(new AppError('No tracks found with those ID', 404))
+  }
 
   res.status(200).json({
     status: 'success',

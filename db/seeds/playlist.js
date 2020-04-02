@@ -109,7 +109,7 @@ createPlaylists = async () => {
     start = track4.indexOf(':')      
     const track4Id = track4.substring(start + 2, start+26)
 
-    let track5=Track.find({'name':'What A Man Gotta Do'}).select('_id')
+    let track5=Track.find({'name':'Perfect'}).select('_id')
     track5= (await track5).toString()
     start = track5.indexOf(':')      
     const track5Id = track5.substring(start + 2, start+26)
@@ -119,7 +119,7 @@ createPlaylists = async () => {
     name: "Imagine Dragons Radio",
     collaborative:false,
     externalUrl:"this should be an externalUrl",
-    "images":"array of links to the images of the playlist",
+    images:["ImagineDragons.jpg"],
     description:"Imagine Dragons",
     owner:user1Id,
     public:true,
@@ -141,8 +141,8 @@ createPlaylists = async () => {
     name: "Happy Hits",
     collaborative:false,
     externalUrl:"this should be an externalUrl",
-    "images":"array of links to the images of the playlist",
-    description:"Jonas Brothers,Imagine Dragons",
+    images:["HappyHits.jpg"],
+    description:"Ed Sheeran,Imagine Dragons",
     owner:user2Id,
     public:true,
     "snapshot_id":"5e729e8b3d8d0a432c70b59d",
@@ -162,7 +162,7 @@ createPlaylists = async () => {
     name: "Chill Bel Masry",
     collaborative:false,
     externalUrl:"this should be an externalUrl",
-    "images":"array of links to the images of the playlist",
+    images:["Chill.jpg"],
     description:"Amr Diab",
     owner:user3Id,
     public:true,

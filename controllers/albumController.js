@@ -40,6 +40,14 @@ const AppError = require('./../utils/appError')
 
 /**
  * express module
+ * Pagination file
+ * @const
+ */
+const paginatedResults = require('./../utils/pagination')
+
+
+/**
+ * express module
  * Track model from the database
  * @const
  */
@@ -61,6 +69,10 @@ exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
 
   })
+
+  if (albums.length===0) {
+    return next(new AppError('No albums found with those IDs', 404))
+  }
 
   res.status(200).json({
     status: 'success',
@@ -105,10 +117,15 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
  * @param {next} - The next function in the middleware
  * @return {JSON} Returns an array of the tracks of the album in a json form.
  */
-exports.getAlbumTracks = catchAsync(async (req, res, next) => {
+exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginated
   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId), req.query).paginate()
-  const tracksArray = await features.query.select('-album').populate('artists')
+  
+  const tracksArray = await features.query.select('-album -audioFilePath').populate('artists')
 
+  if (tracksArray.length===0) {
+    return next(new AppError('No album found with that ID', 404))
+  }
+  
   res.status(200).json({
     status: 'success',
     data: {
@@ -117,7 +134,25 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.getSortedAlbums = catchAsync(async (req, res, next) => {
+// exports.getAlbumTracks = catchAsync(async (req, res, next) => {  //  paginated
+
+//   const results=await paginatedResults(Track,req,await Track.find().where('album').in(req.params.albumId).countDocuments().exec())
+//   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId), req.query).paginate()
+//   results.items= await features.query.select('-album -audioFilePath').populate('artists')
+//   if (results.items.length===0) {
+//     return next(new AppError('No album found with that ID', 404))
+//   }
+  
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       results
+//     }
+//   })
+// })
+
+exports.getSortedAlbums = catchAsync(async (req, res, next) => {  //  not paginated
+  
   const features = new APIFeatures(Album.find(), req.query).sort().paginate()
   const albums = await features.query.populate({
     path: 'artists',
@@ -132,3 +167,22 @@ exports.getSortedAlbums = catchAsync(async (req, res, next) => {
     }
   })
 })
+
+// exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  paginated
+
+//   const results=await paginatedResults(Album,req,await Album.find().countDocuments().exec())
+//   const features = new APIFeatures(Album.find(), req.query).sort().paginate()
+//   results.items = await features.query.populate({
+//     path: 'artists',
+//     select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+
+//   })
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       results
+//     }
+//   })
+// })
+
