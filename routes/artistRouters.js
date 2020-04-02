@@ -36,7 +36,7 @@ const router = express.Router()
  * @memberof module:routes/tracks~tracksRouter
  * @inner
  */
-router.use(authController.protect)
+//router.use(authController.protect)
 
 /**
  * Route for requesting artists
