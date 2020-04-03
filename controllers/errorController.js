@@ -42,6 +42,37 @@ const handleValidationErrorDB = err => {
   return new AppError(message, 400)
 }
 
+
+/**
+* A function for handling mongoose validation errors in production environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
+const handleMongoError = err => new AppError('Input data must be unique', 400)
+
+
+/**
+* A function for handling jwt errors in production environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
+const handleJWTError = err => new AppError('Invalid token. Please log in again', 401)
+
+
+/**
+* A function for handling expired token errors in production environment
+* @function
+* @memberof module:controllers/errorController
+* @param {error} - the error passed from the function
+* @param {Respond} - The response sent
+*/
+const handleJWTExpiredError = err => new AppError('Your token has expired. Please log in again', 401)
+
+
 /**
 * A function for handling errors in development environment
 * @function
@@ -94,6 +125,18 @@ module.exports = (err, req, res, next) => {
     }
     if (error.name === 'ValidationError') {
       error = handleValidationErrorDB(error)
+      return sendErrorProd(error, res)
+    }
+    if (error.name === 'JsonWebTokenError') {
+      error = handleJWTError(error)
+      return sendErrorProd(error, res)
+    }
+    if (error.name === 'TokenExpiredError') {
+      error = handleJWTExpiredError(error)
+      return sendErrorProd(error, res)
+    }
+    if (error.name === 'MongoError') {
+      error = handleMongoError(error)
       return sendErrorProd(error, res)
     }
 

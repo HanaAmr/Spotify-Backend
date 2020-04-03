@@ -78,16 +78,13 @@ const userSchema = new Schema({
     images: {
       type: Array,
       //items: [{type: Schema.Types.ObjectId, ref: 'image'}]
-    },          
-    country: {
-      type: String
-    },      
-    type: {
-      type: String
-    },      
+    },  
     followers: {
       type: Array,
       //items: [{type: Schema.Types.ObjectId, ref: 'followers'}]
+    },
+    following: {
+      type: [String]
     },        
     product: {
       type: String
