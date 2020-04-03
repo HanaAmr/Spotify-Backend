@@ -1,6 +1,6 @@
 /**
- * PlayerController module.
- * @module playerController
+ * Controller module.
+ * @module controllers
  * @requires express
  */
 

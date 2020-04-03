@@ -1,12 +1,25 @@
+/** APIFeatures class for modifying responses
+ * @module module:utils/apiFeatures
+ * @requires express
+ */
 
 class APIFeatures {
   // query is the actual query os mongoose
   // querty string => el fl request
+
+/**
+ * @constructor
+ */  
   constructor (query, queryString) {
     this.query = query
     this.queryString = queryString
   }
-
+  
+/**
+ * For filtering documents
+ * @function
+ * @memberof module:utils/pagination 
+ */
   filter () {
     const queryObj = { ...this.queryString }
     const excludedFields = ['page', 'sort', 'limit', 'fields']
@@ -22,6 +35,11 @@ class APIFeatures {
     return this
   }
 
+/**
+ * For sorting documents
+ * @function
+ * @memberof module:utils/pagination 
+ */
   sort () {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(',').join(' ')
@@ -31,7 +49,11 @@ class APIFeatures {
   }
 
    
-
+/**
+ * For filtering fields
+ * @function
+ * @memberof module:utils/pagination 
+ */
   limitFields(){
       if(this.queryString.fields)
       {
@@ -42,7 +64,11 @@ class APIFeatures {
       }
       return this; 
   }
-
+/**
+ * For filtering fields of playlists
+ * @function
+ * @memberof module:utils/pagination 
+ */
   limitFieldsPlaylist () {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(',').join(' ')
@@ -67,7 +93,11 @@ class APIFeatures {
     }
     return this
   }
-
+/**
+ * For filtering fields of tracks
+ * @function
+ * @memberof module:utils/pagination 
+ */
   limitFieldsTracks () {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(',').join(' ')
@@ -111,6 +141,11 @@ class APIFeatures {
     return this
   }
 
+/**
+ * For paginating
+ * @function
+ * @memberof module:utils/pagination 
+ */
   paginate () {
     const page = this.queryString.page * 1 || 1
     const limit = this.queryString.limit * 1 || 2

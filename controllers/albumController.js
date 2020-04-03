@@ -1,10 +1,10 @@
-/** Express controller providing album related controls
- * @module controllers/album
+/** Controller module
+ * @module controllers
  * @requires express
  */
 
 /**
- * User controller to call when routing.
+ * Album controller to call when routing.
  * @type {object}
  * @const
  * @namespace albumController
@@ -136,7 +136,7 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
 
 // exports.getAlbumTracks = catchAsync(async (req, res, next) => {  //  paginated
 
-//   const results=await paginatedResults(Track,req,await Track.find().where('album').in(req.params.albumId).countDocuments().exec())
+//   const results=await paginatedResults(req,await Track.find().where('album').in(req.params.albumId).countDocuments().exec())
 //   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId), req.query).paginate()
 //   results.items= await features.query.select('-album -audioFilePath').populate('artists')
 //   if (results.items.length===0) {
@@ -151,6 +151,14 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
 //   })
 // })
 
+/**
+ * A function that is used to get sorted albums.
+ * @memberof module:controllers/album~albumController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ * @return {JSON} Returns an array of the top albums in a json form.
+ */
 exports.getSortedAlbums = catchAsync(async (req, res, next) => {  //  not paginated
   
   const features = new APIFeatures(Album.find(), req.query).sort().paginate()
@@ -170,7 +178,7 @@ exports.getSortedAlbums = catchAsync(async (req, res, next) => {  //  not pagina
 
 // exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  paginated
 
-//   const results=await paginatedResults(Album,req,await Album.find().countDocuments().exec())
+//   const results=await paginatedResults(req,await Album.find().countDocuments().exec())
 //   const features = new APIFeatures(Album.find(), req.query).sort().paginate()
 //   results.items = await features.query.populate({
 //     path: 'artists',

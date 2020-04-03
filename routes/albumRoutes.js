@@ -34,8 +34,15 @@ const authController = require('./../controllers/authController')
  * @inner
  */
 router.use(authController.protect)
-// router.use(albumController.populateArtists)
 
+
+/**
+ * Route for requesting top albums
+ * @name get/albums/top
+ * @function
+ * @memberof module:routes/albums~albumRouter
+ * @inner
+ */
 router
   .route('/top')
   .get(albumController.getSortedAlbums)
@@ -48,7 +55,6 @@ router
  * @inner
  * @param {string} albumId - Album ID
  */
-
 router
   .route('/:albumId')
   .get(albumController.getOneAlbum)

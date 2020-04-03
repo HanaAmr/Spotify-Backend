@@ -1,11 +1,11 @@
 /**
- * errorController module.
- * @module errorController
+ * Controller module.
+ * @module controllers
  * @requires express
  */
 
 /**
- * Category controller to call when routing.
+ * Error controller to call when routing.
  * @type {object}
  * @const
  * @namespace errorController

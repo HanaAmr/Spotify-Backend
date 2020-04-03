@@ -34,8 +34,15 @@ const authController = require('./../controllers/authController')
  * @inner
  */
 router.use(authController.protect)
-//  router.param('categoryId', categoryController.checkcategoryID)
 
+
+/**
+ * Route for requesting to get top playlists
+ * @name get/playlists/top
+ * @function
+ * @memberof module:routes/playlist~playlistRouter
+ * @inner
+ */
 router
   .route('/top')
   .get(playlistController.getSortedPlaylist)

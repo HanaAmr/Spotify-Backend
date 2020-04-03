@@ -1,6 +1,6 @@
 /**
- * categoryController module.
- * @module categoryController
+ * Controller module.
+ * @module controllers
  * @requires express
  */
 
@@ -73,7 +73,7 @@ exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non pagina
 
 // exports.getAllCategories =catchAsync(async (req, res, next) => {  // paginated
 
-//   const results=await paginatedResults(Category,req,await Category.find().countDocuments().exec())
+//   const results=await paginatedResults(req,await Category.find().countDocuments().exec())
 //   const features = new APIFeatures(Category.find(), req.query).paginate()
 //   results.items = await features.query
 //   res.status(200).json({
@@ -110,7 +110,7 @@ exports.getCategoryPlaylist = catchAsync(async (req, res, next) => {  //  non pa
 })
 
 // exports.getCategoryPlaylist = catchAsync(async (req, res, next) => { //  paginated
-//   const results=await paginatedResults(Playlist,req,await Playlist.find({ category: req.params.categoryId }).countDocuments().exec())
+//   const results=await paginatedResults(req,await Playlist.find({ category: req.params.categoryId }).countDocuments().exec())
 //   const features = new APIFeatures(Playlist.find({ category: req.params.categoryId }), req.query).paginate().limitFieldsPlaylist()
 //   results.items = await features.query
   
