@@ -24,8 +24,8 @@ const albumSchema = new mongoose.Schema({
     type: String,
     //required: [true,'An Album must have a ref']
   },
-  images: {
-    type: [String],
+  image: {
+    type: String,
     //required: [true, 'An album must have at least one image']
   },
   albumType:{
@@ -68,12 +68,12 @@ const albumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  artists: [
+  artist: 
     {
       type: mongoose.Schema.ObjectId,
       ref: 'User'
     }
-  ],
+,
   totalTracks: {
     description: 'The total number of tracks inside the album',
     type: Number ,
