@@ -29,6 +29,13 @@ const PlayHistory = require('../models/playHistoryModel')
 const Track = require('../models/trackModel')
 /**
  * express module
+ * Player model from the database
+ * @const
+ */
+const Player = require('../models/playerModel')
+
+/**
+ * express module
  * user services object
  * @const
  */
@@ -65,6 +72,31 @@ async validateTrack (authToken) {
     
 }
 
+/**
+ * //TODO:
+* Generates the context for the song playing.
+* @function
+* @memberof module:models/playerModel
+* @inner
+* @param {userId} - The user id.
+*/
+async generateContext (userId) {
+
+}
+
+
+/**
+* Gets the context for the passed user.
+* @function
+* @memberof module:models/playerModel
+* @inner
+* @param {authToken} - The authorization token.
+*/
+async getContext (authToken) {
+    const userId = await userService.getUserId(authToken)
+    const context = await Player.find({userId : userId}).select('context')
+    return context
+}
 
 /**
 * Checking if the user with this token has reached the maximum number of recently played items
