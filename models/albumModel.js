@@ -77,7 +77,7 @@ const albumSchema = new mongoose.Schema({
   totalTracks: {
     description: 'The total number of tracks inside the album',
     type: Number ,
-    required:[true, 'An Album must include the total number of']
+    default:0 
   }
 })
 

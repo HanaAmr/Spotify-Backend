@@ -99,7 +99,15 @@ const userSchema = new Schema({
       type: String,
       enum: ['user', 'artist', 'premium'],
       default: 'user'
-    },    
+    }, 
+    createdPlaylists: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'playlists'
+    }],  
+    likedPlaylists: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'playlists'
+    }],      
     artistInfo: {
       type: {
         biography: String,

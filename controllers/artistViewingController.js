@@ -31,6 +31,13 @@ const Album=require('./../models/albumModel')
 
 /**
  * mongoose module
+ * mongoose model for playlist
+ * @const
+ */
+const Playlist=require('./../models/playlistModel')
+
+/**
+ * mongoose module
  * mongoose model for track
  * @const
  */
@@ -57,18 +64,18 @@ const catchAsync=require('./../utils/catchAsync')
 * @param {next} - The next function in the middleware
 */
 exports.getArtists=catchAsync( async(req,res,next)=>{
-
-    const features=new APIFeatures(User.find({artistInfo:{$exists: true}},
+    
+    const features=new APIFeatures(User.find({role:'artist'},
         {type:0,password:0,email:0,resetPasswordToken:0,resetPasswordExpires:0,
-        resetPasswordToken:0, esetPasswordExpires:0,becomePremiumToken:0,becomePremiumExpires:0,
+        resetPasswordToken:0, resetPasswordExpires:0,becomePremiumToken:0,becomePremiumExpires:0,
         becomeArtistToken:0,becomeArtistExpires:0}),req.query)
         .filter()
         .sort()
         .limitFields()
         .paginate();
-
-    const artists= await features.query;
+        
     
+    const artists= await features.query;
     res.status(200).json({
         status: "success",
         data: artists
@@ -90,7 +97,7 @@ exports.getArtist= catchAsync(async (req,res,next)=>{
             resetPasswordToken:0, esetPasswordExpires:0,becomePremiumToken:0,
             becomePremiumExpires:0,ecomeArtistToken:0,becomeArtistExpires:0})
         
-    if(artist==null || artist.artistInfo==null)
+    if(artist==null || artist.role !== 'artist')
         throw (new AppError("No artist with such an ID",484))
 
     res.status(200).json({
@@ -110,12 +117,12 @@ exports.getArtist= catchAsync(async (req,res,next)=>{
 exports.getRelatedArtists= catchAsync(async (req,res)=>{
 
     const artist=await User.findById(req.params.id)
-    if(artist==null || artist.artistInfo==null)
+    if(artist==null || artist.role !== 'artist')
         throw (new AppError("No artist with such an ID",484))
         
     const genres=artist.artistInfo.genres
 
-    let relatedArtists= await User.find({"artistInfo.genres": {$in: genres}},
+    let relatedArtists= await User.find({role:'artist',"artistInfo.genres": {$in: genres}},
         {type:0,password:0,email:0,type:0 ,resetPasswordToken:0,resetPasswordExpires:0})
 
     //removing current artist
@@ -142,7 +149,7 @@ exports.getRelatedArtists= catchAsync(async (req,res)=>{
 exports.getArtistAlbums= catchAsync(async (req,res,next)=>{
 
     const artist=await User.findById(req.params.id)
-    if(artist==null || artist.artistInfo==null)
+    if(artist==null || artist.role !== 'artist')
         throw (new AppError("No artist with such an ID",484))
     
     const features= new APIFeatures(Album.find({"artists": req.params.id}),req.query)
@@ -174,7 +181,7 @@ exports.getArtistAlbums= catchAsync(async (req,res,next)=>{
 exports.getArtistTopTracks= catchAsync(async (req,res,next)=>{
 
     const artist=await User.findById(req.params.id)
-    if(artist==null || artist.artistInfo==null)
+    if(artist==null || artist.role !== 'artist')
         throw (new AppError("No artist with such an ID",484))
 
     
@@ -193,5 +200,29 @@ exports.getArtistTopTracks= catchAsync(async (req,res,next)=>{
     res.status(200).json({
         status:"sucsess",
         data:tracks
+    })
+})
+
+/**
+* A middleware function for CreatedPlaylists for artist whose id is passed in the query
+* @function
+* @memberof module:controllers/artitViewingController
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getArtistCreatedPlaylists= catchAsync(async (req,res,next)=>{
+
+    const artist=await User.findById(req.params.id)
+    if(artist==null || artist.role !== 'artist')
+        throw (new AppError("No artist with such an ID",484))
+
+    const playlists=await Playlist.find({owner:req.params.id})
+    if(playlists.length==0)
+        throw (new AppError("No created playlists for artist",484))
+
+    res.status(200).json({
+        status:"sucsess",
+        data:playlists
     })
 })
