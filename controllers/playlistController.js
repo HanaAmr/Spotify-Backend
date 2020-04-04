@@ -1,6 +1,6 @@
 /**
- * playlistController module.
- * @module playlistController
+ * Controller module.
+ * @module controllers
  * @requires express
  */
 
@@ -52,6 +52,14 @@ const catchAsync = require('./../utils/catchAsync')
  * @const
  */
 const AppError = require('./../utils/appError')
+
+/**
+ * express module
+ * Pagination file
+ * @const
+ */
+const paginatedResults = require('./../utils/pagination')
+
 
 /**
  * Get one Playlist given its ID
@@ -109,7 +117,7 @@ exports.getPlaylistImage = catchAsync(async (req, res, next) => {
  * @param {next} - The next function in the middleware
  * @return {JSON} Returns an array of the tracks inside this playlist.
  */
-exports.getPlaylistTracks = catchAsync(async (req, res, next) => {
+exports.getPlaylistTracks = catchAsync(async (req, res, next) => {  //  not paginated
   let query = Playlist.findById(req.params.playlistId)
   query = await query.select('trackObjects')
   const features = new APIFeatures(Track.find().where('_id').in(query.trackObjects), req.query).limitFieldsTracks().paginate()
@@ -124,7 +132,34 @@ exports.getPlaylistTracks = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.getSortedPlaylist = catchAsync(async (req, res, next) => {
+// exports.getPlaylistTracks = catchAsync(async (req, res, next) => { //  paginated
+  
+//   let query = Playlist.findById(req.params.playlistId)
+//   query = await query.select('trackObjects')
+
+//   const results=await paginatedResults(req,await Track.find().where('_id').in(query.trackObjects).countDocuments().exec())
+
+//   const features = new APIFeatures(Track.find().where('_id').in(query.trackObjects), req.query).limitFieldsTracks().paginate()
+
+//   results.items = await features.query
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       results
+//     }
+//   })
+// })
+
+/**
+ * Get the top playlists
+ * @memberof module:controllers/playlist~playlistController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ * @return {JSON} Returns an array of the top playlists.
+ */
+exports.getSortedPlaylist = catchAsync(async (req, res, next) => {  //  not paginated
   const features = new APIFeatures(Playlist.find(), req.query).sort().limitFieldsPlaylist().paginate()
   const playlist = await features.query
 
@@ -135,3 +170,18 @@ exports.getSortedPlaylist = catchAsync(async (req, res, next) => {
     }
   })
 })
+
+// exports.getSortedPlaylist = catchAsync(async (req, res, next) => { //  paginated
+//   console.log(req.originalUrl)
+//   const results=await paginatedResults(req,await Playlist.find().countDocuments().exec())
+
+//   const features = new APIFeatures(Playlist.find(), req.query).sort().limitFieldsPlaylist().paginate()
+//   results.items = await features.query
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       results
+//     }
+//   })
+// })

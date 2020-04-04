@@ -1,5 +1,5 @@
 /** Express controller providing user related controls
- * @module controllers/users
+ * @module controllers
  * @requires express
  */
 

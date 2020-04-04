@@ -27,6 +27,7 @@ const categoryController = require('./../controllers/categoryController')
  * @const
  */
 const authController = require('./../controllers/authController')
+
 /**
  * Middleware to check authorization
  * @function
@@ -35,7 +36,6 @@ const authController = require('./../controllers/authController')
  */
 router.use(authController.protect)
 
-//  router.param('categoryId', categoryController.checkcategoryID)
 
 /**
  * Route for requesting categories

@@ -1,7 +1,15 @@
 /** Express controller providing ArtistViewing related controls
- * @module controllers/artitViewingController
+ * @module controllers
  * @requires express
  */
+
+ /**
+ * ArtistViewing controller to call when routing.
+ * @type {object}
+ * @const
+ * @namespace artistViewingController
+ */
+
  /**
  * express module
  * util to import promisify function

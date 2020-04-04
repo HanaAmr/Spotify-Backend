@@ -1,7 +1,16 @@
-/** Express router providing authorization related controles
- * @module routes/users
+/**
+ * Controller module.
+ * @module controllers
  * @requires express
  */
+
+/**
+ * Auth controller to call when routing.
+ * @type {object}
+ * @const
+ * @namespace authController
+ */
+
 
  /**
  * express module

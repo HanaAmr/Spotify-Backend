@@ -109,7 +109,7 @@ createPlaylists = async () => {
     start = track4.indexOf(':')      
     const track4Id = track4.substring(start + 2, start+26)
 
-    let track5=Track.find({'name':'What A Man Gotta Do'}).select('_id')
+    let track5=Track.find({'name':'Perfect'}).select('_id')
     track5= (await track5).toString()
     start = track5.indexOf(':')      
     const track5Id = track5.substring(start + 2, start+26)
@@ -119,7 +119,7 @@ createPlaylists = async () => {
     name: "Imagine Dragons Radio",
     collaborative:false,
     externalUrl:"this should be an externalUrl",
-    "images":"array of links to the images of the playlist",
+    images:["ImagineDragons.jpg"],
     description:"Imagine Dragons",
     owner:user1Id,
     public:true,
@@ -132,8 +132,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist1.save()
-  await playlist1.updateOne({href:`http://127.0.0.1:7000/api/v1/playlists/${playlist1._id}`})
-  await playlist1.updateOne({tracks:{href:`http://127.0.0.1:7000/api/v1/playlists/${playlist1._id}/tracks`,total:2}})
+  await playlist1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist1._id}`})
+  await playlist1.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist1._id}/tracks`,total:2}})
   await playlist1.updateOne({uri:`spotify:playlists:${playlist1._id}`})
 
 
@@ -141,8 +141,8 @@ createPlaylists = async () => {
     name: "Happy Hits",
     collaborative:false,
     externalUrl:"this should be an externalUrl",
-    "images":"array of links to the images of the playlist",
-    description:"Jonas Brothers,Imagine Dragons",
+    images:["HappyHits.jpg"],
+    description:"Ed Sheeran,Imagine Dragons",
     owner:user2Id,
     public:true,
     "snapshot_id":"5e729e8b3d8d0a432c70b59d",
@@ -154,15 +154,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist2.save()
-  await playlist2.updateOne({href:`http://127.0.0.1:7000/api/v1/playlists/${playlist2._id}`})
-  await playlist2.updateOne({tracks:{href:`http://127.0.0.1:7000/api/v1/playlists/${playlist2._id}/tracks`,total:2}})
+  await playlist2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist2._id}`})
+  await playlist2.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist2._id}/tracks`,total:2}})
   await playlist2.updateOne({uri:`spotify:playlists:${playlist2._id}`})
 
   const playlist3 = new Playlist({
     name: "Chill Bel Masry",
     collaborative:false,
     externalUrl:"this should be an externalUrl",
-    "images":"array of links to the images of the playlist",
+    images:["Chill.jpg"],
     description:"Amr Diab",
     owner:user3Id,
     public:true,
@@ -175,8 +175,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist3.save()
-  await playlist3.updateOne({href:`http://127.0.0.1:7000/api/v1/playlists/${playlist3._id}`})
-  await playlist3.updateOne({tracks:{href:`http://127.0.0.1:7000/api/v1/playlists/${playlist3._id}/tracks`,total:1}})
+  await playlist3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3._id}`})
+  await playlist3.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3._id}/tracks`,total:1}})
   await playlist3.updateOne({uri:`spotify:playlists:${playlist3._id}`})
 
 

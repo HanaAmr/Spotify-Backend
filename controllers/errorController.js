@@ -1,11 +1,11 @@
 /**
- * errorController module.
- * @module errorController
+ * Controller module.
+ * @module controllers
  * @requires express
  */
 
 /**
- * Category controller to call when routing.
+ * Error controller to call when routing.
  * @type {object}
  * @const
  * @namespace errorController
@@ -92,10 +92,10 @@ module.exports = (err, req, res, next) => {
       error = handleCastErrorDB(error)
       return sendErrorProd(error, res)
     }
-    if (error.name === 'ValidationError') {
-      error = handleValidationErrorDB(error)
-      return sendErrorProd(error, res)
-    }
+    // if (error.name === 'ValidationError') {
+    //   error = handleValidationErrorDB(error)
+    //   return sendErrorProd(error, res)
+    // }
 
     return sendErrorProd(err, res)
   }

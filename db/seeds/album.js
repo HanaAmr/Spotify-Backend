@@ -75,7 +75,7 @@ createAlbums = async () => {
 
   const album1 = new Album({
     name:"Evolve",
-    "images":"this should be an href to images probably",
+    images:["Evolve.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
@@ -88,30 +88,30 @@ createAlbums = async () => {
     popularity:300000
   })
   await album1.save()
-  await album1.updateOne({href:`http://127.0.0.1:7000/api/v1/albums/${album1._id}`})
+  await album1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album1._id}`})
   await album1.updateOne({uri:`spotify:albums:${album1._id}`})
 
   const album2 = new Album({
-    name:"Happiness Begins",
-    "images":"this should be an href to images probably",
+    name:"Divide",
+    images:["Divide.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
     genre:"Pop-rock",
-    label:"Jonas Brothers Album",
-    copyrights:"© 2019 Jonas Brothers Recording, Limited Liability Company, under exclusive license to Republic Records, a division of UMG Recordings, Inc.",
-    releaseDate:"2019-01-01",
+    label:"Ed Sheeran Album",
+    copyrights:"© 2017 Asylum Records UK, a division of Atlantic Records UK, a Warner Music Group company.",
+    releaseDate:"2017-01-01",
     artists:user2Id,
     totalTracks:1,
     popularity:700000
   })
   await album2.save()
-  await album2.updateOne({href:`http://127.0.0.1:7000/api/v1/albums/${album2._id}`})
+  await album2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album2._id}`})
   await album2.updateOne({uri:`spotify:albums:${album2._id}`})
 
   const album3 = new Album({
     name:"Sahran",
-    "images":"this should be an href to images probably",
+    images:["Sahran.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
@@ -124,7 +124,7 @@ createAlbums = async () => {
     popularity:400000
   })
   await album3.save()
-  await album3.updateOne({href:`http://127.0.0.1:7000/api/v1/albums/${album3._id}`})
+  await album3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album3._id}`})
   await album3.updateOne({uri:`spotify:albums:${album3._id}`})
 
 }

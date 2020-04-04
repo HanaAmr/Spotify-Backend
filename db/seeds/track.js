@@ -17,7 +17,17 @@ const express = require('express')
  * @const
  */
 const Track = require('../../models/trackModel')
+/**
+ * express module
+ * Album model from the database
+ * @const
+ */
 const Album = require('../../models/albumModel')
+/**
+ * express module
+ * User model from the database
+ * @const
+ */
 const User = require('../../models/userModel')
 
 //const app = express()
@@ -52,7 +62,7 @@ db.on('error', err => {
 })
 
 /**
- * A function that is used to create inital seed of users
+ * A function that is used to create inital seed of tracks
  *
  * @memberof module:seeders/tracks~trackSeeder
  *
@@ -79,7 +89,7 @@ createTracks = async () => {
     start = album1.indexOf(':')      
     const album1Id = album1.substring(start + 2, start+26)
 
-    let album2=Album.find({'name':'Happiness Begins'}).select('_id')
+    let album2=Album.find({'name':'Divide'}).select('_id')
     album2= (await album2).toString()
     start = album2.indexOf(':')      
     const album2Id = album2.substring(start + 2, start+26)
@@ -105,7 +115,7 @@ createTracks = async () => {
     
   })
   await track1.save()
-  await track1.updateOne({href:`http://127.0.0.1:7000/api/v1/tracks/${track1._id}`})
+  await track1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track1._id}`})
   await track1.updateOne({uri:`spotify:tracks:${track1._id}`})
 
   
@@ -125,7 +135,7 @@ createTracks = async () => {
     
   })
   await track2.save()
-  await track2.updateOne({href:`http://127.0.0.1:7000/api/v1/tracks/${track2._id}`})
+  await track2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track2._id}`})
   await track2.updateOne({uri:`spotify:tracks:${track2._id}`})
 
   const track3 = new Track({
@@ -144,7 +154,7 @@ createTracks = async () => {
     
   })
   await track3.save()
-  await track3.updateOne({href:`http://127.0.0.1:7000/api/v1/tracks/${track3._id}`})
+  await track3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track3._id}`})
   await track3.updateOne({uri:`spotify:tracks:${track3._id}`})
 
   const track4 = new Track({
@@ -163,12 +173,12 @@ createTracks = async () => {
     
   })
   await track4.save()
-  await track4.updateOne({href:`http://127.0.0.1:7000/api/v1/tracks/${track4._id}`})
+  await track4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track4._id}`})
   await track4.updateOne({uri:`spotify:tracks:${track4._id}`})
 
   const track5 = new Track({
-    name:"What A Man Gotta Do",
-    description:"Jonas Brothers song",
+    name:"Perfect",
+    description:"Ed Sheeran song",
     "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",
@@ -182,7 +192,7 @@ createTracks = async () => {
     
   })
   await track5.save()
-  await track5.updateOne({href:`http://127.0.0.1:7000/api/v1/tracks/${track5._id}`})
+  await track5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track5._id}`})
   await track5.updateOne({uri:`spotify:tracks:${track5._id}`})
 
 }
