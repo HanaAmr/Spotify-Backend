@@ -23,8 +23,6 @@ const validator = require('validator');
  */
 const bcrypt = require('bcryptjs');
 
-
-
 /**
  * express module
  * @const
@@ -52,7 +50,6 @@ const userSchema = new Schema({
     },
     password: {           //confirm password
       type: String,
-      required: [true, 'Please provide a password'],
       minlength: 8,
       maxlength: 20,
       select: false
@@ -66,29 +63,24 @@ const userSchema = new Schema({
     },
     uri: {
       type: String
-      //required: [true, 'Please provide a uri']
     },
     href: {
       type: String
-      //required: [true, 'Please provide a href']
     },
     externalUrls: [{
       //type: Schema.Types.ObjectId, ref: 'externalUrl'
     }],
     images: {
-      type: Array,
+      type: String,
       //items: [{type: Schema.Types.ObjectId, ref: 'image'}]
-    },
-    country: {
-      type: String
-    },
-    type: {
-      type: String
-    },
+    },  
     followers: {
-      type: Array,
+      type: [String],
       //items: [{type: Schema.Types.ObjectId, ref: 'followers'}]
     },
+    following: {
+      type: [String]
+    },        
     product: {
       type: String
     },
@@ -118,6 +110,7 @@ const userSchema = new Schema({
 
       }
     },
+    facebookId: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date, // Date of expiration of reset password token
     upgradeToken: String,
