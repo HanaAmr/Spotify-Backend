@@ -40,3 +40,6 @@ jspm_packages
 
 #out file for jsdoc
 out
+
+#public directory 
+public/
