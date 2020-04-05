@@ -72,6 +72,12 @@ createCategories = async () => {
   await category3.save()
   await category3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/browse/categories/${category3._id}/playlists`})
 
+  const category4 = new Category({
+    name: 'Pop',
+  })
+  await category4.save()
+  await category4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/browse/categories/${category4._id}/playlists`})
+
 }
 
 

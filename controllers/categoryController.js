@@ -54,7 +54,8 @@ const paginatedResults = require('./../utils/pagination')
 
 /**
  * A function that is used to get all categories.
- * @memberof module:controllers/category~categoryController
+ * @memberof module:controllers~categoryController
+ * @function getAllCategories
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -86,7 +87,8 @@ exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non pagina
 
 /**
  * A function that is used to get the playlists of the category.
- * @memberof module:controllers/category~categoryController
+ * @memberof module:controllers~categoryController
+ * @function getCategoryPlaylist
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware

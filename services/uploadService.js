@@ -5,6 +5,12 @@
 const multer= require('multer')
 
 /**
+ * audio duration package for measuring duration of mp3
+ * @const
+ */
+const { getAudioDurationInSeconds } = require('get-audio-duration')
+
+/**
  * User service
  * @type {object}
  * @const

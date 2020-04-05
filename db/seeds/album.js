@@ -127,4 +127,22 @@ createAlbums = async () => {
   await album3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album3._id}`})
   await album3.updateOne({uri:`spotify:albums:${album3._id}`})
 
+  const album4 = new Album({
+    name:"Blurry Face",
+    images:["BlurryFace.jpg"],
+    albumType:"album",
+    externalUrls:"this should be an externalUrl",
+    type:"album",
+    genre:"Pop",
+    label:"21 pilots album",
+    copyrights:"© 2015 Fueled By Ramen LLC for the United States and WEA International Inc. for the world outside of the United States. A Warner Music Group Company",
+    releaseDate:"2015-01-01",
+    artists:user4Id,
+    totalTracks:3,
+    popularity:100000
+  })
+  await album4.save()
+  await album4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album4._id}`})
+  await album4.updateOne({uri:`spotify:albums:${album4._id}`})
+
 }

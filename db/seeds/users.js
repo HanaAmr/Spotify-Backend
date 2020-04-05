@@ -56,28 +56,28 @@ createUsers = async() => {
     
     const user1 = new User({
         id: "id1",
-        name: "user1",
+        name: "Imagine Dragons",
         email: "user1@email.com",
         password: "password",
     })
     
     const user2 = new User({
         id: "id2",
-        name: "user2",
+        name: "Ed Sheeran",
         email: "user2@email.com",
         password: "password",
     })
     
     const user3 = new User({
         id: "id3",
-        name: "omar",
+        name: "Amr Diab",
         email: "omar@email.com",
         password: "password",
     })
     
     const user4 = new User({
         id: "id4",
-        name: "user3",
+        name: "21 Pilots",
         email: "user4@email.com",
         password: "password",
         resetPasswordToken: "abcdefghijklmnopqrstuvwxyz",

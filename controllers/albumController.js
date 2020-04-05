@@ -55,7 +55,8 @@ const Track = require('./../models/trackModel')
 
 /**
  * A function that is used to get albums with ids.
- * @memberof module:controllers/album~albumController
+ * @memberof module:controllers~albumController
+ * @function getAlbumsWithIds
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -84,7 +85,8 @@ exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
 
 /**
  * A function that is used to get one album.
- * @memberof module:controllers/album~albumController
+ * @memberof module:controllers~albumController
+ * @function getOneAlbum
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -111,7 +113,8 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
 
 /**
  * A function that is used to get the tracks of that album.
- * @memberof module:controllers/album~albumController
+ * @memberof module:controllers~albumController
+ * @function getAlbumTracks
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -154,6 +157,7 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
 /**
  * A function that is used to get sorted albums.
  * @memberof module:controllers/album~albumController
+ * @function getAlbumTracks
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
