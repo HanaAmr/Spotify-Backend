@@ -1,3 +1,5 @@
+
+
 const dotenv = require('dotenv') //  we write the cofigurations we need i.e. the environment variables in config.env file
 dotenv.config({ path: '.env' }) // set the path of the config property of dotenv to the file created
 const app = require('./app')

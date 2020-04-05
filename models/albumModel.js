@@ -1,6 +1,13 @@
 /** Express controller providing album model
- * @module controllers/album
+ * @module models
  * @requires express
+ */
+
+/**
+ * Album model 
+ * @type {object}
+ * @const
+ * @namespace albumModel
  */
 
 /**
@@ -11,7 +18,22 @@ const mongoose = require('mongoose')
 
 /**
  * Album schema
+ * @memberof module:models~albumModel
  * @type {object}
+ * @property {String} name Name of the album
+ * @property {String} href href of the album
+ * @property {String} images images of the album
+ * @property {String} albumType albumType of the album
+ * @property {String} externalUrls externalUrls of the album
+ * @property {String} type type of the album
+ * @property {String} uri uri of the album
+ * @property {String} genre genre of the album
+ * @property {String} label label of the album
+ * @property {Number} popularity popularity of the album
+ * @property {String} copyrights copyrights of the album
+ * @property {Date} releaseDate releaseDate of the album
+ * @property {object} artists artists of the album
+ * @property {Number} totalTracks totalTracks of the album
  * @const
  */
 const albumSchema = new mongoose.Schema({

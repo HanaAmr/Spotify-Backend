@@ -74,20 +74,30 @@ createPlaylists = async () => {
     start = category3.indexOf(':')      
     const category3Id = category3.substring(start + 2, start+26)
 
-    let user1=User.find({'name':'user1'}).select('_id')
+    let category4=Category.find({'name':'Pop'}).select('_id')
+    category4= (await category4).toString()
+    start = category4.indexOf(':')      
+    const category4Id = category4.substring(start + 2, start+26)
+
+    let user1=User.find({'name':'Imagine Dragons'}).select('_id')
     user1= (await user1).toString()
     start = user1.indexOf(':')      
     const user1Id = user1.substring(start + 2, start+26)
 
-    let user2=User.find({'name':'user2'}).select('_id')
+    let user2=User.find({'name':'Ed Sheeran'}).select('_id')
     user2= (await user2).toString()
     start = user2.indexOf(':')      
     const user2Id = user2.substring(start + 2, start+26)
 
-    let user3=User.find({'name':'user3'}).select('_id')
+    let user3=User.find({'name':'Amr Diab'}).select('_id')
     user3= (await user3).toString()
     start = user3.indexOf(':')      
     const user3Id = user3.substring(start + 2, start+26)
+
+    let user4=User.find({'name':'21 Pilots'}).select('_id')
+    user4= (await user4).toString()
+    start = user4.indexOf(':')      
+    const user4Id = user4.substring(start + 2, start+26)
 
     let track1=Track.find({'name':'Believer'}).select('_id')
     track1= (await track1).toString()
@@ -113,6 +123,16 @@ createPlaylists = async () => {
     track5= (await track5).toString()
     start = track5.indexOf(':')      
     const track5Id = track5.substring(start + 2, start+26)
+
+    let track6=Track.find({'name':'Stressed Out'}).select('_id')
+    track6= (await track6).toString()
+    start = track6.indexOf(':')      
+    const track6Id = track6.substring(start + 2, start+26)
+
+    let track7=Track.find({'name':'Ride'}).select('_id')
+    track7= (await track7).toString()
+    start = track7.indexOf(':')      
+    const track7Id = track7.substring(start + 2, start+26)
 
 
   const playlist1 = new Playlist({
@@ -178,6 +198,27 @@ createPlaylists = async () => {
   await playlist3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3._id}`})
   await playlist3.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3._id}/tracks`,total:1}})
   await playlist3.updateOne({uri:`spotify:playlists:${playlist3._id}`})
+
+  const playlist4 = new Playlist({
+    name: "Best of 21 Pilots",
+    collaborative:false,
+    externalUrl:"this should be an externalUrl",
+    images:["21Pilots.jpg"],
+    description:"21 Pilots",
+    owner:user4Id,
+    public:true,
+    "snapshot_id":"5e729e8b3d8d0a432c70b59d",
+    type:"playlist",
+    popularity:20000000,
+    noOfFollowers:7000000,
+    trackObjects:[track6Id,track7Id],
+    category: category4Id,
+    createdAt: Date.now()
+  })
+  await playlist4.save()
+  await playlist4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist4._id}`})
+  await playlist4.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist4._id}/tracks`,total:3}})
+  await playlist4.updateOne({uri:`spotify:playlists:${playlist4._id}`})
 
 
 }

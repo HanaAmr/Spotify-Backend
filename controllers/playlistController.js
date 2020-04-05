@@ -63,7 +63,8 @@ const paginatedResults = require('./../utils/pagination')
 
 /**
  * Get one Playlist given its ID
- * @memberof module:controllers/playlist~playlistController
+ * @memberof module:controllers~playlistController
+ * @function getOnePlaylist
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -87,7 +88,8 @@ exports.getOnePlaylist = catchAsync(async (req, res, next) => {
 
 /**
  * A function that is used to get playlist images.
- * @memberof module:controllers/playlist~playlistController
+ * @memberof module:controllers~playlistController
+ * @function getPlaylistImage 
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -111,7 +113,8 @@ exports.getPlaylistImage = catchAsync(async (req, res, next) => {
 
 /**
  * Get the tracks of a playlist given its ID
- * @memberof module:controllers/playlist~playlistController
+ * @memberof module:controllers~playlistController
+ * @function getPlaylistTracks 
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -153,7 +156,8 @@ exports.getPlaylistTracks = catchAsync(async (req, res, next) => {  //  not pagi
 
 /**
  * Get the top playlists
- * @memberof module:controllers/playlist~playlistController
+ * @memberof module:controllers~playlistController
+ * @function getSortedPlaylist
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware

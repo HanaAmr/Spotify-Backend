@@ -20,7 +20,7 @@ module.exports = async function (req,count) {
         Url = req.originalUrl.substring(0, end-1)
         
     }
-        
+    console.log("Inside pagination")    
 
     const results = {}
     if (endIndex < count) {

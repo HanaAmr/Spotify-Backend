@@ -50,7 +50,8 @@ const catchAsync = require('./../utils/catchAsync')
 
 /**
  * Get one Track given its ID
- * @memberof module:controllers/track~trackController
+ * @memberof module:controllers~trackController
+ * @function getOneTrack
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -60,11 +61,7 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
 
   const features = new APIFeatures(Track.findById(req.params.trackId), req.query).limitFieldsTracks()
   const track = await features.query
-  
-  if(!track){
-    return next(new AppError('No track found with that ID', 404))
-  }
-
+  console.error("Inside track")
 
   res.status(200).json({
     status: 'success',
@@ -76,7 +73,8 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
 
 /**
  * Get a list of Tracks given their ID
- * @memberof module:controllers/track~trackController
+ * @memberof module:controllers~trackController
+ * @function getTracks
  * @param {Request}  - The function takes the request as a parameter to access its body.
  * @param {Respond} - The respond sent
  * @param {next} - The next function in the middleware
@@ -120,3 +118,5 @@ exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
     res.status(403).send();
   }
 })
+
+//module.exports=exports.getOneTrack(req,res,next)

@@ -99,10 +99,14 @@ createTracks = async () => {
     start = album3.indexOf(':')      
     const album3Id = album3.substring(start + 2, start+26)
 
+    let album4=Album.find({'name':'Blurry Face'}).select('_id')
+    album4= (await album4).toString()
+    start = album4.indexOf(':')      
+    const album4Id = album4.substring(start + 2, start+26)
+
   const track1 = new Track({
     name:"Believer",
     description:"Imagine Dragons Song",
-    "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
@@ -122,7 +126,6 @@ createTracks = async () => {
   const track2 = new Track({
     name:"Thunder",
     description:"Imagine Dragons Song",
-    "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
@@ -141,7 +144,6 @@ createTracks = async () => {
   const track3 = new Track({
     name:"Youm Talat",
     description:"Amr Diab song",
-    "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
@@ -160,7 +162,6 @@ createTracks = async () => {
   const track4 = new Track({
     name:"Odam Merayetha",
     description:"Amr Diab song",
-    "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
@@ -179,7 +180,6 @@ createTracks = async () => {
   const track5 = new Track({
     name:"Perfect",
     description:"Ed Sheeran song",
-    "image":"probably a link to its image",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
@@ -194,5 +194,42 @@ createTracks = async () => {
   await track5.save()
   await track5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track5._id}`})
   await track5.updateOne({uri:`spotify:tracks:${track5._id}`})
+
+  const track6 = new Track({
+    name:"Stressed Out",
+    description:"21 pilots song",
+    type:"track",
+    externalUrl:"this should be an externalUrl",
+    externalId:"this should be an externalId",
+    trackNumber:1,
+    isLocal:false,
+    durationMs:202000,
+    popularity:300000,
+    album:album4Id,
+    artists:user4Id
+    
+  })
+  await track6.save()
+  await track6.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track6._id}`})
+  await track6.updateOne({uri:`spotify:tracks:${track6._id}`})
+
+  const track7 = new Track({
+    name:"Ride",
+    description:"21 pilots song",
+    type:"track",
+    externalUrl:"this should be an externalUrl",
+    externalId:"this should be an externalId",
+    trackNumber:2,
+    isLocal:false,
+    durationMs:214000,
+    popularity:600000,
+    album:album4Id,
+    artists:user4Id
+    
+  })
+  await track7.save()
+  await track7.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/tracks/${track7._id}`})
+  await track7.updateOne({uri:`spotify:tracks:${track7._id}`})
+
 
 }
