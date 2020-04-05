@@ -160,7 +160,7 @@ exports.getArtistAlbums= catchAsync(async (req,res,next)=>{
     if(artist==null || artist.role !== 'artist')
         throw (new AppError("No artist with such an ID",484))
     
-    const features= new APIFeatures(Album.find({"artists": req.params.id}),req.query)
+    const features= new APIFeatures(Album.find({"artists": req.params.id,"totalTracks":{$ne: 0}}),req.query)
         .filter()
         .sort()
         .limitFields()

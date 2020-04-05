@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 })
 
 const userRouter = require('./routes/userRouters')
-const artistRouter = require('./routes/artistRouters')
+const artistRouter = require('./routes/artistRoutes')
 const categoryRouter = require('./routes/categoryRoutes')
 const playlistRouter = require('./routes/playlistRoutes')
 const trackRouter = require('./routes/trackRoutes')
