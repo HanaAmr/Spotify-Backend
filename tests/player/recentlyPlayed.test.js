@@ -122,10 +122,21 @@ describe('Adding to recently played list of a user', () => {
       password: 'password'
     })
     await validUser.save()
+    const newArtist = new User({
+      role: 'user',
+      name: 'Low roar',
+      email: 'DS@2019.com',
+      password: 'password',
+      href: 'abcd',
+      uri: 'abcd',
+      externalUrls: []
+    })
+    await newArtist.save()
     // Mock the userServices get user id function to return the testing user id.
     sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
   })
-
+  
+  
   // Drop the whole users, playHistory collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
@@ -139,12 +150,8 @@ describe('Adding to recently played list of a user', () => {
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
-        context: {
-          externalUrls: [],
-          uri: 'spotify:artist:5INjqkS1o8h1imAzPqGZBb',
-          href: 'https://api.spotify.com/v1/artists/5INjqkS1o8h1imAzPqGZBb',
-          type: 'artist'
-        },
+        contextType: 'artist', 
+        contextUri: 'abcd',
         trackUri: '1234'
       }
     })
@@ -173,12 +180,8 @@ describe('Adding to recently played list of a user', () => {
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
-        context: {
-          externalUrls: [],
-          uri: 'spotify:artist:5INjqkS1o8h1imAzPqGZBb',
-          href: 'https://api.spotify.com/v1/artists/5INjqkS1o8h1imAzPqGZBb',
-          type: 'artist'
-        },
+        contextType: 'artist', 
+        contextUri: 'abcd',
         trackUri: '12345'
       }
     })
@@ -204,12 +207,8 @@ describe('Adding to recently played list of a user', () => {
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
-        context: {
-          externalUrls: [],
-          uri: 'spotify:artist:5INjqkS1o8h1imAzPqGZBb',
-          href: 'https://api.spotify.com/v1/artists/5INjqkS1o8h1imAzPqGZBb',
-          type: 'artist'
-        },
+        contextType: 'artist', 
+        contextUri: 'abcd',
         trackUri: 'invalidUri'
       }
     })
