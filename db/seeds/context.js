@@ -32,6 +32,13 @@ const Playlist = require('../../models/playlistModel')
 const Album = require('../../models/albumModel')
 
 
+/**
+ * express module
+ * Artist model from the database
+ * @const
+ */
+const User = require('../../models/userModel')
+
 const app = require('./../../app')
 /**
  * express module
@@ -82,7 +89,7 @@ createContexts = async () => {
     let album1= await Album.find({'name':'Divide'}).select('_id')
     
 
-    let album2= await Album.find({'name':'Sahran'}).select('_id')
+    let artist1= await User.find({'name':'21 Pilots'}).select('_id')
     
 
   const context1 = new Context({
@@ -139,13 +146,13 @@ createContexts = async () => {
     externalUrls: 'Should be an external url',
     type: 'album',
     href: 'Should be a href',
-    name: album2[0].name,
-    images: album2[0].images,
-    followersCount: album2[0].popularity
+    name: artist1[0].name,
+    images: artist1[0].images,
+    followersCount: artist1[0].followers.length()
   })
   await context5.save()
-  await context5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album2[0]._id}`})
-  await context5.updateOne({uri:`spotify:albums:${album2[0]._id}`})
+  await context5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${artist1[0]._id}`})
+  await context5.updateOne({uri:`spotify:albums:${artist1[0]._id}`})
 
   
   

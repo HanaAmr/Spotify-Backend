@@ -83,10 +83,10 @@ db.on('error', err => {
 createContexts = async () => {
 
 
-    let user1= await User.find({'name':'user1'})
-    let user2= await User.find({'name':'user2'})
-    let user3= await User.find({'name':'user3'})
-    let user4= await User.find({'name':'user4'})
+    let user1= await User.find({'name':'Imagine Dragons'})
+    let user2= await User.find({'name':'Ed Sheeran'})
+    let user3= await User.find({'name':'Amr Diab'})
+    let user4= await User.find({'name':'21 Pilots'})
 
 
     let track1 = await Track.find({'name':'Believer'})
@@ -97,7 +97,7 @@ createContexts = async () => {
 
   const playHistory1 = new playHistory({
     userId: user1[0]._id,
-    context: context[1]._id,
+    context: context[0]._id,
     playedAt: Date.now(),
     track: track1[0]._id
   })
@@ -109,7 +109,7 @@ createContexts = async () => {
     userId: user2[0]._id,
     context: context[2]._id,
     playedAt: Date.now(),
-    track: track3[0]._id
+    track: track5[0]._id
   })
   await playHistory2.save()
   await context[2].updateOne({playHistoryId:playHistory2._id})
@@ -124,13 +124,23 @@ createContexts = async () => {
   await context[3].updateOne({playHistoryId:playHistory3._id})
   
   const playHistory4 = new playHistory({
-    userId: user4[0]._id,
+    userId: user2[0]._id,
     context: context[4]._id,
     playedAt: Date.now(),
     track: track5[0]._id
   })
   await playHistory4.save()
   await context[4].updateOne({playHistoryId:playHistory4._id})
+
+
+  const playHistory5 = new playHistory({
+    userId: user4[0]._id,
+    context: context[5]._id,
+    playedAt: Date.now(),
+    track: track6[0]._id
+  })
+  await playHistory5.save()
+  await context[5].updateOne({playHistoryId:playHistory5._id})
 
 
 }

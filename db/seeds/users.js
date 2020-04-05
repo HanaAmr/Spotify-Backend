@@ -71,7 +71,7 @@ createUsers = async() => {
     const user3 = new User({
         id: "id3",
         name: "Amr Diab",
-        email: "omar@email.com",
+        email: "user3@email.com",
         password: "password",
     })
     
