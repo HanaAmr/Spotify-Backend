@@ -1,5 +1,5 @@
 /** Express router providing player related routes
- * @module routes/player
+ * @module routers/player
  * @requires express
  */
 
@@ -12,7 +12,6 @@ const express = require('express')
  * Express router to mount player related functions on.
  * @type {object}
  * @const
- * @namespace playerRouter
  */
 const router = express.Router()
 /**
@@ -21,20 +20,15 @@ const router = express.Router()
  * @const
  */
 const playerController = require('../controllers/playerController')
-/**
- * Authorization controller to call when routing.
- * @type {object}
- * @const
- */
-const authController = require('./../controllers/authController')
 
 /**
  * Route for adding a track to recently played
  * @name post/me/player/recentlyPlayed
  * @function
- * @memberof module:routes/player~playerRouter
+ * @memberof module:routers/player
  * @inner
- * @param {Request} Request - The function takes the request as a parameter to access its body.
+ * @param {String} Path - The Express path
+ * @param {Function} addToRecentlyPlayed - Adds currently played track to the recently played list for the user.
  */
 router
   .route('/recentlyPlayed')
@@ -44,8 +38,10 @@ router
  * Route for getting recently played tracks (play history)
  * @name get/me/player/recentlyPlayed
  * @function
- * @memberof module:routes/player~playerRouter
+ * @memberof module:routers/player
  * @inner
+ * @param {String} Path - The Express path
+ * @param {Function} getRecentlyPlayed - Gets the recently played list for the user.
  */
 router
 .route('/recentlyPlayed')

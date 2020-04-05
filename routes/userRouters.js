@@ -10,6 +10,14 @@
 const express = require('express')
 
 /**
+ * Express router to mount user related functions on.
+ * @type {object}
+ * @const
+ * @namespace usersRouter
+ */
+const router = express.Router()
+
+/**
  * User controller to call when routing.
  * @type {object}
  * @const
@@ -29,21 +37,12 @@ const authController = require('../controllers/authController')
  * @const
  */
 const passport = require('passport');
-const passportConf = require('../passport');
-
-/**
- * Express router to mount user related functions on.
- * @type {object}
- * @const
- * @namespace usersRouter
- */
-const router = express.Router()
 
 /**
  * Route for requesting to sign up
  * @name post/signUp
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
  * @param {string} path - Sign up path
  * @param {callback} middleware - Sign up middleware.
@@ -55,7 +54,7 @@ router.post('/signUp', authController.signUp)
  * Route for requesting to login with facebook
  * @name post/loginWithFacebook
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
  * @param {string} path - Sign up with facebook path
  * @param {callback} middleware - Sign up middleware.
@@ -67,7 +66,7 @@ router.post('/loginWithFacebook', passport.authenticate('facebookToken', { sessi
 * Route for requesting to sign in
 * @name post/signIn
 * @function
-* @memberof module:routes/users~usersRouter
+* @memberof module:routes/users
 * @inner
 * @param {string} path - Sign in path
 * @param {callback} middleware - Protect middleware.
@@ -80,7 +79,7 @@ router.post('/signIn', authController.signIn)
 * Route for requesting to get user profile
 * @name get/getMyProfile
 * @function
-* @memberof module:routes/users~usersRouter
+* @memberof module:routes/users
 * @inner
 * @param {string} path - get my profile path
 * @param {callback} middleware - get my profile middleware.
@@ -89,7 +88,7 @@ router.post('/signIn', authController.signIn)
 * Route for requesting to update user profile
 * @name put/updateProfile
 * @function
-* @memberof module:routes/users~usersRouter
+* @memberof module:routes/users
 * @inner
 * @param {string} path - update profile path
 * @param {callback} middleware - update profile middleware.
@@ -105,7 +104,7 @@ router
 * Route for requesting to change user password
 * @name put/changePassword
 * @function
-* @memberof module:routes/users~usersRouter
+* @memberof module:routes/users
 * @inner
 * @param {string} path - change password path
 * @param {callback} middleware - change password middleware.
@@ -118,7 +117,7 @@ router.put('/me/changePassword', authController.protect, authController.changePa
 * Route for requesting to follow user
 * @name put/followArtistUser
 * @function
-* @memberof module:routes/users~usersRouter
+* @memberof module:routes/users
 * @inner
 * @param {string} path - follow user path
 * @param {callback} middleware - follow user middleware.
@@ -127,16 +126,14 @@ router.put('/me/following', authController.protect, authController.followArtistU
 
 
 
-// POST request to reset the password by email.
-
 /**
  * Route for requesting to reset password
  * @name post/resetPassword
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
- * @param {string} path - Resetting password path
- * @param {callback} middleware - Reset Password middleware.
+ * @param {string} path - Request to reset password path
+ * @param {Function} requestResetPassword - Requests to reset the password for the user.
  */
 router.post('/resetPassword', userController.requestResetPassword)
 
@@ -144,11 +141,10 @@ router.post('/resetPassword', userController.requestResetPassword)
  * Route for resetting password
  * @name post/resetPassword/:token
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
  * @param {string} path - Resetting password path
- * @param {string} token - The reset password token
- * @param {callback} middleware - Reset Password middleware.
+ * @param {function} resetPassword - Resets the password for the user given he had a valid token.
  */
 router.post('/resetPassword/:token', userController.resetPassword)
 
@@ -156,10 +152,10 @@ router.post('/resetPassword/:token', userController.resetPassword)
  * Route for requesting to become premium
  * @name post/me/premium
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
  * @param {string} path - Becoming premium path
- * @param {callback} middleware - Upgrade user middleware
+ * @param {function} requestBecomePremium - Requests upgrade to become a premium user.
  */
 router.post('/me/premium', authController.protect, authController.restrictTo('user'), userController.requestBecomePremium)
 
@@ -167,10 +163,10 @@ router.post('/me/premium', authController.protect, authController.restrictTo('us
  * Route for confirming upgrade
  * @name post/me/upgrade
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
- * @param {string} path - Upgrade user path
- * @param {callback} middleware - Upgrade user middleware
+ * @param {string} path - Confirm upgrade user path
+ * @param {function} confirmUpgrade - Confirms user upgrade to either premium or artist membership.
  */
 router.post('/me/upgrade/:confirmationCode', authController.protect, userController.confirmUpgrade)
 
@@ -178,10 +174,10 @@ router.post('/me/upgrade/:confirmationCode', authController.protect, userControl
  * Route for requesting to cancel premium
  * @name post/me/premium
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
- * @param {string} path - cancel premium path
- * @param {callback} middleware - Cancel upgrade middleware
+ * @param {string} path - Request to cancel premium membership path
+ * @param {function} cancelUpgrade - Requests to cancel premium subscription.
  */
 router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
 
@@ -189,10 +185,10 @@ router.delete('/me/premium', authController.protect, authController.restrictTo('
  * Route for confirming to cancel premium
  * @name post/me/premium
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
- * @param {string} path - cancel premium path
- * @param {callback} middleware - Cancel upgrade middleware
+ * @param {string} path - Confirm cancel premium path
+ * @param {function} confirmCancelUpgrade - Cancels premium subscription for the user.
  */
 router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
 
@@ -200,10 +196,10 @@ router.delete('/me/premium/:confirmationCode', authController.protect, authContr
  * Route for requesting to become artist
  * @name post/me/artist
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
  * @param {string} path - Becoming artist path
- * @param {callback} middleware - Upgrade user middleware
+ * @param {function} requestBecomeArtist - Requests upgrade to become an artist user.
  */
 router.post('/me/artist', authController.protect, userController.requestBecomeArtist)
 
@@ -211,10 +207,10 @@ router.post('/me/artist', authController.protect, userController.requestBecomeAr
  * Route for requesting to cancel artist
  * @name post/me/artist
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
- * @param {string} path - cancel ugrade path
- * @param {callback} middleware - Cancel upgrade middleware
+ * @param {string} path - Request to cancel artist membership path
+ * @param {function} cancelUpgrade - Requests to cancel premium subscription.
  */
 router.delete('/me/artist', authController.protect, authController.restrictTo('artist'), userController.cancelUpgrade)
 
@@ -222,10 +218,10 @@ router.delete('/me/artist', authController.protect, authController.restrictTo('a
  * Route for confirming to cancel artist
  * @name post/me/artist
  * @function
- * @memberof module:routes/users~usersRouter
+ * @memberof module:routes/users
  * @inner
- * @param {string} path - cancel upgrade path
- * @param {callback} middleware - Cancel upgrade middleware
+ * @param {string} path - Confirm cancel artist path
+ * @param {function} confirmCancelUpgrade -  Cancels artist membership for the user.
  */
 router.delete('/me/artist/:confirmationCode', authController.protect, authController.restrictTo('artist'), userController.confirmCancelUpgrade)
 
