@@ -63,12 +63,12 @@ const Track = require('../../models/trackModel')
  */
 const playerController = require('../../controllers/playerController')
 
+
 /**
- * express module
- * authentication controller
+ * User service
  * @const
  */
-const authController = require('../../controllers/authController')
+const userServices = require('../../services/userService')
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
@@ -94,6 +94,19 @@ beforeAll(async () => {
     audioFilePath: 'anyDummyPath/artist/track'
   })
   await newTrack.save()
+  const newTrack2 = new Track({
+    externalUrls: [],
+    popularity: 0,
+    artists: [],
+    name: 'track2',
+    uri: '12345',
+    href: 'asdd',
+    trackNumber: 5,
+    isLocal: false,
+    durationMs: 123,
+    audioFilePath: 'anyDummyPath/artist/track2'
+  })
+  await newTrack2.save()
 })
 
 // Testing adding to recently played list for a user.
@@ -109,14 +122,15 @@ describe('Adding to recently played list of a user', () => {
       password: 'password'
     })
     await validUser.save()
-    // Mock the authController get user id function to return the testing user id.
-    sinon.stub(authController, 'getUserId').returns(validUser._id)
+    // Mock the userServices get user id function to return the testing user id.
+    sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
   })
 
   // Drop the whole users, playHistory collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
     await mongoose.connection.collection('playhistories').deleteMany({})
+    sinon.restore()
   })
 
   // Testing adding to recently played with no problems
@@ -137,8 +151,10 @@ describe('Adding to recently played list of a user', () => {
 
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     await playerController.addToRecentlyPlayed(request, response)
-    response.on('end', () => {
+    response.on('end',  async () => {
       try {
+        const count = await PlayHistory.countDocuments()
+        expect(count).toEqual(1)
         expect(response.statusCode).toEqual(204)
         done()
       } catch (error) {
@@ -148,7 +164,7 @@ describe('Adding to recently played list of a user', () => {
   })
 
   // Testing adding to recently played with no problems after reaching limit of recently played
-  it('Should add to recently played with no problems', async (done) => {
+  it('Should add to recently played with no problems even after reaching limit', async (done) => {
     let env
     env = process.env
     process.env.PLAY_HISTORY_MAX_COUNT = 1
@@ -163,13 +179,15 @@ describe('Adding to recently played list of a user', () => {
           href: 'https://api.spotify.com/v1/artists/5INjqkS1o8h1imAzPqGZBb',
           type: 'artist'
         },
-        trackUri: '1234'
+        trackUri: '12345'
       }
     })
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     await playerController.addToRecentlyPlayed(request, response)
-    response.on('end', () => {
+    response.on('end', async () => {
       try {
+        const playHistoryAdded = await PlayHistory.findOne()
+        expect(playHistoryAdded.track.uri).toEqual('12345')
         expect(response.statusCode).toEqual(204)
         process.env = env
         done()
@@ -181,7 +199,7 @@ describe('Adding to recently played list of a user', () => {
   })
 
   // Testing adding to recently played with a track that doesn't exist
-  it('Should add to recently played with no problems', async (done) => {
+  it('Shouldn\'t add to recently played as track doens\'t exist', async (done) => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
@@ -196,7 +214,7 @@ describe('Adding to recently played list of a user', () => {
       }
     })
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    await playerController.addToRecentlyPlayed(request, response, (err) => {
+    playerController.addToRecentlyPlayed(request, response, (err) => {
       console.log(err)
       expect(err).toEqual(expect.anything())
       expect(err.statusCode).toEqual(404)
@@ -216,6 +234,8 @@ describe('Getting recently played list for a user', () => {
       password: 'password'
     })
     await validUser.save()
+    // Mock the userServices get user id function to return the testing user id.
+    sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
   })
 
   // Drop the whole users, playHistory collection after finishing testing
