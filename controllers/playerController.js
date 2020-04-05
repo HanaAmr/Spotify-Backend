@@ -84,6 +84,13 @@ const playerService = new playerServices()
 const AppError = require('../utils/appError')
 
 /**
+ * express module
+ * Pagination file
+ * @const
+ */
+const paginatedResults = require('./../utils/pagination')
+
+/**
  * A function that is used to add a track to the recently played list
  * @memberof module:controllers/player~playerController
  * @param {Request}  - The function takes the request as a parameter to access its body.
@@ -96,9 +103,9 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   // Make sure list of recently played is freed if it has reached the limit
   await playerService.deleteOneRecentlyPlayedIfFull(req.headers.authorization)
   
-
   // TODO: Instead of getting the context from the request, we should have it saved
   // when the user started playing
+  //const newContext = await playerService.getConext(req.headers.authorization)
   const newContext = await Context.create(req.body.context)
   const track = await Track.find().where('uri').equals(req.body.trackUri).select('_id')
   if (track.length === 0) {
@@ -136,3 +143,25 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
     }
   })
 })
+
+
+
+/**
+ * A function that is used to get the recently played list
+ * @memberof module:controllers/player~playerController
+ * @param {Request}  - The function takes the request as a parameter to access its body.
+ * @param {Respond} - The respond sent
+ * @param {next} - The next function in the middleware
+ */
+// exports.getRecentlyPlayed = catchAsync(async function (req, res, next) { //Paginated
+//   const userId = await userService.getUserId(req.headers.authorization)
+//   const results = await paginatedResults(req, await PlayHistory.find().where('userId').equals(userId).countDocuments().exec())
+//   const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId), req.query).paginate()
+//   results.items = await features.query.select('-userId -_id -__v')
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       results
+//     }
+//   })
+// })

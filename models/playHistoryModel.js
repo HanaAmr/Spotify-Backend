@@ -45,7 +45,7 @@ const playHistorySchema = new mongoose.Schema({
 */
 playHistorySchema.pre(/^find/, function (next) {
   this.populate('context', '-__v -_id -playHistoryId')
-  this.populate('track', '-_id -__v')
+  this.populate('track', '-_id -__v -audioFilePath')
   next()
 })
 

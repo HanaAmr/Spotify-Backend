@@ -2,7 +2,7 @@
  * @module models
  * @requires express
  */
-
+ 
 /**
  * Album model 
  * @type {object}
@@ -44,11 +44,11 @@ const albumSchema = new mongoose.Schema({
   },
   href:{
     type: String,
-    //required: [true,'An Album must have a ref']
+    default: `${process.env.API_URL}/albums/`
   },
-  images: {
-    type: [String],
-    //required: [true, 'An album must have at least one image']
+  image: {
+    type: String,
+    required: [true, 'An album must have an image']
   },
   albumType:{
     type: String,
@@ -64,8 +64,8 @@ const albumSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    description: 'The Spotify URI for the album.'
-    //required: [true,'An album must have a uri']
+    description: 'The Spotify URI for the album.',
+    default: 'spotify:albums:'
   },
   genre: {
     description: 'An array of strings. A list of the genres used to classify the album.',
@@ -90,16 +90,16 @@ const albumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  artists: [
+  artist: 
     {
       type: mongoose.Schema.ObjectId,
       ref: 'User'
     }
-  ],
+,
   totalTracks: {
     description: 'The total number of tracks inside the album',
     type: Number ,
-    required:[true, 'An Album must include the total number of']
+    default:0 
   }
 })
 

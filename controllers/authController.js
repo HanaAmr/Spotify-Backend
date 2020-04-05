@@ -61,7 +61,13 @@ const signToken = id => {
 * @param {next} - The next function in the middleware
 */
 exports.signUp = catchAsync (async (req, res, next) => {
-  const newUser = await User.create(req.body);   //edit body
+  const newUser = await User.create({
+    email: req.body.email,
+    password: req.body.password,
+    name: req.body.name,
+    dateOfBirth: req.body.dateOfBirth,
+    gender: req.body.gender  
+  });
   
   const token = signToken(newUser._id);
     
@@ -74,26 +80,29 @@ exports.signUp = catchAsync (async (req, res, next) => {
  });
 });
 
+
 /**
-* A function to check if a user signed up with facebook
+* A function for logging in users with facebook
 * @function
 * @memberof module:controllers/authController
 * @param {Request}  - The function takes the request as a parameter to access its body.
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.checkSignedupWithFacebook = catchAsync (async (req, res, next) => {
-  const checkUser = await User.findOne({email: req.body.email});  
+exports.loginWithFacebook = catchAsync (async (req, res, next) => {
   
-  const exist = checkUser ? true : false;
- 
+  console.log(req.user)
+
+  const token = signToken(req.user._id);
+    
   res.status(200).json({
     status: 'Success',
-    data: {
-      exist
-    }    
-  });
+    token   
+ });
+
 });
+
+
 
 /**
 * A function for signing in users
@@ -183,11 +192,101 @@ exports.restrictTo = (...roles) => {
 
 
 /**
-* A function that returns the database document id of the user that has the token passed to it.
+* A function to get user profile
 * @function
 * @memberof module:controllers/authController
-* @param {String} token - The token string.
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
 */
+exports.getMyProfile = catchAsync (async (req, res, next) => {
+  const newUser = await User.findById(req.user.id)
+
+  res.status(200).json({
+    status: 'Success',
+    data: {
+      name: newUser.name,
+      email: newUser.email,
+      gender: newUser.gender,
+      dateOfBirth: newUser.dateOfBirth
+      //mobile phone
+    }    
+ });
+});
+
+
+/**
+* A function to change user password
+* @function
+* @memberof module:controllers/authController
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.changePassword = catchAsync (async (req, res, next) => {
+  //get user from database
+  const user = await User.findById(req.user.id).select('+password')
+
+  //check if password is correct
+  if(!(await user.correctPassword(req.body.passwordConfirmation, user.password))) {
+    return next(new AppError('Your Confirmation password is wrong', 401))
+  }
+  
+  user.password = req.body.newPassword
+  await user.save()
+
+
+  res.status(200).json({
+      status: 'Success'
+  });  
+ 
+});
+
+
+
+exports.updateProfile = catchAsync (async (req, res, next) => {
+  //get user from database
+  const user = await User.findById(req.user.id)
+
+  
+  user.email = req.body.email
+  user.name = req.body.name
+  user.gender = req.body.gender
+  user.dateOfBirth = req.body.dateOfBirth
+  await user.save()
+
+
+  res.status(200).json({
+      status: 'Success',
+      data: {
+        user
+      }
+  });  
+});
+
+
+exports.followArtistUser = catchAsync (async (req, res, next) => {
+  //get user from database
+  const followedUser = await User.findById(req.body.id)
+  const user = await User.findById(req.user.id)
+
+  if(user.following.includes(req.body.id)) {
+    return next(new AppError('Already following this user', 400))
+  }
+
+  console.log(user.following)
+
+  user.following.push(req.body.id)
+  followedUser.followers.push(user._id)
+  await user.save()
+
+  console.log(user.following)
+
+  res.status(204).json({
+    status: 'Success'
+});  
+});
+
 
 exports.createUser = catchAsync (async (name, email, password) => {
   const newUser = await User.create({
@@ -197,6 +296,18 @@ exports.createUser = catchAsync (async (name, email, password) => {
   });
   return newUser
 })
+
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {}
+  
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el]
+  })
+
+  return newObj
+}
+
+
 /**
 * A function that returns the userId of the current user
 * @function

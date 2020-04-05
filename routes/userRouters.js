@@ -24,6 +24,14 @@ const userController = require('../controllers/userController')
 const authController = require('../controllers/authController')
 
 /**
+ * express module
+ * passport for connecting with facebook
+ * @const
+ */
+const passport = require('passport');
+const passportConf = require('../passport');
+
+/**
  * Express router to mount user related functions on.
  * @type {object}
  * @const
@@ -42,27 +50,18 @@ const router = express.Router()
  */
 router.post('/signUp', authController.signUp)
 
-/**
- * Route for checking if a user signed up with facebook before
- * @name post/checkSignedupWithFacebook
- * @function
- * @memberof module:routes/users~usersRouter
- * @inner
- * @param {string} path - check sign up with facebook path
- * @param {callback} middleware - check sign up middleware.
- */
-router.post('/checkSignedupWithFacebook', authController.checkSignedupWithFacebook)
 
 /**
- * Route for requesting to sign up with facebook
- * @name post/signupWithFacebook
+ * Route for requesting to login with facebook
+ * @name post/loginWithFacebook
  * @function
  * @memberof module:routes/users~usersRouter
  * @inner
  * @param {string} path - Sign up with facebook path
  * @param {callback} middleware - Sign up middleware.
  */
-router.post('/signupWithFacebook', authController.signUp)
+router.post('/loginWithFacebook', passport.authenticate('facebookToken', { session: false }), authController.loginWithFacebook)
+
 
 /**
 * Route for requesting to sign in
@@ -76,6 +75,57 @@ router.post('/signupWithFacebook', authController.signUp)
 */
 router.post('/signIn', authController.signIn)
 // router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
+
+/**
+* Route for requesting to get user profile
+* @name get/getMyProfile
+* @function
+* @memberof module:routes/users~usersRouter
+* @inner
+* @param {string} path - get my profile path
+* @param {callback} middleware - get my profile middleware.
+*/
+/**
+* Route for requesting to update user profile
+* @name put/updateProfile
+* @function
+* @memberof module:routes/users~usersRouter
+* @inner
+* @param {string} path - update profile path
+* @param {callback} middleware - update profile middleware.
+*/
+router
+  .route('/me')
+  .get(authController.protect, authController.getMyProfile)
+  .put(authController.protect, authController.updateProfile)
+
+  
+
+/**
+* Route for requesting to change user password
+* @name put/changePassword
+* @function
+* @memberof module:routes/users~usersRouter
+* @inner
+* @param {string} path - change password path
+* @param {callback} middleware - change password middleware.
+*/
+router.put('/me/changePassword', authController.protect, authController.changePassword)
+
+
+
+/**
+* Route for requesting to follow user
+* @name put/followArtistUser
+* @function
+* @memberof module:routes/users~usersRouter
+* @inner
+* @param {string} path - follow user path
+* @param {callback} middleware - follow user middleware.
+*/
+router.put('/me/following', authController.protect, authController.followArtistUser)
+
+
 
 // POST request to reset the password by email.
 
