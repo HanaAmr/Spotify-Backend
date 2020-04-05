@@ -1,20 +1,16 @@
-/** Express controller providing playHistory model
- * @module controllers/player
- * @requires express
+/** MongoDB Model for the play history object.
+ * @requires mongoose
  */
 
-/**
- * express module
- * @const
- */
 const mongoose = require('mongoose')
 
-/**
- * playHistory schema
- * @type {object}
- * @const
- */
 
+/**
+ * Play History object schema
+ * @memberof module:models~ 
+ * @class playHistory
+ * @classdesc The Play History object that contains details of a track playback that is used in recently played list.
+ */
 const playHistorySchema = new mongoose.Schema({
   userId: {
     type: String,
@@ -36,12 +32,12 @@ const playHistorySchema = new mongoose.Schema({
   }
 })
 
-/**
-* Populating the playHistory
-* @function
-* @memberof module:models/playHistoryModel
-* @inner
-* @param {string} find - populate the documents before any find function
+ /**
+* Populating the play history object
+* @function preFindPopulate
+* @memberof module:models~playHistory
+* @this module:models~playHistory
+* @param {Function} next - The next function to be called. 
 */
 playHistorySchema.pre(/^find/, function (next) {
   this.populate('context', '-__v -_id -playHistoryId')
@@ -49,11 +45,12 @@ playHistorySchema.pre(/^find/, function (next) {
   next()
 })
 
-/**
-* Before deleting the playHistoryModel, delete the context it refrenced.
-* @function
-* @memberof module:models/playHistoryModel
-* @inner
+ /**
+* Deleting the context tied to the play history model before deleting play history object.
+* @function deletePlayHistoryContext
+* @memberof module:models~playHistory
+* @this module:models~playHistory
+* @param {Document} doc - The document that is being deleted. 
 */
 playHistorySchema.post('findOneAndDelete', function (doc) {
   require('./contextModel').deleteMany({ playHistoryId: doc._id }).exec()

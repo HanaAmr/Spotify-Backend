@@ -1,21 +1,15 @@
-/** Express controller providing player model.
- * @module controllers/player
- * @requires express
+/** MongoDB Model for the music player object.
+ * @requires mongoose
  */
 
-/**
- * express module
- * @const
- */
 const mongoose = require('mongoose')
 
-
 /**
- * Player schema
- * @type {object}
- * @const
+ * Player object schema
+ * @memberof module:models~
+ * @class player
+ * @classdesc The player object that contains details of the music player of the user.
  */
-
  const playerSchema = new mongoose.Schema({
      userId: {
          type: String,
@@ -34,29 +28,15 @@ const mongoose = require('mongoose')
 
  /**
 * Populating the player object
-* @function
-* @memberof module:models/playerModel
-* @inner
-* @param {string} find - populate the documents before any find function
+* @function preFindPopulate
+* @memberof module:models~player
+* @this module:models~player
+* @param {Function} next - The next function to be called. 
 */
 playerSchema.pre(/^find/, function (next) {
     this.populate('context')
     next()
-  })
-
-  /**
-* Populating the player object
-* @function
-* @memberof module:models/playerModel
-* @inner
-* @param {string} find - populate the documents before save function
-*/
-playerSchema.pre('save', function (next) {
-    this.populate('context')
-    next()
-  })
-
-
+})
 
 const Player = mongoose.model('Player', playerSchema)
 
