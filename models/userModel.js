@@ -52,7 +52,6 @@ const userSchema = new Schema({
     },      
     password: {           //confirm password
       type: String,
-      required: [true, 'Please provide a password'],
       minlength: 8,
       maxlength: 20,
       select: false    
@@ -107,12 +106,15 @@ const userSchema = new Schema({
         
       }
     },
+    facebookId: String,
     resetPasswordToken: String,
     resetPasswordExpires: Date, // Date of expiration of reset password token
-    becomePremiumToken: String,
-    becomePremiumExpires: Date, // Date of expiration of become premium token
-    becomeArtistToken: String,
-    becomeArtistExpires: Date, // Date of expiration of become artist verification code
+    upgradeToken: String,
+    upgradeTokenExpires: Date, // Date of expiration of Upgrade token
+    upgradeRole: { //Role to upgrade to
+      type: String,
+      enum: ['premium', 'artist']
+    }
     
 });
 
@@ -144,6 +146,6 @@ userSchema.methods.correctPassword = async function(candidatePassword, userPassw
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema)
 
 module.exports = User;

@@ -73,6 +73,29 @@ exports.signUp = catchAsync (async (req, res, next) => {
 
 
 /**
+* A function for logging in users with facebook
+* @function
+* @memberof module:controllers/authController
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.loginWithFacebook = catchAsync (async (req, res, next) => {
+  
+  console.log(req.user)
+
+  const token = signToken(req.user._id);
+    
+  res.status(200).json({
+    status: 'Success',
+    token   
+ });
+
+});
+
+
+
+/**
 * A function for signing in users
 * @function
 * @memberof module:controllers/authController
@@ -265,14 +288,25 @@ exports.createUser = catchAsync (async (name, email, password) => {
   return newUser
 })
 
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {}
+  
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el]
+  })
+
+  return newObj
+}
+
 
 /**
-* A function that returns the database document id of the user that has the token passed to it.
+* A function that returns the userId of the current user
 * @function
 * @memberof module:controllers/authController
-* @param {String} token - The token string.
+* @param {Request} req - The request which contains the token string.
 */
-exports.getUserId = catchAsync( (async (req, next) => {
+
+exports.getUserId = (async (req, next) => { //Not putting catchAsync as we need this function to be async to be able to wait for it in other controllers
   //get token and check if it exists
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
@@ -285,17 +319,40 @@ exports.getUserId = catchAsync( (async (req, next) => {
   //verification of token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   userId = decoded.id
-  next(userId)
-}))
 
-
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {}
-  
-  Object.keys(obj).forEach(el => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el]
+  if(typeof next === 'function') {
+    return Promise.resolve(next(userId))
+  }
+  return new Promise(resolve => {
+      resolve(userId)
   })
+})
 
-  return newObj
-}
+/**
+* A function that returns the role of the current user
+* @function
+* @memberof module:controllers/authController
+* @param {Request} req - The request which contains the token string.
+*/
+
+exports.getUserRole = (async (req, next) => { //Not putting catchAsync as we need this function to be async to be able to wait for it in other controllers
+  //get token and check if it exists
+  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  
+  if(!token) {
+    return next(new AppError('You are not logged in! Please log in to access.', 401));
+  }
+  
+  //verification of token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  userId = decoded.id
+  userRole = await User.findById(userId).select('-_id role')
+  if(typeof next === 'function') {
+    return Promise.resolve(next(userRole.role))
+  }
+  return new Promise(resolve => {
+      resolve(userRole.role)
+  })
+})

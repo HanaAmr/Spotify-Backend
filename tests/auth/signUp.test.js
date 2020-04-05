@@ -25,7 +25,7 @@ const mongoose = require('mongoose');
  * User model from the database
  * @const
  */
-const user = require('../../models/user');
+const user = require('../../models/userModel');
 
 /**
  * express module
