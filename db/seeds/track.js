@@ -106,12 +106,10 @@ createTracks = async () => {
 
   const track1 = new Track({
     name:"Believer",
-    description:"Imagine Dragons Song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:1,
-    isLocal:false,
     durationMs:204000,
     popularity:12000000,
     album:album1Id,
@@ -125,12 +123,10 @@ createTracks = async () => {
   
   const track2 = new Track({
     name:"Thunder",
-    description:"Imagine Dragons Song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:2,
-    isLocal:false,
     durationMs:187000,
     popularity:300000,
     album:album1Id,
@@ -143,12 +139,10 @@ createTracks = async () => {
 
   const track3 = new Track({
     name:"Youm Talat",
-    description:"Amr Diab song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:1,
-    isLocal:false,
     durationMs:212000,
     popularity:200000,
     album:album3Id,
@@ -161,12 +155,10 @@ createTracks = async () => {
 
   const track4 = new Track({
     name:"Odam Merayetha",
-    description:"Amr Diab song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:2,
-    isLocal:false,
     durationMs:222000,
     popularity:200000,
     album:album3Id,
@@ -179,12 +171,10 @@ createTracks = async () => {
 
   const track5 = new Track({
     name:"Perfect",
-    description:"Ed Sheeran song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:1,
-    isLocal:false,
     durationMs:180000,
     popularity:500000,
     album:album2Id,
@@ -197,12 +187,10 @@ createTracks = async () => {
 
   const track6 = new Track({
     name:"Stressed Out",
-    description:"21 pilots song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:1,
-    isLocal:false,
     durationMs:202000,
     popularity:300000,
     album:album4Id,
@@ -215,12 +203,10 @@ createTracks = async () => {
 
   const track7 = new Track({
     name:"Ride",
-    description:"21 pilots song",
     type:"track",
     externalUrl:"this should be an externalUrl",
     externalId:"this should be an externalId",
     trackNumber:2,
-    isLocal:false,
     durationMs:214000,
     popularity:600000,
     album:album4Id,

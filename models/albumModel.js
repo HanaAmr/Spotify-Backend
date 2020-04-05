@@ -90,7 +90,7 @@ const albumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  artist: 
+  artists: 
     {
       type: mongoose.Schema.ObjectId,
       ref: 'User'

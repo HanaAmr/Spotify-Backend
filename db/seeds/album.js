@@ -129,7 +129,7 @@ createAlbums = async () => {
 
   const album4 = new Album({
     name:"Blurry Face",
-    images:["BlurryFace.jpg"],
+    images:["Blurryface.jpg"],
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",

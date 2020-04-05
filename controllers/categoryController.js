@@ -63,7 +63,7 @@ const paginatedResults = require('./../utils/pagination')
  */
 exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non paginated
   const features = new APIFeatures(Category.find(), req.query).paginate()
-  const categories = await features.query
+  const categories = await features.query.select("-__v")
   res.status(200).json({
     status: 'success',
     data: {
