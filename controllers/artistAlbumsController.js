@@ -1,4 +1,5 @@
 
+const { getAudioDurationInSeconds } = require('get-audio-duration')
 /**
  * express module
  * @const
@@ -59,10 +60,22 @@ exports.addAlbum=catchAsync(async(req,res,next)=>{
     if(req.file)
         req.body.image=req.file.filename
     
+    if(req.body.totalTracks)
+        req.body.totalTracks=0
+    
     const artistId= await (userServiceClass.getUserId(req.headers.authorization))
     req.body.artist= new mongoose.Types.ObjectId(artistId)
        
-    const newAlbum= await Album.create(req.body)
+    let newAlbum= await Album.create(req.body)
+
+    //updating uri and href of newely created albums
+    const newUri=newAlbum.uri+newAlbum._id
+    const newHref=newAlbum.href+newAlbum._id
+    newAlbum=await Album.findByIdAndUpdate(newAlbum._id,{uri: newUri,href: newHref},{
+        new: true,
+        runValidators: true
+    })
+
     res.status(200).json({
         status:"sucsess",
         data:newAlbum
@@ -80,21 +93,33 @@ exports.addAlbum=catchAsync(async(req,res,next)=>{
 */
 exports.addTracktoAlbum= catchAsync( async(req,res,next)=>{
     if (req.file)
+    {
         req.body.audioFilePath=req.file.filename
+        getAudioDurationInSeconds(`${__dirname}/../tracks/${req.file.filename}`).then((duration)=>{
+            req.body.durationMs=duration*1000000
+        })
+    }
 
-    console.log(req.body)
     const artistId= await (userServiceClass.getUserId(req.headers.authorization))
     req.body.artist= new mongoose.Types.ObjectId(artistId)
     req.body.album=new mongoose.Types.ObjectId(req.params.id)
 
-    //incrementing number of tracks of albums
+    //updating album to increment number of tracks
     let numberofTracks=(await Album.findById(req.params.id)).totalTracks
     numberofTracks++
     await Album.findByIdAndUpdate(req.params.id,{totalTracks: numberofTracks})
 
     req.body.trackNumber=numberofTracks
-    const newTrack= await Track.create(req.body)
+    let newTrack= await Track.create(req.body)
 
+    //updating href and uri
+    const newUri=newTrack.uri+newTrack._id
+    const newHref=newTrack.href+newTrack._id
+    newTrack=await Track.findByIdAndUpdate(newTrack._id,{uri: newUri,href: newHref},{
+        new: true,
+        runValidators: true
+    })
+    
     res.status(200).json({
         status:"sucsess",
         data:newTrack

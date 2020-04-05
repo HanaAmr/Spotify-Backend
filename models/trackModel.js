@@ -24,11 +24,11 @@ const trackSchema = new mongoose.Schema({
   type: String,
   uri:{
     type: String,
-    //required: [true, "A track must have a spotify URI"]
+    default: 'spotify:tracks:'
   },
   href:{
       type: String,
-      //required: [true, "A track must have a refernce"]
+      default: `${process.env.API_URL}/tracks/`
   },
   externalUrls:{
       type: [String]
@@ -40,10 +40,6 @@ const trackSchema = new mongoose.Schema({
   trackNumber: {
     type: Number,
     required: [true, "A track must be ordered in the album (track Number)"]
-  },
-  isLocal: {
-    type: Boolean,
-    required: [true, "A track must have an isLocal bit"]
   },
   durationMs: {
     type: Number,
@@ -65,7 +61,7 @@ const trackSchema = new mongoose.Schema({
   ],
   audioFilePath: {
     type: String,
-    //required: [true, 'A track must have a path for its audio file to play.']
+    required: [true, 'A track must have a path for its audio file to play.']
   }
 })
 

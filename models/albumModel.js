@@ -2,7 +2,7 @@
  * @module controllers/album
  * @requires express
  */
-
+ 
 /**
  * express module
  * @const
@@ -22,11 +22,11 @@ const albumSchema = new mongoose.Schema({
   },
   href:{
     type: String,
-    //required: [true,'An Album must have a ref']
+    default: `${process.env.API_URL}/albums/`
   },
   image: {
     type: String,
-    //required: [true, 'An album must have at least one image']
+    required: [true, 'An album must have an image']
   },
   albumType:{
     type: String,
@@ -42,8 +42,8 @@ const albumSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    description: 'The Spotify URI for the album.'
-    //required: [true,'An album must have a uri']
+    description: 'The Spotify URI for the album.',
+    default: 'spotify:albums:'
   },
   genre: {
     description: 'An array of strings. A list of the genres used to classify the album.',
