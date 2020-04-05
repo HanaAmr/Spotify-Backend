@@ -67,7 +67,7 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
 db.once('open', url => {
   console.log('Database connected')
-  createContexts()
+  createPlayHistories()
 })
 
 db.on('error', err => {
@@ -80,7 +80,7 @@ db.on('error', err => {
  * @memberof module:seeders/context~contextSeeder
  *
  */
-createContexts = async () => {
+createPlayHistories = async () => {
 
 
     let user1= await User.find({'name':'Imagine Dragons'})
