@@ -117,7 +117,7 @@ class APIFeatures {
           } else {
             this.query.populate({
               path: 'album',
-              select: '-artists'
+              select: '-artists -__v'
             })
           }
           this.query = this.query.select(trackFields)
@@ -135,8 +135,8 @@ class APIFeatures {
       }
     } else {
       this.query = this.query.select('-__v -audioFilePath')
-      this.query.populate({ path: 'album' , select: '-artists'})
-      this.query.populate({ path: 'artists' })
+      this.query.populate({ path: 'album' , select: '-artists -__v'})
+      this.query.populate({ path: 'artists' , select:'_id name uri href externalUrls images type followers userStats userArtist'})
     }
     return this
   }
