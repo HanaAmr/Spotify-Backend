@@ -1,5 +1,13 @@
-
-module.exports = async function (model,req,count) {
+/**
+* For making a paging objct
+* @function
+* @memberof module:utils/pagination
+* @param {req} - The request sent
+* @param {count} - The number of documents that can be returned
+* @param {Async function}  - the async function to paginate.
+* @return {results} The results object containing next,prev,limit,offset,total,and href . 
+*/
+module.exports = async function (req,count) {
     const page = parseInt(req.query.page* 1 || 1)
     const limit = parseInt(req.query.limit* 1 || 2)
 
@@ -9,7 +17,7 @@ module.exports = async function (model,req,count) {
     if(req.originalUrl.includes('limit')){
 
         const end = req.originalUrl.indexOf('limit')
-        Url = req.originalUrl.substring(0, end)
+        Url = req.originalUrl.substring(0, end-1)
         
     }
         

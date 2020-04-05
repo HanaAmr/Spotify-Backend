@@ -30,9 +30,15 @@ const mongoose = require('mongoose')
          type: String,
          requried: [true, 'Context must have a URI']
      },
+     name: String,
+     images: {
+         type: Array
+     },
+     followersCount: Number,
      playHistoryId: String //Not required, only if context was created for playHistoryModel to be able to delete it
  })
 
- const Context = mongoose.model('Context', contextSchema)
+
+const Context = mongoose.model('Context', contextSchema)
 
  module.exports = Context

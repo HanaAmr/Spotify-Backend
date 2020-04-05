@@ -23,8 +23,6 @@ const validator = require('validator');
  */
 const bcrypt = require('bcryptjs');
 
-
-
 /**
  * express module
  * @const
@@ -37,49 +35,47 @@ const Schema = mongoose.Schema;
  * @const
  */
 const userSchema = new Schema({
-    name: { 
+    name: {
       type: String,
       required: [true, 'Please provide your name'],
       trim: true
-    },      
+    },
     email: {
       type: String,
       required:[true, 'Please provide your email'],
-      trim: true, 
+      trim: true,
       unique: true,
       lowercase: true,
       validate: [validator.isEmail, 'Please provide a valid email']
-    },      
+    },
     password: {           //confirm password
       type: String,
       minlength: 8,
       maxlength: 20,
-      select: false    
-    },     
+      select: false
+    },
     gender: {
       type: String
-    },      
+    },
     dateOfBirth: {
       type: String,
       format: Date
-    },       
+    },
     uri: {
       type: String
-      //required: [true, 'Please provide a uri']
-    },      
+    },
     href: {
       type: String
-      //required: [true, 'Please provide a href']
-    },      
+    },
     externalUrls: [{
       //type: Schema.Types.ObjectId, ref: 'externalUrl'
-    }],    
+    }],
     images: {
-      type: Array,
+      type: String,
       //items: [{type: Schema.Types.ObjectId, ref: 'image'}]
     },  
     followers: {
-      type: Array,
+      type: [String],
       //items: [{type: Schema.Types.ObjectId, ref: 'followers'}]
     },
     following: {
@@ -87,7 +83,7 @@ const userSchema = new Schema({
     },        
     product: {
       type: String
-    },       
+    },
     userStats: [{
       //type: Schema.Types.ObjectId, ref: 'userStats'
     }],
@@ -95,7 +91,15 @@ const userSchema = new Schema({
       type: String,
       enum: ['user', 'artist', 'premium'],
       default: 'user'
-    },    
+    },
+    createdPlaylists: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'playlists'
+    }],
+    likedPlaylists: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'playlists'
+    }],
     artistInfo: {
       type: {
         biography: String,
@@ -103,7 +107,7 @@ const userSchema = new Schema({
         genres: [String] ,  //Array of genres
         albums: [String],   //Contains Albums IDs
         popularSong: [String],  //contains songs IDs
-        
+
       }
     },
     facebookId: String,
@@ -115,7 +119,7 @@ const userSchema = new Schema({
       type: String,
       enum: ['premium', 'artist']
     }
-    
+
 });
 
 /**
@@ -126,11 +130,11 @@ const userSchema = new Schema({
 * @param {string} save - encrypt password before saving in database.
 * @param {callback} middleware - function encrypts password.
 */
-userSchema.pre('save', async function(next) {  
+userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
 
     this.password = await bcrypt.hash(this.password, 12);
- 
+
     next();
 });
 

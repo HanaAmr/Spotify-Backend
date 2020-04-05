@@ -89,11 +89,13 @@ const playlistSchema = new mongoose.Schema({
   ],
   noOfFollowers: {
     description: 'The number of followers to this playlist',
-    type: Number
+    type: Number,
+    default: 0
   },
   popularity: {
     description: 'The number of likes to this playlist',
-    type: Number
+    type: Number,
+    default: 0
   },
   createdAt: {
     description: 'The date the playlist was created',

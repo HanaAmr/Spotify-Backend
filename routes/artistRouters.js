@@ -1,5 +1,5 @@
 /** Express router providing album related routes
- * @module routes/artistRouters
+ * @module routes/artistRoutes
  * @requires express
  */
 
@@ -25,10 +25,10 @@ const artistViewingController=require('./../controllers/artistViewingController'
 const authController = require('./../controllers/authController')
 
 /**
- * Express router to mount user related functions on.
+ * Express router to mount artist related functions on.
  * @type {object}
  * @const
- * @namespace usersRouter
+ * @namespace artistRouter
  */
 const router=express.Router()
 /**
@@ -37,7 +37,7 @@ const router=express.Router()
  * @memberof module:routes/tracks~tracksRouter
  * @inner
  */
-router.use(authController.protect)
+//router.use(authController.protect)
 
 
 /**
@@ -100,5 +100,19 @@ router
 router
     .route('/:id/top-tracks')
     .get(artistViewingController.getArtistTopTracks)
+
+router
+    .route('/:id/created-playlists')
+    .get(artistViewingController.getArtistCreatedPlaylists)
+
+/**
+ * Route for requesting a specific album
+ * @name /artists/:artistId/artist-created-playlists
+ * @function
+ * @memberof module:routes/artistRouters
+ * @inner
+ * @param {string} artistId - artist ID
+ */
+
 
 module.exports=router

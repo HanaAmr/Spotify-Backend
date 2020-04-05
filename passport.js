@@ -19,12 +19,13 @@ passport.use('facebookToken', new FacebookTokenStrategy({
         if (existingUser) {
           return done(null, existingUser);
         }
-    
+
         const newUser = new User({
           name: profile.displayName,
-          email: profile.emails[0].value,
+          // email: profile.emails[0].value,
+          email: "test@gmail.com",
           facebookId: profile.id,
-          image: profile.photos[0].value
+          images: profile.photos[0].value
         });
     
         await newUser.save();

@@ -1,7 +1,16 @@
-/** Express router providing authorization related controles
- * @module routes/users
+/**
+ * Controller module.
+ * @module controllers
  * @requires express
  */
+
+/**
+ * Auth controller to call when routing.
+ * @type {object}
+ * @const
+ * @namespace authController
+ */
+
 
  /**
  * express module
@@ -199,7 +208,7 @@ exports.getMyProfile = catchAsync (async (req, res, next) => {
       name: newUser.name,
       email: newUser.email,
       gender: newUser.gender,
-      dateOfBirth: newUser.dateOfBirth,
+      dateOfBirth: newUser.dateOfBirth
       //mobile phone
     }    
  });

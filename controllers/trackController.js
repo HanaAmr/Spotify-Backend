@@ -1,6 +1,6 @@
 /**
- * trackController module.
- * @module trackController
+ * Controller module.
+ * @module controllers
  * @requires express
  */
 
@@ -8,6 +8,7 @@
  * Track controller to call when routing.
  * @type {object}
  * @const
+ * @module controllers
  * @namespace trackController
  */
 

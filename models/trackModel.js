@@ -69,13 +69,13 @@ const trackSchema = new mongoose.Schema({
   }
 })
 
-/**
-* Populating the album object
-* @function
-* @memberof module:models/trackModel
-* @inner
-* @param {string} find - populate the documents before any find function
-*/
+// /**
+// * Populating the album object
+// * @function
+// * @memberof module:models/trackModel
+// * @inner
+// * @param {string} find - populate the documents before any find function
+// */
 // trackSchema.pre(/^find/, function (next) {
 //   this.populate({
 //     path: 'album'

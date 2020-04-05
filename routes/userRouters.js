@@ -23,6 +23,11 @@ const userController = require('../controllers/userController')
  */
 const authController = require('../controllers/authController')
 
+/**
+ * express module
+ * passport for connecting with facebook
+ * @const
+ */
 const passport = require('passport');
 const passportConf = require('../passport');
 
