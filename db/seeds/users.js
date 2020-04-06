@@ -55,37 +55,50 @@ db.once('open', url => {
 createUsers = async() => {
     
     const user1 = new User({
-        id: "id1",
-        name: "Imagine Dragons",
-        email: "user1@email.com",
-        password: "password",
+        name: "ahmed",
+        email: "ahmed@email.com",
+        password: "password1",
+        gender: 'male',
+        dateOfBirth: '2000-1-10'
     })
     
     const user2 = new User({
-        id: "id2",
-        name: "Ed Sheeran",
-        email: "user2@email.com",
-        password: "password",
+        name: "mohamed",
+        email: "mohamed@email.com",
+        password: "password2",
+        gender: 'male',
+        dateOfBirth: '2002-2-15'
     })
     
     const user3 = new User({
-        id: "id3",
-        name: "Amr Diab",
-        email: "user3@email.com",
-        password: "password",
+        name: "omar",
+        email: "omar@email.com",
+        password: "password3",
+        gender: 'male',
+        dateOfBirth: '2004-1-8'
     })
     
     const user4 = new User({
-        id: "id4",
-        name: "21 Pilots",
-        email: "user4@email.com",
-        password: "password",
+        name: "hana",
+        email: "hana@email.com",
+        password: "password4",
+        gender: 'female',
+        dateOfBirth: '1999-6-4',
         resetPasswordToken: "abcdefghijklmnopqrstuvwxyz",
         resetPasswordExpires: Date.now() + 3600000 // 1 Hour = 60 min * 60 sec = 3600000 ms
+    })
+
+    const user5 = new User({
+        name: "nada",
+        email: "nada@email.com",
+        password: "password5",
+        gender: 'female',
+        dateOfBirth: '2006-5-7'
     })
 
     await user1.save()
     await user2.save()
     await user3.save()
     await user4.save()
+    await user5.save()
 }

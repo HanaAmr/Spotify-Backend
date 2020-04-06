@@ -37,6 +37,7 @@ const authController = require('../controllers/authController')
  * @const
  */
 const passport = require('passport');
+const passportConfig = require('../passport')
 
 /**
  * Route for requesting to sign up
@@ -84,6 +85,9 @@ router.post('/signIn', authController.signIn)
 * @param {string} path - get my profile path
 * @param {callback} middleware - get my profile middleware.
 */
+router.get('/me', authController.protect, authController.getMyProfile)
+
+
 /**
 * Route for requesting to update user profile
 * @name put/updateProfile
@@ -93,11 +97,7 @@ router.post('/signIn', authController.signIn)
 * @param {string} path - update profile path
 * @param {callback} middleware - update profile middleware.
 */
-router
-  .route('/me')
-  .get(authController.protect, authController.getMyProfile)
-  .put(authController.protect, authController.updateProfile)
-
+router.put('/me', authController.protect, authController.updateProfile)
   
 
 /**

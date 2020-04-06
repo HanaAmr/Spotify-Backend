@@ -1,39 +1,29 @@
-/** Express controller providing user model
- * @module controllers/users
- * @requires express
+/** MongoDB Model for the user object.
+ * @module models
+ * @requires mongoose
  */
 
- /**
- * express module
- * @const
- */
 const mongoose = require('mongoose');
 
 /**
- * express module
  * validator to validate properties
  * @const
  */
 const validator = require('validator');
 
 /**
- * express module
  * bcrypt to encrypt password
  * @const
  */
 const bcrypt = require('bcryptjs');
 
 /**
- * express module
- * @const
+ * User object schema
+ * @class user
+ * @classdesc All the data of the user
  */
 const Schema = mongoose.Schema;
 
-/**
- * EUser schema
- * @type {object}
- * @const
- */
 const userSchema = new Schema({
     name: {
       type: String,
@@ -48,7 +38,7 @@ const userSchema = new Schema({
       lowercase: true,
       validate: [validator.isEmail, 'Please provide a valid email']
     },
-    password: {           //confirm password
+    password: {           
       type: String,
       minlength: 8,
       maxlength: 20,
@@ -71,12 +61,10 @@ const userSchema = new Schema({
       //type: Schema.Types.ObjectId, ref: 'externalUrl'
     }],
     images: {
-      type: String,
-      //items: [{type: Schema.Types.ObjectId, ref: 'image'}]
+      type: String
     },  
     followers: {
-      type: [String],
-      //items: [{type: Schema.Types.ObjectId, ref: 'followers'}]
+      type: [String]
     },
     following: {
       type: [String]
@@ -110,7 +98,9 @@ const userSchema = new Schema({
 
       }
     },
-    facebookId: String,
+    facebookId: {
+      type: String
+    },
     resetPasswordToken: String,
     resetPasswordExpires: Date, // Date of expiration of reset password token
     upgradeToken: String,
@@ -124,13 +114,13 @@ const userSchema = new Schema({
 
 /**
 * Encrypting password before saving
-* @function
-* @memberof module:models/userModel
+* @alias module:models/userModel
 * @inner
 * @param {string} save - encrypt password before saving in database.
 * @param {callback} middleware - function encrypts password.
 */
 userSchema.pre('save', async function(next) {
+    //if the password changed hash it before saving in the database
     if (!this.isModified('password')) return next();
 
     this.password = await bcrypt.hash(this.password, 12);
@@ -140,13 +130,13 @@ userSchema.pre('save', async function(next) {
 
 /**
 * Encrypting password before saving
-* @function
-* @memberof module:models/userModel
+* @alias module:models/userModel
 * @inner
 * @param {string} candidate password - the input password.
 * @param {string} user password - the user's password saved in database.
 */
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
+    //check if the given password matches the existing one
     return await bcrypt.compare(candidatePassword, userPassword);
 };
 
