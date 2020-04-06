@@ -1,5 +1,5 @@
 /** Express controller providing user related controls
- * @module controllers
+ * @module controllers/user
  * @requires express
  */
 
@@ -7,18 +7,15 @@
  * User controller to call when routing.
  * @type {object}
  * @const
- * @namespace userController
  */
 
 /**
- * express module
  * catch async for async functions
  * @const
  */
 const catchAsync = require('../utils/catchAsync')
 
 /**
- * express module
  * User services
  * @const
  */
@@ -26,7 +23,6 @@ const userServices = require('../services/userService')
 const userService = new userServices()
 
 /**
- * express module
  * Mailer services
  * @const
  */
@@ -35,11 +31,11 @@ const mailerService = new mailerServices()
 
 
 /**
- * A function that is used to reset password for users by sending them emails to change the password.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Resets password for users by sending them emails to change the password.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const requestResetPassword = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
@@ -59,11 +55,11 @@ const requestResetPassword = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to change password for users after requesting to reset it.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Changes password for users after requesting to reset it.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const resetPassword = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
@@ -83,11 +79,11 @@ const resetPassword = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to become a premium user.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Becomes a premium user.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const requestBecomePremium = catchAsync(async function (req, res, next) {
   // Calling the ugrade user function with premium as upgrade role.
@@ -95,11 +91,11 @@ const requestBecomePremium = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to become an artist user.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Becomes an artist user.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const requestBecomeArtist = catchAsync(async function (req, res, next) {
   // Calling the ugrade user function with premium as upgrade role.
@@ -107,11 +103,11 @@ const requestBecomeArtist = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to upgrade user.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *Upgrades user.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const upgradeUser = catchAsync(async function (req, res, upgradeRole, next) {
   // Calling asynchronous functions one after another
@@ -135,11 +131,11 @@ const upgradeUser = catchAsync(async function (req, res, upgradeRole, next) {
 })
 
 /**
- * A function that is used to check for the confirmation code to make the user a premium one.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Checks for the confirmation code to make the user a premium/artist one.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const confirmUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
@@ -159,11 +155,11 @@ const confirmUpgrade = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to cancel premium subscription.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Cancels premium/artist subscription.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const cancelUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
@@ -185,11 +181,11 @@ const cancelUpgrade = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to check for the cancellation code to make the user a normal one.
- * @memberof module:controllers/users~userController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Checks for the cancellation code to make the user a normal one.
+ * @alias module:controllers/user
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 const confirmCancelUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another

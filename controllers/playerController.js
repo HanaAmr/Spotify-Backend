@@ -1,6 +1,6 @@
 /**
  * Controller module.
- * @module controllers
+ * @module controllers/player
  * @requires express
  */
 
@@ -8,59 +8,35 @@
  * Player controller to call when routing.
  * @type {object}
  * @const
- * @namespace playerController
  */
 
+
 /**
- * express module
- * Context model from the database
- * @const
- */
-const Context = require('../models/contextModel')
-/**
- * express module
  * Play History model from the database
  * @const
  */
 const PlayHistory = require('../models/playHistoryModel')
 /**
- * express module
  * Track model from the database
  * @const
  */
 const Track = require('../models/trackModel')
 
-/**
- * express module
- * Async functions
- * @const
- */
-const async = require('async')
+
 
 /**
- * express module
  * catchAsync utils file
  * @const
  */
 const catchAsync = require('../utils/catchAsync')
 
 /**
- * express module
  * APIFeatures utils file
  * @const
  */
 const APIFeatures = require('../utils/apiFeatures')
 
 /**
- * express module
- * Authroization controller
- * @const
- */
-const authController = require('../controllers/authController')
-
-
-/**
- * express module
  * User services
  * @const
  */
@@ -69,7 +45,6 @@ const userService = new userServices()
 
 
 /**
- * express module
  * Player services
  * @const
  */
@@ -77,25 +52,22 @@ const playerServices = require('../services/playerService')
 const playerService = new playerServices()
 
 /**
- * express module
- * error object
  * @const
  */
 const AppError = require('../utils/appError')
 
 /**
- * express module
  * Pagination file
  * @const
  */
 const paginatedResults = require('./../utils/pagination')
 
 /**
- * A function that is used to add a track to the recently played list
- * @memberof module:controllers/player~playerController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Adds a track to the recently played list
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
@@ -130,11 +102,11 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
 })
 
 /**
- * A function that is used to get the recently played list
- * @memberof module:controllers/player~playerController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * Gets the recently played list
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  */
 exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
@@ -150,13 +122,13 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
 
 
 
-/**
- * A function that is used to get the recently played list
- * @memberof module:controllers/player~playerController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
- */
+// /**
+//  * A function that is used to get the recently played list
+//   *  @alias module:controllers/player
+//  * @param {Request}  - The function takes the request as a parameter to access its body.
+//  * @param {Respond} - The respond sent
+//  * @param {next} - The next function in the middleware
+//  */
 // exports.getRecentlyPlayed = catchAsync(async function (req, res, next) { //Paginated
 //   const userId = await userService.getUserId(req.headers.authorization)
 //   const results = await paginatedResults(req, await PlayHistory.find().where('userId').equals(userId).countDocuments().exec())
