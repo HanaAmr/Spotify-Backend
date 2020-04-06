@@ -1,34 +1,57 @@
-/** Express controller providing album model
- * @module controllers/album
+/**
+ * Models module.
+ * @module models/album
  * @requires express
  */
 
 /**
- * express module
+ * Album object
+ * @type {object}
  * @const
+ */
+
+/** MongoDB Model for the album object.
+ * @requires mongoose
  */
 const mongoose = require('mongoose')
 
+
+
 /**
  * Album schema
+ *  @alias module:models/album
  * @type {object}
+ * @property {String} name Name of the album
+ * @property {String} href href of the album
+ * @property {String} images images of the album
+ * @property {String} albumType albumType of the album
+ * @property {String} externalUrls externalUrls of the album
+ * @property {String} type type of the album
+ * @property {String} uri uri of the album
+ * @property {String} genre genre of the album
+ * @property {String} label label of the album
+ * @property {Number} popularity popularity of the album
+ * @property {String} copyrights copyrights of the album
+ * @property {Date} releaseDate releaseDate of the album
+ * @property {object} artists artists of the album
+ * @property {Number} totalTracks totalTracks of the album
  * @const
  */
 const albumSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'An album must have a name'],
+    required: [true,'An album must have a name'],
     unique: true
   },
-  href: {
-    type: String
-    // required: [true,'An Album must have a ref']
+  href:{
+    type: String,
+    default: `${process.env.API_URL}/albums/`
   },
-  images: {
-    type: [String]
-    // required: [true, 'An album must have at least one image']
+  image: {
+    type: String,
+    required: [true, 'An album must have an image']
   },
-  albumType: {
+  albumType:{
     type: String,
     required: [true, 'An Album must have a type']
   },
@@ -42,13 +65,13 @@ const albumSchema = new mongoose.Schema({
   },
   uri: {
     type: String,
-    description: 'The Spotify URI for the album.'
-    // required: [true,'An album must have a uri']
+    description: 'The Spotify URI for the album.',
+    default: 'spotify:albums:'
   },
-  genres: {
+  genre: {
     description: 'An array of strings. A list of the genres used to classify the album.',
     type: [String],
-    required: [true, 'An album must have at least one genre']
+    required: [true,'An album must have at least one genre']
   },
   label: {
     description: 'The label for the album.',
@@ -57,7 +80,7 @@ const albumSchema = new mongoose.Schema({
   popularity: {
     description: 'The popularity of the album. The value will be equal to the sum of the likes of the album’s individual tracks.',
     type: Number,
-	  default: 0
+	  default:0
   },
   copyrights: {
     description: 'Array of copyrights objects. The copyright statements of the album.',
@@ -68,16 +91,16 @@ const albumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  artists: [
+  artists: 
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'user'
+      ref: 'User'
     }
-  ],
+,
   totalTracks: {
     description: 'The total number of tracks inside the album',
-    type: Number,
-    required: [true, 'An Album must include the total number of']
+    type: Number ,
+    default:0 
   }
 })
 
@@ -88,14 +111,16 @@ const albumSchema = new mongoose.Schema({
 // * @inner
 // * @param {string} find - populate the database before any find function
 // */
-albumSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'artists'
-  })
+// albumSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'artists',
+//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
 
-  next()
-})
+//   })
 
-const Album = mongoose.model('album', albumSchema)
+//   next()
+// })
+
+const Album = mongoose.model('Album', albumSchema)
 
 module.exports = Album

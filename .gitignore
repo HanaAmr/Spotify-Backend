@@ -40,3 +40,9 @@ jspm_packages
 
 #out file for jsdoc
 out
+
+#public directory 
+public/
+
+#tracks directory of storing audio filesh
+tracks/

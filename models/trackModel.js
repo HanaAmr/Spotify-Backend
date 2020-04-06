@@ -1,5 +1,6 @@
-/** Express controller providing track model
- * @module controllers/track
+/**
+ * Models module.
+ * @module models/track
  * @requires express
  */
 
@@ -15,27 +16,41 @@ const mongoose = require('mongoose')
  * @const
  */
 
+/**
+ * Track schema
+ *  @alias module:models/track
+ * @type {object}
+ * @property {String} name Name of the track
+ * @property {String} href href of the track
+ * @property {String} externalUrls externalUrls of the track
+ * @property {String} external_ID external_ID of the track
+ * @property {String} type type of the track
+ * @property {String} uri uri of the track
+ * @property {Number} popularity popularity of the track
+ * @property {object} album album of the track
+ * @property {object} artists artists of the track
+ * @property {String} audioFilePath audioFilePath of the track
+ * @property {Number} durationMs durationMs of the track
+ * @property {Number} trackNumber trackNumber in the album
+ * @const
+ */  
 const trackSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'A track must have an album'],
+    required: [true, "A track must have an album"],
     unique: true
   },
-  image: {
-    type: String
-    // required: [true, "A track must have an image"]
-  },
   type: String,
-  uri: {
-    type: String
-    // required: [true, "A track must have a spotify URI"]
-  },
-  href: {
+  uri:{
     type: String,
-    required: [true, 'A track must have a refernce']
+    default: 'spotify:tracks:'
   },
-  externalUrls: {
-    type: [String]
+  href:{
+      type: String,
+      default: `${process.env.API_URL}/tracks/`
+  },
+  externalUrls:{
+      type: [String]
   },
   external_ID: {
     description: 'Known external IDs for the track.',
@@ -43,54 +58,55 @@ const trackSchema = new mongoose.Schema({
   },
   trackNumber: {
     type: Number,
-    required: [true, 'A track must be ordered in the album (track Number)']
-  },
-  isLocal: {
-    type: Boolean,
-    required: [true, 'A track must have an isLocal bit']
+    required: [true, "A track must be ordered in the album (track Number)"]
   },
   durationMs: {
     type: Number,
-    required: [true, 'A track must contain its duration']
+    required: [true, "A track must contain its duration"]
   },
   popularity: {
     type: Number,
-	  default: 0
-  },
-  previewUrl: {
-    type: String,
-    description: 'A link to 30 second preview of the track.'
-    // required: [true, "A track must have a preview URL"]
+	  default:0
   },
   album: {
     type: mongoose.Schema.ObjectId,
-    ref: 'album'
+    ref: 'Album',
   },
   artists: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'user'
+      ref: 'User'
     }
-  ]
+  ],
+  audioFilePath: {
+    type: String,
+    //required: [true, 'A track must have a path for its audio file to play.']
+  }
 })
 
-/**
-* Populating the album object
-* @function
-* @memberof module:models/trackModel
-* @inner
-* @param {string} find - populate the documents before any find function
-*/
-trackSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'album'
-  })
-  this.populate({
-    path: 'artists'
-  })
+// /**
+// * Populating the album object
+// * @function
+// * @memberof module:models/trackModel
+// * @inner
+// * @param {string} find - populate the documents before any find function
+// */
+// trackSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'album'
+//   })
+//   this.populate({
+//     path: 'artists',
+//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
+//   })
 
-  next()
-})
+//   next()
+// })
+
+// trackSchema.pre(/^find/, function (next) {
+//   this.updateMany( {}, { $rename: { "_id": "id" } } )
+//   next()
+// })
 
 const Track = mongoose.model('Track', trackSchema)
 

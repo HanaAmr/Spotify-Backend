@@ -1,5 +1,5 @@
-/** Express router providing album related routes
- * @module routes/category
+/** Express router providing playlist related routes
+ * @module routes/playlist
  * @requires express
  */
 
@@ -8,12 +8,7 @@
  * @const
  */
 const express = require('express')
-/**
- * Express router to mount album related functions on.
- * @type {object}
- * @const
- * @namespace categoryRouter
- */
+
 const router = express.Router()
 /**
  * Playlist controller to call when routing.
@@ -34,13 +29,24 @@ const authController = require('./../controllers/authController')
  * @inner
  */
 router.use(authController.protect)
-//  router.param('categoryId', categoryController.checkcategoryID)
+
+
+/**
+ * Route for requesting to get top playlists
+ * @name get/playlists/top
+ * @function
+ * @memberof module:routes/playlist
+ * @inner
+ */
+router
+  .route('/top')
+  .get(playlistController.getSortedPlaylist)
 
 /**
  * Route for requesting to get a playlist
  * @name get/playlists/:playlistId
  * @function
- * @memberof module:routes/playlist~playlistRouter
+ * @memberof module:routes/playlist
  * @inner
  * @param {string} id - PLaylist ID
  */
@@ -52,7 +58,7 @@ router
  * Route for requesting to get a playlist's image
  * @name get/playlists/:playlistId/image
  * @function
- * @memberof module:routes/playlist~playlistRouter
+ * @memberof module:routes/playlist
  * @inner
  * @param {string} id - PLaylist ID
  */
@@ -64,7 +70,7 @@ router
  * Route for requesting to get a playlist's tracks
  * @name get/playlists/:playlistId/tracks
  * @function
- * @memberof module:routes/playlist~playlistRouter
+ * @memberof module:routes/playlist
  * @inner
  * @param {string} id - PLaylist ID
  */

@@ -4,8 +4,9 @@
   "description": "Spotify's api backend, using nodejs, express and MongoDB.",
   "main": "app.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=6000",
-    "start": "node server.js"
+    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=6000 ",
+    "start": "node server.js",
+    "standard": "standard --fix && node my-tests.js"
   },
   "repository": {
     "type": "git",
@@ -25,17 +26,21 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "get-audio-duration": "^1.0.0",
     "jest": "^25.1.0",
     "jsdoc": "^3.6.3",
     "jsonwebtoken": "^8.5.1",
     "mockgoose": "^8.0.4",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.4",
+    "multer": "^1.4.2",
     "node-mocks-http": "^1.8.1",
     "nodemailer": "^6.4.5",
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
+    "passport-facebook-token": "^3.3.0",
     "passport-local": "^1.0.0",
+    "passport-oauth2": "^1.5.0",
     "sinon": "^9.0.1",
     "standard": "^14.3.1",
     "supertest": "^4.0.2",

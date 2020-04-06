@@ -1,42 +1,31 @@
 /** Express router providing album related routes
- * @module routes/artistRouters
+ * This module needs to authorization to access the endpoints
+ * @module routes/artistRoutes
  * @requires express
  */
 
-/**
+ /**
  * express module
  * @const
  */
-const express = require('express')
+const express=require('express')
 
 /**
  * ArtistViewing controller to call when routing.
  * @type {object}
  * @const
  */
-const artistViewingController = require('./../controllers/artistViewingController')
+const artistViewingController=require('../controllers/artistViewingController')
 
 /**
- * Authorization controller to call when routing.
+ * Express router to mount artist related functions on.
  * @type {object}
  * @const
+ * @namespace artistRouter
  */
-const authController = require('./../controllers/authController')
+const router=express.Router()
 
-/**
- * Express router to mount user related functions on.
- * @type {object}
- * @const
- * @namespace usersRouter
- */
-const router = express.Router()
-/**
- * Middleware to check authorization
- * @function
- * @memberof module:routes/tracks~tracksRouter
- * @inner
- */
-router.use(authController.protect)
+
 
 /**
  * Route for requesting artists
@@ -46,8 +35,8 @@ router.use(authController.protect)
  * @inner
  */
 router
-  .route('/')
-  .get(artistViewingController.getArtists)
+    .route('/')
+    .get(artistViewingController.getArtists)
 
 /**
  * Route for requesting a specific album
@@ -58,8 +47,9 @@ router
  * @param {string} artistId - artist ID
  */
 router
-  .route('/:id')
-  .get(artistViewingController.getArtist)
+    .route('/:id')
+    .get(artistViewingController.getArtist)
+
 
 /**
  * Route for requesting a specific album
@@ -70,8 +60,9 @@ router
  * @param {string} artistId - artist ID
  */
 router
-  .route('/:id/related-artists')
-  .get(artistViewingController.getRelatedArtists)
+    .route('/:id/related-artists')
+    .get(artistViewingController.getRelatedArtists)
+
 
 /**
  * Route for requesting a specific album
@@ -82,8 +73,8 @@ router
  * @param {string} artistId - artist ID
  */
 router
-  .route('/:id/albums')
-  .get(artistViewingController.getArtistAlbums)
+    .route('/:id/albums')
+    .get(artistViewingController.getArtistAlbums)
 
 /**
  * Route for requesting a specific album
@@ -94,7 +85,21 @@ router
  * @param {string} artistId - artist ID
  */
 router
-  .route('/:id/top-tracks')
-  .get(artistViewingController.getArtistTopTracks)
+    .route('/:id/top-tracks')
+    .get(artistViewingController.getArtistTopTracks)
 
-module.exports = router
+router
+    .route('/:id/created-playlists')
+    .get(artistViewingController.getArtistCreatedPlaylists)
+
+/**
+ * Route for requesting a specific album
+ * @name /artists/:artistId/artist-created-playlists
+ * @function
+ * @memberof module:routes/artistRouters
+ * @inner
+ * @param {string} artistId - artist ID
+ */
+
+
+module.exports=router
