@@ -68,7 +68,8 @@ exports.signUp = catchAsync (async (req, res, next) => {
   res.status(200).json({
     status: 'Success',
     success: true,
-    token   
+    expireDate: process.env.JWT_EXPIRE_IN,
+    token
  });
 });
 
@@ -87,6 +88,7 @@ exports.loginWithFacebook = catchAsync (async (req, res, next) => {
   res.status(200).json({
     status: 'Success',
     sucess: true,
+    expireDate: process.env.JWT_EXPIRE_IN,
     token   
  });
 
@@ -125,6 +127,7 @@ exports.signIn = catchAsync(async (req, res, next) => {
     res.status(200).json({
         status: 'Success',
         success: true,
+        expireDate: process.env.JWT_EXPIRE_IN,
         token  
     });
 });
