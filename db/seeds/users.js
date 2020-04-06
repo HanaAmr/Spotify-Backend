@@ -55,7 +55,7 @@ db.once('open', url => {
 createUsers = async() => {
     
     const user1 = new User({
-        name: "ahmed",
+        name: "Imagine Dragons",
         email: "ahmed@email.com",
         password: "password1",
         gender: 'male',
@@ -63,7 +63,7 @@ createUsers = async() => {
     })
     
     const user2 = new User({
-        name: "mohamed",
+        name: "Ed Sheeran",
         email: "mohamed@email.com",
         password: "password2",
         gender: 'male',
@@ -71,7 +71,7 @@ createUsers = async() => {
     })
     
     const user3 = new User({
-        name: "omar",
+        name: "Amr Diab",
         email: "omar@email.com",
         password: "password3",
         gender: 'male',
@@ -79,7 +79,7 @@ createUsers = async() => {
     })
     
     const user4 = new User({
-        name: "hana",
+        name: "21 Pilots",
         email: "hana@email.com",
         password: "password4",
         gender: 'female',
