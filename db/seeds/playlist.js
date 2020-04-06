@@ -146,8 +146,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist1.save()
-  await playlist1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist1._id}`})
-  await playlist1.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist1._id}/tracks`,total:2}})
+  await playlist1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist1._id}`})
+  await playlist1.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist1._id}/tracks`,total:2}})
   await playlist1.updateOne({uri:`spotify:playlists:${playlist1._id}`})
 
 
@@ -168,8 +168,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist2.save()
-  await playlist2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist2._id}`})
-  await playlist2.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist2._id}/tracks`,total:2}})
+  await playlist2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist2._id}`})
+  await playlist2.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist2._id}/tracks`,total:2}})
   await playlist2.updateOne({uri:`spotify:playlists:${playlist2._id}`})
 
   const playlist3 = new Playlist({
@@ -189,8 +189,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist3.save()
-  await playlist3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3._id}`})
-  await playlist3.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3._id}/tracks`,total:1}})
+  await playlist3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist3._id}`})
+  await playlist3.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist3._id}/tracks`,total:1}})
   await playlist3.updateOne({uri:`spotify:playlists:${playlist3._id}`})
 
   const playlist4 = new Playlist({
@@ -210,8 +210,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist4.save()
-  await playlist4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist4._id}`})
-  await playlist4.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist4._id}/tracks`,total:3}})
+  await playlist4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}`})
+  await playlist4.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}/tracks`,total:3}})
   await playlist4.updateOne({uri:`spotify:playlists:${playlist4._id}`})
 
 

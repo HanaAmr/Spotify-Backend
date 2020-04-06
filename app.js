@@ -6,9 +6,9 @@ const errorController = require('./controllers/errorController');
 
 app.use(express.static('./public'))
 
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'get is successful el7', app: 'spotifycufe' })
-})
+// app.get('/', (req, res) => {
+//   res.status(200).json({ message: 'get is successful el7', app: 'spotifycufe' })
+// })
 
 const userRouter = require('./routes/userRouters')
 const artistRouter = require('./routes/artistRoutes')
@@ -21,14 +21,14 @@ const artistAlbumRouter=require('./routes/artistAlbumRoutes')
 
 
 // Mounting the Routers
-app.use('/api/v1', userRouter)
-app.use('/api/v1/artists', artistRouter)
-app.use('/api/v1/browse/categories', categoryRouter) //   act as middleware for this route only
-app.use('/api/v1/playlists', playlistRouter)
-app.use('/api/v1/tracks', trackRouter)
-app.use('/api/v1/albums', albumRouter)
-app.use('/api/v1/me/player',playerRouter)
-app.use('/api/v1/me/albums',artistAlbumRouter)
+app.use('/', userRouter)
+app.use('/artists', artistRouter)
+app.use('/browse/categories', categoryRouter) //   act as middleware for this route only
+app.use('/playlists', playlistRouter)
+app.use('/tracks', trackRouter)
+app.use('/albums', albumRouter)
+app.use('/me/player',playerRouter)
+app.use('/me/albums',artistAlbumRouter)
 
 //Middlewares
 //after all handeled routes

@@ -87,7 +87,7 @@ createAlbums = async () => {
     popularity:300000
   })
   await album1.save()
-  await album1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album1._id}`})
+  await album1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${album1._id}`})
   await album1.updateOne({uri:`spotify:albums:${album1._id}`})
 
   const album2 = new Album({
@@ -105,7 +105,7 @@ createAlbums = async () => {
     popularity:700000
   })
   await album2.save()
-  await album2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album2._id}`})
+  await album2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${album2._id}`})
   await album2.updateOne({uri:`spotify:albums:${album2._id}`})
 
   const album3 = new Album({
@@ -123,7 +123,7 @@ createAlbums = async () => {
     popularity:400000
   })
   await album3.save()
-  await album3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album3._id}`})
+  await album3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${album3._id}`})
   await album3.updateOne({uri:`spotify:albums:${album3._id}`})
 
   const album4 = new Album({
@@ -141,7 +141,7 @@ createAlbums = async () => {
     popularity:100000
   })
   await album4.save()
-  await album4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album4._id}`})
+  await album4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${album4._id}`})
   await album4.updateOne({uri:`spotify:albums:${album4._id}`})
 
 }

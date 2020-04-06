@@ -101,7 +101,7 @@ createContexts = async () => {
     followersCount: playlist1[0].noOfFollowers
   })
   await context1.save()
-  await context1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist1[0]._id}`})
+  await context1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist1[0]._id}`})
   await context1.updateOne({uri:`spotify:playlists:${playlist1[0]._id}`})
 
   const context2 = new Context({
@@ -113,7 +113,7 @@ createContexts = async () => {
     followersCount: playlist2[0].noOfFollowers
   })
   await context2.save()
-  await context2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist2[0]._id}`})
+  await context2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist2[0]._id}`})
   await context2.updateOne({uri:`spotify:playlists:${playlist2[0]._id}`})
 
   const context3 = new Context({
@@ -125,7 +125,7 @@ createContexts = async () => {
     followersCount: playlist3[0].noOfFollowers
   })
   await context3.save()
-  await context3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/playlists/${playlist3[0]._id}`})
+  await context3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist3[0]._id}`})
   await context3.updateOne({uri:`spotify:playlists:${playlist3[0]._id}`})
 
 
@@ -138,7 +138,7 @@ createContexts = async () => {
     followersCount: album1[0].popularity
   })
   await context4.save()
-  await context4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${album1[0]._id}`})
+  await context4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${album1[0]._id}`})
   await context4.updateOne({uri:`spotify:albums:${album1[0]._id}`})
 
   
@@ -151,7 +151,7 @@ createContexts = async () => {
     followersCount: artist1[0].followers.length()
   })
   await context5.save()
-  await context5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/albums/${artist1[0]._id}`})
+  await context5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${artist1[0]._id}`})
   await context5.updateOne({uri:`spotify:albums:${artist1[0]._id}`})
 
   

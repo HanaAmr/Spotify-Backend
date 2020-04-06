@@ -4,7 +4,7 @@
   "description": "Spotify's api backend, using nodejs, express and MongoDB.",
   "main": "app.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=6000 ",
+    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=6000 getOneTrack.test.js",
     "start": "node server.js",
     "standard": "standard --fix && node my-tests.js"
   },

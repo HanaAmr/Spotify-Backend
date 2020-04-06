@@ -26,7 +26,7 @@ describe('test getting one playlist', () => {
       testPlaylist = new Playlist({
         _id: '5e729d853d8d0a432c70b59c',
         name: 'Imagine Dragons Radio',
-        href: "http://127.0.0.1:7000/api/v1/playlists/5e729d853d8d0a432c70b59c",
+        href: "http://127.0.0.1:7000/playlists/5e729d853d8d0a432c70b59c",
         uri: "spotify:playlists:5e729d853d8d0a432c70b59c",
         owner: [
             "5e729e8b3d8d0a432c70b59d"
@@ -47,7 +47,7 @@ describe('test getting one playlist', () => {
     
     it("tests the get playlist endpoint and have the same id returned", async () => {
 
-		const response = await supertest(app).get('/api/v1/playlists/5e729d853d8d0a432c70b59c');
+		const response = await supertest(app).get('/playlists/5e729d853d8d0a432c70b59c');
 
 		expect(response.status).toBe(200);
         expect(response.body.status).toBe('success');
@@ -59,7 +59,7 @@ describe('test getting one playlist', () => {
         console.log('http')
       const request = httpMocks.createRequest({
         method: 'GET',
-        url: '/api/v1/playlists/5e729d853d8d0a432c70b59g'
+        url: '/playlists/5e729d853d8d0a432c70b59g'
       })
 
       console.log('i exited')
@@ -83,7 +83,7 @@ describe('test getting one playlist', () => {
         console.log('http 2')
       const request = httpMocks.createRequest({
         method: 'GET',
-        url: '/api/v1/playlists/5e729d853d8d0a432c70b59c/image',
+        url: '/playlists/5e729d853d8d0a432c70b59c/image',
       })
 
       console.log('i exited 2')
