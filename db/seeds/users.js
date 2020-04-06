@@ -119,7 +119,7 @@ createUsers = async() => {
     await user5.updateOne({uri:`spotify:albums:${user5._id}`})
 
     const user6 = new User({
-        name: "omar",
+        name: "Omar",
         email: "omar@email.com",
         password: "password6",
         gender: 'male',
