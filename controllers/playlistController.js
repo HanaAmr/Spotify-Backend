@@ -1,60 +1,52 @@
 /**
  * Controller module.
- * @module controllers
+ * @module controllers/playlist
  * @requires express
  */
 
 /**
- * Playlist controller to call when routing.
+ * PLaylist controller to call when routing.
  * @type {object}
  * @const
- * @namespace playlistController
- */
+ */ 
 
 /**
- * express module
  * Playlist model from the database
  * @const
  */
 const Playlist = require('./../models/playlistModel')
 
 /**
- * express module
  * Track model from the database
  * @const
  */
 const Track = require('./../models/trackModel')
 
 /**
- * express module
  * User model from the database
  * @const
  */
 const User = require('./../models/userModel')
 
 /**
- * express module
  * API features utils file
  * @const
  */
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * express module
  * catchAsync utils file
  * @const
  */
 const catchAsync = require('./../utils/catchAsync')
 
 /**
- * express module
  * AppError class file
  * @const
  */
 const AppError = require('./../utils/appError')
 
 /**
- * express module
  * Pagination file
  * @const
  */
@@ -63,11 +55,11 @@ const paginatedResults = require('./../utils/pagination')
 
 /**
  * Get one Playlist given its ID
- * @memberof module:controllers~playlistController
- * @function getOnePlaylist
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/playlist
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} playlistId - The playlistId to search for.
  * @return {JSON} The details of the playlist in a json form.
  */
 exports.getOnePlaylist = catchAsync(async (req, res, next) => {
@@ -88,11 +80,11 @@ exports.getOnePlaylist = catchAsync(async (req, res, next) => {
 
 /**
  * A function that is used to get playlist images.
- * @memberof module:controllers~playlistController
- * @function getPlaylistImage 
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/playlist
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} playlistId - The playlistId to search for.
  * @return {string} The image of the playlist in string format
  */
 exports.getPlaylistImage = catchAsync(async (req, res, next) => {
@@ -113,11 +105,11 @@ exports.getPlaylistImage = catchAsync(async (req, res, next) => {
 
 /**
  * Get the tracks of a playlist given its ID
- * @memberof module:controllers~playlistController
- * @function getPlaylistTracks 
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/playlist
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} playlistId - The playlistId to search for.
  * @return {JSON} Returns an array of the tracks inside this playlist.
  */
 exports.getPlaylistTracks = catchAsync(async (req, res, next) => {  //  not paginated
@@ -156,11 +148,10 @@ exports.getPlaylistTracks = catchAsync(async (req, res, next) => {  //  not pagi
 
 /**
  * Get the top playlists
- * @memberof module:controllers~playlistController
- * @function getSortedPlaylist
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/playlist
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  * @return {JSON} Returns an array of the top playlists.
  */
 exports.getSortedPlaylist = catchAsync(async (req, res, next) => {  //  not paginated

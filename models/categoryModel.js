@@ -1,19 +1,23 @@
-/** Express controller providing category model
- * @module controllers/category
+/**
+ * Models module.
+ * @module models/category
  * @requires express
  */
-
 /**
  * express module
  * @const
  */
 const mongoose = require('mongoose')
 
+
 /**
  * Category schema
+ *  @alias module:models/category
  * @type {object}
+ * @property {String} name Name of the category
+ * @property {String} href href of the category
  * @const
- */
+ */ 
 const categorySchema = new mongoose.Schema({
   name: {
     type: String,

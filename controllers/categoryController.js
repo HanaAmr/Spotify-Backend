@@ -1,6 +1,6 @@
 /**
  * Controller module.
- * @module controllers
+ * @module controllers/category
  * @requires express
  */
 
@@ -8,45 +8,39 @@
  * Category controller to call when routing.
  * @type {object}
  * @const
- * @namespace categoryController
- */
+ */ 
 
 /**
- * express module
  * Category model from the database
  * @const
  */
 const Category = require('./../models/categoryModel')
 
 /**
- * express module
  * Playlist model from the database
  * @const
  */
 const Playlist = require('./../models/playlistModel')
+
 /**
- * express module
  * API features utils file
  * @const
  */
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * express module
  * catchAsync utils file
  * @const
  */
 const catchAsync = require('./../utils/catchAsync')
 
 /**
- * express module
  * AppError class file
  * @const
  */
 const AppError = require('./../utils/appError')
 
 /**
- * express module
  * Pagination file
  * @const
  */
@@ -54,11 +48,10 @@ const paginatedResults = require('./../utils/pagination')
 
 /**
  * A function that is used to get all categories.
- * @memberof module:controllers~categoryController
- * @function getAllCategories
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/category
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  * @return {JSON} Returns an array of categories in a json form.
  */
 exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non paginated
@@ -87,11 +80,11 @@ exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non pagina
 
 /**
  * A function that is used to get the playlists of the category.
- * @memberof module:controllers~categoryController
- * @function getCategoryPlaylist
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/category
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} categoryId - The categoryId to search for.
  * @return {JSON} Returns an array of playlists in a json form.
  */
 exports.getCategoryPlaylist = catchAsync(async (req, res, next) => {  //  non paginated

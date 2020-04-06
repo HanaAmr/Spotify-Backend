@@ -1,14 +1,8 @@
 /** Seeder to have initial data for users
- * @module seeders/playlist
+ * @module seeders/playlists
  * @requires express
  */
 
-/**
- * Users seeder to call to fill initial database.
- * @type {object}
- * @const
- * @namespace playlistSeeder
- */
 
 const express = require('express')
 /**
@@ -54,7 +48,7 @@ db.on('error', err => {
 /**
  * A function that is used to create inital seed of users
  *
- * @memberof module:seeders/playlists~playlistSeeder
+ * @memberof module:seeders/playlists
  *
  */
 createPlaylists = async () => {

@@ -1,5 +1,6 @@
-/** Controller module
- * @module controllers
+/**
+ * Controller module.
+ * @module controllers/album
  * @requires express
  */
 
@@ -7,39 +8,33 @@
  * Album controller to call when routing.
  * @type {object}
  * @const
- * @namespace albumController
- */
+ */ 
 
 /**
- * express module
  * Album model from the database
  * @const
  */
 const Album = require('./../models/albumModel')
 
 /**
- * express module
  * API features utils file
  * @const
  */
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * express module
  * catchAsync utils file
  * @const
  */
 const catchAsync = require('./../utils/catchAsync')
 
 /**
- * express module
  * AppError class file
  * @const
  */
 const AppError = require('./../utils/appError')
 
 /**
- * express module
  * Pagination file
  * @const
  */
@@ -47,19 +42,27 @@ const paginatedResults = require('./../utils/pagination')
 
 
 /**
- * express module
  * Track model from the database
  * @const
  */
 const Track = require('./../models/trackModel')
 
+
+// /**
+//  * Adds a track to the recently played list
+//  *  @alias module:controllers/player
+//  * @param {Object} req - The request passed.
+//  * @param {Object} res - The respond sent
+//  * @param {Function} next - The next function in the middleware
+//  */
+
 /**
  * A function that is used to get albums with ids.
- * @memberof module:controllers~albumController
- * @function getAlbumsWithIds
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/album
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} albumId - The albumIds to search for.
  * @return {JSON} Returns an array of albums in a json form.
  */
 exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
@@ -85,11 +88,11 @@ exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
 
 /**
  * A function that is used to get one album.
- * @memberof module:controllers~albumController
- * @function getOneAlbum
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/album
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} albumId - The albumId to search for.
  * @return {JSON} Returns an album a json form.
  */
 exports.getOneAlbum = catchAsync(async (req, res, next) => {
@@ -113,11 +116,11 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
 
 /**
  * A function that is used to get the tracks of that album.
- * @memberof module:controllers~albumController
- * @function getAlbumTracks
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/album
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} albumId - The albumId to search for.
  * @return {JSON} Returns an array of the tracks of the album in a json form.
  */
 exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginated
@@ -160,11 +163,10 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
 
 /**
  * A function that is used to get sorted albums.
- * @memberof module:controllers/album~albumController
- * @function getAlbumTracks
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ *  @alias module:controllers/album
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
  * @return {JSON} Returns an array of the top albums in a json form.
  */
 exports.getSortedAlbums = catchAsync(async (req, res, next) => {  //  not paginated

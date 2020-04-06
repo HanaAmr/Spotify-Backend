@@ -1,5 +1,6 @@
-/** Express controller providing track model
- * @module controllers/track
+/**
+ * Models module.
+ * @module models/track
  * @requires express
  */
 
@@ -15,6 +16,24 @@ const mongoose = require('mongoose')
  * @const
  */
 
+/**
+ * Track schema
+ *  @alias module:models/track
+ * @type {object}
+ * @property {String} name Name of the track
+ * @property {String} href href of the track
+ * @property {String} externalUrls externalUrls of the track
+ * @property {String} external_ID external_ID of the track
+ * @property {String} type type of the track
+ * @property {String} uri uri of the track
+ * @property {Number} popularity popularity of the track
+ * @property {object} album album of the track
+ * @property {object} artists artists of the track
+ * @property {String} audioFilePath audioFilePath of the track
+ * @property {Number} durationMs durationMs of the track
+ * @property {Number} trackNumber trackNumber in the album
+ * @const
+ */  
 const trackSchema = new mongoose.Schema({
   name: {
     type: String,

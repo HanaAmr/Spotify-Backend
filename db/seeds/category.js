@@ -1,14 +1,8 @@
 /** Seeder to have initial data for users
- * @module seeders/category
+ * @module seeders/categories
  * @requires express
  */
 
-/**
- * Users seeder to call to fill initial database.
- * @type {object}
- * @const
- * @namespace categorySeeder
- */
 
 const express = require('express')
 /**
@@ -49,7 +43,7 @@ db.on('error', err => {
 /**
  * A function that is used to create inital seed of users
  *
- * @memberof module:seeders/categories~categorySeeder
+ * @memberof module:seeders/categories
  *
  */
 createCategories = async () => {

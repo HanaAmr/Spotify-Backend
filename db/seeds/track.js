@@ -1,14 +1,8 @@
 /** Seeder to have initial data for users
- * @module seeders/album
+ * @module seeders/tracks
  * @requires express
  */
 
-/**
- * Users seeder to call to fill initial database.
- * @type {object}
- * @const
- * @namespace trackSeeder
- */
 
 const express = require('express')
 /**
@@ -64,7 +58,7 @@ db.on('error', err => {
 /**
  * A function that is used to create inital seed of tracks
  *
- * @memberof module:seeders/tracks~trackSeeder
+ * @memberof module:seeders/tracks
  *
  */
 createTracks = async () => {

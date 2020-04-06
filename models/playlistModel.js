@@ -1,5 +1,6 @@
-/** Express controller providing playlist model
- * @module controllers/playlist
+/**
+ * Models module.
+ * @module models/playlist
  * @requires express
  */
 
@@ -9,11 +10,29 @@
  */
 const mongoose = require('mongoose')
 
+
 /**
  * Playlist schema
+ *  @alias module:models/playlist
  * @type {object}
+ * @property {String} name Name of the playlist
+ * @property {String} href href of the playlist
+ * @property {String} images images of the playlist
+ * @property {Boolean} collaborative Is the playlist collaborative
+ * @property {String} externalUrls externalUrls of the playlist
+ * @property {String} type type of the playlist
+ * @property {String} uri uri of the playlist
+ * @property {String} description description of the playlist
+ * @property {String} snapshot_id snapshot_id of the playlist
+ * @property {Boolean} public Is the playlist public
+ * @property {Number} popularity popularity of the playlist
+ * @property {Array} tracks tracks of the playlist
+ * @property {Date}  createdAt createdAt of the playlist
+ * @property {object} owner owner of the playlist
+ * @property {object} category category of the playlist
+ * @property {Number} noOfFollowers totalTracks of the playlist
  * @const
- */
+ */ 
 const playlistSchema = new mongoose.Schema({
   name: {
     type: String,

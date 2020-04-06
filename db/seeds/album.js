@@ -1,14 +1,8 @@
 /** Seeder to have initial data for users
- * @module seeders/album
+ * @module seeders/albums
  * @requires express
  */
 
-/**
- * Users seeder to call to fill initial database.
- * @type {object}
- * @const
- * @namespace albumSeeder
- */
 
 const express = require('express')
 /**
@@ -51,9 +45,9 @@ db.on('error', err => {
 })
 
 /**
- * A function that is used to create inital seed of users
+ * A function that is used to create inital seed of albums
  *
- * @memberof module:seeders/albums~albumSeeder
+ * @memberof module:seeders/albums
  *
  */
 createAlbums = async () => {

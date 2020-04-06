@@ -1,5 +1,5 @@
-/** Express router providing album related routes
- * @module routes/category
+/** Express router providing track related routes
+ * @module routes/track
  * @requires express
  */
 
@@ -8,12 +8,7 @@
  * @const
  */
 const express = require('express')
-/**
- * Express router to mount album related functions on.
- * @type {object}
- * @const
- * @namespace categoryRouter
- */
+
 const router = express.Router()
 /**
  * Track controller to call when routing.
@@ -31,7 +26,7 @@ const authController = require('./../controllers/authController')
 /**
  * Middleware to check authorization
  * @function
- * @memberof module:routes/tracks~tracksRouter
+ * @memberof module:routes/track
  * @inner
  */
 router.use(authController.protect)
@@ -40,7 +35,7 @@ router.use(authController.protect)
  * Route for requesting to get a track
  * @name get/tracks/:trackId
  * @function
- * @memberof module:routes/tracks~tracksRouter
+ * @memberof module:routes/track
  * @inner
  * @param {string} id - PLaylist ID
  */
@@ -52,7 +47,7 @@ router
  * Route for requesting categories
  * @name get/tracks
  * @function
- * @memberof module:routes/tracks~tracksRouter
+ * @memberof module:routes/track
  * @inner
  */
 router
@@ -63,7 +58,7 @@ router
  * Route for requesting to get a track mp3 file
  * @name get/tracks/:trackId
  * @function
- * @memberof module:routes/tracks~tracksRouter
+ * @memberof module:routes/track
  * @inner
  * @param {string} trackId - Track ID
  */
