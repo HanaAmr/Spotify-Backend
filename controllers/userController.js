@@ -65,14 +65,14 @@ const resetPassword = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we change the password if valid, then send an email informing the user.
   if (req.params.token === undefined) return next(new AppError('No token is provided', 404))
-  await userService.resetChangePassword(req.params.token, req.body.newPassword, req.body.passwordConfirmation)
+  const email =  await userService.resetChangePassword(req.params.token, req.body.newPassword, req.body.passwordConfirmation)
 
-  //E-mail subject and text
+  //E-mail, subject and text
   const subject = 'Your password has been changed'
   const text = 'Hello,\n\n' +
     'This is a confirmation that the password for your account has just been changed.\n'
 
-  await mailerService.sendMail(req.body.email, subject, text)
+  await mailerService.sendMail(email, subject, text)
 
   // If everything is fine, send empty body with status 204
   res.status(204).send()
@@ -109,7 +109,7 @@ const requestBecomeArtist = catchAsync(async function (req, res, next) {
  * @param {Object} res - The respond sent
  * @param {Function} next - The next function in the middleware
  */
-const upgradeUser = catchAsync(async function (req, res, upgradeRole, next) {
+const upgradeUser = async function (req, res, upgradeRole, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
   //async.waterfall([async.apply(upgradeMiddleware.createTokenString, req, res, process.env.PREM_CONF_CODE_SIZE, upgradeRole), upgradeMiddleware.assignUpgradeConfirmCode, upgradeMiddleware.sendUpgradeConfirmCodeMail], (err) => {
@@ -126,9 +126,7 @@ const upgradeUser = catchAsync(async function (req, res, upgradeRole, next) {
 
   // If everything is fine, send an empty body code 204.
   res.status(204).send()
-
-
-})
+}
 
 /**
  * Checks for the confirmation code to make the user a premium/artist one.
