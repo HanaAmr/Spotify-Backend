@@ -4,6 +4,9 @@
  */
 const passport = require('passport');
 
+const dotenv = require('dotenv') //  we write the cofigurations we need i.e. the environment variables in config.env file
+dotenv.config({ path: '.env' }) // set the path of the config property of dotenv to the file created
+
 /**
  * facebook token strategy
  * @const
@@ -17,7 +20,7 @@ const FacebookTokenStrategy = require('passport-facebook-token');
 const User = require('./models/userModel');
 
 passport.use('facebookToken', new FacebookTokenStrategy({
-    clientID: process.env.FB_CLIENTID,
+    clientID: 2542629655959579,
     clientSecret: process.env.FB_CLIENTSECRET
   }, async (accessToken, refreshToken, profile, done) => {
     
