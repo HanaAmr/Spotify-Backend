@@ -4,7 +4,7 @@
   "description": "Spotify's api backend, using nodejs, express and MongoDB.",
   "main": "app.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=6000 getOneTrack.test.js",
+    "test": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=6000 ",
     "start": "node server.js",
     "standard": "standard --fix && node my-tests.js"
   },
@@ -40,6 +40,7 @@
     "passport": "^0.4.1",
     "passport-facebook-token": "^3.3.0",
     "passport-local": "^1.0.0",
+    "passport-oauth2": "^1.5.0",
     "sinon": "^9.0.1",
     "standard": "^14.3.1",
     "supertest": "^4.0.2",

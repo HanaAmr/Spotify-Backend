@@ -80,7 +80,7 @@ const trackSchema = new mongoose.Schema({
   ],
   audioFilePath: {
     type: String,
-    required: [true, 'A track must have a path for its audio file to play.']
+    //required: [true, 'A track must have a path for its audio file to play.']
   }
 })
 

@@ -171,7 +171,7 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
  */
 exports.getSortedAlbums = catchAsync(async (req, res, next) => {  //  not paginated
   
-  const features = new APIFeatures(Album.find(), req.query).sort().paginate()
+  const features = new APIFeatures(Album.find().select('-__v'), req.query).sort().paginate()
   const albums = await features.query.populate({
     path: 'artists',
     select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
