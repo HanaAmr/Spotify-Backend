@@ -4,66 +4,59 @@
  */
 
 /**
- * express module
  * User model from the database
  * @const
  */
 const User = require('../models/userModel')
+
  /**
- * express module
+ * promisify module
  * util to import promisify function
  * @const
  */
 const { promisify } = require('util');
 /**
- * express module
+ * jwt module
  * jwt for tokens
  * @const
  */
 const jwt = require('jsonwebtoken');
 
- /**
- * express module
- * Async functions
- * @const
- */
-const async = require('async')
-
 /**
- * express module
+ * crypto module
  * Crypto to generate random secure tokens
  * @const
  */
 const crypto = require('crypto')
 
-/**
- * express module
- * catchAsync object
- * @const
- */
-const catchAsync = require('../utils/catchAsync')
 
 /**
- * express module
- * error object
+ * Error object to send
  * @const
  */
 const appError = require('../utils/appError')
 
+/**
+ * Class representing the user services needed for the user
+ */
 class userService {
   // Constructor with dependency injection
+  /**
+    * Constructs the player service
+    * @param {*} userModel
+    * @param {*} crypto
+    */
   constructor(userModel, crypto) {
     this.userModel = userModel
     this.crypto = crypto
   }
 
   /**
-  * A function that returns the id of the token provided for the user
+  * Returns the id of the token provided for the user
   * @function
-  * @memberof module:controllers/authController
-  * @param {authToken}  - The token
+  * @param {string} authToken  - The authorization token of the user.
+  * @return {string} The user id.
   */
-  
   async getUserId (authToken) { 
     let token
     //get token and check if it exists
@@ -80,10 +73,10 @@ class userService {
   }
   
   /**
-  * A function that returns the role of the token provided for the user
+  * Returns the role of the token provided for the user
   * @function
-  * @memberof module:controllers/authController
-  * @param {authToken}  - The token
+  * @param {authToken}  - The authorization token of the user.
+  * @return {string} - The user role.
   */
   
   async getUserRole( authToken) {
@@ -108,10 +101,10 @@ class userService {
 
    
   /**
-  * A function that returns the email of the token provided for the user
+  * Returns the email of the token provided for the user
   * @function
-  * @memberof module:controllers/authController
-  * @param {authToken}  - The token
+  * @param {authToken}  - The authorization token of the user.
+  * @returns {string} - The user mail.
   */
   
  async getUserMail( authToken) {
@@ -135,10 +128,10 @@ class userService {
 }
 
   /**
-     * A function that is used to create a random secure token
-     * @memberof module:controllers/users~userController
-     * @param {Size}  - The size of the token string wanted
-     * @param {token} - The token generated
+     * Creates a random secure token
+     * @function
+     * @param {number} size  - The size of the token string wanted
+     * @return {string} - The token generated
      */
   async createTokenString(size) {
     const buff = crypto.randomBytes(size/2) //Divide by 2 as 1 byte = 2 hex digits
@@ -147,10 +140,10 @@ class userService {
   }
 
   /**
-   * A function that is used to assign reset password token to a certain user
-   * @memberof module:controllers/users~userController
-   * @param {Token}  - The token to be assigned to the user
-   * @param {Email} - The user email
+   * Assigns reset password token to a certain user
+   * @function
+   * @param {string} token - The token to be assigned to the user
+   * @param {string} email - The user email
    */
   async assignResetToken(token, email) {
     // Search for the user with the provided email in the db.
@@ -167,9 +160,11 @@ class userService {
 
 
   /**
- * A function that is used to change the password after resetting in the db.
- * @memberof module:controllers/users~userController
- * @param {Reset Token}  - The reset token
+ * Changes the password after resetting in the db.
+ * @function
+ * @param {string} token  - The reset token
+ * @param {string} newPassword - The user new password
+ * @param {string} passwordConfirmation - The confirmation for the user password
  */
   async resetChangePassword(token, newPassword, passwordConfirmation) {
     // Searching for the user with this reset token if not expired.
@@ -190,10 +185,10 @@ class userService {
   }
 
   /**
- * A function that is used to assign verification code to upgrade to the user
- * @memberof module:controllers/users~userController
- * @param {Token}  - The token for upgrade
- * @param {upgradeRole} - The upgrade role 
+ * Assigns verification code to upgrade to the user
+ * @function
+ * @param {string} authToken  - The authorization token for the user
+ * @param {strng} upgradeRole - The upgrade role 
  */
 async assignUpgradeConfirmCode (authToken,token, upgradeRole) {
   // Get the user ID using authorization controller
@@ -212,10 +207,10 @@ async assignUpgradeConfirmCode (authToken,token, upgradeRole) {
 
 
 /**
- * A function that is used to check if the confirmation code is valid and thus make the user a premium/artist one.
- * @memberof module:controllers/users~userController
- * @param {Token}  - The token for upgrade
- * @param {confirmationCode} - The confirmation code
+ * Checks if the confirmation code is valid and thus make the user a premium/artist one.
+ * @function upgradeUserRole
+ * @param {string} authToken - The authorization token for the user.
+ * @param {string} confirmationCode - The confirmation code for the upgrade.
  */
 async upgradeUserRole (authToken,confirmationCode ) {
   // Get the user ID using authorization controller
@@ -233,11 +228,11 @@ async upgradeUserRole (authToken,confirmationCode ) {
       }
     }
 
-    /**
- * A function that is used to check if the cancellation code is valid and thus make the user a normal one.
- * @memberof module:controllers/users~userController
- * @param {Token}  - The token for upgrade
- * @param {confirmationCode} - The confirmation code
+ /**
+ * Checks if the cancellation code is valid and thus make the user a normal one.
+ * @function
+ * @param {string} authToken - The authorization token for the user.
+ * @param {string} confirmationCode - The confirmation code for cancelling.
  */
 async changeRoleToUser(authToken, confirmationCode) {
   // Get the user ID using authorization controller

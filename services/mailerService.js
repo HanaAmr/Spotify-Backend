@@ -1,36 +1,37 @@
-/** Express service for Email
+/** Express service for Emailing
  * @module services/mailer
  * @requires express
  */
 
 /**
- * express module
- * Nodemailer to send emails
+ * nodemailer module
+ * Nodemailer is used to send emails
  * @const
  */
 const nodemailer = require('nodemailer')
 
-
 /**
- * express module
- * error object
- * @const
+ * Class representing mailer service used to send emails to users.
  */
-const AppError = require('../utils/appError')
-
 class mailerService {
   // Constructor with dependency injection
+  /**
+   * Constructs the mailer service
+   * @constructor
+   * @param {*} nodemailer 
+   * @param {*} crypto 
+   */
   constructor (nodemailer, crypto) {
     this.nodemailer = nodemailer
     this.crypto = crypto
   }
 
   /**
-   * A function that is used to send the reset password email to the user.
-   * @memberof module:controllers/users~userController
-   * @param {Receiver}  - The receiver of the mail
-   * @param {Subject}  - The subject of the mail
-   * @param {Text}  - The text of the mail
+   * Sends the reset password email to the user.
+   * @function
+   * @param {String} Receiver - The receiver of the mail
+   * @param {String} Subject - The subject of the mail
+   * @param {String} Text - The text of the mail
    */
   async sendMail (receiver, subject, text) {
     // Creating transporting method for nodemailer

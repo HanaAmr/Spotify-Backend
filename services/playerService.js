@@ -4,95 +4,80 @@
  */
 
 /**
- * express module
- * Player model from the database
+ * User model from the database
  * @const
  */
 const User = require('../models/userModel')
 
-/* express module
+/* 
 * Context model from the database
 * @const
 */
 const Context = require('../models/contextModel')
+
 /**
- * express module
  * Play History model from the database
  * @const
  */
 const PlayHistory = require('../models/playHistoryModel')
-/**
- * express module
- * Track model from the database
- * @const
- */
-const Track = require('../models/trackModel')
 
-/* express module
-* Context model from the database
+/*
+* Playlist model from the database
 * @const
 */
 const Playlist = require('../models/playlistModel')
 
-/* express module
-* Context model from the database
+/*
+* Album model from the database
 * @const
 */
 const Album = require('../models/albumModel')
 
 /**
- * express module
+ * 
  * Player model from the database
  * @const
  */
 const Player = require('../models/playerModel')
 
 /**
- * express module
- * user services object
+ * User services class
  * @const
  */
 const userServices = require('./userService')
+
 const userService = new userServices()
 
 /**
- * express module
- * error object
- * @const
+ * Class reprensenting the player services needed to handle the music player
  */
-const AppError = require('../utils/appError')
-
 class playerService {
     // Constructor with dependency injection
+    /**
+    * Constructs the player service
+    * @param {*} userService
+    */
     constructor(userService) {
         this.userService = userService
     }
 
     /**
-    * Checking if track requested can be played by user or not
+    * Checks if track requested can be played by user or not
     * @function
-    * @memberof module:models/playerModel
-    * @inner
-    * @param {Request} req req - The request sent.
+    * @param {String} authToken - The authorization token of the user.
     */
     async validateTrack(authToken) {
         const userId = await userService.getUserId(authToken)
         const userRole = await userService.getUserRole(authToken)
-        if (userRole === 'user') {
-            return false //TODO: Instead of returning false, compare with the current queue for this user.
-        }
-        return true
-
+        return true //TODO: Instead of returning true, compare with the current queue for this user if was free member.
     }
 
     /**
-     * //TODO:
-    * Generates the context for the song playing.
+     * 
+    * Generates the context for the song playing at the moment of sending the request.
     * @function
-    * @memberof module:models/playerModel
-    * @inner
-    * @param {uri} - The uri of played conext.
-    * @param {Type} - The type of played context.
+    * @param {String} uri - The uri of played conext.
+    * @param {String} type - The type of played context.
     */
     async generateContext(uri, type) {
         const newContext = new Context()
@@ -130,9 +115,8 @@ class playerService {
     /**
     * Gets the context for the passed user.
     * @function
-    * @memberof module:models/playerModel
     * @inner
-    * @param {authToken} - The authorization token.
+    * @param {String} authToken - The authorization token.
     */
     async getContext(authToken) {
         const userId = await userService.getUserId(authToken)
@@ -141,11 +125,9 @@ class playerService {
     }
 
     /**
-    * Checking if the user with this token has reached the maximum number of recently played items
+    * Checks if the user with this token has reached the maximum number of recently played items and if so deletes one recently played item.
     * @function
-    * @memberof module:models/playerModel
-    * @inner
-    * @param {Request} req req - The request sent.
+    * @param {String} authToken  - The authorization token of the user.
     */
     async deleteOneRecentlyPlayedIfFull(authToken) {
         const userId = await userService.getUserId(authToken)
