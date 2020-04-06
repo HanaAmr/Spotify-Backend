@@ -1,35 +1,13 @@
-/** Seeder to have initial data for player
+/** Seeder to have seed data for player
  * @module seeders/player
  * @requires express
  */
 
 /**
- * Context seeder to call to fill initial database.
+ * Context seeder to call to fill database.
  * @type {object}
  * @const
  */
-
-const express = require('express')
-/**
- * express module
- * Category model from the database
- * @const
- */
-const Context = require('../../models/contextModel')
-
-/**
- * express module
- * Playlist model from the database
- * @const
- */
-const Playlist = require('../../models/playlistModel')
-
-/**
- * express module
- * Album model from the database
- * @const
- */
-const Album = require('../../models/albumModel')
 
 /**
  * express module
@@ -40,13 +18,11 @@ const Player = require('../../models/playerModel')
 
 
 /**
- * express module
- * Artist model from the database
+ * User model from the database
  * @const
  */
 const User = require('../../models/userModel')
 
-const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -134,6 +110,7 @@ createPlayers = async () => {
     userId: user8[0]._id
   })
   await player8.save()
-
+  
+  process.exit()
   
 }

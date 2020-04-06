@@ -215,6 +215,7 @@ createTracks = async () => {
   await track7.save()
   await track7.updateOne({href:`http://127.0.0.1:${process.env.PORT}/tracks/${track7._id}`})
   await track7.updateOne({uri:`spotify:tracks:${track7._id}`})
+  process.exit()
 
 
 }

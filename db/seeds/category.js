@@ -71,6 +71,7 @@ createCategories = async () => {
   })
   await category4.save()
   await category4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category4._id}/playlists`})
+  process.exit()
 
 }
 

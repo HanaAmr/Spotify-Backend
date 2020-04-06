@@ -1,58 +1,54 @@
-/** Seeder to have initial data for playHistories
+/** Seeder to seed data for playHistories
  * @module seeders/playlist
  * @requires express
  */
 
 /**
- * playHistory seeder to call to fill initial database.
+ * playHistory seeder to call to fill database.
  * @type {object}
  * @const
  */
 
-const express = require('express')
 /**
- * express module
  * Category model from the database
  * @const
  */
 const Context = require('../../models/contextModel')
 
 /**
- * express module
  * Play history model from the database
  * @const
  */
 const playHistory = require('../../models/playHistoryModel')
 
 /**
- * express module
  * Album model from the database
  * @const
  */
 const Album = require('../../models/albumModel')
 /**
- * express module
+ * Playlist model from the database
+ * @const
+ */
+const Playlist = require('../../models/playlistModel')
+/**
  * Track model from the database
  * @const
  */
 const Track = require('../../models/trackModel')
 /**
- * express module
  * User model from the database
  * @const
  */
 const User = require('../../models/userModel')
 
 
-const app = require('./../../app')
 /**
- * express module
  * dotenv to access environment constants
  * @const
  */
 const dotenv = require('dotenv')
 /**
- * express module
  * Mongoose to access and change the database
  * @const
  */
@@ -97,7 +93,7 @@ createPlayHistories = async () => {
   let playlist1 = await Playlist.find({ 'name': 'Imagine Dragons Radio' })
   let playlist2 = await Playlist.find({ 'name': 'Happy Hits' })
   let playlist3 = await Playlist.find({ 'name': 'Chill Bel Masry' })
-  let playlist3 = await Playlist.find({ 'name': 'Best of 21 Pilots' })
+  let playlist4 = await Playlist.find({ 'name': 'Best of 21 Pilots' })
 
 
   let album1 = await Album.find({ 'name': 'Evolve' }).select('_id')
@@ -105,11 +101,6 @@ createPlayHistories = async () => {
   let album3 = await Album.find({ 'name': 'Sahran' }).select('_id')
   let album4 = await Album.find({ 'name': 'Blurry Face' }).select('_id')
 
-
-  let artist1 = await User.find({ 'name': 'Imagine Dragons' }).select('_id')
-  let artist2 = await User.find({ 'name': 'Ed Sheeran' }).select('_id')
-  let artist3 = await User.find({ 'name': 'Amr Diab' }).select('_id')
-  let artist4 = await User.find({ 'name': '21 Pilots' }).select('_id')
 
   let track1 = await Track.find({ 'name': 'Believer' })
   let track2 = await Track.find({ 'name': 'Youm Talat' })
@@ -186,26 +177,26 @@ createPlayHistories = async () => {
     externalUrls: 'Should be an external url',
     type: 'album',
     href: 'Should be a href',
-    name: artist1[0].name,
-    images: artist1[0].images,
-    followersCount: artist1[0].followers.length()
+    name: user1[0].name,
+    images: user1[0].images,
+    followersCount: user1[0].followers.length
   })
   await context6.save()
-  await context6.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${artist1[0]._id}` })
-  await context6.updateOne({ uri: `spotify:albums:${artist1[0]._id}` })
+  await context6.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user1[0]._id}` })
+  await context6.updateOne({ uri: `spotify:albums:${user1[0]._id}` })
 
 
   const context7 = new Context({
     externalUrls: 'Should be an external url',
     type: 'album',
     href: 'Should be a href',
-    name: artist2[0].name,
-    images: artist2[0].images,
-    followersCount: artist2[0].followers.length()
+    name: user2[0].name,
+    images: user2[0].images,
+    followersCount: user2[0].followers.length
   })
   await context7.save()
-  await context7.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${artist2[0]._id}` })
-  await context7.updateOne({ uri: `spotify:albums:${artist2[0]._id}` })
+  await context7.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user2[0]._id}` })
+  await context7.updateOne({ uri: `spotify:albums:${user2[0]._id}` })
 
 
   const playHistory1 = new playHistory({
@@ -277,6 +268,7 @@ createPlayHistories = async () => {
   })
   await playHistory7.save()
   await context7.updateOne({ playHistoryId: playHistory7._id })
+  process.exit()
 
 
 }

@@ -213,6 +213,7 @@ createPlaylists = async () => {
   await playlist4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}`})
   await playlist4.updateOne({tracks:{href:`http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}/tracks`,total:3}})
   await playlist4.updateOne({uri:`spotify:playlists:${playlist4._id}`})
+  process.exit()
 
 
 }
