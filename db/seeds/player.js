@@ -89,7 +89,10 @@ createPlayers = async () => {
     let user2= await User.find({'name':'Ed Sheeran'})
     let user3= await User.find({'name':'Amr Diab'})
     let user4= await User.find({'name':'21 Pilots'})
-
+    let user5= await User.find({'name':'Omar'})
+    let user6= await User.find({'name':'Ahmed'})
+    let user7= await User.find({'name':'Hana'})
+    let user8= await User.find({'name':'Nada'})
 
 
   const player1 = new Player({
@@ -111,6 +114,26 @@ createPlayers = async () => {
     userId: user4[0]._id
   })
   await player4.save()
+
+  const player5 = new Player({
+    userId: user5[0]._id
+  })
+  await player5.save()
+
+  const player6 = new Player({
+    userId: user6[0]._id
+  })
+  await player6.save()
+
+  const player7 = new Player({
+    userId: user7[0]._id
+  })
+  await player7.save()
+
+  const player8 = new Player({
+    userId: user8[0]._id
+  })
+  await player8.save()
 
   
 }
