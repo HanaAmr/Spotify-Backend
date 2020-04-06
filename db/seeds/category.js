@@ -1,14 +1,8 @@
 /** Seeder to have initial data for users
- * @module seeders/category
+ * @module seeders/categories
  * @requires express
  */
 
-/**
- * Users seeder to call to fill initial database.
- * @type {object}
- * @const
- * @namespace categorySeeder
- */
 
 const express = require('express')
 /**
@@ -49,7 +43,7 @@ db.on('error', err => {
 /**
  * A function that is used to create inital seed of users
  *
- * @memberof module:seeders/categories~categorySeeder
+ * @memberof module:seeders/categories
  *
  */
 createCategories = async () => {
@@ -57,26 +51,26 @@ createCategories = async () => {
     name: 'Jazz',
   })
   await category1.save()
-  await category1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/browse/categories/${category1._id}/playlists`})
+  await category1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category1._id}/playlists`})
 
 
   const category2 = new Category({
     name: 'Happy',
   })
   await category2.save()
-  await category2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/browse/categories/${category2._id}/playlists`})
+  await category2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category2._id}/playlists`})
 
   const category3 = new Category({
     name: 'Arabic',
   })
   await category3.save()
-  await category3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/browse/categories/${category3._id}/playlists`})
+  await category3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category3._id}/playlists`})
 
   const category4 = new Category({
     name: 'Pop',
   })
   await category4.save()
-  await category4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/api/v1/browse/categories/${category4._id}/playlists`})
+  await category4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category4._id}/playlists`})
 
 }
 

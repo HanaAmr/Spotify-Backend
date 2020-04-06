@@ -1,24 +1,25 @@
-/** Express controller providing album model
- * @module models
- * @requires express
- */
- 
 /**
- * Album model 
- * @type {object}
- * @const
- * @namespace albumModel
+ * Models module.
+ * @module models/album
+ * @requires express
  */
 
 /**
- * express module
+ * Album object
+ * @type {object}
  * @const
+ */
+
+/** MongoDB Model for the album object.
+ * @requires mongoose
  */
 const mongoose = require('mongoose')
 
+
+
 /**
  * Album schema
- * @memberof module:models~albumModel
+ *  @alias module:models/album
  * @type {object}
  * @property {String} name Name of the album
  * @property {String} href href of the album

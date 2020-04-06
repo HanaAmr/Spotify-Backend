@@ -165,6 +165,7 @@ class userService {
  * @param {string} token  - The reset token
  * @param {string} newPassword - The user new password
  * @param {string} passwordConfirmation - The confirmation for the user password
+ * @param {string} email - The current user email to be used by controller
  */
   async resetChangePassword(token, newPassword, passwordConfirmation) {
     // Searching for the user with this reset token if not expired.
@@ -179,6 +180,8 @@ class userService {
       user.resetPasswordExpires = undefined
       // Save the user account after changing the password.
       await user.save()
+      const email = user.email
+      return email
     } else {
       throw new appError('Passwords don\'t match.', 403)
     }
@@ -196,6 +199,9 @@ async assignUpgradeConfirmCode (authToken,token, upgradeRole) {
     const user = await User.findById(userId)
       if (!user) { // If user doesn't exist
         throw (new appError('Couldn\'t find the user', 404))
+      }else if(user.role == upgradeRole)
+      {
+        throw (new appError('User is already ' + upgradeRole +' !' , 403))
       } else {
       // Update the user premium verification code and save changes
         user.upgradeToken = token

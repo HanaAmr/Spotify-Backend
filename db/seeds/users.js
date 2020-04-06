@@ -55,50 +55,100 @@ db.once('open', url => {
 createUsers = async() => {
     
     const user1 = new User({
-        name: "ahmed",
-        email: "ahmed@email.com",
+        name: "Imagine Dragons",
+        email: "dragonss@email.com",
         password: "password1",
         gender: 'male',
         dateOfBirth: '2000-1-10'
     })
+    await user1.save()
+    await user1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user1._id}`})
+    await user1.updateOne({uri:`spotify:albums:${user1._id}`})
+
     
     const user2 = new User({
-        name: "mohamed",
-        email: "mohamed@email.com",
+        name: "Ed Sheeran",
+        email: "sheeran@email.com",
         password: "password2",
         gender: 'male',
         dateOfBirth: '2002-2-15'
     })
+    await user2.save()
+    await user2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user2._id}`})
+    await user2.updateOne({uri:`spotify:albums:${user2._id}`})
+
     
     const user3 = new User({
-        name: "omar",
-        email: "omar@email.com",
+        name: "Amr Diab",
+        email: "amr@email.com",
         password: "password3",
         gender: 'male',
         dateOfBirth: '2004-1-8'
     })
-    
+    await user3.save()
+    await user3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user3._id}`})
+    await user3.updateOne({uri:`spotify:albums:${user3._id}`})
+
+
     const user4 = new User({
-        name: "hana",
-        email: "hana@email.com",
+        name: "21 Pilots",
+        email: "pilots@email.com",
         password: "password4",
         gender: 'female',
-        dateOfBirth: '1999-6-4',
-        resetPasswordToken: "abcdefghijklmnopqrstuvwxyz",
-        resetPasswordExpires: Date.now() + 3600000 // 1 Hour = 60 min * 60 sec = 3600000 ms
+        dateOfBirth: '1999-6-4'
     })
+    await user4.save()
+    await user4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user4._id}`})
+    await user4.updateOne({uri:`spotify:albums:${user4._id}`})
+
+
 
     const user5 = new User({
-        name: "nada",
-        email: "nada@email.com",
+        name: "Billie Eilish",
+        email: "billie@email.com",
         password: "password5",
         gender: 'female',
         dateOfBirth: '2006-5-7'
     })
-
-    await user1.save()
-    await user2.save()
-    await user3.save()
-    await user4.save()
     await user5.save()
+    await user5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user5._id}`})
+    await user5.updateOne({uri:`spotify:albums:${user5._id}`})
+
+    const user6 = new User({
+        name: "Camila Cabello",
+        email: "cabello@email.com",
+        password: "password6",
+        gender: 'female',
+        dateOfBirth: '2006-5-7'
+    })
+    await user6.save()
+    await user6.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user6._id}`})
+    await user6.updateOne({uri:`spotify:albums:${user6._id}`})
+
+
+
+    const user7 = new User({
+        name: "Rihanna",
+        email: "rihanna@email.com",
+        password: "password7",
+        gender: 'female',
+        dateOfBirth: '2006-5-7'
+    })
+    await user7.save()
+    await user7.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user7._id}`})
+    await user7.updateOne({uri:`spotify:albums:${user7._id}`})
+
+
+
+    await user1.updateOne({following: user2._id})
+    await user2.updateOne({followers: user1._id})
+
+    await user3.updateOne({following: user4._id})
+    await user4.updateOne({followers: user3._id})
+
+    await user5.updateOne({following: user6._id})
+    await user6.updateOne({followers: user5._id})
+
+    await user7.updateOne({following: user1._id})
+    await user1.updateOne({followers: user7._id})
 }

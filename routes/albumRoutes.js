@@ -8,12 +8,6 @@
  * @const
  */
 const express = require('express')
-/**
- * Express router to mount album related functions on.
- * @type {object}
- * @const
- * @namespace albumRouter
- */
 const router = express.Router()
 /**
  * Album controller to call when routing.
@@ -40,7 +34,7 @@ router.use(authController.protect)
  * Route for requesting top albums
  * @name get/albums/top
  * @function
- * @memberof module:routes/albums~albumRouter
+ * @memberof module:routes/albums
  * @inner
  */
 router
@@ -51,7 +45,7 @@ router
  * Route for requesting a specific album
  * @name get/albums/:albumId
  * @function
- * @memberof module:routes/albums~albumRouter
+ * @memberof module:routes/albums
  * @inner
  * @param {string} albumId - Album ID
  */
@@ -63,7 +57,7 @@ router
  * Route for requesting a group of albums
  * @name get/albums
  * @function
- * @memberof module:routes/albums~albumRouter
+ * @memberof module:routes/albums
  * @inner
  */
 router
@@ -74,7 +68,7 @@ router
  * Route for requesting a group of albums
  * @name get/albums/:albumId/tracks
  * @function
- * @memberof module:routes/albums~albumRouter
+ * @memberof module:routes/albums
  * @param {string} albumId - Album ID
  * @inner
  */

@@ -1,6 +1,6 @@
 /**
  * Controller module.
- * @module controllers
+ * @module controllers/track
  * @requires express
  */
 
@@ -8,18 +8,14 @@
  * Track controller to call when routing.
  * @type {object}
  * @const
- * @module controllers
- * @namespace trackController
- */
+ */ 
 
 /**
- * express module
  * Track model from the database
  * @const
  */
 const Track = require('./../models/trackModel')
 /**
- * express module
  * Player services
  * @const
  */
@@ -27,21 +23,18 @@ const playerServices = require('../services/playerService')
 const playerService = new playerServices()
 
 /**
- * express module
  * AppError class file
  * @const
  */
 const AppError = require('./../utils/appError')
 
 /**
- * express module
  * API features utils file
  * @const
  */
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * express module
  * catchAsync utils file
  * @const
  */
@@ -50,11 +43,11 @@ const catchAsync = require('./../utils/catchAsync')
 
 /**
  * Get one Track given its ID
- * @memberof module:controllers~trackController
- * @function getOneTrack
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * @alias module:controllers/track
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} trackId - The trackId to search for.
  * @return {JSON} The details of the track in a json form.
  */
 exports.getOneTrack = catchAsync(async (req, res, next) => {
@@ -73,11 +66,11 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
 
 /**
  * Get a list of Tracks given their ID
- * @memberof module:controllers~trackController
- * @function getTracks
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * @alias module:controllers/track
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} trackId - The trackIds to search for.
  * @return {JSON} The details of the tracks in a json form.
  */
 exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href for tracks in playlist but basicly can work for anything
@@ -100,10 +93,11 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
 
 /**
  * Get one Track mp3 file given its ID
- * @memberof module:controllers/track~trackController
- * @param {Request}  - The function takes the request as a parameter to access its body.
- * @param {Respond} - The respond sent
- * @param {next} - The next function in the middleware
+ * @alias module:controllers/track
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} trackId - The trackId to search for.
  * @return {File} The mp3 file of the track.
  */
 exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
