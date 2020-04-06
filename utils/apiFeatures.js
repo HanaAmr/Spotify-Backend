@@ -86,8 +86,8 @@ class APIFeatures {
       this.query = this.query.select('-__v -trackObjects')
       this.query.populate({
         path: 'owner',
-        //select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
-        select: 'name'
+        select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+        //select: 'name'
       })
     
     }
