@@ -58,24 +58,29 @@ db.on('error', err => {
  */
 createAlbums = async () => {
 
-    let user1=User.find({'name':'user1'}).select('_id')
+    let user1=User.find({'name':'Imagine Dragons'}).select('_id')
     user1= (await user1).toString()
     let start = user1.indexOf(':')      
     const user1Id = user1.substring(start + 2, start+26)
 
-    let user2=User.find({'name':'user2'}).select('_id')
+    let user2=User.find({'name':'Ed Sheeran'}).select('_id')
     user2= (await user2).toString()
     start = user2.indexOf(':')      
     const user2Id = user2.substring(start + 2, start+26)
 
-    let user3=User.find({'name':'user3'}).select('_id')
+    let user3=User.find({'name':'Amr Diab'}).select('_id')
     user3= (await user3).toString()
     start = user3.indexOf(':')      
     const user3Id = user3.substring(start + 2, start+26)
 
+    let user4=User.find({'name':'21 Pilots'}).select('_id')
+    user4= (await user4).toString()
+    start = user4.indexOf(':')      
+    const user4Id = user4.substring(start + 2, start+26)
+
   const album1 = new Album({
     name:"Evolve",
-    images:["Evolve.jpg"],
+    image:"Evolve.jpg",
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
@@ -93,7 +98,7 @@ createAlbums = async () => {
 
   const album2 = new Album({
     name:"Divide",
-    images:["Divide.jpg"],
+    image:"Divide.jpg",
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
@@ -111,7 +116,7 @@ createAlbums = async () => {
 
   const album3 = new Album({
     name:"Sahran",
-    images:["Sahran.jpg"],
+    image:"Sahran.jpg",
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",
@@ -129,7 +134,7 @@ createAlbums = async () => {
 
   const album4 = new Album({
     name:"Blurry Face",
-    images:["Blurryface.jpg"],
+    image:"Blurryface.jpg",
     albumType:"album",
     externalUrls:"this should be an externalUrl",
     type:"album",

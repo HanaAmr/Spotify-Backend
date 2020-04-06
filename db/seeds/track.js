@@ -69,20 +69,25 @@ db.on('error', err => {
  */
 createTracks = async () => {
 
-    let user1=User.find({'name':'user1'}).select('_id')
+    let user1=User.find({'name':'Imagine Dragons'}).select('_id')
     user1= (await user1).toString()
     let start = user1.indexOf(':')      
     const user1Id = user1.substring(start + 2, start+26)
 
-    let user2=User.find({'name':'user2'}).select('_id')
+    let user2=User.find({'name':'Ed Sheeran'}).select('_id')
     user2= (await user2).toString()
     start = user2.indexOf(':')      
     const user2Id = user2.substring(start + 2, start+26)
 
-    let user3=User.find({'name':'user3'}).select('_id')
+    let user3=User.find({'name':'Amr Diab'}).select('_id')
     user3= (await user3).toString()
     start = user3.indexOf(':')      
     const user3Id = user3.substring(start + 2, start+26)
+
+    let user4=User.find({'name':'21 Pilots'}).select('_id')
+    user4= (await user4).toString()
+    start = user4.indexOf(':')      
+    const user4Id = user4.substring(start + 2, start+26)
 
     let album1=Album.find({'name':'Evolve'}).select('_id')
     album1= (await album1).toString()
