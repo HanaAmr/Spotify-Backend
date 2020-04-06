@@ -73,17 +73,17 @@ router
     .post(uploadService.uploadAlbumImage,artistAlbumController.addAlbum)
     .get(artistAlbumController.getArtistAlbums)
 
-/**
- * Route for artist's albums tracks
- * @name /me/albums
- * @function
- * @memberof module:routes/artistAlbumsRoutes
- * @inner
- */
-router
-    .route('/:id/tracks')
-    .post(uploadService.uploadTrackAudio,artistAlbumController.addTracktoAlbum)
-    .get(artistAlbumController.getAlbumTracks)
+// /**
+//  * Route for artist's albums tracks
+//  * @name /me/albums
+//  * @function
+//  * @memberof module:routes/artistAlbumsRoutes
+//  * @inner
+//  */
+// router
+//     .route('/:id/tracks')
+//     .post(uploadService.uploadTrackAudio,artistAlbumController.addTracktoAlbum)
+//     .get(artistAlbumController.getAlbumTracks)
 
 
     

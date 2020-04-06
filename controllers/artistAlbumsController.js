@@ -155,23 +155,23 @@ exports.getArtistAlbums= catchAsync(async (req,res,next)=>{
 
 })
 
-/**
-* A middleware function for getting tracksofAlbums for llogged in artist where album id is passed as aparameter of request
-* @function
-* @memberof module:controllers/artistAlbumsController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
-exports.getAlbumTracks= catchAsync(async (req,res,nex)=>{
+// /**
+// * A middleware function for getting tracksofAlbums for llogged in artist where album id is passed as aparameter of request
+// * @function
+// * @memberof module:controllers/artistAlbumsController
+// * @param {Request}  - The function takes the request as a parameter to access its body.
+// * @param {Respond} - The respond sent
+// * @param {next} - The next function in the middleware
+// */
+// exports.getAlbumTracks= catchAsync(async (req,res,nex)=>{
 
-    const albumTracks=await Track.find({album: req.params.id})
+//     const albumTracks=await Track.find({album: req.params.id})
 
-    if(albumTracks.length==0)
-        throw (new AppError("Album is empty, Add more tracks",484))
+//     if(albumTracks.length==0)
+//         throw (new AppError("Album is empty, Add more tracks",484))
 
-    res.status(200).json({
-        status:"sucsess",
-        data:albumTracks
-    })
-})
+//     res.status(200).json({
+//         status:"sucsess",
+//         data:albumTracks
+//     })
+// })
