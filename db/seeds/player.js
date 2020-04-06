@@ -110,6 +110,7 @@ createPlayers = async () => {
     userId: user8[0]._id
   })
   await player8.save()
-
+  
+  process.exit()
   
 }

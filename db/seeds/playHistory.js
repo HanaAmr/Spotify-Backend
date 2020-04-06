@@ -268,6 +268,7 @@ createPlayHistories = async () => {
   })
   await playHistory7.save()
   await context7.updateOne({ playHistoryId: playHistory7._id })
+  process.exit()
 
 
 }

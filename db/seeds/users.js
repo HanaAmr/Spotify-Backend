@@ -168,4 +168,7 @@ createUsers = async() => {
 
     await user7.updateOne({following: user8._id})
     await user8.updateOne({followers: user7._id})
+
+    process.exit()
+
 }

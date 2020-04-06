@@ -143,5 +143,6 @@ createAlbums = async () => {
   await album4.save()
   await album4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${album4._id}`})
   await album4.updateOne({uri:`spotify:albums:${album4._id}`})
+  process.exit()
 
 }
