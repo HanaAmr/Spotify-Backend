@@ -59,7 +59,8 @@ createUsers = async() => {
         email: "dragonss@email.com",
         password: "password1",
         gender: 'male',
-        dateOfBirth: '2000-1-10'
+        dateOfBirth: '2000-1-10',
+        role: 'artist'
     })
     await user1.save()
     await user1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user1._id}`})
@@ -71,7 +72,8 @@ createUsers = async() => {
         email: "sheeran@email.com",
         password: "password2",
         gender: 'male',
-        dateOfBirth: '2002-2-15'
+        dateOfBirth: '2002-2-15',
+        role: 'artist'
     })
     await user2.save()
     await user2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user2._id}`})
@@ -83,7 +85,8 @@ createUsers = async() => {
         email: "amr@email.com",
         password: "password3",
         gender: 'male',
-        dateOfBirth: '2004-1-8'
+        dateOfBirth: '2004-1-8',
+        role: 'artist'
     })
     await user3.save()
     await user3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user3._id}`})
@@ -95,7 +98,8 @@ createUsers = async() => {
         email: "pilots@email.com",
         password: "password4",
         gender: 'female',
-        dateOfBirth: '1999-6-4'
+        dateOfBirth: '1999-6-4',
+        role: 'artist'
     })
     await user4.save()
     await user4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user4._id}`})
@@ -104,10 +108,10 @@ createUsers = async() => {
 
 
     const user5 = new User({
-        name: "Billie Eilish",
-        email: "billie@email.com",
+        name: "Ahmed",
+        email: "ahmed@email.com",
         password: "password5",
-        gender: 'female',
+        gender: 'male',
         dateOfBirth: '2006-5-7'
     })
     await user5.save()
@@ -115,10 +119,10 @@ createUsers = async() => {
     await user5.updateOne({uri:`spotify:albums:${user5._id}`})
 
     const user6 = new User({
-        name: "Camila Cabello",
-        email: "cabello@email.com",
+        name: "omar",
+        email: "omar@email.com",
         password: "password6",
-        gender: 'female',
+        gender: 'male',
         dateOfBirth: '2006-5-7'
     })
     await user6.save()
@@ -128,16 +132,29 @@ createUsers = async() => {
 
 
     const user7 = new User({
-        name: "Rihanna",
-        email: "rihanna@email.com",
+        name: "Hana",
+        email: "hana@email.com",
         password: "password7",
         gender: 'female',
-        dateOfBirth: '2006-5-7'
+        dateOfBirth: '1999-3-3',
+        role: 'premium'
     })
     await user7.save()
     await user7.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user7._id}`})
     await user7.updateOne({uri:`spotify:albums:${user7._id}`})
 
+
+    const user8 = new User({
+        name: "Nada",
+        email: "nada@email.com",
+        password: "password8",
+        gender: 'female',
+        dateOfBirth: '1999-7-10',
+        role: 'premium'
+    })
+    await user8.save()
+    await user8.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user8._id}`})
+    await user8.updateOne({uri:`spotify:albums:${user8._id}`})
 
 
     await user1.updateOne({following: user2._id})
@@ -149,6 +166,6 @@ createUsers = async() => {
     await user5.updateOne({following: user6._id})
     await user6.updateOne({followers: user5._id})
 
-    await user7.updateOne({following: user1._id})
-    await user1.updateOne({followers: user7._id})
+    await user7.updateOne({following: user8._id})
+    await user8.updateOne({followers: user7._id})
 }
