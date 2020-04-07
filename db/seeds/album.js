@@ -77,7 +77,7 @@ createAlbums = async () => {
     label: 'Imagine Dragons Album',
     copyrights: '© 2018 KIDinaKORNER/Interscope Records',
     releaseDate: '2018-01-01',
-    artists: user1Id,
+    artists: [user1Id],
     totalTracks: 2,
     popularity: 300000
   })
@@ -95,7 +95,7 @@ createAlbums = async () => {
     label: 'Ed Sheeran Album',
     copyrights: '© 2017 Asylum Records UK, a division of Atlantic Records UK, a Warner Music Group company.',
     releaseDate: '2017-01-01',
-    artists: user2Id,
+    artists: [user2Id],
     totalTracks: 1,
     popularity: 700000
   })
@@ -113,7 +113,7 @@ createAlbums = async () => {
     label: 'Amr Diab',
     copyrights: '© 2020 Nay',
     releaseDate: '2020-01-01',
-    artists: user3Id,
+    artists: [user3Id],
     totalTracks: 2,
     popularity: 400000
   })
@@ -131,7 +131,7 @@ createAlbums = async () => {
     label: '21 pilots album',
     copyrights: '© 2015 Fueled By Ramen LLC for the United States and WEA International Inc. for the world outside of the United States. A Warner Music Group Company',
     releaseDate: '2015-01-01',
-    artists: user4Id,
+    artists: [user4Id],
     totalTracks: 3,
     popularity: 100000
   })

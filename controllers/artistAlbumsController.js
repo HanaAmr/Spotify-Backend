@@ -138,8 +138,7 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
 
-  const features = new APIFeatures(Album.find({ artists: artistId }), req.query)
-
+  const features = new APIFeatures(Album.find({ artists: artistId }).select('-__v'), req.query)
     .filter()
     .sort()
     .limitFields()

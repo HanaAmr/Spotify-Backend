@@ -234,9 +234,10 @@ exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
 */
 exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
-  if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
 
-const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
+  if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
+  
+  const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
     .filter()
     .sort()
     .limitFieldsPlaylist()

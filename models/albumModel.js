@@ -91,8 +91,8 @@ const albumSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  artists:[
-    {
+  artists:
+    [{
       type: mongoose.Schema.ObjectId,
       ref: 'User'
     }],
