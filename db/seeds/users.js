@@ -59,16 +59,6 @@ db.on('error', err => {
  */
 createUsers = async () => {
 
-  let album1 = Album.find({ name: 'Evolve' }).select('_id')
-  album1 = (await album1).toString()
-  let start = album1.indexOf(':')
-  const album1ID = album1.substring(start + 2, start + 26)
-
-
-  let album2 = Album.find({ name: 'Divide' }).select('_id')
-  album2 = (await album2).toString()
-  let start = album2.indexOf(':')
-  const album2ID = album2.substring(start + 2, start + 26)
 
   const user1 = new User({
     name: 'Imagine Dragons',
@@ -81,7 +71,7 @@ createUsers = async () => {
       biography: "Imagine Dragons is an American rock band from Las Vegas, Nevada, consisting of lead vocalist Dan Reynolds, lead guitarist Wayne Sermon, bassist Ben McKee, and drummer Daniel Platzman.\nThe band's second studio album Smoke + Mirrors (2015) reached number one in the US, Canada and the UK.",
       popularity: 100000,
       genres: ['pop rock'],
-      albums: [album1ID],
+      //albums: [album1],
     }
   })
   await user1.save()
@@ -99,7 +89,7 @@ createUsers = async () => {
       biography: "Ed Sheeran was born on February 17, 1991, in Halifax, West Yorkshire, in the United Kingdom.\n When he was young, he began playing guitar, showing early promise as a musical talent. When he was 11, Sheeran met singer-songwriter Damien Rice backstage at one of Rice's shows, and the young musician found added inspiration.",
       popularity: 5000,
       genres: ['pop'],
-      albums: [album2ID],
+      //albums: [album2],
     }
   })
   await user2.save()
@@ -117,7 +107,7 @@ createUsers = async () => {
       biography: 'Amr Diab (Amr Abd-Albaset Abd-Alaziz Diab), born on the 11th of October 1961 in Port Said, Egypt, he is an Egyptian Singer, he is known as the Father of Mediterranean Music. ... Amr Diab has earned his bachelor degree in Arabic Music and graduated from the Cairo Academy of Arts in 1986.',
       popularity: 1000000,
       genres:['Arabic pop'],
-      albums:  []
+      //albums:  []
     }
   })
   await user3.save()
@@ -135,7 +125,7 @@ createUsers = async () => {
       biography: 'Twenty One Pilots is a Grammy Award-winning American musical duo that originates from Columbus, Ohio. The band was formed in 2009 by Tyler Joseph along with former members Nick Thomas and Chris Salih, and currently consists of vocalist/keyboardist Tyler Joseph and drummer Josh Dun. ',
       popularity:5000000,
       genres:['Alternative hip hop','Electropop','Indie pop','Pop rock', 'Alternative rock'],
-      albums:  []
+      //albums:  []
     }
   })
   await user4.save()
