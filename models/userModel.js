@@ -101,7 +101,7 @@ const userSchema = new Schema({
       popularity: Number,
       genres: [String], // Array of genres
       albums: [String], // Contains Albums IDs
-      popularSong: [String] // contains songs IDs
+      //popularSong: [String] // contains songs IDs
 
     }
   },
