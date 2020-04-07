@@ -74,7 +74,6 @@ router.post('/loginWithFacebook', passport.authenticate('facebookToken', { sessi
 * @param {callback} middleware - Sign in middleware.
 */
 router.post('/signIn', authController.signIn)
-// router.post('/signIn', authController.protect, authController.restrictTo('artist'), authController.signIn);
 
 /**
 * Route for requesting to get user profile

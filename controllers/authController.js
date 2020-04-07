@@ -192,7 +192,6 @@ exports.getMyProfile = catchAsync (async (req, res, next) => {
   const newUser = await User.findById(req.user.id)
 
   res.status(200).json({
-    id: newUser.id,
     name: newUser.name,
     email: newUser.email,
     gender: newUser.gender,
@@ -203,7 +202,8 @@ exports.getMyProfile = catchAsync (async (req, res, next) => {
     uri: newUser.uri,
     href: newUser.href,
     userStats: newUser.userStats,
-    artistInfo: newUser.artistInfo
+    artistInfo: newUser.artistInfo,
+    role: newUser.role
  });
 });
 
