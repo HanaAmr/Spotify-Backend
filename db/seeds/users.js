@@ -145,17 +145,6 @@ createUsers = async () => {
   await user8.updateOne({href:`${process.env.API_URL}/users/${user8._id}`})
   await user8.updateOne({uri:`spotify:users:${user8._id}`})
 
-  const user9 = new User({
-    name: 'Jonas Brothers',
-    email: 'brothers@email.com',
-    password: 'password9',
-    gender: 'male',
-    dateOfBirth: '2004-1-8',
-    role: 'artist'
-  })
-  await user9.save()
-  await user9.updateOne({href:`${process.env.API_URL}/users/${user9._id}`})
-  await user9.updateOne({uri:`spotify:users:${user9._id}`})
 
   await user1.updateOne({ following: user2._id })
   await user2.updateOne({ followers: user1._id })

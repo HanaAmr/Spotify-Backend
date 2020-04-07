@@ -216,7 +216,7 @@ createTracks = async () => {
   await track7.updateOne({ uri: `spotify:tracks:${track7._id}` })
 
   const track8 = new Track({
-    name: 'Lonely',
+    name: 'Thinking Out Loud',
     type: 'track',
     externalUrl: 'this should be an externalUrl',
     externalId: 'this should be an externalId',
@@ -231,21 +231,6 @@ createTracks = async () => {
   await track8.updateOne({ href: `${process.env.API_URL}/tracks/${track8._id}` })
   await track8.updateOne({ uri: `spotify:tracks:${track8._id}` })
 
-  const track9 = new Track({
-    name: 'Lonely',
-    type: 'track',
-    externalUrl: 'this should be an externalUrl',
-    externalId: 'this should be an externalId',
-    trackNumber: 2,
-    durationMs: 139000,
-    popularity: 900000,
-    album: album4Id,
-    artists: user4Id,
-    audioFilePath: 'tracks/track8.mp3'
-  })
-  await track9.save()
-  await track9.updateOne({ href: `${process.env.API_URL}/tracks/${track9._id}` })
-  await track9.updateOne({ uri: `spotify:tracks:${track9._id}` })
-
+  
   process.exit()
 }

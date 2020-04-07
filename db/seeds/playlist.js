@@ -105,11 +105,6 @@ createPlaylists = async () => {
   start = user8.indexOf(':')
   const user8Id = user8.substring(start + 2, start + 26)
 
-  let user9 = User.find({ name: 'Jonas Brothers' }).select('_id')
-  user9 = (await user9).toString()
-  start = user9.indexOf(':')
-  const user9Id = user9.substring(start + 2, start + 26)
-
   let track1 = Track.find({ name: 'Believer' }).select('_id')
   track1 = (await track1).toString()
   start = track1.indexOf(':')
@@ -145,7 +140,7 @@ createPlaylists = async () => {
   start = track7.indexOf(':')
   const track7Id = track7.substring(start + 2, start + 26)
 
-  let track8 = Track.find({ name: 'Lonely' }).select('_id')
+  let track8 = Track.find({ name: 'Thinking Out Loud' }).select('_id')
   track8 = (await track8).toString()
   start = track8.indexOf(':')
   const track8Id = track8.substring(start + 2, start + 26)
@@ -240,8 +235,8 @@ createPlaylists = async () => {
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
     images: [`${process.env.API_URL}/public/imgs/playlists/Mood_Booster.jpg`],
-    description: 'Jonas Brothers',
-    owner: user9Id,
+    description: 'Ed Sheeran',
+    owner: user2Id,
     public: true,
     snapshot_id: '5e729e8b3d8d0a432c70b595',
     type: 'playlist',
@@ -261,7 +256,7 @@ createPlaylists = async () => {
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
     images: [`${process.env.API_URL}/public/imgs/playlists/Happy_Beats.jpg`],
-    description: 'Jonas Brothers, Ed Sheeran',
+    description: 'Ed Sheeran',
     owner: user7Id,
     public: true,
     snapshot_id: '5e729e8b3d8d0a432c70b595',
@@ -303,7 +298,7 @@ createPlaylists = async () => {
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
     images: [`${process.env.API_URL}/public/imgs/playlists/Feeling_Good.jpg`],
-    description: '21 Pilots, Jonas Brothers',
+    description: '21 Pilots, Ed Sheeran',
     owner: user8Id,
     public: true,
     snapshot_id: '5e729e8b3d8d0a432c70b595',
