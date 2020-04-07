@@ -152,7 +152,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   // removing current artist
   relatedArtists = relatedArtists.filter(el => el.id !== artist.id)
 
-  if (relatedArtists.length === 1) { throw (new AppError('No related artists found for this artist!', 484)) }
+  if (relatedArtists.length === 0) { throw (new AppError('No related artists found for this artist!', 484)) }
 
   res.status(200).json({
     status: 'sucsess',
@@ -172,12 +172,18 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
 
-  const features = new APIFeatures(Album.find({ artists: req.params.id, totalTracks: { $ne: 1 } }), req.query)
+  const features = new APIFeatures(Album.find({ artists: req.params.id, totalTracks: { $ne: 0 } }), req.query)
     .filter()
     .sort()
     .paginate()
+<<<<<<< HEAD
 
     const albums =await features.querypopulate({
+=======
+  
+    
+  const albums = await features.populate({
+>>>>>>> df0347b9d85f8d78603d48947fd2867e61cb7982
     path: 'artists',
     select: '_id name uri href externalUrls images role followers userStats artistInfo' 
 
@@ -233,8 +239,13 @@ exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
 */
 exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
+<<<<<<< HEAD
   if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
 
+=======
+  if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
+  
+>>>>>>> df0347b9d85f8d78603d48947fd2867e61cb7982
   const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
     .filter()
     .sort()
@@ -242,8 +253,13 @@ exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
     .paginate()
 
 
+<<<<<<< HEAD
   const playlists = await Playlist.find({ 'owner': req.params.id })
   if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 484)) }
+=======
+  const playlists = await features.query
+  if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 404)) }
+>>>>>>> df0347b9d85f8d78603d48947fd2867e61cb7982
 
   res.status(200).json({
     status: 'success',
