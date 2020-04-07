@@ -63,7 +63,9 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  req.body.artist = new mongoose.Types.ObjectId(artistId)
+  req.body.artists = []
+  req.body.artists.push(new mongoose.Types.ObjectId(artistId))
+
 
   let newAlbum = await Album.create(req.body)
 
@@ -135,14 +137,14 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
 */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-    console.log(artistId)
-  const features = new APIFeatures(Album.find({ artist: artistId }).select('-__v'), req.query)
+
+  const features = new APIFeatures(Album.find({ artists: artistId }).select('-__v'), req.query)
     .filter()
     .sort()
     .limitFields()
     .paginate()
-
-  const albums = await features.query.populate({
+    
+    const albums = await features.query.populate({
     path: 'artists',
     select: '_id name uri href externalUrls images role followers userStats artistInfo' 
 
