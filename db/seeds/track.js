@@ -112,8 +112,8 @@ createTracks = async () => {
     durationMs:204000,
     popularity:12000000,
     album:album1Id,
-    artists:user1Id
-    
+    artists:user1Id,
+    audioFilePath: 'tracks/track1.mp3'
   })
   await track1.save()
   await track1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/tracks/${track1._id}`})
@@ -129,7 +129,8 @@ createTracks = async () => {
     durationMs:187000,
     popularity:300000,
     album:album1Id,
-    artists:user1Id
+    artists:user1Id,
+    audioFilePath: 'tracks/track2.mp3'
     
   })
   await track2.save()
@@ -145,7 +146,8 @@ createTracks = async () => {
     durationMs:212000,
     popularity:200000,
     album:album3Id,
-    artists:user3Id
+    artists:user3Id,
+    audioFilePath: 'tracks/track3.mp3'
     
   })
   await track3.save()
@@ -161,7 +163,8 @@ createTracks = async () => {
     durationMs:222000,
     popularity:200000,
     album:album3Id,
-    artists:user3Id
+    artists:user3Id,
+    audioFilePath: 'tracks/track4.mp3'
     
   })
   await track4.save()
@@ -177,8 +180,8 @@ createTracks = async () => {
     durationMs:180000,
     popularity:500000,
     album:album2Id,
-    artists:user2Id
-    
+    artists:user2Id,
+    audioFilePath: 'tracks/track5.mp3'
   })
   await track5.save()
   await track5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/tracks/${track5._id}`})
@@ -193,8 +196,8 @@ createTracks = async () => {
     durationMs:202000,
     popularity:300000,
     album:album4Id,
-    artists:user4Id
-    
+    artists:user4Id,
+    audioFilePath: 'tracks/track6.mp3'
   })
   await track6.save()
   await track6.updateOne({href:`http://127.0.0.1:${process.env.PORT}/tracks/${track6._id}`})
@@ -209,8 +212,8 @@ createTracks = async () => {
     durationMs:214000,
     popularity:600000,
     album:album4Id,
-    artists:user4Id
-    
+    artists:user4Id,
+    audioFilePath: 'tracks/track7.mp3'
   })
   await track7.save()
   await track7.updateOne({href:`http://127.0.0.1:${process.env.PORT}/tracks/${track7._id}`})
