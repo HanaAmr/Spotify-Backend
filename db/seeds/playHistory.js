@@ -105,7 +105,7 @@ createPlayHistories = async () => {
     followersCount: playlist1[0].noOfFollowers
   })
   await context1.save()
-  await context1.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist1[0]._id}` })
+  await context1.updateOne({ href: `${process.env.API_URL}/playlists/${playlist1[0]._id}` })
   await context1.updateOne({ uri: `spotify:playlists:${playlist1[0]._id}` })
 
   const context2 = new Context({
@@ -117,7 +117,7 @@ createPlayHistories = async () => {
     followersCount: playlist2[0].noOfFollowers
   })
   await context2.save()
-  await context2.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist2[0]._id}` })
+  await context2.updateOne({ href: `${process.env.API_URL}/playlists/${playlist2[0]._id}` })
   await context2.updateOne({ uri: `spotify:playlists:${playlist2[0]._id}` })
 
   const context3 = new Context({
@@ -129,7 +129,7 @@ createPlayHistories = async () => {
     followersCount: playlist3[0].noOfFollowers
   })
   await context3.save()
-  await context3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist3[0]._id}` })
+  await context3.updateOne({ href: `${process.env.API_URL}/playlists/${playlist3[0]._id}` })
   await context3.updateOne({ uri: `spotify:playlists:${playlist3[0]._id}` })
 
   const context4 = new Context({
@@ -141,7 +141,7 @@ createPlayHistories = async () => {
     followersCount: album1[0].popularity
   })
   await context4.save()
-  await context4.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album1[0]._id}` })
+  await context4.updateOne({ href: `${process.env.API_URL}/albums/${album1[0]._id}` })
   await context4.updateOne({ uri: `spotify:albums:${album1[0]._id}` })
 
   const context5 = new Context({
@@ -153,7 +153,7 @@ createPlayHistories = async () => {
     followersCount: album2[0].popularity
   })
   await context5.save()
-  await context5.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album2[0]._id}` })
+  await context5.updateOne({ href: `${process.env.API_URL}/albums/${album2[0]._id}` })
   await context5.updateOne({ uri: `spotify:albums:${album2[0]._id}` })
 
   const context6 = new Context({
@@ -165,7 +165,7 @@ createPlayHistories = async () => {
     followersCount: user1[0].followers.length
   })
   await context6.save()
-  await context6.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user1[0]._id}` })
+  await context6.updateOne({ href: `${process.env.API_URL}/albums/${user1[0]._id}` })
   await context6.updateOne({ uri: `spotify:albums:${user1[0]._id}` })
 
   const context7 = new Context({
@@ -177,7 +177,7 @@ createPlayHistories = async () => {
     followersCount: user2[0].followers.length
   })
   await context7.save()
-  await context7.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user2[0]._id}` })
+  await context7.updateOne({ href: `${process.env.API_URL}/albums/${user2[0]._id}` })
   await context7.updateOne({ uri: `spotify:albums:${user2[0]._id}` })
 
   const playHistory1 = new PlayHistory({

@@ -22,18 +22,18 @@ module.exports = async function (req, count) {
 
   const results = {}
   if (endIndex < count) {
-    results.next = `http://127.0.0.1:${process.env.PORT}${Url}?limit=${limit}&page=${page + 1}`
+    results.next = `${process.env.API_URL}${Url}?limit=${limit}&page=${page + 1}`
   } else {
     results.next = null
   }
 
   if (startIndex > 0) {
-    results.previous = `http://127.0.0.1:${process.env.PORT}${Url}?limit=${limit}&page=${page - 1}`
+    results.previous = `${process.env.API_URL}${Url}?limit=${limit}&page=${page - 1}`
   } else {
     results.previous = null
   }
 
-  results.href = `http://127.0.0.1:${process.env.PORT}${Url}`
+  results.href = `${process.env.API_URL}${process.env.PORT}${Url}`
   results.limit = limit
   results.offset = page
   results.total = count

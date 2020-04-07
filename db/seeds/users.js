@@ -60,8 +60,8 @@ createUsers = async () => {
     role: 'artist'
   })
   await user1.save()
-  // await user1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user1._id}`})
-  // await user1.updateOne({uri:`spotify:albums:${user1._id}`})
+  await user1.updateOne({href:`${process.env.API_URL}/users/${user1._id}`})
+  await user1.updateOne({uri:`spotify:users:${user1._id}`})
 
   const user2 = new User({
     name: 'Ed Sheeran',
@@ -72,8 +72,8 @@ createUsers = async () => {
     role: 'artist'
   })
   await user2.save()
-  // await user2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user2._id}`})
-  // await user2.updateOne({uri:`spotify:albums:${user2._id}`})
+  await user2.updateOne({href:`${process.env.API_URL}/users/${user2._id}`})
+  await user2.updateOne({uri:`spotify:users:${user2._id}`})
 
   const user3 = new User({
     name: 'Amr Diab',
@@ -84,8 +84,8 @@ createUsers = async () => {
     role: 'artist'
   })
   await user3.save()
-  // await user3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user3._id}`})
-  // await user3.updateOne({uri:`spotify:albums:${user3._id}`})
+  await user3.updateOne({href:`${process.env.API_URL}/users/${user3._id}`})
+  await user3.updateOne({uri:`spotify:users:${user3._id}`})
 
   const user4 = new User({
     name: '21 Pilots',
@@ -96,8 +96,8 @@ createUsers = async () => {
     role: 'artist'
   })
   await user4.save()
-  // await user4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user4._id}`})
-  // await user4.updateOne({uri:`spotify:albums:${user4._id}`})
+  await user4.updateOne({href:`${process.env.API_URL}/users/${user4._id}`})
+  await user4.updateOne({uri:`spotify:users:${user4._id}`})
 
   const user5 = new User({
     name: 'Ahmed',
@@ -107,8 +107,8 @@ createUsers = async () => {
     dateOfBirth: '2006-5-7'
   })
   await user5.save()
-  // await user5.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user5._id}`})
-  // await user5.updateOne({uri:`spotify:albums:${user5._id}`})
+  await user5.updateOne({href:`${process.env.API_URL}/users/${user5._id}`})
+  await user5.updateOne({uri:`spotify:users:${user5._id}`})
 
   const user6 = new User({
     name: 'Omar',
@@ -118,8 +118,8 @@ createUsers = async () => {
     dateOfBirth: '2006-5-7'
   })
   await user6.save()
-  // await user6.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user6._id}`})
-  // await user6.updateOne({uri:`spotify:albums:${user6._id}`})
+  await user6.updateOne({href:`${process.env.API_URL}/users/${user6._id}`})
+  await user6.updateOne({uri:`spotify:users:${user6._id}`})
 
   const user7 = new User({
     name: 'Hana',
@@ -130,8 +130,8 @@ createUsers = async () => {
     role: 'premium'
   })
   await user7.save()
-  // await user7.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user7._id}`})
-  // await user7.updateOne({uri:`spotify:albums:${user7._id}`})
+  await user7.updateOne({href:`${process.env.API_URL}/users/${user7._id}`})
+  await user7.updateOne({uri:`spotify:users:${user7._id}`})
 
   const user8 = new User({
     name: 'Nada',
@@ -142,8 +142,20 @@ createUsers = async () => {
     role: 'premium'
   })
   await user8.save()
-  // await user8.updateOne({href:`http://127.0.0.1:${process.env.PORT}/albums/${user8._id}`})
-  // await user8.updateOne({uri:`spotify:albums:${user8._id}`})
+  await user8.updateOne({href:`${process.env.API_URL}/users/${user8._id}`})
+  await user8.updateOne({uri:`spotify:users:${user8._id}`})
+
+  const user9 = new User({
+    name: 'Jonas Brothers',
+    email: 'brothers@email.com',
+    password: 'password9',
+    gender: 'male',
+    dateOfBirth: '2004-1-8',
+    role: 'artist'
+  })
+  await user9.save()
+  await user9.updateOne({href:`${process.env.API_URL}/users/${user9._id}`})
+  await user9.updateOne({uri:`spotify:users:${user9._id}`})
 
   await user1.updateOne({ following: user2._id })
   await user2.updateOne({ followers: user1._id })

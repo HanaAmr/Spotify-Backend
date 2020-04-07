@@ -14,7 +14,7 @@ const Track = require('../../models/trackModel')
 const User = require('../../models/userModel')
 const Category = require('../../models/categoryModel')
 // const app = express()
-const app = require('./../../app')
+//const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -90,6 +90,26 @@ createPlaylists = async () => {
   start = user4.indexOf(':')
   const user4Id = user4.substring(start + 2, start + 26)
 
+  let user7 = User.find({ name: 'Hana' }).select('_id')
+  user7 = (await user7).toString()
+  start = user7.indexOf(':')
+  const user7Id = user7.substring(start + 2, start + 26)
+
+  let user6 = User.find({ name: 'Omar' }).select('_id')
+  user6 = (await user6).toString()
+  start = user6.indexOf(':')
+  const user6Id = user6.substring(start + 2, start + 26)
+
+  let user8 = User.find({ name: 'Nada' }).select('_id')
+  user8 = (await user8).toString()
+  start = user8.indexOf(':')
+  const user8Id = user8.substring(start + 2, start + 26)
+
+  let user9 = User.find({ name: 'Jonas Brothers' }).select('_id')
+  user9 = (await user9).toString()
+  start = user9.indexOf(':')
+  const user9Id = user9.substring(start + 2, start + 26)
+
   let track1 = Track.find({ name: 'Believer' }).select('_id')
   track1 = (await track1).toString()
   start = track1.indexOf(':')
@@ -125,11 +145,17 @@ createPlaylists = async () => {
   start = track7.indexOf(':')
   const track7Id = track7.substring(start + 2, start + 26)
 
+  let track8 = Track.find({ name: 'Lonely' }).select('_id')
+  track8 = (await track8).toString()
+  start = track8.indexOf(':')
+  const track8Id = track8.substring(start + 2, start + 26)
+
+
   const playlist1 = new Playlist({
     name: 'Imagine Dragons Radio',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Imagine_Dragons.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Imagine_Dragons.jpg`],
     description: 'Imagine Dragons',
     owner: user1Id,
     public: true,
@@ -142,15 +168,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist1.save()
-  await playlist1.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist1._id}` })
-  await playlist1.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist1._id}/tracks`, total: 2 } })
+  await playlist1.updateOne({ href: `${process.env.API_URL}/playlists/${playlist1._id}` })
+  await playlist1.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist1._id}/tracks`, total: 2 } })
   await playlist1.updateOne({ uri: `spotify:playlists:${playlist1._id}` })
 
   const playlist2 = new Playlist({
     name: 'Happy Hits',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Happy_Hits.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Happy_Hits.jpg`],
     description: 'Ed Sheeran,Imagine Dragons',
     owner: user2Id,
     public: true,
@@ -163,15 +189,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist2.save()
-  await playlist2.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist2._id}` })
-  await playlist2.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist2._id}/tracks`, total: 2 } })
+  await playlist2.updateOne({ href: `${process.env.API_URL}/playlists/${playlist2._id}` })
+  await playlist2.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist2._id}/tracks`, total: 2 } })
   await playlist2.updateOne({ uri: `spotify:playlists:${playlist2._id}` })
 
   const playlist3 = new Playlist({
     name: 'Chill Bel Masry',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Chill_Bel_Masry.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Chill_Bel_Masry.jpg`],
     description: 'Amr Diab',
     owner: user3Id,
     public: true,
@@ -184,15 +210,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist3.save()
-  await playlist3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist3._id}` })
-  await playlist3.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist3._id}/tracks`, total: 1 } })
+  await playlist3.updateOne({ href: `${process.env.API_URL}/playlists/${playlist3._id}` })
+  await playlist3.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist3._id}/tracks`, total: 1 } })
   await playlist3.updateOne({ uri: `spotify:playlists:${playlist3._id}` })
 
   const playlist4 = new Playlist({
     name: 'Best of 21 Pilots',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Best_of_21_Pilots.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Best_of_21_Pilots.jpg`],
     description: '21 Pilots',
     owner: user4Id,
     public: true,
@@ -205,8 +231,114 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist4.save()
-  await playlist4.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}` })
-  await playlist4.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}/tracks`, total: 3 } })
+  await playlist4.updateOne({ href: `${process.env.API_URL}/playlists/${playlist4._id}` })
+  await playlist4.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist4._id}/tracks`, total: 3 } })
   await playlist4.updateOne({ uri: `spotify:playlists:${playlist4._id}` })
+
+  const playlist5 = new Playlist({
+    name: 'Mood Booster',
+    collaborative: false,
+    externalUrl: 'this should be an externalUrl',
+    images: [`${process.env.API_URL}/public/imgs/playlists/Mood_Booster.jpg`],
+    description: 'Jonas Brothers',
+    owner: user9Id,
+    public: true,
+    snapshot_id: '5e729e8b3d8d0a432c70b595',
+    type: 'playlist',
+    popularity: 10000000,
+    noOfFollowers: 3000000,
+    trackObjects: [track8Id],
+    category: category2Id,
+    createdAt: Date.now()
+  })
+  await playlist5.save()
+  await playlist5.updateOne({ href: `${process.env.API_URL}/playlists/${playlist5._id}` })
+  await playlist5.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist5._id}/tracks`, total: 1 } })
+  await playlist5.updateOne({ uri: `spotify:playlists:${playlist5._id}` })
+
+  const playlist6 = new Playlist({
+    name: 'Happy Beats',
+    collaborative: false,
+    externalUrl: 'this should be an externalUrl',
+    images: [`${process.env.API_URL}/public/imgs/playlists/Happy_Beats.jpg`],
+    description: 'Jonas Brothers, Ed Sheeran',
+    owner: user7Id,
+    public: true,
+    snapshot_id: '5e729e8b3d8d0a432c70b595',
+    type: 'playlist',
+    popularity: 90000000,
+    noOfFollowers: 6000000,
+    trackObjects: [track8Id, track5Id],
+    category: category4Id,
+    createdAt: Date.now()
+  })
+  await playlist6.save()
+  await playlist6.updateOne({ href: `${process.env.API_URL}/playlists/${playlist6._id}` })
+  await playlist6.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist6._id}/tracks`, total: 2 } })
+  await playlist6.updateOne({ uri: `spotify:playlists:${playlist6._id}` })
+
+  const playlist7 = new Playlist({
+    name: 'Good Vibes',
+    collaborative: false,
+    externalUrl: 'this should be an externalUrl',
+    images: [`${process.env.API_URL}/public/imgs/playlists/Good_Vibes.jpg`],
+    description: 'Imagine Dragons',
+    owner: user8Id,
+    public: true,
+    snapshot_id: '5e729e8b3d8d0a432c70b595',
+    type: 'playlist',
+    popularity: 50000000,
+    noOfFollowers: 3000000,
+    trackObjects: [track2Id],
+    category: category4Id,
+    createdAt: Date.now()
+  })
+  await playlist7.save()
+  await playlist7.updateOne({ href: `${process.env.API_URL}/playlists/${playlist7._id}` })
+  await playlist7.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist7._id}/tracks`, total: 1 } })
+  await playlist7.updateOne({ uri: `spotify:playlists:${playlist7._id}` })
+
+  const playlist8 = new Playlist({
+    name: 'Feeling Good',
+    collaborative: false,
+    externalUrl: 'this should be an externalUrl',
+    images: [`${process.env.API_URL}/public/imgs/playlists/Feeling_Good.jpg`],
+    description: '21 Pilots, Jonas Brothers',
+    owner: user8Id,
+    public: true,
+    snapshot_id: '5e729e8b3d8d0a432c70b595',
+    type: 'playlist',
+    popularity: 40000000,
+    noOfFollowers: 9000000,
+    trackObjects: [track7Id,track8Id],
+    category: category1Id,
+    createdAt: Date.now()
+  })
+  await playlist8.save()
+  await playlist8.updateOne({ href: `${process.env.API_URL}/playlists/${playlist8._id}` })
+  await playlist8.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist8._id}/tracks`, total: 2 } })
+  await playlist8.updateOne({ uri: `spotify:playlists:${playlist8._id}` })
+
+  const playlist9 = new Playlist({
+    name: 'Lo-Fi Beats',
+    collaborative: false,
+    externalUrl: 'this should be an externalUrl',
+    images: [`${process.env.API_URL}/public/imgs/playlists/Lo-Fi_Beats.jpg`],
+    description: '21 Pilots, Imagine_Dragons',
+    owner: user6Id,
+    public: true,
+    snapshot_id: '5e729e8b3d8d0a432c70b595',
+    type: 'playlist',
+    popularity: 80000000,
+    noOfFollowers: 1000000,
+    trackObjects: [track6Id,track7Id,track2Id],
+    category: category1Id,
+    createdAt: Date.now()
+  })
+  await playlist9.save()
+  await playlist9.updateOne({ href: `${process.env.API_URL}/playlists/${playlist9._id}` })
+  await playlist9.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist9._id}/tracks`, total: 3 } })
+  await playlist9.updateOne({ uri: `spotify:playlists:${playlist9._id}` })
+
   process.exit()
 }
