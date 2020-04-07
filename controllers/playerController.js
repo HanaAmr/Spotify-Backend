@@ -37,15 +37,15 @@ const APIFeatures = require('../utils/apiFeatures')
  * User services
  * @const
  */
-const userServices = require('../services/userService')
-const userService = new userServices()
+const UserServices = require('../services/userService')
+const userService = new UserServices()
 
 /**
  * Player services
  * @const
  */
-const playerServices = require('../services/playerService')
-const playerService = new playerServices()
+const PlayerServices = require('../services/playerService')
+const playerService = new PlayerServices()
 
 /**
  * @const

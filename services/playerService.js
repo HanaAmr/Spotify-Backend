@@ -44,9 +44,9 @@ const Player = require('../models/playerModel')
  * User services class
  * @const
  */
-const userServices = require('./userService')
+const UserServices = require('./userService')
 
-const userService = new userServices()
+const userService = new UserServices()
 
 /**
  * Class reprensenting the player services needed to handle the music player
@@ -98,7 +98,6 @@ class playerService {
       newContext.images = contextAlbum.images
       newContext.followersCount = contextAlbum.popularity
     } else if (type === 'artist') {
-      const usr = await User.find({})
       const contextArtist = await User.findOne({ uri: uri })
       newContext.externalUrls = contextArtist.externalUrls
       newContext.href = contextArtist.href

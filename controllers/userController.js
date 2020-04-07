@@ -19,8 +19,8 @@ const catchAsync = require('../utils/catchAsync')
  * User services
  * @const
  */
-const userServices = require('../services/userService')
-const userService = new userServices()
+const UserServices = require('../services/userService')
+const userService = new UserServices()
 
 /**
  * AppError class file
@@ -32,8 +32,8 @@ const AppError = require('./../utils/appError')
  * Mailer services
  * @const
  */
-const mailerServices = require('../services/mailerService')
-const mailerService = new mailerServices()
+const MailerServices = require('../services/mailerService')
+const mailerService = new MailerServices()
 
 /**
  * Resets password for users by sending them emails to change the password.

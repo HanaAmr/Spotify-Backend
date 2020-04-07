@@ -19,7 +19,7 @@ const Context = require('../../models/contextModel')
  * Play history model from the database
  * @const
  */
-const playHistory = require('../../models/playHistoryModel')
+const PlayHistory = require('../../models/playHistoryModel')
 
 /**
  * Album model from the database
@@ -80,27 +80,20 @@ createPlayHistories = async () => {
   // Data needed to seed
   const user1 = await User.find({ name: 'Imagine Dragons' })
   const user2 = await User.find({ name: 'Ed Sheeran' })
-  const user3 = await User.find({ name: 'Amr Diab' })
-  const user4 = await User.find({ name: '21 Pilots' })
   const user5 = await User.find({ name: 'Omar' })
   const user6 = await User.find({ name: 'Ahmed' })
   const user7 = await User.find({ name: 'Hana' })
-  const user8 = await User.find({ name: 'Nada' })
 
   const playlist1 = await Playlist.find({ name: 'Imagine Dragons Radio' })
   const playlist2 = await Playlist.find({ name: 'Happy Hits' })
   const playlist3 = await Playlist.find({ name: 'Chill Bel Masry' })
-  const playlist4 = await Playlist.find({ name: 'Best of 21 Pilots' })
 
   const album1 = await Album.find({ name: 'Evolve' }).select('_id')
   const album2 = await Album.find({ name: 'Divide' }).select('_id')
-  const album3 = await Album.find({ name: 'Sahran' }).select('_id')
-  const album4 = await Album.find({ name: 'Blurry Face' }).select('_id')
 
   const track1 = await Track.find({ name: 'Believer' })
   const track2 = await Track.find({ name: 'Youm Talat' })
   const track3 = await Track.find({ name: 'Perfect' })
-  const track4 = await Track.find({ name: 'Stressed Out' })
   const track5 = await Track.find({ name: 'Ride' })
 
   const context1 = new Context({
@@ -187,7 +180,7 @@ createPlayHistories = async () => {
   await context7.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user2[0]._id}` })
   await context7.updateOne({ uri: `spotify:albums:${user2[0]._id}` })
 
-  const playHistory1 = new playHistory({
+  const playHistory1 = new PlayHistory({
     userId: user1[0]._id,
     context: context1._id,
     playedAt: Date.now(),
@@ -196,7 +189,7 @@ createPlayHistories = async () => {
   await playHistory1.save()
   await context1.updateOne({ playHistoryId: playHistory1._id })
 
-  const playHistory2 = new playHistory({
+  const playHistory2 = new PlayHistory({
     userId: user2[0]._id,
     context: context2._id,
     playedAt: Date.now(),
@@ -205,7 +198,7 @@ createPlayHistories = async () => {
   await playHistory2.save()
   await context2.updateOne({ playHistoryId: playHistory2._id })
 
-  const playHistory3 = new playHistory({
+  const playHistory3 = new PlayHistory({
     userId: user7[0]._id,
     context: context3._id,
     playedAt: Date.now(),
@@ -214,7 +207,7 @@ createPlayHistories = async () => {
   await playHistory3.save()
   await context3.updateOne({ playHistoryId: playHistory3._id })
 
-  const playHistory4 = new playHistory({
+  const playHistory4 = new PlayHistory({
     userId: user2[0]._id,
     context: context4._id,
     playedAt: Date.now(),
@@ -223,7 +216,7 @@ createPlayHistories = async () => {
   await playHistory4.save()
   await context4.updateOne({ playHistoryId: playHistory4._id })
 
-  const playHistory5 = new playHistory({
+  const playHistory5 = new PlayHistory({
     userId: user6[0]._id,
     context: context5._id,
     playedAt: Date.now(),
@@ -232,7 +225,7 @@ createPlayHistories = async () => {
   await playHistory5.save()
   await context5.updateOne({ playHistoryId: playHistory5._id })
 
-  const playHistory6 = new playHistory({
+  const playHistory6 = new PlayHistory({
     userId: user5[0]._id,
     context: context6._id,
     playedAt: Date.now(),
@@ -241,7 +234,7 @@ createPlayHistories = async () => {
   await playHistory6.save()
   await context6.updateOne({ playHistoryId: playHistory6._id })
 
-  const playHistory7 = new playHistory({
+  const playHistory7 = new PlayHistory({
     userId: user5[0]._id,
     context: context7._id,
     playedAt: Date.now(),
