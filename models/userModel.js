@@ -66,8 +66,8 @@ const userSchema = new Schema({
     default: ''
   },
   images: {
-    type: String,
-    default: ''
+    type: [String],
+    default:`${process.env.API_URL}/public/imgs/users/default.jpg`
   },
   followers: {
     type: [String]
