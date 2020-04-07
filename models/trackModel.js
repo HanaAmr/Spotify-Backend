@@ -40,7 +40,10 @@ const trackSchema = new mongoose.Schema({
     required: [true, "A track must have an album"],
     unique: true
   },
-  type: String,
+  type:{
+    type: String,
+    default:'track'
+  }, 
   uri:{
     type: String,
     default: 'spotify:tracks:'
@@ -54,7 +57,8 @@ const trackSchema = new mongoose.Schema({
   },
   externalId: {
     description: 'Known external IDs for the track.',
-    type: String
+    type: String,
+    default:''
   },
   trackNumber: {
     type: Number,

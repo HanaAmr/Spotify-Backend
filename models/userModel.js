@@ -45,23 +45,29 @@ const userSchema = new Schema({
       select: false
     },
     gender: {
-      type: String
+      type: String,
+      default:'male'
     },
     dateOfBirth: {
       type: String,
-      format: Date
+      format: Date,
+      default: '1980-01-01'
     },
     uri: {
-      type: String
+      type: String,
+      default: ''
     },
     href: {
-      type: String
+      type: String,
+      default: ''
     },
-    externalUrls: [{
-      //type: Schema.Types.ObjectId, ref: 'externalUrl'
-    }],
+    externalUrls: {
+      type: [String],
+      default: ''
+    },
     images: {
-      type: String
+      type: String,
+      default: ''
     },  
     followers: {
       type: [String]
@@ -70,7 +76,8 @@ const userSchema = new Schema({
       type: [String]
     },        
     product: {
-      type: String
+      type: String,
+      default: ''
     },
     userStats: [{
       //type: Schema.Types.ObjectId, ref: 'userStats'
@@ -82,11 +89,11 @@ const userSchema = new Schema({
     },
     createdPlaylists: [{
       type: mongoose.Schema.ObjectId,
-      ref: 'playlists'
+      ref: 'Playlist'
     }],
     likedPlaylists: [{
       type: mongoose.Schema.ObjectId,
-      ref: 'playlists'
+      ref: 'Playlist'
     }],
     artistInfo: {
       type: {
@@ -99,7 +106,8 @@ const userSchema = new Schema({
       }
     },
     facebookId: {
-      type: String
+      type: String,
+      default: ''
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date, // Date of expiration of reset password token

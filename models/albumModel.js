@@ -61,7 +61,8 @@ const albumSchema = new mongoose.Schema({
   },
   type: {
     description: 'The object type  “album”',
-    type: String
+    type: String,
+    default: 'album'
   },
   uri: {
     type: String,
@@ -75,7 +76,8 @@ const albumSchema = new mongoose.Schema({
   },
   label: {
     description: 'The label for the album.',
-    type: String
+    type: String,
+    default: ' '
   },
   popularity: {
     description: 'The popularity of the album. The value will be equal to the sum of the likes of the album’s individual tracks.',

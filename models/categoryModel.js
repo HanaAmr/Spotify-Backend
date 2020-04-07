@@ -26,7 +26,8 @@ const categorySchema = new mongoose.Schema({
   },
   href: {
     type: String,
-    //required: [true, ' A link to the Web API endpoint returning full details of the category.']
+    //required: [true, ' A link to the Web API endpoint returning full details of the category.'],
+    default:''
   }
 })
 
