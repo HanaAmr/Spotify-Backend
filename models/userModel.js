@@ -75,10 +75,6 @@ const userSchema = new Schema({
   following: {
     type: [String]
   },
-  product: {
-    type: String,
-    default: ''
-  },
   userStats: [{
     // type: Schema.Types.ObjectId, ref: 'userStats'
   }],
