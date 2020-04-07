@@ -175,7 +175,6 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(Album.find({ artists: req.params.id, totalTracks: { $ne: 0 } }), req.query)
     .filter()
     .sort()
-    .limitFields()
     .paginate()
   
     

@@ -63,7 +63,9 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  req.body.artist = new mongoose.Types.ObjectId(artistId)
+  req.body.artists = []
+  req.body.artists.push(new mongoose.Types.ObjectId(artistId))
+
 
   let newAlbum = await Album.create(req.body)
 
