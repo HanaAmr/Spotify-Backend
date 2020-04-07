@@ -137,18 +137,15 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
 */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-<<<<<<< HEAD
 
   const features = new APIFeatures(Album.find({ artists: artistId }), req.query)
-=======
-  const features = new APIFeatures(Album.find({ artists: artistId }).select('-__v'), req.query)
->>>>>>> df0347b9d85f8d78603d48947fd2867e61cb7982
+
     .filter()
     .sort()
     .limitFields()
     .paginate()
-    console.log(await Album.find({ artist: artistId }).select('-__v'))
-  const albums = await features.query.populate({
+    
+    const albums = await features.query.populate({
     path: 'artists',
     select: '_id name uri href externalUrls images role followers userStats artistInfo' 
 
