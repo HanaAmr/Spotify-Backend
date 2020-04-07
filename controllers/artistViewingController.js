@@ -89,10 +89,11 @@ exports.getArtists = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate()
 
+  const artists= await features.query  
   // console.log(artists)
   res.status(200).json({
     status: 'success',
-    data: features
+    data: artists
   })
 })
 
