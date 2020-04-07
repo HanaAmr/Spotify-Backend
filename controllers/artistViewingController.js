@@ -172,16 +172,14 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
 
-  const features = new APIFeatures(Album.find({ artists: req.params.id, totalTracks: { $ne: 0 } }), req.query)
+  const features = new APIFeatures(Album.find({ artists: req.params.id, totalTracks: { $gt: 0 } }), req.query)
     .filter()
     .sort()
     .paginate()
 
-    const albums =await features.querypopulate({
-
+    const albums =await features.query.populate({
     path: 'artists',
     select: '_id name uri href externalUrls images role followers userStats artistInfo' 
-
   })
 
   if (albums.length === 0) { throw (new AppError('No albums for this artist!', 484)) }

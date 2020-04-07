@@ -4,7 +4,7 @@ app.use(express.json()) // to have body to requests specially for post methods
 const AppError = require('./utils/appError')
 const errorController = require('./controllers/errorController')
 
-app.use(express.static('./public'))
+app.use('/public',express.static('./public'))
 
 // app.get('/', (req, res) => {
 //   res.status(200).json({ message: 'get is successful el7', app: 'spotifycufe' })
