@@ -65,10 +65,11 @@ const userSchema = new Schema({
     type: [String],
     default: ''
   },
-  images: {
+  images: [{
+    
     type: String,
     default: ''
-  },
+  }],
   followers: {
     type: [String]
   },

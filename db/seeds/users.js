@@ -98,7 +98,7 @@ createUsers = async () => {
     artistInfo: {
       biography: "Ed Sheeran was born on February 17, 1991, in Halifax, West Yorkshire, in the United Kingdom.\n When he was young, he began playing guitar, showing early promise as a musical talent. When he was 11, Sheeran met singer-songwriter Damien Rice backstage at one of Rice's shows, and the young musician found added inspiration.",
       popularity: 5000,
-      genres: ['pop'],
+      genres: ['pop','pop rock'],
       albums: [album2ID],
     }
   })
@@ -116,7 +116,7 @@ createUsers = async () => {
     artistInfo:{
       biography: 'Amr Diab (Amr Abd-Albaset Abd-Alaziz Diab), born on the 11th of October 1961 in Port Said, Egypt, he is an Egyptian Singer, he is known as the Father of Mediterranean Music. ... Amr Diab has earned his bachelor degree in Arabic Music and graduated from the Cairo Academy of Arts in 1986.',
       popularity: 1000000,
-      genres:['Arabic pop'],
+      genres:['Arabic pop','pop rock'],
       albums:  []
     }
   })
@@ -134,7 +134,7 @@ createUsers = async () => {
     artistInfo:{
       biography: 'Twenty One Pilots is a Grammy Award-winning American musical duo that originates from Columbus, Ohio. The band was formed in 2009 by Tyler Joseph along with former members Nick Thomas and Chris Salih, and currently consists of vocalist/keyboardist Tyler Joseph and drummer Josh Dun. ',
       popularity:5000000,
-      genres:['Alternative hip hop','Electropop','Indie pop','Pop rock', 'Alternative rock'],
+      genres:['Alternative hip hop','Electropop','Indie pop','Pop rock', 'Alternative rock','pop rock'],
       albums:  []
     }
   })
