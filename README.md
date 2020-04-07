@@ -7,7 +7,7 @@
 * [Pre-requisites for installation](#pre-requisites-for-installation)
 * [Package installation](#package-installation)
 * [Pre-requisites for running](#pre-requisites-for-running)
-* [Unit tests](#unit-tests)]
+* [Unit tests](#unit-tests)
 * [How to run for developers](#how-to-run-for-developers)
 * [How to run for production](#how-to-run-for-production)
 * [Functional documenation generation](#functional-documentation-generation)
@@ -31,26 +31,26 @@
 
 	       # Using Ubuntu
 	       $ curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-		   $ sudo apt-get install -y nodejs
+	       $ sudo apt-get install -y nodejs
 		   
-		   # Using Debian, as root
-		   $ curl -sL https://deb.nodesource.com/setup_13.x | bash -
-		   $ apt-get install -y nodejs
+	       # Using Debian, as root
+	       $ curl -sL https://deb.nodesource.com/setup_13.x | bash -
+	       $ apt-get install -y nodejs
 
  
  2. **MongoDB**:
 	 1.  Import the public key used by the package management system
 	  `wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -`
 	  If you receive an error indicating that `gnupg` is not installed, you can:
-		 1. Install `gnupg` and its required libraries:
-		 `$ sudo apt-get install gnupg`
-		 `$ wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -`
-	       2. Create a list file for MongoDB
-	       `$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list`
-	       3.  Reload local package database
-	          `$ sudo apt-get update`
-	       4. Install the MongoDB packages
-	       `sudo apt-get install -y mongodb-org`
+		 1. Install `gnupg` and its required libraries:  
+		 `$ sudo apt-get install gnupg`  
+		 `$ wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -`  
+	       2. Create a list file for MongoDB  
+	       `$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list`  
+	       3.  Reload local package database  
+	          `$ sudo apt-get update`  
+	       4. Install the MongoDB packages  
+	       `sudo apt-get install -y mongodb-org`  
 							
 ## Package installation 
 Run the following command to install Express and all other needed packages.
