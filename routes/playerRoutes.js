@@ -21,6 +21,29 @@ const router = express.Router()
  */
 const playerController = require('../controllers/playerController')
 
+
+
+/**
+ * Route for adding a track to recently played
+ * @name post/me/player/recentlyPlayed
+ * @function
+ * @memberof module:routers/player
+ * @inner
+ * @param {String} Path - The Express path
+ * @param {Function} addToRecentlyPlayed - Adds currently played track to the recently played list for the user.
+ */
+router
+  .route('/recentlyPlayed')
+  .post(playerController.addToRecentlyPlayed)
+
+
+
+
+
+
+
+
+
 /**
  * Route for adding a track to recently played
  * @name post/me/player/recentlyPlayed

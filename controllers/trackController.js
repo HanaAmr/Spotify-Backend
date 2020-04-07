@@ -102,7 +102,6 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
  */
 exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
   const track = await Track.findById(req.params.trackId)
-  console.log(track)
   //Check authorization first
   const authorized = await playerService.validateTrack(req.headers.authorization)
   if(authorized){  //Send file if authorize
