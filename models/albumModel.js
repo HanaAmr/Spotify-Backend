@@ -92,10 +92,10 @@ const albumSchema = new mongoose.Schema({
     default: Date.now()
   },
   artists:
-    {
+    [{
       type: mongoose.Schema.ObjectId,
       ref: 'User'
-    },
+    }],
   totalTracks: {
     description: 'The total number of tracks inside the album',
     type: Number,
