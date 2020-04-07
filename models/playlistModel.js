@@ -66,11 +66,11 @@ const playlistSchema = new mongoose.Schema({
     type: Boolean,
     description: 'The playlist’s public/private status true the playlist is public, false the playlist is private, null the playlist status is not relevant.'
   },
-  snapshot_id: {
+  snapshotId: {
     type: String,
     description: 'The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version.'
   },
-  external_urls: {
+  externalUrls: {
     description: 'an external URL object  Known external URLs for this playlist.',
     type: [String]
   },

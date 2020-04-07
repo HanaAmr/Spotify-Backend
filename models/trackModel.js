@@ -52,7 +52,7 @@ const trackSchema = new mongoose.Schema({
   externalUrls:{
       type: [String]
   },
-  external_ID: {
+  externalId: {
     description: 'Known external IDs for the track.',
     type: String
   },
