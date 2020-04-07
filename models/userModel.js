@@ -17,6 +17,9 @@ const validator = require('validator')
  */
 const bcrypt = require('bcryptjs')
 
+const dotenv = require('dotenv')
+dotenv.config({ path: '.env' })
+
 /**
  * User object schema
  * @class user
@@ -67,7 +70,7 @@ const userSchema = new Schema({
   },
   images: {
     type: [String],
-    default:`${process.env.API_URL}/public/imgs/users/default.jpg`
+    default:`http://138.91.114.14/api/public/imgs/users/default.jpg`
   },
   followers: {
     type: [String]
