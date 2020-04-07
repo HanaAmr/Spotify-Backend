@@ -63,7 +63,6 @@ const Track = require('../../models/trackModel')
  */
 const playerController = require('../../controllers/playerController')
 
-
 /**
  * User service
  * @const
@@ -135,8 +134,7 @@ describe('Adding to recently played list of a user', () => {
     // Mock the userServices get user id function to return the testing user id.
     sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
   })
-  
-  
+
   // Drop the whole users, playHistory collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
@@ -150,7 +148,7 @@ describe('Adding to recently played list of a user', () => {
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
-        contextType: 'artist', 
+        contextType: 'artist',
         contextUri: 'abcd',
         trackUri: '1234'
       }
@@ -158,7 +156,7 @@ describe('Adding to recently played list of a user', () => {
 
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     await playerController.addToRecentlyPlayed(request, response)
-    response.on('end',  async () => {
+    response.on('end', async () => {
       try {
         const count = await PlayHistory.countDocuments()
         expect(count).toEqual(1)
@@ -180,7 +178,7 @@ describe('Adding to recently played list of a user', () => {
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
-        contextType: 'artist', 
+        contextType: 'artist',
         contextUri: 'abcd',
         trackUri: '12345'
       }
@@ -207,7 +205,7 @@ describe('Adding to recently played list of a user', () => {
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
-        contextType: 'artist', 
+        contextType: 'artist',
         contextUri: 'abcd',
         trackUri: 'invalidUri'
       }

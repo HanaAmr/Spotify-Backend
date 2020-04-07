@@ -30,7 +30,6 @@ const authController = require('./../controllers/authController')
  */
 router.use(authController.protect)
 
-
 /**
  * Route for requesting to get top playlists
  * @name get/playlists/top

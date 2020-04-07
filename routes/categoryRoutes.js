@@ -7,7 +7,7 @@
  * Category routes.
  * @type {object}
  * @const
- */ 
+ */
 
 /**
  * express module
@@ -36,7 +36,6 @@ const authController = require('./../controllers/authController')
  * @inner
  */
 router.use(authController.protect)
-
 
 /**
  * Route for requesting categories

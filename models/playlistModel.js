@@ -10,7 +10,6 @@
  */
 const mongoose = require('mongoose')
 
-
 /**
  * Playlist schema
  *  @alias module:models/playlist
@@ -32,7 +31,7 @@ const mongoose = require('mongoose')
  * @property {object} category category of the playlist
  * @property {Number} noOfFollowers totalTracks of the playlist
  * @const
- */ 
+ */
 const playlistSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -41,36 +40,43 @@ const playlistSchema = new mongoose.Schema({
   },
   collaborative: {
     type: Boolean,
-    description: 'Returns true if context is not search and the owner allows other users to modify the playlist. Otherwise returns false.'
+    description: 'Returns true if context is not search and the owner allows other users to modify the playlist. Otherwise returns false.',
+    default: false
   },
   description: {
     type: String,
-    description: 'The playlist description.Returns the names of the artists in this playlist'
+    description: 'The playlist description.Returns the names of the artists in this playlist',
+    default: ''
   },
   images: [String],
   type: {
     description: 'The object type  “playlist”',
-    type: String
+    type: String,
+    default: 'playlist'
   },
   uri: {
     type: String,
-    //required: true,
-    description: 'The Spotify URI for the playlist.'
+    // required: true,
+    description: 'The Spotify URI for the playlist.',
+    default: ''
   },
   href: {
     type: String,
-    //required: true,
-    description: 'A link to the Web API endpoint providing full details of the playlist.'
+    // required: true,
+    description: 'A link to the Web API endpoint providing full details of the playlist.',
+    default: ''
   },
   public: {
     type: Boolean,
-    description: 'The playlist’s public/private status true the playlist is public, false the playlist is private, null the playlist status is not relevant.'
+    description: 'The playlist’s public/private status true the playlist is public, false the playlist is private, null the playlist status is not relevant.',
+    default: true
   },
-  snapshot_id: {
+  snapshotId: {
     type: String,
-    description: 'The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version.'
+    description: 'The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version.',
+    default: ''
   },
-  external_urls: {
+  externalUrls: {
     description: 'an external URL object  Known external URLs for this playlist.',
     type: [String]
   },
@@ -102,8 +108,8 @@ const playlistSchema = new mongoose.Schema({
   trackObjects: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Track',
-      
+      ref: 'Track'
+
     }
   ],
   noOfFollowers: {
@@ -138,8 +144,6 @@ const playlistSchema = new mongoose.Schema({
 
 //   next()
 // })
-
-
 
 const Playlist = mongoose.model('Playlist', playlistSchema)
 

@@ -28,7 +28,6 @@ dotenv.config()
  */
 const mongoose = require('mongoose')
 
-
 /**
  * mongoose for db management
  * @const
@@ -55,14 +54,12 @@ const userServices = require('../../services/userService')
  */
 const mailerServices = require('../../services/mailerService')
 
-
 /**
  * express module
  * App error
  * @const
  */
 const appError = require('../../utils/appError')
-
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
@@ -74,8 +71,8 @@ if (process.env.NODE_ENV === 'test') {
 
 // Testing userService get user id
 describe('userService get user id functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
+  let authToken = 'token'
+  let id = 'testid'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     await mongoose.connection.collection('users').deleteMany({})
@@ -89,9 +86,9 @@ describe('userService get user id functionality', () => {
     await validUser.save()
     // get the id of the document in the db to use it to get authorization token
     await User.findOne({}, (err, user) => {
-        id = user._id
-        authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      })
+      id = user._id
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
   })
 
   // Drop the whole users collection after finishing testing
@@ -112,14 +109,12 @@ describe('userService get user id functionality', () => {
     const userService = new userServices()
     await expect(userService.getUserId('invalidtoken')).rejects.toThrow(appError)
   })
-
-  
 })
 
 // Testing userService get user role
 describe('userService get user role functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
+  let authToken = 'token'
+  let id = 'testid'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     await mongoose.connection.collection('users').deleteMany({})
@@ -133,9 +128,9 @@ describe('userService get user role functionality', () => {
     await validUser.save()
     // get the id of the document in the db to use it to get authorization token
     await User.findOne({}, (err, user) => {
-        id = user._id
-        authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      })
+      id = user._id
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
   })
 
   // Drop the whole users collection after finishing testing
@@ -156,14 +151,12 @@ describe('userService get user role functionality', () => {
     const userService = new userServices()
     await expect(userService.getUserRole('invalidtoken')).rejects.toThrow(appError)
   })
-
-  
 })
 
 // Testing userService get user email
 describe('userService get user email functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
+  let authToken = 'token'
+  let id = 'testid'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     await mongoose.connection.collection('users').deleteMany({})
@@ -177,9 +170,9 @@ describe('userService get user email functionality', () => {
     await validUser.save()
     // get the id of the document in the db to use it to get authorization token
     await User.findOne({}, (err, user) => {
-        id = user._id
-        authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      })
+      id = user._id
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
   })
 
   // Drop the whole users collection after finishing testing
@@ -200,6 +193,4 @@ describe('userService get user email functionality', () => {
     const userService = new userServices()
     await expect(userService.getUserMail('invalidtoken')).rejects.toThrow(appError)
   })
-
-  
 })

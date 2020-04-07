@@ -18,8 +18,8 @@ class mailerService {
   /**
    * Constructs the mailer service
    * @constructor
-   * @param {*} nodemailer 
-   * @param {*} crypto 
+   * @param {*} nodemailer
+   * @param {*} crypto
    */
   constructor (nodemailer, crypto) {
     this.nodemailer = nodemailer

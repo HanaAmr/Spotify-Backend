@@ -10,7 +10,6 @@
  * @const
  */
 
-
 /**
  * Play History model from the database
  * @const
@@ -21,8 +20,6 @@ const PlayHistory = require('../models/playHistoryModel')
  * @const
  */
 const Track = require('../models/trackModel')
-
-
 
 /**
  * catchAsync utils file
@@ -40,27 +37,26 @@ const APIFeatures = require('../utils/apiFeatures')
  * User services
  * @const
  */
-const userServices = require('../services/userService')
-const userService = new userServices()
-
+const UserServices = require('../services/userService')
+const userService = new UserServices()
 
 /**
  * Player services
  * @const
  */
-const playerServices = require('../services/playerService')
-const playerService = new playerServices()
+const PlayerServices = require('../services/playerService')
+const playerService = new PlayerServices()
 
 /**
  * @const
  */
 const AppError = require('../utils/appError')
 
-/**
- * Pagination file
- * @const
- */
-const paginatedResults = require('./../utils/pagination')
+// /**
+//  * Pagination file
+//  * @const
+//  */
+// const paginatedResults = require('./../utils/pagination')
 
 /**
  * Adds a track to the recently played list
@@ -74,12 +70,12 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
 
   // Make sure list of recently played is freed if it has reached the limit
   await playerService.deleteOneRecentlyPlayedIfFull(req.headers.authorization)
-  
+
   // TODO: Instead of getting the context from the request, we should have it saved
   // when the user started playing
-  //const newContext = await playerService.getConext(req.headers.authorization)
+  // const newContext = await playerService.getConext(req.headers.authorization)
 
-  //For now, we generate the context here
+  // For now, we generate the context here
   const newContext = await playerService.generateContext(req.body.contextUri, req.body.contextType)
   newContext.save()
   const track = await Track.find().where('uri').equals(req.body.trackUri).select('_id')
@@ -118,8 +114,6 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
     }
   })
 })
-
-
 
 // /**
 //  * A function that is used to get the recently played list

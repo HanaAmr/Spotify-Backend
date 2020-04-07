@@ -63,7 +63,6 @@ if (process.env.NODE_ENV === 'test') {
   throw new Error('Can\'t connect to db, make sure you run in test environment!' + process.env.NODE_ENV)
 }
 
-
 // Testing assigning the config code for upgrade to user
 describe('userService assigning config code to user functionality', () => {
   // the authorization token needed to test
@@ -94,24 +93,23 @@ describe('userService assigning config code to user functionality', () => {
 
   // Testing successfully assigning the config code to a user
   it('Should assign the confiramtion code to an existing user successfully', async () => {
-        expect.assertions(1)
-        const userService = new userServices()
-        const token = 'a random token'
-        await userService.assignUpgradeConfirmCode(authToken,token,'premium')
-        const user = await User.find({'email':'omar@email.com', 'upgradeToken':token, upgradeTokenExpires: { $gt: Date.now() }})
-        expect(user).toBeDefined()  
-  })
-   // Testing assigning the token to a non existent user
-   it('Shouldn\'t assign the token string as it\'s an non-existent user', async () => {
+    expect.assertions(1)
     const userService = new userServices()
     const token = 'a random token'
-    //making authToken invalid
+    await userService.assignUpgradeConfirmCode(authToken, token, 'premium')
+    const user = await User.find({ email: 'omar@email.com', upgradeToken: token, upgradeTokenExpires: { $gt: Date.now() } })
+    expect(user).toBeDefined()
+  })
+  // Testing assigning the token to a non existent user
+  it('Shouldn\'t assign the token string as it\'s an non-existent user', async () => {
+    const userService = new userServices()
+    const token = 'a random token'
+    // making authToken invalid
     const id = mongoose.Types.ObjectId()
-    authToken = 'Bearer ' + jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE_IN})
-    await expect(userService.assignUpgradeConfirmCode(authToken,token, 'premium')).rejects.toThrow(appError)
+    authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    await expect(userService.assignUpgradeConfirmCode(authToken, token, 'premium')).rejects.toThrow(appError)
   })
 })
-
 
 // Testing userService change user role after confirming upgrade code
 describe('userService change user role after confirming upgrade code', () => {
@@ -148,15 +146,15 @@ describe('userService change user role after confirming upgrade code', () => {
   it('Should change the role to premium successfully', async () => {
     expect.assertions(1)
     const userService = new userServices()
-    await userService.upgradeUserRole(authToken,'atoken')
-    const user = await User.findOne({email: 'omar@email.com', role: 'premium'})
+    await userService.upgradeUserRole(authToken, 'atoken')
+    const user = await User.findOne({ email: 'omar@email.com', role: 'premium' })
     expect(user.role).toEqual('premium')
   })
 
   // Testing changing the role to premium with non valid confirmation code
   it('Should change the role to premium successfully', async () => {
     const userService = new userServices()
-    await expect(userService.upgradeUserRole(authToken,'notvalid')).rejects.toThrow(appError)
+    await expect(userService.upgradeUserRole(authToken, 'notvalid')).rejects.toThrow(appError)
   })
 })
 
@@ -196,16 +194,14 @@ describe('userService change user role to normal after confirming cancellation c
   it('Should change the role to premium successfully', async () => {
     expect.assertions(1)
     const userService = new userServices()
-    await userService.changeRoleToUser(authToken,'atoken')
-    const user = await User.findOne({email: 'omar@email.com', role: 'user'})
+    await userService.changeRoleToUser(authToken, 'atoken')
+    const user = await User.findOne({ email: 'omar@email.com', role: 'user' })
     expect(user.role).toEqual('user')
   })
 
   // Testing changing the role to premium with non valid confirmation code
   it('Should change the role to premium successfully', async () => {
     const userService = new userServices()
-    await expect(userService.changeRoleToUser(authToken,'notvalid')).rejects.toThrow(appError)
+    await expect(userService.changeRoleToUser(authToken, 'notvalid')).rejects.toThrow(appError)
   })
 })
-
-  
