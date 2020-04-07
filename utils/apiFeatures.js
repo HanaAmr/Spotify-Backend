@@ -85,7 +85,7 @@ class APIFeatures {
       this.query = this.query.select('-__v -trackObjects')
       this.query.populate({
         path: 'owner',
-        select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+        select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
         // select: 'name'
       })
     }
@@ -125,7 +125,7 @@ class APIFeatures {
         if (fields.includes('artists')) {
           this.query.populate({
             path: 'artists',
-            select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+            select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
 
           })
         }
@@ -135,7 +135,7 @@ class APIFeatures {
     } else {
       this.query = this.query.select('-__v -audioFilePath')
       this.query.populate({ path: 'album', select: '-artists -__v' })
-      this.query.populate({ path: 'artists', select: '_id name uri href externalUrls images type followers userStats userArtist' })
+      this.query.populate({ path: 'artists', select: '_id name uri href externalUrls images role followers userStats artistInfo' })
     }
     return this
   }

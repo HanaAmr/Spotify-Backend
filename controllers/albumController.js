@@ -120,7 +120,7 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
 
   const tracksArray = await features.query.select('-album -audioFilePath').populate({
     path: 'artists',
-    select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+    select: '_id name uri href externalUrls images type followers userStats artistInfo' // user public data
 
   })
 
@@ -165,7 +165,7 @@ exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  not paginat
   const features = new APIFeatures(Album.find().select('-__v'), req.query).sort().paginate()
   const albums = await features.query.populate({
     path: 'artists',
-    select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+    select: '_id name uri href externalUrls images type followers userStats artistInfo' // user public data
 
   })
 
