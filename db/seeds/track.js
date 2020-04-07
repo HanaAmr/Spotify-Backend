@@ -1,9 +1,9 @@
-/** Seeder to have initial data for users
- * @module seeders/tracks
- * @requires express
- */
+// /** Seeder to have initial data for users
+//  * @module seeders/tracks
+//  * @requires express
+//  */
 
-const express = require('express')
+//const express = require('express')
 /**
  * express module
  * Track model from the database
@@ -24,7 +24,7 @@ const Album = require('../../models/albumModel')
 const User = require('../../models/userModel')
 
 // const app = express()
-const app = require('./../../app')
+//const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -113,7 +113,7 @@ createTracks = async () => {
     audioFilePath: 'tracks/track1.mp3'
   })
   await track1.save()
-  await track1.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track1._id}` })
+  await track1.updateOne({ href: `${process.env.API_URL}/tracks/${track1._id}` })
   await track1.updateOne({ uri: `spotify:tracks:${track1._id}` })
 
   const track2 = new Track({
@@ -130,7 +130,7 @@ createTracks = async () => {
 
   })
   await track2.save()
-  await track2.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track2._id}` })
+  await track2.updateOne({ href: `${process.env.API_URL}/tracks/${track2._id}` })
   await track2.updateOne({ uri: `spotify:tracks:${track2._id}` })
 
   const track3 = new Track({
@@ -147,7 +147,7 @@ createTracks = async () => {
 
   })
   await track3.save()
-  await track3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track3._id}` })
+  await track3.updateOne({ href: `${process.env.API_URL}/tracks/${track3._id}` })
   await track3.updateOne({ uri: `spotify:tracks:${track3._id}` })
 
   const track4 = new Track({
@@ -164,7 +164,7 @@ createTracks = async () => {
 
   })
   await track4.save()
-  await track4.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track4._id}` })
+  await track4.updateOne({ href: `${process.env.API_URL}/tracks/${track4._id}` })
   await track4.updateOne({ uri: `spotify:tracks:${track4._id}` })
 
   const track5 = new Track({
@@ -180,7 +180,7 @@ createTracks = async () => {
     audioFilePath: 'tracks/track5.mp3'
   })
   await track5.save()
-  await track5.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track5._id}` })
+  await track5.updateOne({ href: `${process.env.API_URL}/tracks/${track5._id}` })
   await track5.updateOne({ uri: `spotify:tracks:${track5._id}` })
 
   const track6 = new Track({
@@ -196,7 +196,7 @@ createTracks = async () => {
     audioFilePath: 'tracks/track6.mp3'
   })
   await track6.save()
-  await track6.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track6._id}` })
+  await track6.updateOne({ href: `${process.env.API_URL}/tracks/${track6._id}` })
   await track6.updateOne({ uri: `spotify:tracks:${track6._id}` })
 
   const track7 = new Track({
@@ -212,7 +212,7 @@ createTracks = async () => {
     audioFilePath: 'tracks/track7.mp3'
   })
   await track7.save()
-  await track7.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/tracks/${track7._id}` })
+  await track7.updateOne({ href: `${process.env.API_URL}/tracks/${track7._id}` })
   await track7.updateOne({ uri: `spotify:tracks:${track7._id}` })
   process.exit()
 }
