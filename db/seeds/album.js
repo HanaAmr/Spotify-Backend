@@ -1,9 +1,9 @@
-/** Seeder to have initial data for users
- * @module seeders/albums
- * @requires express
- */
+// /** Seeder to have initial data for users
+//  * @module seeders/albums
+//  * @requires express
+//  */
 
-const express = require('express')
+// const express = require('express')
 /**
  * express module
  * Album model from the database
@@ -69,7 +69,7 @@ createAlbums = async () => {
 
   const album1 = new Album({
     name: 'Evolve',
-    image: 'http://138.91.114.14/api/public/imgs/Evolve.jpg',
+    image: `${process.env.API_URL}/public/imgs/albums/Evolve.jpg`,
     albumType: 'album',
     externalUrls: 'this should be an externalUrl',
     type: 'album',
@@ -82,12 +82,12 @@ createAlbums = async () => {
     popularity: 300000
   })
   await album1.save()
-  await album1.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album1._id}` })
+  await album1.updateOne({ href: `${process.env.API_URL}/albums/${album1._id}` })
   await album1.updateOne({ uri: `spotify:albums:${album1._id}` })
 
   const album2 = new Album({
     name: 'Divide',
-    image: 'http://138.91.114.14/api/public/imgs/Divide.jpg',
+    image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
     albumType: 'album',
     externalUrls: 'this should be an externalUrl',
     type: 'album',
@@ -100,12 +100,12 @@ createAlbums = async () => {
     popularity: 700000
   })
   await album2.save()
-  await album2.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album2._id}` })
+  await album2.updateOne({ href: `${process.env.API_URL}/albums/${album2._id}` })
   await album2.updateOne({ uri: `spotify:albums:${album2._id}` })
 
   const album3 = new Album({
     name: 'Sahran',
-    image: 'http://138.91.114.14/api/public/imgs/Sahran.jpg',
+    image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
     albumType: 'album',
     externalUrls: 'this should be an externalUrl',
     type: 'album',
@@ -118,12 +118,12 @@ createAlbums = async () => {
     popularity: 400000
   })
   await album3.save()
-  await album3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album3._id}` })
+  await album3.updateOne({ href: `${process.env.API_URL}/albums/${album3._id}` })
   await album3.updateOne({ uri: `spotify:albums:${album3._id}` })
 
   const album4 = new Album({
     name: 'Blurry Face',
-    image: 'http://138.91.114.14/api/public/imgs/Blurryface.jpg',
+    image: `${process.env.API_URL}/public/imgs/albums/Blurryface.jpg`,
     albumType: 'album',
     externalUrls: 'this should be an externalUrl',
     type: 'album',
@@ -136,7 +136,7 @@ createAlbums = async () => {
     popularity: 100000
   })
   await album4.save()
-  await album4.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album4._id}` })
+  await album4.updateOne({ href: `${process.env.API_URL}/albums/${album4._id}` })
   await album4.updateOne({ uri: `spotify:albums:${album4._id}` })
   process.exit()
 }

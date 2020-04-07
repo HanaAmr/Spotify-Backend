@@ -57,7 +57,8 @@ const catchAsync = require('./../utils/catchAsync')
 * @param {next} - The next function in the middleware
 */
 exports.addAlbum = catchAsync(async (req, res, next) => {
-  if (req.file) { req.body.image = `${process.env.API_URL}/${req.file.filename} `}
+
+  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename} `}
 
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 

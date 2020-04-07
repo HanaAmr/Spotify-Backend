@@ -14,7 +14,7 @@ const Track = require('../../models/trackModel')
 const User = require('../../models/userModel')
 const Category = require('../../models/categoryModel')
 // const app = express()
-const app = require('./../../app')
+//const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -129,7 +129,7 @@ createPlaylists = async () => {
     name: 'Imagine Dragons Radio',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Imagine_Dragons.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Imagine_Dragons.jpg`],
     description: 'Imagine Dragons',
     owner: user1Id,
     public: true,
@@ -142,15 +142,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist1.save()
-  await playlist1.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist1._id}` })
-  await playlist1.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist1._id}/tracks`, total: 2 } })
+  await playlist1.updateOne({ href: `${process.env.API_URL}/playlists/${playlist1._id}` })
+  await playlist1.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist1._id}/tracks`, total: 2 } })
   await playlist1.updateOne({ uri: `spotify:playlists:${playlist1._id}` })
 
   const playlist2 = new Playlist({
     name: 'Happy Hits',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Happy_Hits.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Happy_Hits.jpg`],
     description: 'Ed Sheeran,Imagine Dragons',
     owner: user2Id,
     public: true,
@@ -163,15 +163,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist2.save()
-  await playlist2.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist2._id}` })
-  await playlist2.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist2._id}/tracks`, total: 2 } })
+  await playlist2.updateOne({ href: `${process.env.API_URL}/playlists/${playlist2._id}` })
+  await playlist2.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist2._id}/tracks`, total: 2 } })
   await playlist2.updateOne({ uri: `spotify:playlists:${playlist2._id}` })
 
   const playlist3 = new Playlist({
     name: 'Chill Bel Masry',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Chill_Bel_Masry.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Chill_Bel_Masry.jpg`],
     description: 'Amr Diab',
     owner: user3Id,
     public: true,
@@ -184,15 +184,15 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist3.save()
-  await playlist3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist3._id}` })
-  await playlist3.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist3._id}/tracks`, total: 1 } })
+  await playlist3.updateOne({ href: `${process.env.API_URL}/playlists/${playlist3._id}` })
+  await playlist3.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist3._id}/tracks`, total: 1 } })
   await playlist3.updateOne({ uri: `spotify:playlists:${playlist3._id}` })
 
   const playlist4 = new Playlist({
     name: 'Best of 21 Pilots',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
-    images: ['http://138.91.114.14/api/public/imgs/Best_of_21_Pilots.jpg'],
+    images: [`${process.env.API_URL}/public/imgs/playlists/Best_of_21_Pilots.jpg`],
     description: '21 Pilots',
     owner: user4Id,
     public: true,
@@ -205,8 +205,8 @@ createPlaylists = async () => {
     createdAt: Date.now()
   })
   await playlist4.save()
-  await playlist4.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}` })
-  await playlist4.updateOne({ tracks: { href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist4._id}/tracks`, total: 3 } })
+  await playlist4.updateOne({ href: `${process.env.API_URL}/playlists/${playlist4._id}` })
+  await playlist4.updateOne({ tracks: { href: `${process.env.API_URL}/playlists/${playlist4._id}/tracks`, total: 3 } })
   await playlist4.updateOne({ uri: `spotify:playlists:${playlist4._id}` })
   process.exit()
 }

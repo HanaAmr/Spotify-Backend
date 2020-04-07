@@ -52,11 +52,11 @@ const playerService = new PlayerServices()
  */
 const AppError = require('../utils/appError')
 
-/**
- * Pagination file
- * @const
- */
-const paginatedResults = require('./../utils/pagination')
+// /**
+//  * Pagination file
+//  * @const
+//  */
+// const paginatedResults = require('./../utils/pagination')
 
 /**
  * Adds a track to the recently played list
