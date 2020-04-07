@@ -42,7 +42,6 @@ const handleValidationErrorDB = err => {
   return new AppError(message, 400)
 }
 
-
 /**
 * A function for handling mongoose validation errors in production environment
 * @function
@@ -51,7 +50,6 @@ const handleValidationErrorDB = err => {
 * @param {Respond} - The response sent
 */
 const handleMongoError = err => new AppError('Input data must be unique', 400)
-
 
 /**
 * A function for handling jwt errors in production environment
@@ -62,7 +60,6 @@ const handleMongoError = err => new AppError('Input data must be unique', 400)
 */
 const handleJWTError = err => new AppError('Invalid token. Please log in again', 401)
 
-
 /**
 * A function for handling expired token errors in production environment
 * @function
@@ -71,7 +68,6 @@ const handleJWTError = err => new AppError('Invalid token. Please log in again',
 * @param {Respond} - The response sent
 */
 const handleJWTExpiredError = err => new AppError('Your token has expired. Please log in again', 401)
-
 
 /**
 * A function for handling errors in development environment
@@ -103,7 +99,7 @@ const sendErrorProd = (err, res) => { //    Operational, trusted error: send mes
       message: err.message
     })
   } else {
-    //console.error('ERROR ', err)
+    // console.error('ERROR ', err)
     res.status(500).json({
       status: 'error',
       message: 'Something went wrong!'

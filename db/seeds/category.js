@@ -3,16 +3,15 @@
  * @requires express
  */
 
-
-const express = require('express')
+// const express = require('express')
 /**
  * express module
  * Category model from the database
  * @const
  */
 const Category = require('../../models/categoryModel')
-//const app = express()
-const app = require('./../../app')
+// const app = express()
+// const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -48,32 +47,29 @@ db.on('error', err => {
  */
 createCategories = async () => {
   const category1 = new Category({
-    name: 'Jazz',
+    name: 'Jazz'
   })
   await category1.save()
-  await category1.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category1._id}/playlists`})
-
+  await category1.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/browse/categories/${category1._id}/playlists` })
 
   const category2 = new Category({
-    name: 'Happy',
+    name: 'Happy'
   })
   await category2.save()
-  await category2.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category2._id}/playlists`})
+  await category2.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/browse/categories/${category2._id}/playlists` })
 
   const category3 = new Category({
-    name: 'Arabic',
+    name: 'Arabic'
   })
   await category3.save()
-  await category3.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category3._id}/playlists`})
+  await category3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/browse/categories/${category3._id}/playlists` })
 
   const category4 = new Category({
-    name: 'Pop',
+    name: 'Pop'
   })
   await category4.save()
-  await category4.updateOne({href:`http://127.0.0.1:${process.env.PORT}/browse/categories/${category4._id}/playlists`})
+  await category4.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/browse/categories/${category4._id}/playlists` })
   process.exit()
-
 }
 
-
-//Sequence : category -> user -> album -> track -> playlist
+// Sequence : category -> user -> album -> track -> playlist

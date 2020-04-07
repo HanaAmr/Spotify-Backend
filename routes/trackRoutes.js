@@ -54,7 +54,7 @@ router
   .route('/')
   .get(trackController.getTracks)
 
-  /**
+/**
  * Route for requesting to get a track mp3 file
  * @name get/tracks/:trackId
  * @function
@@ -63,7 +63,7 @@ router
  * @param {string} trackId - Track ID
  */
 router
-.route('/:trackId/audio')
-.get(trackController.getOneTrackAudioFile)
+  .route('/:trackId/audio')
+  .get(trackController.getOneTrackAudioFile)
 
 module.exports = router

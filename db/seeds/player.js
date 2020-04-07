@@ -16,7 +16,6 @@
  */
 const Player = require('../../models/playerModel')
 
-
 /**
  * User model from the database
  * @const
@@ -35,7 +34,6 @@ const dotenv = require('dotenv')
  * @const
  */
 const mongoose = require('mongoose')
-
 
 // Configuring environment variables to use them
 dotenv.config({ path: '../../.env' })
@@ -59,17 +57,14 @@ db.on('error', err => {
  *
  */
 createPlayers = async () => {
-
-
-    let user1= await User.find({'name':'Imagine Dragons'})
-    let user2= await User.find({'name':'Ed Sheeran'})
-    let user3= await User.find({'name':'Amr Diab'})
-    let user4= await User.find({'name':'21 Pilots'})
-    let user5= await User.find({'name':'Omar'})
-    let user6= await User.find({'name':'Ahmed'})
-    let user7= await User.find({'name':'Hana'})
-    let user8= await User.find({'name':'Nada'})
-
+  const user1 = await User.find({ name: 'Imagine Dragons' })
+  const user2 = await User.find({ name: 'Ed Sheeran' })
+  const user3 = await User.find({ name: 'Amr Diab' })
+  const user4 = await User.find({ name: '21 Pilots' })
+  const user5 = await User.find({ name: 'Omar' })
+  const user6 = await User.find({ name: 'Ahmed' })
+  const user7 = await User.find({ name: 'Hana' })
+  const user8 = await User.find({ name: 'Nada' })
 
   const player1 = new Player({
     userId: user1[0]._id
@@ -110,7 +105,6 @@ createPlayers = async () => {
     userId: user8[0]._id
   })
   await player8.save()
-  
+
   process.exit()
-  
 }

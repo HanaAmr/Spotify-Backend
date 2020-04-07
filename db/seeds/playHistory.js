@@ -42,7 +42,6 @@ const Track = require('../../models/trackModel')
  */
 const User = require('../../models/userModel')
 
-
 /**
  * dotenv to access environment constants
  * @const
@@ -53,7 +52,6 @@ const dotenv = require('dotenv')
  * @const
  */
 const mongoose = require('mongoose')
-
 
 // Configuring environment variables to use them
 dotenv.config({ path: '../../.env' })
@@ -77,38 +75,33 @@ db.on('error', err => {
  *
  */
 createPlayHistories = async () => {
+  // Seeding context first. *Note: can't seed in seperate file as we will lose the contexts we created as it can't exist on it's own*
 
-  //Seeding context first. *Note: can't seed in seperate file as we will lose the contexts we created as it can't exist on it's own*
-  
-  //Data needed to seed
-  let user1 = await User.find({ 'name': 'Imagine Dragons' })
-  let user2 = await User.find({ 'name': 'Ed Sheeran' })
-  let user3 = await User.find({ 'name': 'Amr Diab' })
-  let user4 = await User.find({ 'name': '21 Pilots' })
-  let user5 = await User.find({ 'name': 'Omar' })
-  let user6 = await User.find({ 'name': 'Ahmed' })
-  let user7 = await User.find({ 'name': 'Hana' })
-  let user8 = await User.find({ 'name': 'Nada' })
+  // Data needed to seed
+  const user1 = await User.find({ name: 'Imagine Dragons' })
+  const user2 = await User.find({ name: 'Ed Sheeran' })
+  const user3 = await User.find({ name: 'Amr Diab' })
+  const user4 = await User.find({ name: '21 Pilots' })
+  const user5 = await User.find({ name: 'Omar' })
+  const user6 = await User.find({ name: 'Ahmed' })
+  const user7 = await User.find({ name: 'Hana' })
+  const user8 = await User.find({ name: 'Nada' })
 
-  let playlist1 = await Playlist.find({ 'name': 'Imagine Dragons Radio' })
-  let playlist2 = await Playlist.find({ 'name': 'Happy Hits' })
-  let playlist3 = await Playlist.find({ 'name': 'Chill Bel Masry' })
-  let playlist4 = await Playlist.find({ 'name': 'Best of 21 Pilots' })
+  const playlist1 = await Playlist.find({ name: 'Imagine Dragons Radio' })
+  const playlist2 = await Playlist.find({ name: 'Happy Hits' })
+  const playlist3 = await Playlist.find({ name: 'Chill Bel Masry' })
+  const playlist4 = await Playlist.find({ name: 'Best of 21 Pilots' })
 
+  const album1 = await Album.find({ name: 'Evolve' }).select('_id')
+  const album2 = await Album.find({ name: 'Divide' }).select('_id')
+  const album3 = await Album.find({ name: 'Sahran' }).select('_id')
+  const album4 = await Album.find({ name: 'Blurry Face' }).select('_id')
 
-  let album1 = await Album.find({ 'name': 'Evolve' }).select('_id')
-  let album2 = await Album.find({ 'name': 'Divide' }).select('_id')
-  let album3 = await Album.find({ 'name': 'Sahran' }).select('_id')
-  let album4 = await Album.find({ 'name': 'Blurry Face' }).select('_id')
-
-
-  let track1 = await Track.find({ 'name': 'Believer' })
-  let track2 = await Track.find({ 'name': 'Youm Talat' })
-  let track3 = await Track.find({ 'name': 'Perfect' })
-  let track4 = await Track.find({ 'name': 'Stressed Out' })
-  let track5 = await Track.find({ 'name': 'Ride' })
-
-
+  const track1 = await Track.find({ name: 'Believer' })
+  const track2 = await Track.find({ name: 'Youm Talat' })
+  const track3 = await Track.find({ name: 'Perfect' })
+  const track4 = await Track.find({ name: 'Stressed Out' })
+  const track5 = await Track.find({ name: 'Ride' })
 
   const context1 = new Context({
     externalUrls: 'Should be an external url',
@@ -146,7 +139,6 @@ createPlayHistories = async () => {
   await context3.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/playlists/${playlist3[0]._id}` })
   await context3.updateOne({ uri: `spotify:playlists:${playlist3[0]._id}` })
 
-
   const context4 = new Context({
     externalUrls: 'Should be an external url',
     type: 'album',
@@ -171,8 +163,6 @@ createPlayHistories = async () => {
   await context5.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${album2[0]._id}` })
   await context5.updateOne({ uri: `spotify:albums:${album2[0]._id}` })
 
-
-
   const context6 = new Context({
     externalUrls: 'Should be an external url',
     type: 'album',
@@ -184,7 +174,6 @@ createPlayHistories = async () => {
   await context6.save()
   await context6.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user1[0]._id}` })
   await context6.updateOne({ uri: `spotify:albums:${user1[0]._id}` })
-
 
   const context7 = new Context({
     externalUrls: 'Should be an external url',
@@ -198,7 +187,6 @@ createPlayHistories = async () => {
   await context7.updateOne({ href: `http://127.0.0.1:${process.env.PORT}/albums/${user2[0]._id}` })
   await context7.updateOne({ uri: `spotify:albums:${user2[0]._id}` })
 
-
   const playHistory1 = new playHistory({
     userId: user1[0]._id,
     context: context1._id,
@@ -207,7 +195,6 @@ createPlayHistories = async () => {
   })
   await playHistory1.save()
   await context1.updateOne({ playHistoryId: playHistory1._id })
-
 
   const playHistory2 = new playHistory({
     userId: user2[0]._id,
@@ -236,7 +223,6 @@ createPlayHistories = async () => {
   await playHistory4.save()
   await context4.updateOne({ playHistoryId: playHistory4._id })
 
-
   const playHistory5 = new playHistory({
     userId: user6[0]._id,
     context: context5._id,
@@ -245,8 +231,6 @@ createPlayHistories = async () => {
   })
   await playHistory5.save()
   await context5.updateOne({ playHistoryId: playHistory5._id })
-
-
 
   const playHistory6 = new playHistory({
     userId: user5[0]._id,
@@ -257,9 +241,6 @@ createPlayHistories = async () => {
   await playHistory6.save()
   await context6.updateOne({ playHistoryId: playHistory6._id })
 
-
-
-
   const playHistory7 = new playHistory({
     userId: user5[0]._id,
     context: context7._id,
@@ -269,6 +250,4 @@ createPlayHistories = async () => {
   await playHistory7.save()
   await context7.updateOne({ playHistoryId: playHistory7._id })
   process.exit()
-
-
 }

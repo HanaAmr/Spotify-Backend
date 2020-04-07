@@ -29,7 +29,6 @@ const authController = require('./../controllers/authController')
  */
 router.use(authController.protect)
 
-
 /**
  * Route for requesting top albums
  * @name get/albums/top

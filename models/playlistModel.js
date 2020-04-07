@@ -10,7 +10,6 @@
  */
 const mongoose = require('mongoose')
 
-
 /**
  * Playlist schema
  *  @alias module:models/playlist
@@ -32,7 +31,7 @@ const mongoose = require('mongoose')
  * @property {object} category category of the playlist
  * @property {Number} noOfFollowers totalTracks of the playlist
  * @const
- */ 
+ */
 const playlistSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -42,30 +41,30 @@ const playlistSchema = new mongoose.Schema({
   collaborative: {
     type: Boolean,
     description: 'Returns true if context is not search and the owner allows other users to modify the playlist. Otherwise returns false.',
-    default:false
+    default: false
   },
   description: {
     type: String,
     description: 'The playlist description.Returns the names of the artists in this playlist',
-    default:''
+    default: ''
   },
   images: [String],
   type: {
     description: 'The object type  “playlist”',
     type: String,
-    default:'playlist'
+    default: 'playlist'
   },
   uri: {
     type: String,
-    //required: true,
+    // required: true,
     description: 'The Spotify URI for the playlist.',
-    default:''
+    default: ''
   },
   href: {
     type: String,
-    //required: true,
+    // required: true,
     description: 'A link to the Web API endpoint providing full details of the playlist.',
-    default:''
+    default: ''
   },
   public: {
     type: Boolean,
@@ -75,7 +74,7 @@ const playlistSchema = new mongoose.Schema({
   snapshotId: {
     type: String,
     description: 'The version identifier for the current playlist. Can be supplied in other requests to target a specific playlist version.',
-    default:''
+    default: ''
   },
   externalUrls: {
     description: 'an external URL object  Known external URLs for this playlist.',
@@ -109,8 +108,8 @@ const playlistSchema = new mongoose.Schema({
   trackObjects: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'Track',
-      
+      ref: 'Track'
+
     }
   ],
   noOfFollowers: {
@@ -145,8 +144,6 @@ const playlistSchema = new mongoose.Schema({
 
 //   next()
 // })
-
-
 
 const Playlist = mongoose.model('Playlist', playlistSchema)
 

@@ -49,14 +49,12 @@ const userServices = require('../../services/userService')
  */
 const mailerServices = require('../../services/mailerService')
 
-
 /**
  * express module
  * App error
  * @const
  */
 const appError = require('../../utils/appError')
-
 
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
@@ -122,10 +120,10 @@ describe('userService assigning token string to user functionality', () => {
   it('Should assign the token string to an existing user successfully', async () => {
     expect.assertions(1)
     const userService = new userServices()
-    const token = 'a random token'    
+    const token = 'a random token'
     await userService.assignResetToken(token, 'omar@email.com')
-    const user = await User.find({'email':'omar@email.com', 'resetPasswordToken':token, resetPasswordExpires: { $gt: Date.now() }})
-    expect(user).toBeDefined()  
+    const user = await User.find({ email: 'omar@email.com', resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } })
+    expect(user).toBeDefined()
   })
 
   // Testing assigning the token to a non existent user
@@ -154,12 +152,9 @@ describe('mailerServie send email functionality', () => {
     const email = 'testingmail@testingmail.com'
     const subject = 'testingsubject'
     const text = 'testingtext'
-    await expect(mailerService.sendMail(email,subject,text)).resolves
-    
+    await expect(mailerService.sendMail(email, subject, text)).resolves
   })
-
 })
-
 
 // Testing userService change password after reset
 describe('userService change password after reset functionality', () => {
@@ -192,9 +187,9 @@ describe('userService change password after reset functionality', () => {
     const token = 'atoken'
     const pass = 'testpassword'
     const passConf = 'testpassword'
-    const oldPass = await User.findOne({email: 'omar@email.com'}).select('password')
-    await userService.resetChangePassword(token, pass,passConf)
-    const newPass = await User.findOne({email: 'omar@email.com'}).select('password')
+    const oldPass = await User.findOne({ email: 'omar@email.com' }).select('password')
+    await userService.resetChangePassword(token, pass, passConf)
+    const newPass = await User.findOne({ email: 'omar@email.com' }).select('password')
     expect(oldPass.password).not.toEqual(newPass.password)
   })
 
@@ -215,6 +210,4 @@ describe('userService change password after reset functionality', () => {
     const passConf = 'testpassword2'
     await expect(userService.resetChangePassword(token, pass, passConf)).rejects.toThrow(appError)
   })
-
 })
-

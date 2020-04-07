@@ -36,7 +36,7 @@ const authController = require('../controllers/authController')
  * passport for connecting with facebook
  * @const
  */
-const passport = require('passport');
+const passport = require('passport')
 const passportConfig = require('../passport')
 
 /**
@@ -50,7 +50,6 @@ const passportConfig = require('../passport')
  */
 router.post('/signUp', authController.signUp)
 
-
 /**
  * Route for requesting to login with facebook
  * @name post/loginWithFacebook
@@ -61,7 +60,6 @@ router.post('/signUp', authController.signUp)
  * @param {callback} middleware - Sign up middleware.
  */
 router.post('/loginWithFacebook', passport.authenticate('facebookToken', { session: false }), authController.loginWithFacebook)
-
 
 /**
 * Route for requesting to sign in
@@ -86,7 +84,6 @@ router.post('/signIn', authController.signIn)
 */
 router.get('/me', authController.protect, authController.getMyProfile)
 
-
 /**
 * Route for requesting to update user profile
 * @name put/updateProfile
@@ -97,7 +94,6 @@ router.get('/me', authController.protect, authController.getMyProfile)
 * @param {callback} middleware - update profile middleware.
 */
 router.put('/me', authController.protect, authController.updateProfile)
-  
 
 /**
 * Route for requesting to change user password
@@ -110,8 +106,6 @@ router.put('/me', authController.protect, authController.updateProfile)
 */
 router.put('/me/changePassword', authController.protect, authController.changePassword)
 
-
-
 /**
 * Route for requesting to follow user
 * @name put/followArtistUser
@@ -122,8 +116,6 @@ router.put('/me/changePassword', authController.protect, authController.changePa
 * @param {callback} middleware - follow user middleware.
 */
 router.put('/me/following', authController.protect, authController.followArtistUser)
-
-
 
 /**
  * Route for requesting to reset password

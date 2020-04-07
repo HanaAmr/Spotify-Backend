@@ -8,7 +8,7 @@
  * Category controller to call when routing.
  * @type {object}
  * @const
- */ 
+ */
 
 /**
  * Category model from the database
@@ -41,12 +41,6 @@ const catchAsync = require('./../utils/catchAsync')
 const AppError = require('./../utils/appError')
 
 /**
- * Pagination file
- * @const
- */
-const paginatedResults = require('./../utils/pagination')
-
-/**
  * A function that is used to get all categories.
  *  @alias module:controllers/category
  * @param {Object} req - The request passed.
@@ -54,9 +48,9 @@ const paginatedResults = require('./../utils/pagination')
  * @param {Function} next - The next function in the middleware
  * @return {JSON} Returns an array of categories in a json form.
  */
-exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non paginated
+exports.getAllCategories = catchAsync(async (req, res, next) => { //  non paginated
   const features = new APIFeatures(Category.find(), req.query).paginate()
-  const categories = await features.query.select("-__v")
+  const categories = await features.query.select('-__v')
   res.status(200).json({
     status: 'success',
     data: {
@@ -87,15 +81,15 @@ exports.getAllCategories =catchAsync(async (req, res, next) => {  //  non pagina
  * @param {String} categoryId - The categoryId to search for.
  * @return {JSON} Returns an array of playlists in a json form.
  */
-exports.getCategoryPlaylist = catchAsync(async (req, res, next) => {  //  non paginated
-  const category=await Category.findById(req.params.categoryId)
-  
-  if(!category){
+exports.getCategoryPlaylist = catchAsync(async (req, res, next) => { //  non paginated
+  const category = await Category.findById(req.params.categoryId)
+
+  if (!category) {
     return next(new AppError('No category found with that ID', 404))
   }
   const features = new APIFeatures(Playlist.find({ category: req.params.categoryId }), req.query).paginate().limitFieldsPlaylist()
   const playlists = await features.query
-  
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -108,7 +102,7 @@ exports.getCategoryPlaylist = catchAsync(async (req, res, next) => {  //  non pa
 //   const results=await paginatedResults(req,await Playlist.find({ category: req.params.categoryId }).countDocuments().exec())
 //   const features = new APIFeatures(Playlist.find({ category: req.params.categoryId }), req.query).paginate().limitFieldsPlaylist()
 //   results.items = await features.query
-  
+
 //   res.status(200).json({
 //     status: 'success',
 //     data: {
