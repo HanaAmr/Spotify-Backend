@@ -90,7 +90,7 @@ exports.getAlbumsWithIds = catchAsync(async (req, res, next) => {
 exports.getOneAlbum = catchAsync(async (req, res, next) => {
   const album = await Album.findById(req.params.albumId).select('-__v').populate({
     path: 'artists',
-    select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
+    select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
 
   })
 

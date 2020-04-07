@@ -98,7 +98,9 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   }
 
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  req.body.artist = new mongoose.Types.ObjectId(artistId)
+  req.body.artists = []
+  req.body.artists.push(new mongoose.Types.ObjectId(artistId))
+
   req.body.album = new mongoose.Types.ObjectId(req.params.id)
 
   // updating album to increment number of tracks
@@ -133,14 +135,18 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
 */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-
-  const features = new APIFeatures(Album.find({ artist: artistId }), req.query)
+    console.log(artistId)
+  const features = new APIFeatures(Album.find({ artist: artistId }).select('-__v'), req.query)
     .filter()
     .sort()
     .limitFields()
     .paginate()
 
-  const albums = await features.query
+  const albums = await features.query.populate({
+    path: 'artists',
+    select: '_id name uri href externalUrls images role followers userStats artistInfo' 
+
+  })
 
   if (albums.length === 0) { throw (new AppError('You did not create any albums yet!', 484)) }
 

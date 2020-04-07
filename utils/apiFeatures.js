@@ -139,7 +139,7 @@ class APIFeatures {
     }
     return this
   }
-
+  
   /**
  * For paginating
  * @function
