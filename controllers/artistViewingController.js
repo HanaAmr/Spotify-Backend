@@ -116,7 +116,7 @@ exports.getArtist = catchAsync(async (req, res, next) => {
       followers: 1,
       artistInfo: 1
     })
-  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
+  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
   res.status(200).json({
     status: 'sucsess',
@@ -134,7 +134,7 @@ exports.getArtist = catchAsync(async (req, res, next) => {
 */
 exports.getRelatedArtists = catchAsync(async (req, res) => {
   const artist = await User.findById(req.params.id)
-  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
+  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
   const genres = artist.artistInfo.genres
 
@@ -154,7 +154,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   // removing current artist
   relatedArtists = relatedArtists.filter(el => el.id !== artist.id)
 
-  if (relatedArtists.length === 0) { throw (new AppError('No related artists found for this artist!', 484)) }
+  if (relatedArtists.length === 0) { throw (new AppError('No related artists found for this artist!', 404)) }
 
   res.status(200).json({
     status: 'sucsess',
@@ -172,7 +172,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
 */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
-  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
+  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
   const features = new APIFeatures(Album.find({ artists: req.params.id, totalTracks: { $gt: 0 } }), req.query)
     .filter()
@@ -184,7 +184,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
     select: '_id name uri href externalUrls images role followers userStats artistInfo'
   })
 
-  if (albums.length === 0) { throw (new AppError('No albums for this artist!', 484)) }
+  if (albums.length === 0) { throw (new AppError('No albums for this artist!', 404)) }
 
   res.status(200).json({
     status: 'sucsess',
@@ -202,21 +202,18 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
 */
 exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
-  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 484)) }
+  if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
   req.query.sort = '-popularity'
-  const features = new APIFeatures(Track.find({ artists: req.params.id }).select('-__v -album -audioFilePath'), req.query)
+  const features = new APIFeatures(Track.find({ artists: req.params.id }).select('-__v -audioFilePath'), req.query)
     .filter()
     .sort()
     .limitFieldsTracks()
     .paginate()
 
-  const tracks = await features.query.populate({
-    path: 'artists',
-    select: '_id name uri href externalUrls images type followers userStats userArtist'
-  })
+  const tracks = await features.query
 
-  if (tracks.length === 0) { throw (new AppError('No tracks for artist', 484)) }
+  if (tracks.length === 0) { throw (new AppError('No tracks for artist', 404)) }
 
   res.status(200).json({
     status: 'success',
