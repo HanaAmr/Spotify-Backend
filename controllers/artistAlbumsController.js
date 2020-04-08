@@ -104,6 +104,10 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
       req.body.durationMs = duration * 1000000
     })
   }
+  else
+  {
+    throw (new AppError('No file received', 484))
+  }
 
   //inserting artists and album in req body
   req.body.artists = []
