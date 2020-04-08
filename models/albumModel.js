@@ -47,7 +47,8 @@ const albumSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: [true, 'An album must have an image']
+    required: [true, 'An album must have an image'],
+    default:`http://138.91.114.14/api/public/imgs/albums/default.jpg`
   },
   albumType: {
     type: String,
