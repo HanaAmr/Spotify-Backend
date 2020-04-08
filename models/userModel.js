@@ -54,7 +54,12 @@ const userSchema = new Schema({
   dateOfBirth: {
     type: String,
     format: Date,
-    default: '1980-01-01'
+    default: '1980-01-01',
+    validate: {
+      validator: function() {
+        return (this.dateOfBirth < "2000-01-01")
+      }
+    }
   },
   uri: {
     type: String,
