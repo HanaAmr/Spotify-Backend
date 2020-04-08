@@ -48,7 +48,7 @@ const albumSchema = new mongoose.Schema({
   image: {
     type: String,
     required: [true, 'An album must have an image'],
-    default:`http://138.91.114.14/api/public/imgs/albums/default.jpg`
+    default: 'http://138.91.114.14/api/public/imgs/albums/default.jpg'
   },
   albumType: {
     type: String,
@@ -103,23 +103,6 @@ const albumSchema = new mongoose.Schema({
     default: 0
   }
 })
-
-// /**
-// * Populating the artist object
-// * @function
-// * @memberof module:models/albumModel
-// * @inner
-// * @param {string} find - populate the database before any find function
-// */
-// albumSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'artists',
-//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
-
-//   })
-
-//   next()
-// })
 
 const Album = mongoose.model('Album', albumSchema)
 

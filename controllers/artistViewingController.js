@@ -139,7 +139,8 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   const genres = artist.artistInfo.genres
 
   let relatedArtists = await User.find({ role: 'artist', 'artistInfo.genres': { $in: genres } },
-    {_id: 1,
+    {
+      _id: 1,
       name: 1,
       uri: 1,
       href: 1,
@@ -147,7 +148,8 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
       images: 1,
       role: 1,
       followers: 1,
-      artistInfo: 1})
+      artistInfo: 1
+    })
 
   // removing current artist
   relatedArtists = relatedArtists.filter(el => el.id !== artist.id)
@@ -177,9 +179,9 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
     .sort()
     .paginate()
 
-    const albums =await features.query.populate({
+  const albums = await features.query.populate({
     path: 'artists',
-    select: '_id name uri href externalUrls images role followers userStats artistInfo' 
+    select: '_id name uri href externalUrls images role followers userStats artistInfo'
   })
 
   if (albums.length === 0) { throw (new AppError('No albums for this artist!', 404)) }
@@ -231,15 +233,15 @@ exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
 
   if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
-  
-  const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
-    .filter()
-    .sort()
-    .limitFieldsPlaylist()
-    .paginate()
 
-  const playlists = await Playlist.find({ 'owner': req.params.id })
-  if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 404)) }
+  // const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
+  //   .filter()
+  //   .sort()
+  //   .limitFieldsPlaylist()
+  //   .paginate()
+
+  const playlists = await Playlist.find({ owner: req.params.id })
+  if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 484)) }
 
   res.status(200).json({
     status: 'success',

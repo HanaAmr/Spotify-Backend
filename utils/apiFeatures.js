@@ -5,7 +5,7 @@
 
 class APIFeatures {
   // query is the actual query os mongoose
-  // querty string => el fl request
+  // querty string => that is in the request
 
   /**
  * @constructor
@@ -75,8 +75,7 @@ class APIFeatures {
         this.query = this.query.select(fields)
         this.query.populate({
           path: 'owner',
-          // select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
-          select: 'name'
+          select: '_id name uri href externalUrls images type followers userStats artistInfo' // user public data
         })
       } else {
         this.query = this.query.select(fields)
@@ -86,7 +85,6 @@ class APIFeatures {
       this.query.populate({
         path: 'owner',
         select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
-        // select: 'name'
       })
     }
     return this
@@ -139,7 +137,7 @@ class APIFeatures {
     }
     return this
   }
-  
+
   /**
  * For paginating
  * @function

@@ -3,7 +3,7 @@
 //  * @requires express
 //  */
 
-//const express = require('express')
+// const express = require('express')
 /**
  * express module
  * Track model from the database
@@ -24,7 +24,7 @@ const Album = require('../../models/albumModel')
 const User = require('../../models/userModel')
 
 // const app = express()
-//const app = require('./../../app')
+// const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -231,6 +231,5 @@ createTracks = async () => {
   await track8.updateOne({ href: `${process.env.API_URL}/tracks/${track8._id}` })
   await track8.updateOne({ uri: `spotify:tracks:${track8._id}` })
 
-  
   process.exit()
 }

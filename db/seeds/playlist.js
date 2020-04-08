@@ -14,7 +14,7 @@ const Track = require('../../models/trackModel')
 const User = require('../../models/userModel')
 const Category = require('../../models/categoryModel')
 // const app = express()
-//const app = require('./../../app')
+// const app = require('./../../app')
 /**
  * express module
  * dotenv to access environment constants
@@ -144,7 +144,6 @@ createPlaylists = async () => {
   track8 = (await track8).toString()
   start = track8.indexOf(':')
   const track8Id = track8.substring(start + 2, start + 26)
-
 
   const playlist1 = new Playlist({
     name: 'Imagine Dragons Radio',
@@ -305,7 +304,7 @@ createPlaylists = async () => {
     type: 'playlist',
     popularity: 40000000,
     noOfFollowers: 9000000,
-    trackObjects: [track7Id,track8Id],
+    trackObjects: [track7Id, track8Id],
     category: category1Id,
     createdAt: Date.now()
   })
@@ -326,7 +325,7 @@ createPlaylists = async () => {
     type: 'playlist',
     popularity: 80000000,
     noOfFollowers: 1000000,
-    trackObjects: [track6Id,track7Id,track2Id],
+    trackObjects: [track6Id, track7Id, track2Id],
     category: category1Id,
     createdAt: Date.now()
   })

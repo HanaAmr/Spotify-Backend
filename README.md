@@ -72,7 +72,7 @@ To run for developers, run the following command:
 To run for production, run the following command:
 `$ npm start`
 ## Functional documentation generation
-To generate functional documentation, runt the following command in the main directory:
+To generate functional documentation, run the following command in the main directory:
 `$ node_modules/jsdoc/jsdoc.js`
 ## API documentation generation
 To generate API documentation, go to swagger and log-in. Then press the extract to button.
