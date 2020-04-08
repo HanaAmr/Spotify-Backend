@@ -116,13 +116,17 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns an array of the tracks of the album in a json form.
  */
 exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginated
-  const features = new APIFeatures(Track.find().where('album').in(req.params.albumId).select('-__v'), req.query).paginate()
+  const features = new APIFeatures(Track.find().where('album').in(req.params.albumId).select('-__v'), req.query).paginate().limitFieldsTracks()
 
-  const tracksArray = await features.query.select('-album -audioFilePath').populate({
-    path: 'artists',
-    select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
+   const tracksArray = await features.query//.select('-audioFilePath').populate({
+  //   path: 'artists',
+  //   select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
 
-  })
+  // }).populate({
+  //   path: 'album',
+  //   select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
+
+  // })
 
   if (tracksArray.length === 0) {
     return next(new AppError('No album found with that ID', 404))
