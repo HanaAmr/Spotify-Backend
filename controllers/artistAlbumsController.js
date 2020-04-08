@@ -92,17 +92,22 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const album= await Album.find({_id:req.params.id,artists:artistId})
+  if(album.length==0)
+  { throw (new AppError('You are not authorized, you cannot add tracks to albums other than yours!', 484)) }
+  
   if (req.file) {
     req.body.audioFilePath = `tracks/${req.file.filename}`
-    getAudioDurationInSeconds(`${__dirname}/../tracks/${req.file.filename}`).then((duration) => {
+    await getAudioDurationInSeconds(`${__dirname}/../tracks/${req.file.filename}`).then((duration) => {
       req.body.durationMs = duration * 1000000
     })
   }
 
-  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  //inserting artists and album in req body
   req.body.artists = []
   req.body.artists.push(new mongoose.Types.ObjectId(artistId))
-
   req.body.album = new mongoose.Types.ObjectId(req.params.id)
 
   // updating album to increment number of tracks

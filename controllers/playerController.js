@@ -76,7 +76,6 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   // For now, we generate the context here
   const newContext = await playerService.generateContext(req.body.contextUri, req.body.contextType)
   if(!newContext) throw new AppError(`Couldn't generate context. ${req.body.contextType} uri doesn't exist`, 404)
-  newContext.save()
   const track = await Track.find().where('uri').equals(req.body.trackUri).select('_id')
   if (track.length === 0) {
     return next(new AppError('No track with this uri was found!', 404))
