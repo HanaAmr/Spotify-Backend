@@ -58,7 +58,7 @@ router.use(authController.protect)
  * @inner
  *
  */
-// router.use(authController.restrictTo('artist'))
+ router.use(authController.restrictTo('artist'))
 
 /**
  * Route for artist's albums

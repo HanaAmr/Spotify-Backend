@@ -48,7 +48,10 @@ const playlistSchema = new mongoose.Schema({
     description: 'The playlist description.Returns the names of the artists in this playlist',
     default: ''
   },
-  images: [String],
+  images: {
+    type: [String],
+    default:`http://138.91.114.14/api/public/imgs/playlists/default.jpg`
+  },
   type: {
     description: 'The object type  “playlist”',
     type: String,
