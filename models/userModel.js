@@ -56,8 +56,8 @@ const userSchema = new Schema({
     format: Date,
     default: '1980-01-01',
     validate: {
-      validator: function() {
-        return (this.dateOfBirth < "2000-01-01")
+      validator: function () {
+        return (this.dateOfBirth < '2000-01-01')
       }
     }
   },
@@ -75,7 +75,7 @@ const userSchema = new Schema({
   },
   images: {
     type: [String],
-    default:`http://138.91.114.14/api/public/imgs/users/default.jpg`
+    default: 'http://138.91.114.14/api/public/imgs/users/default.jpg'
   },
   followers: {
     type: [String]
@@ -104,8 +104,8 @@ const userSchema = new Schema({
       biography: String,
       popularity: Number,
       genres: [String], // Array of genres
-      albums: [String], // Contains Albums IDs
-      //popularSong: [String] // contains songs IDs
+      albums: [String] // Contains Albums IDs
+      // popularSong: [String] // contains songs IDs
 
     }
   },

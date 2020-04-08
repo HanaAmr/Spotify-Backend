@@ -23,12 +23,6 @@ const Playlist = require('./../models/playlistModel')
 const Track = require('./../models/trackModel')
 
 /**
- * User model from the database
- * @const
- */
-const User = require('./../models/userModel')
-
-/**
  * API features utils file
  * @const
  */

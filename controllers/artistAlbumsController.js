@@ -57,15 +57,13 @@ const catchAsync = require('./../utils/catchAsync')
 * @param {next} - The next function in the middleware
 */
 exports.addAlbum = catchAsync(async (req, res, next) => {
-
-  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename} `}
+  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename} ` }
 
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   req.body.artists = []
   req.body.artists.push(new mongoose.Types.ObjectId(artistId))
-
 
   let newAlbum = await Album.create(req.body)
 
@@ -92,12 +90,10 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
-
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.find({_id:req.params.id,artists:artistId})
-  if(album.length==0)
-  { throw (new AppError('You are not authorized, you cannot add tracks to albums other than yours!', 484)) }
-  
+  const album = await Album.find({ _id: req.params.id, artists: artistId })
+  if (album.length === 0) { throw (new AppError('You are not authorized, you cannot add tracks to albums other than yours!', 484)) }
+
   if (req.file) {
     req.body.audioFilePath = `tracks/${req.file.filename}`
     await getAudioDurationInSeconds(`${__dirname}/../tracks/${req.file.filename}`).then((duration) => {
@@ -105,7 +101,7 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
     })
   }
 
-  //inserting artists and album in req body
+  // inserting artists and album in req body
   req.body.artists = []
   req.body.artists.push(new mongoose.Types.ObjectId(artistId))
   req.body.album = new mongoose.Types.ObjectId(req.params.id)
@@ -148,10 +144,10 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    
-    const albums = await features.query.populate({
+
+  const albums = await features.query.populate({
     path: 'artists',
-    select: '_id name uri href externalUrls images role followers userStats artistInfo' 
+    select: '_id name uri href externalUrls images role followers userStats artistInfo'
 
   })
 

@@ -50,7 +50,7 @@ const playlistSchema = new mongoose.Schema({
   },
   images: {
     type: [String],
-    default:`http://138.91.114.14/api/public/imgs/playlists/default.jpg`
+    default: 'http://138.91.114.14/api/public/imgs/playlists/default.jpg'
   },
   type: {
     description: 'The object type  “playlist”',
@@ -88,13 +88,6 @@ const playlistSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Category'
   },
-  // owner: [
-  //   {
-  //     type: String,
-  //     required: true,
-  //     description: 'link to the owner/s of the playlist'
-  //   }
-  // ],
   owner: [
     {
       type: mongoose.Schema.ObjectId,
@@ -132,21 +125,6 @@ const playlistSchema = new mongoose.Schema({
   }
 
 })
-
-// playlistSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'owner',
-//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
-//   })
-
-//   next()
-// })
-
-// playlistSchema.pre(/^find/, function (next) {
-//   this.select('-trackObjects')
-
-//   next()
-// })
 
 const Playlist = mongoose.model('Playlist', playlistSchema)
 

@@ -40,14 +40,6 @@ const AppError = require('./../utils/appError')
  */
 const Track = require('./../models/trackModel')
 
-// /**
-//  * Adds a track to the recently played list
-//  *  @alias module:controllers/player
-//  * @param {Object} req - The request passed.
-//  * @param {Object} res - The respond sent
-//  * @param {Function} next - The next function in the middleware
-//  */
-
 /**
  * A function that is used to get albums with ids.
  *  @alias module:controllers/album
@@ -118,15 +110,7 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
 exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginated
   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId).select('-__v'), req.query).paginate().limitFieldsTracks()
 
-   const tracksArray = await features.query//.select('-audioFilePath').populate({
-  //   path: 'artists',
-  //   select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
-
-  // }).populate({
-  //   path: 'album',
-  //   select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
-
-  // })
+  const tracksArray = await features.query
 
   if (tracksArray.length === 0) {
     return next(new AppError('No album found with that ID', 404))

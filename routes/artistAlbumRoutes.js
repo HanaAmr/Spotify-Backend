@@ -58,7 +58,7 @@ router.use(authController.protect)
  * @inner
  *
  */
- router.use(authController.restrictTo('artist'))
+router.use(authController.restrictTo('artist'))
 
 /**
  * Route for artist's albums
@@ -72,7 +72,7 @@ router
   .post(uploadService.uploadAlbumImage, artistAlbumController.addAlbum)
   .get(artistAlbumController.getArtistAlbums)
 
- /**
+/**
   * Route for artist's albums tracks
   * @name /me/albums
   * @function
@@ -80,7 +80,7 @@ router
   * @inner
   */
 router
-    .route('/:id/tracks')
-    .post(uploadService.uploadTrackAudio,artistAlbumController.addTracktoAlbum)
+  .route('/:id/tracks')
+  .post(uploadService.uploadTrackAudio, artistAlbumController.addTracktoAlbum)
 
 module.exports = router

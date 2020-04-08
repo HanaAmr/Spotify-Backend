@@ -92,7 +92,7 @@ class playerService {
     newContext.type = type
     if (type === 'playlist') {
       const contextPlaylist = await Playlist.findOne({ uri: uri })
-      if(!contextPlaylist) return null
+      if (!contextPlaylist) return null
       newContext.externalUrls = contextPlaylist.external_urls
       newContext.href = contextPlaylist.href
       newContext.name = contextPlaylist.name
@@ -100,7 +100,7 @@ class playerService {
       newContext.followersCount = contextPlaylist.popularity
     } else if (type === 'album') {
       const contextAlbum = await Album.findOne({ uri: uri })
-      if(!contextAlbum) return null
+      if (!contextAlbum) return null
       newContext.externalUrls = contextAlbum.externalUrls
       newContext.href = contextAlbum.href
       newContext.name = contextAlbum.name
@@ -108,7 +108,7 @@ class playerService {
       newContext.followersCount = contextAlbum.popularity
     } else if (type === 'artist') {
       const contextArtist = await User.findOne({ uri: uri })
-      if(contextArtist == null) return null
+      if (contextArtist == null) return null
       newContext.externalUrls = contextArtist.externalUrls
       newContext.href = contextArtist.href
       newContext.name = contextArtist.name

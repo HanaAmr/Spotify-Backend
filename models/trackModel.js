@@ -88,30 +88,6 @@ const trackSchema = new mongoose.Schema({
   }
 })
 
-// /**
-// * Populating the album object
-// * @function
-// * @memberof module:models/trackModel
-// * @inner
-// * @param {string} find - populate the documents before any find function
-// */
-// trackSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'album'
-//   })
-//   this.populate({
-//     path: 'artists',
-//     select: '_id name uri href externalUrls images type followers userStats userArtist'   // user public data
-//   })
-
-//   next()
-// })
-
-// trackSchema.pre(/^find/, function (next) {
-//   this.updateMany( {}, { $rename: { "_id": "id" } } )
-//   next()
-// })
-
 const Track = mongoose.model('Track', trackSchema)
 
 module.exports = Track
