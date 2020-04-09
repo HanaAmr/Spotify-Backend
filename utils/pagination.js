@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+dotenv.config({ path: '.env' })
+
 /**
 * For making a paging objct
 * @function
@@ -18,8 +21,7 @@ module.exports = async function (req, count) {
     const end = req.originalUrl.indexOf('limit')
     Url = req.originalUrl.substring(0, end - 1)
   }
-  console.log('Inside pagination')
-
+  
   const results = {}
   if (endIndex < count) {
     results.next = `${process.env.API_URL}${Url}?limit=${limit}&page=${page + 1}`
@@ -33,7 +35,7 @@ module.exports = async function (req, count) {
     results.previous = null
   }
 
-  results.href = `${process.env.API_URL}${process.env.PORT}${Url}`
+  results.href = `${process.env.API_URL}${Url}`
   results.limit = limit
   results.offset = page
   results.total = count

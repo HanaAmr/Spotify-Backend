@@ -52,7 +52,12 @@ const catchAsync = require('./../utils/catchAsync')
 exports.getOneTrack = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(Track.findById(req.params.trackId), req.query).limitFieldsTracks()
   const track = await features.query
-  console.error('Inside track')
+
+  
+  if (!track) {
+    return next(new AppError('No track found with that ID', 404))
+  }
+
 
   res.status(200).json({
     status: 'success',
