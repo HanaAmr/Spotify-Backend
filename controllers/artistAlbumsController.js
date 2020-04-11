@@ -1,61 +1,74 @@
-
-const { getAudioDurationInSeconds } = require('get-audio-duration')
 /**
- * express module
+ * Controller module.
+ * @module controllers/artistAlbumsController
+ * @requires express
+ */
+
+/**
+ * Artist albums controller to call when routing.
+ * @type {object}
  * @const
  */
-// const express = require('express')
+
+
+ /**
+ * Get Audio Duration Package, used to get duration of uploaded tracks
+ * @const
+ */
+const { getAudioDurationInSeconds } = require('get-audio-duration')
 
 /**
- * mongoose module
+ * Mongoose package
  * @const
  */
 const mongoose = require('mongoose')
 
 /**
- * mongoose Album model
+ * Album model from the database
  * @const
  */
 const Album = require('../models/albumModel')
 
 /**
- * mongoose Track model
+ * Track model from the database
  * @const
  */
 const Track = require('../models/trackModel')
 
 /**
- * util to handle query parameters
+ * util to handle query params
  * @const
  */
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * App error object for creating errors
+ * Error handing module
  * @const
  */
 const AppError = require('../utils/appError')
+
 /**
- * User service
- * @type {object}
+ * user Service Class
  * @const
  */
 const userService = require('./../services/userService')
 const userServiceClass = new userService()
+
 /**
- * catch async function for handling asynch functions
+ * catch async function for handling async functions
  * @const
  */
 const catchAsync = require('./../utils/catchAsync')
 
 /**
-* A middleware function for addingAlbum for artist
-* @function
-* @memberof module:controllers/artistAlbumsController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for addingAlbum for artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns album object created if album is created sucessfully or error object otherwise
+ */
 exports.addAlbum = catchAsync(async (req, res, next) => {
   if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename} ` }
 
@@ -82,13 +95,15 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
 })
 
 /**
-* A middleware function for addingTracktoAlbum for artist where album id is passed as aparameter of request
-* @function
-* @memberof module:controllers/artistAlbumsController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for adding track to album for artist where album id is passed as a query parameter of request
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @param {String} albumId - album ID to add track to , passed in query
+ * @return {JSON} Returns JSON object of added track if request is sucessful, an error object otherwise
+ */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   const album = await Album.find({ _id: req.params.id, artists: artistId })
@@ -133,13 +148,14 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
 })
 
 /**
-* A middleware function for getting Albums for logged in artist
-* @function
-* @memberof module:controllers/artistAlbumsController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * AA middleware function for getting Albums of logged in artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns list of Albums created by artist whether empty or not, or an error if artist has no albums
+ */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
 

@@ -1,6 +1,6 @@
 /**
  * Controller module.
- * @module controllers
+ * @module controllers/errorController
  * @requires express
  */
 
@@ -8,19 +8,18 @@
  * Error controller to call when routing.
  * @type {object}
  * @const
- * @namespace errorController
  */
 
+
 /**
- * express module
  * AppError class file
  * @const
  */
 const AppError = require('./../utils/appError')
+
 /**
 * A function for handling Cast Errors  in production environment
-* @function
-* @memberof module:controllers/errorController
+*  @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */
@@ -30,8 +29,7 @@ const handleCastErrorDB = err => {
 }
 /**
 * A function for handling mongoose validation errors in production environment
-* @function
-* @memberof module:controllers/errorController
+* @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */
@@ -44,8 +42,7 @@ const handleValidationErrorDB = err => {
 
 /**
 * A function for handling mongoose validation errors in production environment
-* @function
-* @memberof module:controllers/errorController
+* @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */
@@ -53,8 +50,7 @@ const handleMongoError = err => new AppError('Input data must be unique', 400)
 
 /**
 * A function for handling jwt errors in production environment
-* @function
-* @memberof module:controllers/errorController
+* @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */
@@ -62,8 +58,7 @@ const handleJWTError = err => new AppError('Invalid token. Please log in again',
 
 /**
 * A function for handling expired token errors in production environment
-* @function
-* @memberof module:controllers/errorController
+* @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */
@@ -71,8 +66,7 @@ const handleJWTExpiredError = err => new AppError('Your token has expired. Pleas
 
 /**
 * A function for handling errors in development environment
-* @function
-* @memberof module:controllers/errorController
+* @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */
@@ -87,8 +81,7 @@ const sendErrorDev = (err, res) => {
 
 /**
 * A function for handling errors in production environment
-* @function
-* @memberof module:controllers/errorController
+* @alias module:controllers/errorController
 * @param {error} - the error passed from the function
 * @param {Respond} - The response sent
 */

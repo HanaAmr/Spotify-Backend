@@ -29,7 +29,7 @@ const APIFeatures = require('./../utils/apiFeatures')
 const catchAsync = require('./../utils/catchAsync')
 
 /**
- * AppError class file
+ * Error handing module
  * @const
  */
 const AppError = require('./../utils/appError')
@@ -150,7 +150,7 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
  * @return {JSON} Returns an array of the top albums in a json form.
  */
 exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  not paginated
-  const features = new APIFeatures(Album.find().select('-__v'), req.query).sort().paginate()
+  const features = new APIFeatures(Album.find({totalTracks: { $gt: 0 } }).select('-__v'), req.query).sort().paginate()
   const albums = await features.query.populate({
     path: 'artists',
     select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data

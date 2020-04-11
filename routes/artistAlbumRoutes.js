@@ -1,4 +1,4 @@
-/** Express router providing album related routes
+/** Express router providing artist's albums related routes
  * @module routes/artistAlbumsRoutes
  * @requires express
  */
@@ -10,37 +10,26 @@
 const express = require('express')
 
 /**
- * User service
- * @type {object}
- * @const
- */
-const userService = require('./../services/userService')
-/**
  * artistAlbum controller to call when routing.
- * @type {object}
  * @const
  */
 const artistAlbumController = require('./../controllers/artistAlbumsController')
 
 /**
- * uploadService that has uploading middlewares
- * @type {object}
+ * uploadService that has uploading middlewares to call when routing
  * @const
  */
 const uploadService = require('./../services/uploadService')
 
 /**
  * Authorization controller to call when routing.
- * @type {object}
  * @const
  */
 const authController = require('./../controllers/authController')
 
 /**
  * Express router to mount artistAlbus related functions on.
- * @type {object}
  * @const
- * @namespace artistAlbumsRouter
  */
 const router = express.Router()
 
@@ -51,14 +40,15 @@ const router = express.Router()
  * @inner
  */
 router.use(authController.protect)
+
 /**
  * Middleware to restrict this routes to only artist
  * @function
  * @memberof module:routes/artistAlbumsRoutes
  * @inner
- *
  */
 router.use(authController.restrictTo('artist'))
+
 
 /**
  * Route for artist's albums
@@ -77,6 +67,7 @@ router
   * @name /me/albums
   * @function
   * @memberof module:routes/artistAlbumsRoutes
+  * @param {string} albumId - album id passed in query
   * @inner
   */
 router

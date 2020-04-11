@@ -1,7 +1,7 @@
-/** Express service for music player
- * @module services/player
- * @requires express
- */
+// /** Express service for music player
+//  * @module services/player
+//  * @requires express
+//  */
 
 /**
  * User model from the database

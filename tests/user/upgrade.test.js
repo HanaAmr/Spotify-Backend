@@ -1,7 +1,7 @@
-/** Jest unit testing for becoming premium
- * @module routes/users
- * @requires express
- */
+// /** Jest unit testing for becoming premium
+//  * @module routes/users
+//  * @requires express
+//  */
 
 /**
  * sinon
@@ -82,7 +82,9 @@ describe('userService assigning config code to user functionality', () => {
     await User.findOne({}, (err, user) => {
       const id = user._id
       authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+      
     })
+    
   })
 
   // Drop the whole users collection after finishing testing
@@ -93,6 +95,7 @@ describe('userService assigning config code to user functionality', () => {
 
   // Testing successfully assigning the config code to a user
   it('Should assign the confiramtion code to an existing user successfully', async () => {
+    
     expect.assertions(1)
     const userService = new userServices()
     const token = 'a random token'

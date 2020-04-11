@@ -1,10 +1,19 @@
 /**
-* For making a paging objct
+ * For making a paging object
+ * @module utils/pagination
+ * @requires express
+ */
+
+
+const dotenv = require('dotenv')
+dotenv.config({ path: '.env' })
+
+/**
+* For making a paging object
 * @function
 * @memberof module:utils/pagination
 * @param {req} - The request sent
 * @param {count} - The number of documents that can be returned
-* @param {Async function}  - the async function to paginate.
 * @return {results} The results object containing next,prev,limit,offset,total,and href .
 */
 module.exports = async function (req, count) {
@@ -18,8 +27,7 @@ module.exports = async function (req, count) {
     const end = req.originalUrl.indexOf('limit')
     Url = req.originalUrl.substring(0, end - 1)
   }
-  console.log('Inside pagination')
-
+  
   const results = {}
   if (endIndex < count) {
     results.next = `${process.env.API_URL}${Url}?limit=${limit}&page=${page + 1}`
@@ -33,7 +41,7 @@ module.exports = async function (req, count) {
     results.previous = null
   }
 
-  results.href = `${process.env.API_URL}${process.env.PORT}${Url}`
+  results.href = `${process.env.API_URL}${Url}`
   results.limit = limit
   results.offset = page
   results.total = count

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: trackController</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Namespace: trackController</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-controllers.html">controllers</a>~</span>trackController</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Track controller to call when routing.</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_trackController.js.html">controllers/trackController.js</a>, <a href="controllers_trackController.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getOneTrack"><span class="type-signature">(static) </span>getOneTrack<span class="signature">()</span><span class="type-signature"> &rarr; {JSON}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get one Track given its ID
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function takes the request as a parameter to access its body.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Respond</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The respond sent</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">next</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The next function in the middleware</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_trackController.js.html">controllers/trackController.js</a>, <a href="controllers_trackController.js.html#line51">line 51</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The details of the track in a json form.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSON</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getTracks"><span class="type-signature">(static) </span>getTracks<span class="signature">()</span><span class="type-signature"> &rarr; {JSON}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get a list of Tracks given their ID
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The function takes the request as a parameter to access its body.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Respond</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The respond sent</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">next</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The next function in the middleware</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="controllers_trackController.js.html">controllers/trackController.js</a>, <a href="controllers_trackController.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The details of the tracks in a json form.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">JSON</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers.html">controllers</a></li><li><a href="module-controllers_album.html">controllers/album</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_category.html">controllers/category</a></li><li><a href="module-controllers_player.html">controllers/player</a></li><li><a href="module-controllers_playlist.html">controllers/playlist</a></li><li><a href="module-controllers_track.html">controllers/track</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-models.html">models</a></li><li><a href="module-pagination.html">pagination</a></li><li><a href="module-routers_player.html">routers/player</a></li><li><a href="module-routes_albums.html">routes/albums</a></li><li><a href="module-routes_artistAlbumsRoutes.html">routes/artistAlbumsRoutes</a></li><li><a href="module-routes_artistRoutes.html">routes/artistRoutes</a></li><li><a href="module-routes_category.html">routes/category</a></li><li><a href="module-routes_player.html">routes/player</a></li><li><a href="module-routes_users.html">routes/users</a></li><li><a href="module-seeders_album.html">seeders/album</a></li><li><a href="module-seeders_category.html">seeders/category</a></li><li><a href="module-seeders_player.html">seeders/player</a></li><li><a href="module-seeders_playlist.html">seeders/playlist</a></li><li><a href="module-seeders_users.html">seeders/users</a></li><li><a href="module-services_mailer.html">services/mailer</a></li><li><a href="module-services_player.html">services/player</a></li><li><a href="module-services_user.html">services/user</a></li><li><a href="module-utils_apiFeatures.html">utils/apiFeatures</a></li><li><a href="module-utils_appError.html">utils/appError</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-controllers-artistViewingController.html">artistViewingController</a></li><li><a href="module-controllers-errorController.html">errorController</a></li><li><a href="module-controllers-trackController.html">trackController</a></li><li><a href="module-models-albumModel.html">albumModel</a></li><li><a href="module-routes_albums-albumRouter.html">albumRouter</a></li><li><a href="module-routes_artistAlbumsRoutes-artistAlbumsRouter.html">artistAlbumsRouter</a></li><li><a href="module-routes_artistRoutes-artistRouter.html">artistRouter</a></li><li><a href="module-routes_category-categoryRouter.html">categoryRouter</a></li><li><a href="module-routes_users-usersRouter.html">usersRouter</a></li><li><a href="module-seeders_album-albumSeeder.html">albumSeeder</a></li><li><a href="module-seeders_album-trackSeeder.html">trackSeeder</a></li><li><a href="module-seeders_category-categorySeeder.html">categorySeeder</a></li><li><a href="module-seeders_playlist-playlistSeeder.html">playlistSeeder</a></li><li><a href="module-seeders_users-usersSeeder.html">usersSeeder</a></li></ul><h3>Classes</h3><ul><li><a href="module-models-context.html">context</a></li><li><a href="module-models-player.html">player</a></li><li><a href="module-models-playHistory.html">playHistory</a></li><li><a href="module-models-user.html">user</a></li><li><a href="module-services_mailer-mailerService.html">mailerService</a></li><li><a href="module-services_player-playerService.html">playerService</a></li><li><a href="module-services_user-userService.html">userService</a></li><li><a href="module-utils_apiFeatures-APIFeatures.html">APIFeatures</a></li><li><a href="module-utils_appError-AppError.html">AppError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Album">Album</a></li><li><a href="global.html#APIFeatures">APIFeatures</a></li><li><a href="global.html#AppError">AppError</a></li><li><a href="global.html#catchAsync">catchAsync</a></li><li><a href="global.html#categorySchema">categorySchema</a></li><li><a href="global.html#express">express</a></li><li><a href="global.html#FacebookTokenStrategy">FacebookTokenStrategy</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#multer">multer</a></li><li><a href="global.html#passport">passport</a></li><li><a href="global.html#Track">Track</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#userService">userService</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Apr 06 2020 11:37:02 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

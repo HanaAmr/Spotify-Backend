@@ -108,7 +108,7 @@ const requestBecomeArtist = catchAsync(async function (req, res, next) {
 })
 
 /**
- *Upgrades user.
+ * Upgrades user.
  * @alias module:controllers/user
  * @param {Object} req - The request passed.
  * @param {Object} res - The respond sent

@@ -1,13 +1,18 @@
 /** MongoDB Model for the music player object.
+ * @module models/player
  * @requires mongoose
  */
 const mongoose = require('mongoose')
 
 /**
- * Player object schema
- * @memberof module:models~
- * @class player
- * @classdesc The player object that contains details of the music player of the user.
+ * Player schema
+ * @alias module:models/player
+ * @type {object}
+ * @property {String} userId The id of the user that this player belongs to
+ * @property {object} Context The context of this player that keeps track of user activity
+ * @property {String} queueTracksUris The list of tracks in the queue for free user
+ * @property {Number} queueOffset The offset of the queue, i.e. which track should be played
+ * @const
  */
 const playerSchema = new mongoose.Schema({
   userId: {

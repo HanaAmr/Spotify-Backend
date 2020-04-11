@@ -13,7 +13,6 @@ const express = require('express')
  * Express router to mount user related functions on.
  * @type {object}
  * @const
- * @namespace usersRouter
  */
 const router = express.Router()
 

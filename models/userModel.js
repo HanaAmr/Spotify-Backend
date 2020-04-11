@@ -1,7 +1,8 @@
 /** MongoDB Model for the user object.
- * @module models
+ * @module models/user
  * @requires mongoose
  */
+
 
 const mongoose = require('mongoose')
 
@@ -20,13 +21,38 @@ const bcrypt = require('bcryptjs')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 
-/**
- * User object schema
- * @class user
- * @classdesc All the data of the user
- */
-const Schema = mongoose.Schema
 
+/**
+ * User schema
+ *  @alias module:models/user
+ * @type {object}
+ * @property {String} name name of the user
+ * @property {String} href href of the user
+ * @property {String} images images of the user
+ * @property {String} externalUrls externalUrls of the user
+ * @property {String} email email of the user
+ * @property {String} password password of the user
+ * @property {String} dateOfBirth dateOfBirth of the user
+ * @property {String} facebookId facebookId of the user
+ * @property {String} gender gender of the user
+ * @property {String} role role of the user
+ * @property {String} followers followers of the user
+ * @property {String} following following of the user
+ * @property {String} userStats userStats of the user
+ * @property {String} createdPlaylists createdPlaylists of the user
+ * @property {String} likedPlaylists likedPlaylists of the user
+ * @property {String} artistInfo artistInfo of the user
+ * @property {String} resetPasswordToken resetPasswordToken of the user
+ * @property {String} resetPasswordExpires resetPasswordExpires of the user
+ * @property {String} upgradeToken upgradeToken of the user
+ * @property {String} upgradeTokenExpires upgradeTokenExpires of the user
+ * @property {String} upgradeRole upgradeRole of the user
+ * @property {String} uri uri of the user
+ * @const
+ */
+
+
+const Schema = mongoose.Schema
 const userSchema = new Schema({
   name: {
     type: String,
@@ -57,7 +83,7 @@ const userSchema = new Schema({
     default: '1980-01-01',
     validate: {
       validator: function () {
-        return (this.dateOfBirth < '2000-01-01')
+        return (this.dateOfBirth < '2000-01-01' && this.dateOfBirth > '1920-01-01')
       }
     }
   },
@@ -126,7 +152,7 @@ const userSchema = new Schema({
 
 /**
 * Encrypting password before saving
-* @alias module:models/userModel
+* @alias module:models/user
 * @inner
 * @param {string} save - encrypt password before saving in database.
 * @param {callback} middleware - function encrypts password.
@@ -142,7 +168,7 @@ userSchema.pre('save', async function (next) {
 
 /**
 * Encrypting password before saving
-* @alias module:models/userModel
+* @alias module:models/user
 * @inner
 * @param {string} candidate password - the input password.
 * @param {string} user password - the user's password saved in database.

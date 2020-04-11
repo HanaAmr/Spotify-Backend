@@ -1,13 +1,9 @@
 /**
  * Models module.
  * @module models/playlist
- * @requires express
+ * @requires mongoose
  */
 
-/**
- * express module
- * @const
- */
 const mongoose = require('mongoose')
 
 /**

@@ -1,5 +1,5 @@
 /** Seeder to seed data for playHistories
- * @module seeders/playlist
+ * @module seeders/playHistory
  * @requires express
  */
 
@@ -71,7 +71,7 @@ db.on('error', err => {
 /**
  * A function that is used to create inital seed of contexts
  *
- * @memberof module:seeders/context~contextSeeder
+ * @memberof module:seeders/playHistory
  *
  */
 createPlayHistories = async () => {

@@ -1,7 +1,7 @@
-/** Express service for Emailing
- * @module services/mailer
- * @requires express
- */
+// /** Express service for Emailing
+//  * @module services/mailer
+//  * @requires express
+//  */
 
 /**
  * nodemailer module

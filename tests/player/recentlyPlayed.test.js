@@ -1,7 +1,7 @@
-/** Jest unit testing for functions related to recently played
- * @module routes/player
- * @requires express
- */
+// /** Jest unit testing for functions related to recently played
+//  * @module routers/player
+//  * @requires express
+//  */
 
 /**
  * sinon
@@ -43,11 +43,17 @@ const User = require('../../models/userModel')
 const PlayHistory = require('../../models/playHistoryModel')
 
 /**
- * express module
  * Album model from the database
  * @const
  */
 const Album = require('../../models/albumModel')
+
+/**
+ * express module
+ * Playlit model from the database
+ * @const
+ */
+const Playlist = require('../../models/playlistModel')
 
 /**
  * express module
@@ -113,6 +119,8 @@ describe('Adding to recently played list of a user', () => {
   // Drop the whole users, playHistory collection before testing and add a simple user to test with
   beforeAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+    await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('playhistories').deleteMany({})
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -131,6 +139,38 @@ describe('Adding to recently played list of a user', () => {
       externalUrls: []
     })
     await newArtist.save()
+    const newAlbum = new Album({
+    name: 'Evolve',
+    albumType: 'album',
+    externalUrls: 'this should be an externalUrl',
+    type: 'album',
+    genre: 'Pop-rock',
+    label: 'Imagine Dragons Album',
+    copyrights: '© 2018 KIDinaKORNER/Interscope Records',
+    releaseDate: '2018-01-01',
+    artists: [newArtist._id],
+    totalTracks: 2,
+    popularity: 300000,
+    uri:"abcd",
+    href: "abcd"
+    })
+    await newAlbum.save()
+    const newPlaylist = new Playlist({
+    name: 'Imagine Dragons Radio',
+    collaborative: false,
+    externalUrl: 'this should be an externalUrl',
+    description: 'Imagine Dragons',
+    owner: newArtist._id,
+    public: true,
+    snapshot_id: '5e729e8b3d8d0a432c70b59d',
+    type: 'playlist',
+    popularity: 24000000,
+    noOfFollowers: 2000000,
+    createdAt: Date.now(),
+    uri:"abcd",
+    href: "abcd"
+    })
+    await newPlaylist.save()
     // Mock the userServices get user id function to return the testing user id.
     sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
   })
@@ -138,17 +178,82 @@ describe('Adding to recently played list of a user', () => {
   // Drop the whole users, playHistory collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+    await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('playhistories').deleteMany({})
     sinon.restore()
   })
 
-  // Testing adding to recently played with no problems
+
+  // Testing adding to recently played linked with artist with no problems
   it('Should add to recently played with no problems', async (done) => {
+    //Deletes recently played after each test
+    await mongoose.connection.collection('playhistories').deleteMany({})
+
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
       body: {
         contextType: 'artist',
+        contextUri: 'abcd',
+        trackUri: '1234'
+      }
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    await playerController.addToRecentlyPlayed(request, response)
+    response.on('end', async () => {
+      try {
+        const count = await PlayHistory.countDocuments()
+        expect(count).toEqual(1)
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+
+  // Testing adding to recently played linked with album with no problems
+  it('Should add to recently played linked with album with no problems', async (done) => {
+    //Deletes recently played after each test
+    await mongoose.connection.collection('playhistories').deleteMany({})
+
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/recentlyPlayed',
+      body: {
+        contextType: 'album',
+        contextUri: 'abcd',
+        trackUri: '1234'
+      }
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    await playerController.addToRecentlyPlayed(request, response)
+    response.on('end', async () => {
+      try {
+        const count = await PlayHistory.countDocuments()
+        expect(count).toEqual(1)
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  // Testing adding to recently played linked with playlist with no problems
+  it('Should add to recently played linked with playlist with no problems', async (done) => {
+    //Deletes recently played after each test
+    await mongoose.connection.collection('playhistories').deleteMany({})
+
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/recentlyPlayed',
+      body: {
+        contextType: 'playlist',
         contextUri: 'abcd',
         trackUri: '1234'
       }
@@ -185,7 +290,7 @@ describe('Adding to recently played list of a user', () => {
     })
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     await playerController.addToRecentlyPlayed(request, response)
-    response.on('end', async () => {
+     response.on('end', async () => {
       try {
         const playHistoryAdded = await PlayHistory.findOne()
         expect(playHistoryAdded.track.uri).toEqual('12345')
@@ -212,7 +317,6 @@ describe('Adding to recently played list of a user', () => {
     })
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     playerController.addToRecentlyPlayed(request, response, (err) => {
-      console.log(err)
       expect(err).toEqual(expect.anything())
       expect(err.statusCode).toEqual(404)
       done()

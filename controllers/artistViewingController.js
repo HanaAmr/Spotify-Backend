@@ -1,21 +1,15 @@
-/** Express controller providing ArtistViewing related controls
- * @module controllers
+/**
+ * Controller module.
+ * @module controllers/artistViewingController
  * @requires express
  */
 
 /**
- * ArtistViewing controller to call when routing.
+ * artist viewing(in user mode) controller to call when routing.
  * @type {object}
  * @const
- * @namespace artistViewingController
  */
 
-/**
- * express module
- * util to import promisify function
- * @const
- */
-// const express = require('express')
 
 /**
  * util to handle query parameters
@@ -24,28 +18,24 @@
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * mongoose module
  * mongoose model for user
  * @const
  */
 const User = require('./../models/userModel')
 
 /**
- * mongoose module
  * mongoose model for album
  * @const
  */
 const Album = require('./../models/albumModel')
 
 /**
- * mongoose module
  * mongoose model for playlist
  * @const
  */
 const Playlist = require('./../models/playlistModel')
 
 /**
- * mongoose module
  * mongoose model for track
  * @const
  */
@@ -58,19 +48,19 @@ const Track = require('./../models/trackModel')
 const AppError = require('../utils/appError')
 
 /**
- * catch async function for handling asynch functions
+ * catch async function for handling async functions
  * @const
  */
 const catchAsync = require('./../utils/catchAsync')
 
 /**
-* A middleware function for Returning An array of Artists
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for Returning An array of Artists (with only public fields)
+ * @alias module:controllers/artistViewingController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @return {JSON} Returns JSON array of Artist object
+ */
 exports.getArtists = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(User.find({ role: 'artist' },
     {
@@ -96,13 +86,14 @@ exports.getArtists = catchAsync(async (req, res, next) => {
 })
 
 /**
-* A middleware function for Returning an artist whose id is specified in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for Returning an artist (with only public fields) whose id is specified in the query
+ *  @alias module:controllers/artistViewingController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} id - id of artist
+ * @return {JSON} Returns JSON object of artist if id is valid or an error object Otherwise
+ */
 exports.getArtist = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id,
     {
@@ -125,13 +116,14 @@ exports.getArtist = catchAsync(async (req, res, next) => {
 })
 
 /**
-* A middleware function for Returning related artists to the passed artist id in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for Returning related artists to the passed artist id in the query
+ * @alias module:controllers/artistViewingController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} id - id of artist
+ * @return {JSON} Returns JSON array of artist objects if id is valid and related artists exist or an error object Otherwise
+ */
 exports.getRelatedArtists = catchAsync(async (req, res) => {
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
@@ -162,14 +154,16 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   })
 })
 
+
 /**
-* A middleware function for Returning albumss for artist whose id is passed in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for Returning albums of artist whose id is passed in the query
+ *  @alias module:controllers/artistViewingController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} id - id of artist
+ * @return {JSON} Returns JSON array of album objects if id is valid and artist have albums. Otherwise, returns an error object
+ */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
@@ -192,14 +186,16 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   })
 })
 
+
 /**
-* A middleware function for TopTracks for artist whose id is passed in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for returning TopTracks for artist whose id is passed in the query
+ *  @alias module:controllers/artistViewingController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} id - id of artist
+ * @return {JSON} Returns JSON array of track objects if id is valid and artist have tracks. Otherwise, returns an error object
+ */
 exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
@@ -221,14 +217,16 @@ exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
   })
 })
 
+
 /**
-* A middleware function for CreatedPlaylists for artist whose id is passed in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
-*/
+ * A middleware function for returning CreatedPlaylists for artist whose id is passed in the query
+ *  @alias module:controllers/artistViewingController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} id - id of artist
+ * @return {JSON} Returns JSON array of playlist objects if id is valid and artist have have createdPlaylists. Otherwise, returns an error object
+ */
 exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
 
@@ -241,7 +239,7 @@ exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   //   .paginate()
 
   const playlists = await Playlist.find({ owner: req.params.id })
-  if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 484)) }
+  if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 404)) }
 
   res.status(200).json({
     status: 'success',
