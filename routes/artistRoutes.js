@@ -42,7 +42,7 @@ router
  * @function
  * @memberof module:routes/artistRouters
  * @inner
- * @param {string} artistId - artist ID
+ * @param {string} artistId - artist id passed in query
  */
 router
   .route('/:id')
@@ -54,7 +54,7 @@ router
  * @function
  * @memberof module:routes/artistRouters
  * @inner
- * @param {string} artistId - artist ID
+ * @param {string} artistId - artist id passed in query
  */
 router
   .route('/:id/related-artists')
@@ -66,7 +66,7 @@ router
  * @function
  * @memberof module:routes/artistRouters
  * @inner
- * @param {string} artistId - artist ID
+ * @param {string} artistId - artist ID passed in query
  */
 router
   .route('/:id/albums')
@@ -78,23 +78,25 @@ router
  * @function
  * @memberof module:routes/artistRouters
  * @inner
- * @param {string} artistId - artist ID
+ * @param {string} artistId - artist ID passed in query
  */
 router
   .route('/:id/top-tracks')
   .get(artistViewingController.getArtistTopTracks)
 
-router
-  .route('/:id/created-playlists')
-  .get(artistViewingController.getArtistCreatedPlaylists)
 
 /**
- * Route for requesting a specific album
+ * Route for requesting artist Created Playlists
  * @name /artists/:artistId/artist-created-playlists
  * @function
  * @memberof module:routes/artistRouters
  * @inner
- * @param {string} artistId - artist ID
+ * @param {string} artistId - artist ID passed in query
  */
+router
+  .route('/:id/created-playlists')
+  .get(artistViewingController.getArtistCreatedPlaylists)
+
+
 
 module.exports = router

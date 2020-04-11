@@ -29,7 +29,7 @@ const APIFeatures = require('./../utils/apiFeatures')
 const catchAsync = require('./../utils/catchAsync')
 
 /**
- * AppError class file
+ * Error handing module
  * @const
  */
 const AppError = require('./../utils/appError')

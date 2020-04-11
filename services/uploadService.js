@@ -1,3 +1,8 @@
+/** Express service for Emailing
+ * @module services/uploadService
+ * @requires multer
+ */
+
 /**
  * multer package for dealing with files
  * @const
