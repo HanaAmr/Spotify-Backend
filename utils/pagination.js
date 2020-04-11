@@ -1,13 +1,19 @@
+/**
+ * For making a paging object
+ * @module utils/pagination
+ * @requires express
+ */
+
+
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 
 /**
-* For making a paging objct
+* For making a paging object
 * @function
 * @memberof module:utils/pagination
 * @param {req} - The request sent
 * @param {count} - The number of documents that can be returned
-* @param {Async function}  - the async function to paginate.
 * @return {results} The results object containing next,prev,limit,offset,total,and href .
 */
 module.exports = async function (req, count) {

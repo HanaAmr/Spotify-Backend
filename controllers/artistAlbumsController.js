@@ -4,7 +4,6 @@ const { getAudioDurationInSeconds } = require('get-audio-duration')
  * express module
  * @const
  */
-// const express = require('express')
 
 /**
  * mongoose module
@@ -13,7 +12,7 @@ const { getAudioDurationInSeconds } = require('get-audio-duration')
 const mongoose = require('mongoose')
 
 /**
- * mongoose Album model
+ * Album model from the database
  * @const
  */
 const Album = require('../models/albumModel')

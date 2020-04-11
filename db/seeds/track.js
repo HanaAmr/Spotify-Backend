@@ -1,38 +1,34 @@
-// /** Seeder to have initial data for users
-//  * @module seeders/tracks
-//  * @requires express
-//  */
+/** Seeder to have initial data for users
+ * @module seeders/tracks
+ * @requires express
+ */
 
 // const express = require('express')
 /**
- * express module
  * Track model from the database
  * @const
  */
 const Track = require('../../models/trackModel')
+
 /**
- * express module
  * Album model from the database
  * @const
  */
 const Album = require('../../models/albumModel')
+
 /**
- * express module
  * User model from the database
  * @const
  */
 const User = require('../../models/userModel')
 
-// const app = express()
-// const app = require('./../../app')
 /**
- * express module
  * dotenv to access environment constants
  * @const
  */
 const dotenv = require('dotenv')
+
 /**
- * express module
  * Mongoose to access and change the database
  * @const
  */
@@ -55,9 +51,8 @@ db.on('error', err => {
 
 /**
  * A function that is used to create inital seed of tracks
- *
  * @memberof module:seeders/tracks
- *
+ * @function
  */
 createTracks = async () => {
   let user1 = User.find({ name: 'Imagine Dragons' }).select('_id')

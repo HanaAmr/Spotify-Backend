@@ -1,20 +1,7 @@
-/**
- * Pagination tests.
- * @module pagination
- * @requires express
- */
 
-/**
- * express module
- * Pagination file
- * @const
- */
 const paginatedResults = require('./../utils/pagination')
 
-/**
- * Test paginatedResults with limit specified and in the last page
- * @memberof module:tests/pagination
- */
+
 test('paginatedResults with limit specified and in the last page ', async () => {
   const req = {}
   req.query = {}
@@ -31,15 +18,10 @@ test('paginatedResults with limit specified and in the last page ', async () => 
   expect(results.href).toBe(`${process.env.API_URL}/browse/categories/5e85f1b37031746730dc71dc/playlists`)
 })
 
-/**
- * Test paginatedResults with no limit specified and in the first page
- * @memberof module:tests/pagination
- */
+
 test('paginatedResults with no limit specified and in the first page ', async () => {
   const req = {}
   req.query = {}
-  // req.query.page=3
-  // req.query.limit=4
   req.originalUrl = '/browse/categories/5e85f1b37031746730dc71dc/playlists'
   const count = 10
   const results = await paginatedResults(req, count)
@@ -51,10 +33,6 @@ test('paginatedResults with no limit specified and in the first page ', async ()
   expect(results.href).toBe(`${process.env.API_URL}/browse/categories/5e85f1b37031746730dc71dc/playlists`)
 })
 
-/**
- * Test paginatedResults with no limit specified and in a middle page
- * @memberof module:tests/pagination
- */
 test('paginatedResults with no limit specified and in a middle page ', async () => {
   const req = {}
   req.query = {}

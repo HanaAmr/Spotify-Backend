@@ -1,7 +1,6 @@
 /** MongoDB Model for the play history object.
  * @requires mongoose
  */
-
 const mongoose = require('mongoose')
 
 /**
