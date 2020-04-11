@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/albumModel.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/albumModel.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Models module.
+ * @module models/album
+ * @requires mongoose
+ */
+
+
+const mongoose = require('mongoose')
+
+/**
+ * Album schema
+ *  @alias module:models/album
+ * @type {object}
+ * @property {String} name Name of the album
+ * @property {String} href href of the album
+ * @property {String} images images of the album
+ * @property {String} albumType albumType of the album
+ * @property {String} externalUrls externalUrls of the album
+ * @property {String} type type of the album
+ * @property {String} uri uri of the album
+ * @property {String} genre genre of the album
+ * @property {String} label label of the album
+ * @property {Number} popularity popularity of the album
+ * @property {String} copyrights copyrights of the album
+ * @property {Date} releaseDate releaseDate of the album
+ * @property {object} artists artists of the album
+ * @property {Number} totalTracks totalTracks of the album
+ * @const
+ */
+const albumSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'An album must have a name'],
+    unique: true
+  },
+  href: {
+    type: String,
+    default: `${process.env.API_URL}/albums/`
+  },
+  image: {
+    type: String,
+    required: [true, 'An album must have an image'],
+    default: 'http://138.91.114.14/api/public/imgs/albums/default.jpg'
+  },
+  albumType: {
+    type: String,
+    required: [true, 'An Album must have a type']
+  },
+  externalUrls: {
+    description: 'an external URL object  Known external URLs for this album',
+    type: [String]
+  },
+  type: {
+    description: 'The object type  “album”',
+    type: String,
+    default: 'album'
+  },
+  uri: {
+    type: String,
+    description: 'The Spotify URI for the album.',
+    default: 'spotify:albums:'
+  },
+  genre: {
+    description: 'An array of strings. A list of the genres used to classify the album.',
+    type: [String],
+    required: [true, 'An album must have at least one genre']
+  },
+  label: {
+    description: 'The label for the album.',
+    type: String,
+    default: ' '
+  },
+  popularity: {
+    description: 'The popularity of the album. The value will be equal to the sum of the likes of the album’s individual tracks.',
+    type: Number,
+	  default: 0
+  },
+  copyrights: {
+    description: 'Array of copyrights objects. The copyright statements of the album.',
+    type: [String]
+  },
+  releaseDate: {
+    description: 'The date the album was first released, for example 1981. Depending on the precision, it might be shown as 1981-12 or 1981-12-15.',
+    type: Date,
+    default: Date.now()
+  },
+  artists:
+    [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'User'
+    }],
+  totalTracks: {
+    description: 'The total number of tracks inside the album',
+    type: Number,
+    default: 0
+  }
+})
+
+const Album = mongoose.model('Album', albumSchema)
+
+module.exports = Album
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_album.html">controllers/album</a></li><li><a href="module-controllers_artistAlbumsController.html">controllers/artistAlbumsController</a></li><li><a href="module-controllers_artistViewingController.html">controllers/artistViewingController</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_category.html">controllers/category</a></li><li><a href="module-controllers_errorController.html">controllers/errorController</a></li><li><a href="module-controllers_player.html">controllers/player</a></li><li><a href="module-controllers_playlist.html">controllers/playlist</a></li><li><a href="module-controllers_track.html">controllers/track</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-models_album.html">models/album</a></li><li><a href="module-models_category.html">models/category</a></li><li><a href="module-models_context.html">models/context</a></li><li><a href="module-models_player.html">models/player</a></li><li><a href="module-models_playHistory.html">models/playHistory</a></li><li><a href="module-models_playlist.html">models/playlist</a></li><li><a href="module-models_track.html">models/track</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-routes_albums.html">routes/albums</a></li><li><a href="module-routes_artistAlbumsRoutes.html">routes/artistAlbumsRoutes</a></li><li><a href="module-routes_artistRoutes.html">routes/artistRoutes</a></li><li><a href="module-routes_category.html">routes/category</a></li><li><a href="module-routes_player.html">routes/player</a></li><li><a href="module-routes_playlist.html">routes/playlist</a></li><li><a href="module-routes_track.html">routes/track</a></li><li><a href="module-routes_users.html">routes/users</a></li><li><a href="module-seeders_albums.html">seeders/albums</a></li><li><a href="module-seeders_categories.html">seeders/categories</a></li><li><a href="module-seeders_player.html">seeders/player</a></li><li><a href="module-seeders_playHistory.html">seeders/playHistory</a></li><li><a href="module-seeders_playlists.html">seeders/playlists</a></li><li><a href="module-seeders_tracks.html">seeders/tracks</a></li><li><a href="module-seeders_users.html">seeders/users</a></li><li><a href="module-services_uploadService.html">services/uploadService</a></li><li><a href="module-utils_catchAsync.html">utils/catchAsync</a></li><li><a href="module-utils_pagination.html">utils/pagination</a></li></ul><h3>Classes</h3><ul><li><a href="apiFeatures.html">apiFeatures</a></li><li><a href="global.html#appError">appError</a></li><li><a href="mailerService.html">mailerService</a></li><li><a href="playerService.html">playerService</a></li><li><a href="userService.html">userService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Album">Album</a></li><li><a href="global.html#AppError">AppError</a></li><li><a href="global.html#crypto">crypto</a></li><li><a href="global.html#dotenv">dotenv</a></li><li><a href="global.html#FacebookTokenStrategy">FacebookTokenStrategy</a></li><li><a href="global.html#httpMocks">httpMocks</a></li><li><a href="global.html#jwt">jwt</a></li><li><a href="global.html#mailerServices">mailerServices</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#nodemailer">nodemailer</a></li><li><a href="global.html#passport">passport</a></li><li><a href="global.html#Player">Player</a></li><li><a href="global.html#playerController">playerController</a></li><li><a href="global.html#PlayHistory">PlayHistory</a></li><li><a href="global.html#Playlist">Playlist</a></li><li><a href="global.html#sinon">sinon</a></li><li><a href="global.html#Track">Track</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#UserServices">UserServices</a></li><li><a href="global.html#userServices">userServices</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Apr 11 2020 22:54:52 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

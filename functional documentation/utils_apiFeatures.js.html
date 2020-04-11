@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utils/apiFeatures.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utils/apiFeatures.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+class APIFeatures {
+ /**
+ * APIFeatures class for modifying responses
+ * @class apiFeatures
+ * @classdesc The apiFeatures class to modify the responses 
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  constructor (query, queryString) {
+    this.query = query
+    this.queryString = queryString
+  }
+
+  /**
+ * For filtering documents
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  filter () {
+    const queryObj = { ...this.queryString }
+    const excludedFields = ['page', 'sort', 'limit', 'fields']
+    excludedFields.forEach(el => delete queryObj[el])
+
+    let queryStr = JSON.stringify(queryObj)
+
+    // using regular expression
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+    this.query = this.query.find(JSON.parse(queryStr))
+
+    // to be able to chain methods!!
+    return this
+  }
+
+  /**
+ * For sorting documents
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  sort () {
+    if (this.queryString.sort) {
+      const sortBy = this.queryString.sort.split(',').join(' ')
+      this.query = this.query.sort(sortBy)
+    }
+    return this
+  }
+
+  /**
+ * For filtering fields
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  limitFields () {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ')
+      this.query = this.query.select(fields)
+    } else {
+      this.query = this.query.select('-__v')
+    }
+    return this
+  }
+
+  /**
+ * For filtering fields of playlists
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  limitFieldsPlaylist () {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ')
+      if (fields.includes('owner')) {
+        this.query = this.query.select(fields)
+        this.query.populate({
+          path: 'owner',
+          select: '_id name uri href externalUrls images type followers userStats artistInfo' // user public data
+        })
+      } else {
+        this.query = this.query.select(fields)
+      }
+    } else {
+      this.query = this.query.select('-__v -trackObjects')
+      this.query.populate({
+        path: 'owner',
+        select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
+      })
+    }
+    return this
+  }
+
+  /**
+ * For filtering fields of tracks
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  limitFieldsTracks () {
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(',').join(' ')
+
+      if (fields.includes('album') || fields.includes('artists')) {
+        if (fields.includes('album')) {
+          const start = fields.indexOf('album')
+          const end = fields.indexOf(')')
+          const fieldsPopulated = fields.substring(start + 6, end)
+          const trackFields = fields.substring(0, start)
+
+          if (fieldsPopulated !== '') {
+            this.query.populate({
+              path: 'album',
+              select: fieldsPopulated
+            })
+          } else {
+            this.query.populate({
+              path: 'album',
+              select: '-artists -__v'
+            })
+          }
+          this.query = this.query.select(trackFields)
+        }
+
+        if (fields.includes('artists')) {
+          this.query.populate({
+            path: 'artists',
+            select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
+
+          })
+        }
+      } else {
+        this.query = this.query.select(fields)
+      }
+    } else {
+      this.query = this.query.select('-__v -audioFilePath')
+      this.query.populate({ path: 'album', select: '-artists -__v' })
+      this.query.populate({ path: 'artists', select: '_id name uri href externalUrls images role followers userStats artistInfo' })
+    }
+    return this
+  }
+
+  /**
+ * For paginating
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
+ */
+  paginate () {
+    const page = this.queryString.page * 1 || 1
+    const limit = this.queryString.limit * 1 || 5
+    const skip = (page - 1) * limit
+
+    this.query = this.query.skip(skip).limit(limit)
+    return this
+  }
+}
+
+module.exports = APIFeatures
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_album.html">controllers/album</a></li><li><a href="module-controllers_artistAlbumsController.html">controllers/artistAlbumsController</a></li><li><a href="module-controllers_artistViewingController.html">controllers/artistViewingController</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_category.html">controllers/category</a></li><li><a href="module-controllers_errorController.html">controllers/errorController</a></li><li><a href="module-controllers_player.html">controllers/player</a></li><li><a href="module-controllers_playlist.html">controllers/playlist</a></li><li><a href="module-controllers_track.html">controllers/track</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-models_album.html">models/album</a></li><li><a href="module-models_category.html">models/category</a></li><li><a href="module-models_context.html">models/context</a></li><li><a href="module-models_player.html">models/player</a></li><li><a href="module-models_playHistory.html">models/playHistory</a></li><li><a href="module-models_playlist.html">models/playlist</a></li><li><a href="module-models_track.html">models/track</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-routes_albums.html">routes/albums</a></li><li><a href="module-routes_artistAlbumsRoutes.html">routes/artistAlbumsRoutes</a></li><li><a href="module-routes_artistRoutes.html">routes/artistRoutes</a></li><li><a href="module-routes_category.html">routes/category</a></li><li><a href="module-routes_player.html">routes/player</a></li><li><a href="module-routes_playlist.html">routes/playlist</a></li><li><a href="module-routes_track.html">routes/track</a></li><li><a href="module-routes_users.html">routes/users</a></li><li><a href="module-seeders_albums.html">seeders/albums</a></li><li><a href="module-seeders_categories.html">seeders/categories</a></li><li><a href="module-seeders_player.html">seeders/player</a></li><li><a href="module-seeders_playHistory.html">seeders/playHistory</a></li><li><a href="module-seeders_playlists.html">seeders/playlists</a></li><li><a href="module-seeders_tracks.html">seeders/tracks</a></li><li><a href="module-seeders_users.html">seeders/users</a></li><li><a href="module-services_uploadService.html">services/uploadService</a></li><li><a href="module-utils_catchAsync.html">utils/catchAsync</a></li><li><a href="module-utils_pagination.html">utils/pagination</a></li></ul><h3>Classes</h3><ul><li><a href="apiFeatures.html">apiFeatures</a></li><li><a href="global.html#appError">appError</a></li><li><a href="mailerService.html">mailerService</a></li><li><a href="playerService.html">playerService</a></li><li><a href="userService.html">userService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Album">Album</a></li><li><a href="global.html#AppError">AppError</a></li><li><a href="global.html#crypto">crypto</a></li><li><a href="global.html#dotenv">dotenv</a></li><li><a href="global.html#FacebookTokenStrategy">FacebookTokenStrategy</a></li><li><a href="global.html#httpMocks">httpMocks</a></li><li><a href="global.html#jwt">jwt</a></li><li><a href="global.html#mailerServices">mailerServices</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#nodemailer">nodemailer</a></li><li><a href="global.html#passport">passport</a></li><li><a href="global.html#Player">Player</a></li><li><a href="global.html#playerController">playerController</a></li><li><a href="global.html#PlayHistory">PlayHistory</a></li><li><a href="global.html#Playlist">Playlist</a></li><li><a href="global.html#sinon">sinon</a></li><li><a href="global.html#Track">Track</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#UserServices">UserServices</a></li><li><a href="global.html#userServices">userServices</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Apr 11 2020 22:54:52 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

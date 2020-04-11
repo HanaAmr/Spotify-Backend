@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: routes/userRouters.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: routes/userRouters.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** Express router providing user related routes
+ * @module routes/users
+ * @requires express
+ */
+
+/**
+ * express module
+ * @const
+ */
+const express = require('express')
+
+/**
+ * Express router to mount user related functions on.
+ * @type {object}
+ * @const
+ */
+const router = express.Router()
+
+/**
+ * User controller to call when routing.
+ * @type {object}
+ * @const
+ */
+const userController = require('../controllers/userController')
+
+/**
+ * Auth controller to call when routing.
+ * @type {object}
+ * @const
+ */
+const authController = require('../controllers/authController')
+
+/**
+ * express module
+ * passport for connecting with facebook
+ * @const
+ */
+const passport = require('passport')
+const passportConfig = require('../passport')
+
+/**
+ * Route for requesting to sign up
+ * @name post/signUp
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Sign up path
+ * @param {callback} middleware - Sign up middleware.
+ */
+router.post('/signUp', authController.signUp)
+
+/**
+ * Route for requesting to login with facebook
+ * @name post/loginWithFacebook
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Sign up with facebook path
+ * @param {callback} middleware - Sign up middleware.
+ */
+router.post('/loginWithFacebook', passport.authenticate('facebookToken', { session: false }), authController.loginWithFacebook)
+
+/**
+* Route for requesting to sign in
+* @name post/signIn
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - Sign in path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - Sign in middleware.
+*/
+router.post('/signIn', authController.signIn)
+
+/**
+* Route for requesting to get user profile
+* @name get/getMyProfile
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - get my profile path
+* @param {callback} middleware - get my profile middleware.
+*/
+router.get('/me', authController.protect, authController.getMyProfile)
+
+/**
+* Route for requesting to update user profile
+* @name put/updateProfile
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - update profile path
+* @param {callback} middleware - update profile middleware.
+*/
+router.put('/me', authController.protect, authController.updateProfile)
+
+/**
+* Route for requesting to change user password
+* @name put/changePassword
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - change password path
+* @param {callback} middleware - change password middleware.
+*/
+router.put('/me/changePassword', authController.protect, authController.changePassword)
+
+/**
+* Route for requesting to follow user
+* @name put/followArtistUser
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - follow user path
+* @param {callback} middleware - follow user middleware.
+*/
+router.put('/me/following', authController.protect, authController.followArtistUser)
+
+/**
+ * Route for requesting to reset password
+ * @name post/resetPassword
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Request to reset password path
+ * @param {Function} requestResetPassword - Requests to reset the password for the user.
+ */
+router.post('/resetPassword', userController.requestResetPassword)
+
+/**
+ * Route for resetting password
+ * @name post/resetPassword/:token
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Resetting password path
+ * @param {function} resetPassword - Resets the password for the user given he had a valid token.
+ */
+router.post('/resetPassword/:token', userController.resetPassword)
+
+/**
+ * Route for requesting to become premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Becoming premium path
+ * @param {function} requestBecomePremium - Requests upgrade to become a premium user.
+ */
+router.post('/me/premium', authController.protect, authController.restrictTo('user'), userController.requestBecomePremium)
+
+/**
+ * Route for confirming upgrade
+ * @name post/me/upgrade
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Confirm upgrade user path
+ * @param {function} confirmUpgrade - Confirms user upgrade to either premium or artist membership.
+ */
+router.post('/me/upgrade/:confirmationCode', authController.protect, userController.confirmUpgrade)
+
+/**
+ * Route for requesting to cancel premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Request to cancel premium membership path
+ * @param {function} cancelUpgrade - Requests to cancel premium subscription.
+ */
+router.delete('/me/premium', authController.protect, authController.restrictTo('premium'), userController.cancelUpgrade)
+
+/**
+ * Route for confirming to cancel premium
+ * @name post/me/premium
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Confirm cancel premium path
+ * @param {function} confirmCancelUpgrade - Cancels premium subscription for the user.
+ */
+router.delete('/me/premium/:confirmationCode', authController.protect, authController.restrictTo('premium'), userController.confirmCancelUpgrade)
+
+/**
+ * Route for requesting to become artist
+ * @name post/me/artist
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Becoming artist path
+ * @param {function} requestBecomeArtist - Requests upgrade to become an artist user.
+ */
+router.post('/me/artist', authController.protect, userController.requestBecomeArtist)
+
+/**
+ * Route for requesting to cancel artist
+ * @name post/me/artist
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Request to cancel artist membership path
+ * @param {function} cancelUpgrade - Requests to cancel premium subscription.
+ */
+router.delete('/me/artist', authController.protect, authController.restrictTo('artist'), userController.cancelUpgrade)
+
+/**
+ * Route for confirming to cancel artist
+ * @name post/me/artist
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Confirm cancel artist path
+ * @param {function} confirmCancelUpgrade -  Cancels artist membership for the user.
+ */
+router.delete('/me/artist/:confirmationCode', authController.protect, authController.restrictTo('artist'), userController.confirmCancelUpgrade)
+
+module.exports = router
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_album.html">controllers/album</a></li><li><a href="module-controllers_artistAlbumsController.html">controllers/artistAlbumsController</a></li><li><a href="module-controllers_artistViewingController.html">controllers/artistViewingController</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_category.html">controllers/category</a></li><li><a href="module-controllers_errorController.html">controllers/errorController</a></li><li><a href="module-controllers_player.html">controllers/player</a></li><li><a href="module-controllers_playlist.html">controllers/playlist</a></li><li><a href="module-controllers_track.html">controllers/track</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-models_album.html">models/album</a></li><li><a href="module-models_category.html">models/category</a></li><li><a href="module-models_context.html">models/context</a></li><li><a href="module-models_player.html">models/player</a></li><li><a href="module-models_playHistory.html">models/playHistory</a></li><li><a href="module-models_playlist.html">models/playlist</a></li><li><a href="module-models_track.html">models/track</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-routes_albums.html">routes/albums</a></li><li><a href="module-routes_artistAlbumsRoutes.html">routes/artistAlbumsRoutes</a></li><li><a href="module-routes_artistRoutes.html">routes/artistRoutes</a></li><li><a href="module-routes_category.html">routes/category</a></li><li><a href="module-routes_player.html">routes/player</a></li><li><a href="module-routes_playlist.html">routes/playlist</a></li><li><a href="module-routes_track.html">routes/track</a></li><li><a href="module-routes_users.html">routes/users</a></li><li><a href="module-seeders_albums.html">seeders/albums</a></li><li><a href="module-seeders_categories.html">seeders/categories</a></li><li><a href="module-seeders_player.html">seeders/player</a></li><li><a href="module-seeders_playHistory.html">seeders/playHistory</a></li><li><a href="module-seeders_playlists.html">seeders/playlists</a></li><li><a href="module-seeders_tracks.html">seeders/tracks</a></li><li><a href="module-seeders_users.html">seeders/users</a></li><li><a href="module-services_uploadService.html">services/uploadService</a></li><li><a href="module-utils_catchAsync.html">utils/catchAsync</a></li><li><a href="module-utils_pagination.html">utils/pagination</a></li></ul><h3>Classes</h3><ul><li><a href="apiFeatures.html">apiFeatures</a></li><li><a href="global.html#appError">appError</a></li><li><a href="mailerService.html">mailerService</a></li><li><a href="playerService.html">playerService</a></li><li><a href="userService.html">userService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Album">Album</a></li><li><a href="global.html#AppError">AppError</a></li><li><a href="global.html#crypto">crypto</a></li><li><a href="global.html#dotenv">dotenv</a></li><li><a href="global.html#FacebookTokenStrategy">FacebookTokenStrategy</a></li><li><a href="global.html#httpMocks">httpMocks</a></li><li><a href="global.html#jwt">jwt</a></li><li><a href="global.html#mailerServices">mailerServices</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#nodemailer">nodemailer</a></li><li><a href="global.html#passport">passport</a></li><li><a href="global.html#Player">Player</a></li><li><a href="global.html#playerController">playerController</a></li><li><a href="global.html#PlayHistory">PlayHistory</a></li><li><a href="global.html#Playlist">Playlist</a></li><li><a href="global.html#sinon">sinon</a></li><li><a href="global.html#Track">Track</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#UserServices">UserServices</a></li><li><a href="global.html#userServices">userServices</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Apr 11 2020 22:54:52 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
