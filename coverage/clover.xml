@@ -1,0 +1,944 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1586640076249" clover="3.2.0">
+  <project timestamp="1586640076249" name="All files">
+    <metrics statements="812" coveredstatements="570" conditionals="204" coveredconditionals="95" methods="99" coveredmethods="53" elements="1115" coveredelements="718" complexity="0" loc="812" ncloc="812" packages="6" files="36" classes="36"/>
+    <package name="Spotify-Backend">
+      <metrics statements="40" coveredstatements="31" conditionals="4" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <file name="app.js" path="C:\Users\Dell\Desktop\Spotify-Backend\app.js">
+        <metrics statements="26" coveredstatements="25" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="10" type="stmt"/>
+        <line num="2" count="10" type="stmt"/>
+        <line num="3" count="10" type="stmt"/>
+        <line num="4" count="10" type="stmt"/>
+        <line num="5" count="10" type="stmt"/>
+        <line num="7" count="10" type="stmt"/>
+        <line num="13" count="10" type="stmt"/>
+        <line num="14" count="10" type="stmt"/>
+        <line num="15" count="10" type="stmt"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="19" count="10" type="stmt"/>
+        <line num="20" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="25" count="10" type="stmt"/>
+        <line num="26" count="10" type="stmt"/>
+        <line num="27" count="10" type="stmt"/>
+        <line num="28" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="39" count="10" type="stmt"/>
+        <line num="41" count="10" type="stmt"/>
+      </file>
+      <file name="passport.js" path="C:\Users\Dell\Desktop\Spotify-Backend\passport.js">
+        <metrics statements="14" coveredstatements="6" conditionals="4" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="5" count="10" type="stmt"/>
+        <line num="7" count="10" type="stmt"/>
+        <line num="8" count="10" type="stmt"/>
+        <line num="14" count="10" type="stmt"/>
+        <line num="20" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="Spotify-Backend.controllers">
+      <metrics statements="390" coveredstatements="233" conditionals="110" coveredconditionals="39" methods="55" coveredmethods="23"/>
+      <file name="albumController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\albumController.js">
+        <metrics statements="27" coveredstatements="26" conditionals="6" coveredconditionals="5" methods="4" coveredmethods="4"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="35" count="10" type="stmt"/>
+        <line num="41" count="10" type="stmt"/>
+        <line num="52" count="10" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="55" count="2" type="stmt"/>
+        <line num="61" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="82" count="10" type="stmt"/>
+        <line num="83" count="3" type="stmt"/>
+        <line num="89" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="90" count="2" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+        <line num="110" count="10" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="115" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="119" count="1" type="stmt"/>
+        <line num="152" count="10" type="stmt"/>
+        <line num="153" count="2" type="stmt"/>
+        <line num="154" count="2" type="stmt"/>
+        <line num="160" count="2" type="stmt"/>
+      </file>
+      <file name="artistAlbumsController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\artistAlbumsController.js">
+        <metrics statements="47" coveredstatements="12" conditionals="10" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="36" count="10" type="stmt"/>
+        <line num="42" count="10" type="stmt"/>
+        <line num="48" count="10" type="stmt"/>
+        <line num="54" count="10" type="stmt"/>
+        <line num="55" count="10" type="stmt"/>
+        <line num="61" count="10" type="stmt"/>
+        <line num="72" count="10" type="stmt"/>
+        <line num="73" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="75" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="78" count="0" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="91" count="0" type="stmt"/>
+        <line num="107" count="10" type="stmt"/>
+        <line num="108" count="0" type="stmt"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="110" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="112" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="113" count="0" type="stmt"/>
+        <line num="114" count="0" type="stmt"/>
+        <line num="115" count="0" type="stmt"/>
+        <line num="120" count="0" type="stmt"/>
+        <line num="124" count="0" type="stmt"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="126" count="0" type="stmt"/>
+        <line num="129" count="0" type="stmt"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="131" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
+        <line num="137" count="0" type="stmt"/>
+        <line num="138" count="0" type="stmt"/>
+        <line num="139" count="0" type="stmt"/>
+        <line num="144" count="0" type="stmt"/>
+        <line num="159" count="10" type="stmt"/>
+        <line num="160" count="0" type="stmt"/>
+        <line num="162" count="0" type="stmt"/>
+        <line num="168" count="0" type="stmt"/>
+        <line num="174" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="176" count="0" type="stmt"/>
+      </file>
+      <file name="artistViewingController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\artistViewingController.js">
+        <metrics statements="44" coveredstatements="13" conditionals="28" coveredconditionals="0" methods="7" coveredmethods="0"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="36" count="10" type="stmt"/>
+        <line num="42" count="10" type="stmt"/>
+        <line num="48" count="10" type="stmt"/>
+        <line num="54" count="10" type="stmt"/>
+        <line num="64" count="10" type="stmt"/>
+        <line num="65" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="97" count="10" type="stmt"/>
+        <line num="98" count="0" type="stmt"/>
+        <line num="110" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="127" count="10" type="stmt"/>
+        <line num="128" count="0" type="stmt"/>
+        <line num="129" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="131" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="147" count="0" type="stmt"/>
+        <line num="149" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="151" count="0" type="stmt"/>
+        <line num="167" count="10" type="stmt"/>
+        <line num="168" count="0" type="stmt"/>
+        <line num="169" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="176" count="0" type="stmt"/>
+        <line num="181" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="183" count="0" type="stmt"/>
+        <line num="199" count="10" type="stmt"/>
+        <line num="200" count="0" type="stmt"/>
+        <line num="201" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="203" count="0" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="210" count="0" type="stmt"/>
+        <line num="212" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="214" count="0" type="stmt"/>
+        <line num="230" count="10" type="stmt"/>
+        <line num="231" count="0" type="stmt"/>
+        <line num="233" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="241" count="0" type="stmt"/>
+        <line num="242" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="244" count="0" type="stmt"/>
+      </file>
+      <file name="authController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\authController.js">
+        <metrics statements="77" coveredstatements="67" conditionals="28" coveredconditionals="23" methods="12" coveredmethods="9"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="28" count="10" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="40" count="10" type="stmt"/>
+        <line num="43" count="10" type="stmt"/>
+        <line num="44" count="2" type="stmt"/>
+        <line num="54" count="10" type="stmt"/>
+        <line num="56" count="8" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="82" count="10" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="101" count="10" type="stmt"/>
+        <line num="102" count="5" type="stmt"/>
+        <line num="105" count="5" type="cond" truecount="4" falsecount="0"/>
+        <line num="106" count="2" type="stmt"/>
+        <line num="110" count="3" type="stmt"/>
+        <line num="111" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="112" count="1" type="stmt"/>
+        <line num="114" count="2" type="stmt"/>
+        <line num="115" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="116" count="1" type="stmt"/>
+        <line num="120" count="1" type="stmt"/>
+        <line num="122" count="1" type="stmt"/>
+        <line num="137" count="10" type="stmt"/>
+        <line num="141" count="6" type="cond" truecount="4" falsecount="0"/>
+        <line num="142" count="4" type="stmt"/>
+        <line num="145" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="146" count="2" type="stmt"/>
+        <line num="150" count="4" type="stmt"/>
+        <line num="153" count="4" type="stmt"/>
+        <line num="154" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="155" count="0" type="stmt"/>
+        <line num="158" count="4" type="stmt"/>
+        <line num="159" count="4" type="stmt"/>
+        <line num="167" count="10" type="stmt"/>
+        <line num="168" count="60" type="stmt"/>
+        <line num="170" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="171" count="0" type="stmt"/>
+        <line num="173" count="0" type="stmt"/>
+        <line num="184" count="10" type="stmt"/>
+        <line num="186" count="1" type="stmt"/>
+        <line num="188" count="1" type="stmt"/>
+        <line num="211" count="10" type="stmt"/>
+        <line num="213" count="4" type="stmt"/>
+        <line num="216" count="4" type="cond" truecount="4" falsecount="0"/>
+        <line num="217" count="2" type="stmt"/>
+        <line num="221" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="222" count="1" type="stmt"/>
+        <line num="226" count="1" type="stmt"/>
+        <line num="227" count="1" type="stmt"/>
+        <line num="229" count="1" type="stmt"/>
+        <line num="241" count="10" type="stmt"/>
+        <line num="243" count="2" type="stmt"/>
+        <line num="246" count="2" type="stmt"/>
+        <line num="247" count="2" type="stmt"/>
+        <line num="248" count="2" type="stmt"/>
+        <line num="249" count="2" type="stmt"/>
+        <line num="250" count="2" type="stmt"/>
+        <line num="252" count="1" type="stmt"/>
+        <line num="265" count="10" type="stmt"/>
+        <line num="267" count="1" type="stmt"/>
+        <line num="268" count="1" type="stmt"/>
+        <line num="271" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="272" count="0" type="stmt"/>
+        <line num="276" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="277" count="0" type="stmt"/>
+        <line num="281" count="1" type="stmt"/>
+        <line num="282" count="1" type="stmt"/>
+        <line num="284" count="1" type="stmt"/>
+        <line num="285" count="1" type="stmt"/>
+        <line num="287" count="1" type="stmt"/>
+        <line num="292" count="10" type="stmt"/>
+        <line num="293" count="0" type="stmt"/>
+        <line num="298" count="0" type="stmt"/>
+      </file>
+      <file name="categoryController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\categoryController.js">
+        <metrics statements="16" coveredstatements="16" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="35" count="10" type="stmt"/>
+        <line num="41" count="10" type="stmt"/>
+        <line num="51" count="10" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="84" count="10" type="stmt"/>
+        <line num="85" count="2" type="stmt"/>
+        <line num="87" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="93" count="1" type="stmt"/>
+      </file>
+      <file name="errorController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\errorController.js">
+        <metrics statements="40" coveredstatements="9" conditionals="20" coveredconditionals="0" methods="9" coveredmethods="0"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="26" count="10" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="36" count="10" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="49" count="10" type="stmt"/>
+        <line num="57" count="10" type="stmt"/>
+        <line num="65" count="10" type="stmt"/>
+        <line num="73" count="10" type="stmt"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="88" count="10" type="stmt"/>
+        <line num="89" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="90" count="0" type="stmt"/>
+        <line num="96" count="0" type="stmt"/>
+        <line num="103" count="10" type="stmt"/>
+        <line num="104" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="105" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="106" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="107" count="0" type="stmt"/>
+        <line num="108" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="111" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="113" count="0" type="stmt"/>
+        <line num="115" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="116" count="0" type="stmt"/>
+        <line num="117" count="0" type="stmt"/>
+        <line num="119" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="120" count="0" type="stmt"/>
+        <line num="121" count="0" type="stmt"/>
+        <line num="123" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="124" count="0" type="stmt"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="127" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="128" count="0" type="stmt"/>
+        <line num="129" count="0" type="stmt"/>
+        <line num="132" count="0" type="stmt"/>
+      </file>
+      <file name="playerController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\playerController.js">
+        <metrics statements="27" coveredstatements="27" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="17" count="11" type="stmt"/>
+        <line num="22" count="11" type="stmt"/>
+        <line num="28" count="11" type="stmt"/>
+        <line num="34" count="11" type="stmt"/>
+        <line num="40" count="11" type="stmt"/>
+        <line num="41" count="11" type="stmt"/>
+        <line num="47" count="11" type="stmt"/>
+        <line num="48" count="11" type="stmt"/>
+        <line num="53" count="11" type="stmt"/>
+        <line num="68" count="11" type="stmt"/>
+        <line num="69" count="5" type="stmt"/>
+        <line num="71" count="5" type="stmt"/>
+        <line num="77" count="5" type="stmt"/>
+        <line num="78" count="5" type="cond" truecount="1" falsecount="1"/>
+        <line num="79" count="5" type="stmt"/>
+        <line num="80" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="83" count="4" type="stmt"/>
+        <line num="89" count="4" type="stmt"/>
+        <line num="91" count="4" type="stmt"/>
+        <line num="92" count="4" type="stmt"/>
+        <line num="94" count="4" type="stmt"/>
+        <line num="104" count="11" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+      </file>
+      <file name="playlistController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\playlistController.js">
+        <metrics statements="27" coveredstatements="26" conditionals="4" coveredconditionals="3" methods="4" coveredmethods="4"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="35" count="10" type="stmt"/>
+        <line num="41" count="10" type="stmt"/>
+        <line num="58" count="10" type="stmt"/>
+        <line num="59" count="4" type="stmt"/>
+        <line num="60" count="4" type="stmt"/>
+        <line num="62" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="63" count="3" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="83" count="10" type="stmt"/>
+        <line num="84" count="1" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="87" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
+        <line num="108" count="10" type="stmt"/>
+        <line num="109" count="1" type="stmt"/>
+        <line num="110" count="1" type="stmt"/>
+        <line num="111" count="1" type="stmt"/>
+        <line num="113" count="1" type="stmt"/>
+        <line num="115" count="1" type="stmt"/>
+        <line num="150" count="10" type="stmt"/>
+        <line num="151" count="2" type="stmt"/>
+        <line num="152" count="2" type="stmt"/>
+        <line num="154" count="2" type="stmt"/>
+      </file>
+      <file name="trackController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\trackController.js">
+        <metrics statements="25" coveredstatements="19" conditionals="6" coveredconditionals="3" methods="3" coveredmethods="2"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="35" count="10" type="stmt"/>
+        <line num="41" count="10" type="stmt"/>
+        <line num="52" count="10" type="stmt"/>
+        <line num="53" count="2" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="57" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="58" count="1" type="stmt"/>
+        <line num="62" count="1" type="stmt"/>
+        <line num="79" count="10" type="stmt"/>
+        <line num="80" count="2" type="stmt"/>
+        <line num="81" count="2" type="stmt"/>
+        <line num="82" count="2" type="stmt"/>
+        <line num="84" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="105" count="10" type="stmt"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="108" count="0" type="stmt"/>
+        <line num="109" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="110" count="0" type="stmt"/>
+        <line num="112" count="0" type="stmt"/>
+      </file>
+      <file name="userController.js" path="C:\Users\Dell\Desktop\Spotify-Backend\controllers\userController.js">
+        <metrics statements="60" coveredstatements="18" conditionals="2" coveredconditionals="0" methods="8" coveredmethods="0"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="35" count="10" type="stmt"/>
+        <line num="36" count="10" type="stmt"/>
+        <line num="45" count="10" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="69" count="10" type="stmt"/>
+        <line num="72" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="83" count="0" type="stmt"/>
+        <line num="93" count="10" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="105" count="10" type="stmt"/>
+        <line num="107" count="0" type="stmt"/>
+        <line num="117" count="10" type="stmt"/>
+        <line num="121" count="0" type="stmt"/>
+        <line num="122" count="0" type="stmt"/>
+        <line num="125" count="0" type="stmt"/>
+        <line num="126" count="0" type="stmt"/>
+        <line num="127" count="0" type="stmt"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="143" count="10" type="stmt"/>
+        <line num="146" count="0" type="stmt"/>
+        <line num="148" count="0" type="stmt"/>
+        <line num="149" count="0" type="stmt"/>
+        <line num="150" count="0" type="stmt"/>
+        <line num="151" count="0" type="stmt"/>
+        <line num="153" count="0" type="stmt"/>
+        <line num="156" count="0" type="stmt"/>
+        <line num="166" count="10" type="stmt"/>
+        <line num="169" count="0" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="172" count="0" type="stmt"/>
+        <line num="173" count="0" type="stmt"/>
+        <line num="174" count="0" type="stmt"/>
+        <line num="175" count="0" type="stmt"/>
+        <line num="178" count="0" type="stmt"/>
+        <line num="181" count="0" type="stmt"/>
+        <line num="191" count="10" type="stmt"/>
+        <line num="195" count="0" type="stmt"/>
+        <line num="197" count="0" type="stmt"/>
+        <line num="198" count="0" type="stmt"/>
+        <line num="199" count="0" type="stmt"/>
+        <line num="201" count="0" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="208" count="10" type="stmt"/>
+        <line num="211" count="10" type="stmt"/>
+        <line num="221" count="10" type="stmt"/>
+        <line num="222" count="10" type="stmt"/>
+      </file>
+    </package>
+    <package name="Spotify-Backend.models">
+      <metrics statements="53" coveredstatements="51" conditionals="4" coveredconditionals="4" methods="6" coveredmethods="5"/>
+      <file name="albumModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\albumModel.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="8" count="11" type="stmt"/>
+        <line num="30" count="11" type="stmt"/>
+        <line num="99" count="11" type="stmt"/>
+        <line num="101" count="11" type="stmt"/>
+      </file>
+      <file name="categoryModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\categoryModel.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="7" count="10" type="stmt"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="32" count="10" type="stmt"/>
+      </file>
+      <file name="contextModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\contextModel.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="6" count="11" type="stmt"/>
+        <line num="21" count="11" type="stmt"/>
+        <line num="44" count="11" type="stmt"/>
+        <line num="46" count="11" type="stmt"/>
+      </file>
+      <file name="playHistoryModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\playHistoryModel.js">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="5" count="11" type="stmt"/>
+        <line num="17" count="11" type="stmt"/>
+        <line num="45" count="11" type="stmt"/>
+        <line num="46" count="6" type="stmt"/>
+        <line num="47" count="6" type="stmt"/>
+        <line num="48" count="6" type="stmt"/>
+        <line num="58" count="11" type="stmt"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="62" count="11" type="stmt"/>
+        <line num="64" count="11" type="stmt"/>
+      </file>
+      <file name="playerModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\playerModel.js">
+        <metrics statements="7" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="5" count="11" type="stmt"/>
+        <line num="17" count="11" type="stmt"/>
+        <line num="40" count="11" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="45" count="11" type="stmt"/>
+        <line num="47" count="11" type="stmt"/>
+      </file>
+      <file name="playlistModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\playlistModel.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="7" count="11" type="stmt"/>
+        <line num="31" count="11" type="stmt"/>
+        <line num="125" count="11" type="stmt"/>
+        <line num="127" count="11" type="stmt"/>
+      </file>
+      <file name="trackModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\trackModel.js">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="8" count="11" type="stmt"/>
+        <line num="34" count="11" type="stmt"/>
+        <line num="88" count="11" type="stmt"/>
+        <line num="90" count="11" type="stmt"/>
+      </file>
+      <file name="userModel.js" path="C:\Users\Dell\Desktop\Spotify-Backend\models\userModel.js">
+        <metrics statements="16" coveredstatements="16" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
+        <line num="7" count="14" type="stmt"/>
+        <line num="13" count="14" type="stmt"/>
+        <line num="19" count="14" type="stmt"/>
+        <line num="21" count="14" type="stmt"/>
+        <line num="22" count="14" type="stmt"/>
+        <line num="55" count="14" type="stmt"/>
+        <line num="56" count="14" type="stmt"/>
+        <line num="86" count="59" type="cond" truecount="2" falsecount="0"/>
+        <line num="160" count="14" type="stmt"/>
+        <line num="162" count="53" type="cond" truecount="2" falsecount="0"/>
+        <line num="164" count="49" type="stmt"/>
+        <line num="166" count="49" type="stmt"/>
+        <line num="176" count="14" type="stmt"/>
+        <line num="178" count="4" type="stmt"/>
+        <line num="181" count="14" type="stmt"/>
+        <line num="183" count="14" type="stmt"/>
+      </file>
+    </package>
+    <package name="Spotify-Backend.routes">
+      <metrics statements="83" coveredstatements="83" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="albumRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\albumRoutes.js">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="11" count="10" type="stmt"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="23" count="10" type="stmt"/>
+        <line num="39" count="10" type="stmt"/>
+        <line num="51" count="10" type="stmt"/>
+        <line num="62" count="10" type="stmt"/>
+        <line num="74" count="10" type="stmt"/>
+        <line num="78" count="10" type="stmt"/>
+      </file>
+      <file name="artistAlbumRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\artistAlbumRoutes.js">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="28" count="10" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="42" count="10" type="stmt"/>
+        <line num="50" count="10" type="stmt"/>
+        <line num="60" count="10" type="stmt"/>
+        <line num="73" count="10" type="stmt"/>
+        <line num="77" count="10" type="stmt"/>
+      </file>
+      <file name="artistRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\artistRoutes.js">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="11" count="10" type="stmt"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="25" count="10" type="stmt"/>
+        <line num="34" count="10" type="stmt"/>
+        <line num="46" count="10" type="stmt"/>
+        <line num="58" count="10" type="stmt"/>
+        <line num="70" count="10" type="stmt"/>
+        <line num="82" count="10" type="stmt"/>
+        <line num="95" count="10" type="stmt"/>
+        <line num="101" count="10" type="stmt"/>
+      </file>
+      <file name="categoryRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\categoryRoutes.js">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="47" count="10" type="stmt"/>
+        <line num="59" count="10" type="stmt"/>
+        <line num="63" count="10" type="stmt"/>
+      </file>
+      <file name="playerRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\playerRoutes.js">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="33" count="10" type="stmt"/>
+        <line num="46" count="10" type="stmt"/>
+        <line num="59" count="10" type="stmt"/>
+        <line num="63" count="10" type="stmt"/>
+      </file>
+      <file name="playlistRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\playlistRoutes.js">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="12" count="10" type="stmt"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="40" count="10" type="stmt"/>
+        <line num="52" count="10" type="stmt"/>
+        <line num="64" count="10" type="stmt"/>
+        <line num="76" count="10" type="stmt"/>
+        <line num="80" count="10" type="stmt"/>
+      </file>
+      <file name="trackRoutes.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\trackRoutes.js">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="12" count="10" type="stmt"/>
+        <line num="18" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="42" count="10" type="stmt"/>
+        <line num="53" count="10" type="stmt"/>
+        <line num="65" count="10" type="stmt"/>
+        <line num="69" count="10" type="stmt"/>
+      </file>
+      <file name="userRouters.js" path="C:\Users\Dell\Desktop\Spotify-Backend\routes\userRouters.js">
+        <metrics statements="23" coveredstatements="23" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="17" count="10" type="stmt"/>
+        <line num="24" count="10" type="stmt"/>
+        <line num="31" count="10" type="stmt"/>
+        <line num="38" count="10" type="stmt"/>
+        <line num="39" count="10" type="stmt"/>
+        <line num="50" count="10" type="stmt"/>
+        <line num="61" count="10" type="stmt"/>
+        <line num="73" count="10" type="stmt"/>
+        <line num="84" count="10" type="stmt"/>
+        <line num="95" count="10" type="stmt"/>
+        <line num="106" count="10" type="stmt"/>
+        <line num="117" count="10" type="stmt"/>
+        <line num="128" count="10" type="stmt"/>
+        <line num="139" count="10" type="stmt"/>
+        <line num="150" count="10" type="stmt"/>
+        <line num="161" count="10" type="stmt"/>
+        <line num="172" count="10" type="stmt"/>
+        <line num="183" count="10" type="stmt"/>
+        <line num="194" count="10" type="stmt"/>
+        <line num="205" count="10" type="stmt"/>
+        <line num="216" count="10" type="stmt"/>
+        <line num="218" count="10" type="stmt"/>
+      </file>
+    </package>
+    <package name="Spotify-Backend.services">
+      <metrics statements="163" coveredstatements="117" conditionals="50" coveredconditionals="33" methods="23" coveredmethods="15"/>
+      <file name="mailerService.js" path="C:\Users\Dell\Desktop\Spotify-Backend\services\mailerService.js">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="11" count="12" type="stmt"/>
+        <line num="25" count="11" type="stmt"/>
+        <line num="26" count="11" type="stmt"/>
+        <line num="38" count="1" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="57" count="12" type="stmt"/>
+      </file>
+      <file name="playerService.js" path="C:\Users\Dell\Desktop\Spotify-Backend\services\playerService.js">
+        <metrics statements="50" coveredstatements="44" conditionals="14" coveredconditionals="10" methods="5" coveredmethods="3"/>
+        <line num="10" count="11" type="stmt"/>
+        <line num="16" count="11" type="stmt"/>
+        <line num="22" count="11" type="stmt"/>
+        <line num="28" count="11" type="stmt"/>
+        <line num="34" count="11" type="stmt"/>
+        <line num="41" count="11" type="stmt"/>
+        <line num="48" count="11" type="stmt"/>
+        <line num="54" count="11" type="stmt"/>
+        <line num="56" count="11" type="stmt"/>
+        <line num="68" count="21" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="78" count="0" type="stmt"/>
+        <line num="79" count="0" type="stmt"/>
+        <line num="90" count="5" type="stmt"/>
+        <line num="91" count="5" type="stmt"/>
+        <line num="92" count="5" type="stmt"/>
+        <line num="93" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="94" count="1" type="stmt"/>
+        <line num="95" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="96" count="1" type="stmt"/>
+        <line num="97" count="1" type="stmt"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="99" count="1" type="stmt"/>
+        <line num="100" count="1" type="stmt"/>
+        <line num="101" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="103" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="104" count="1" type="stmt"/>
+        <line num="105" count="1" type="stmt"/>
+        <line num="106" count="1" type="stmt"/>
+        <line num="107" count="1" type="stmt"/>
+        <line num="108" count="1" type="stmt"/>
+        <line num="109" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="110" count="3" type="stmt"/>
+        <line num="111" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="112" count="3" type="stmt"/>
+        <line num="113" count="3" type="stmt"/>
+        <line num="114" count="3" type="stmt"/>
+        <line num="115" count="3" type="stmt"/>
+        <line num="116" count="3" type="stmt"/>
+        <line num="118" count="5" type="stmt"/>
+        <line num="128" count="0" type="stmt"/>
+        <line num="129" count="0" type="stmt"/>
+        <line num="130" count="0" type="stmt"/>
+        <line num="139" count="5" type="stmt"/>
+        <line num="140" count="5" type="stmt"/>
+        <line num="141" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="142" count="2" type="stmt"/>
+        <line num="147" count="2" type="stmt"/>
+        <line num="152" count="11" type="stmt"/>
+      </file>
+      <file name="uploadService.js" path="C:\Users\Dell\Desktop\Spotify-Backend\services\uploadService.js">
+        <metrics statements="29" coveredstatements="13" conditionals="4" coveredconditionals="0" methods="6" coveredmethods="0"/>
+        <line num="10" count="10" type="stmt"/>
+        <line num="16" count="10" type="stmt"/>
+        <line num="22" count="10" type="stmt"/>
+        <line num="29" count="10" type="stmt"/>
+        <line num="30" count="10" type="stmt"/>
+        <line num="41" count="10" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="62" count="10" type="stmt"/>
+        <line num="64" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="82" count="10" type="stmt"/>
+        <line num="83" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="86" count="0" type="stmt"/>
+        <line num="98" count="10" type="stmt"/>
+        <line num="99" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="100" count="0" type="stmt"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="111" count="10" type="stmt"/>
+        <line num="121" count="10" type="stmt"/>
+        <line num="131" count="10" type="stmt"/>
+        <line num="139" count="10" type="stmt"/>
+      </file>
+      <file name="userService.js" path="C:\Users\Dell\Desktop\Spotify-Backend\services\userService.js">
+        <metrics statements="77" coveredstatements="53" conditionals="32" coveredconditionals="23" methods="10" coveredmethods="10"/>
+        <line num="10" count="14" type="stmt"/>
+        <line num="17" count="14" type="stmt"/>
+        <line num="23" count="14" type="stmt"/>
+        <line num="30" count="14" type="stmt"/>
+        <line num="36" count="14" type="stmt"/>
+        <line num="49" count="70" type="stmt"/>
+        <line num="50" count="70" type="stmt"/>
+        <line num="62" count="8" type="cond" truecount="4" falsecount="0"/>
+        <line num="63" count="3" type="stmt"/>
+        <line num="65" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="66" count="5" type="stmt"/>
+        <line num="69" count="3" type="stmt"/>
+        <line num="70" count="3" type="stmt"/>
+        <line num="71" count="3" type="stmt"/>
+        <line num="84" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="88" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="89" count="2" type="stmt"/>
+        <line num="93" count="0" type="stmt"/>
+        <line num="94" count="0" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="97" count="0" type="stmt"/>
+        <line num="110" count="2" type="cond" truecount="3" falsecount="1"/>
+        <line num="111" count="0" type="stmt"/>
+        <line num="114" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="115" count="2" type="stmt"/>
+        <line num="119" count="0" type="stmt"/>
+        <line num="120" count="0" type="stmt"/>
+        <line num="121" count="0" type="stmt"/>
+        <line num="123" count="0" type="stmt"/>
+        <line num="133" count="1" type="stmt"/>
+        <line num="134" count="1" type="stmt"/>
+        <line num="135" count="1" type="stmt"/>
+        <line num="146" count="2" type="stmt"/>
+        <line num="147" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="148" count="1" type="stmt"/>
+        <line num="151" count="1" type="stmt"/>
+        <line num="152" count="1" type="stmt"/>
+        <line num="153" count="1" type="stmt"/>
+        <line num="167" count="3" type="stmt"/>
+        <line num="168" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="169" count="1" type="stmt"/>
+        <line num="171" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="172" count="1" type="stmt"/>
+        <line num="174" count="1" type="stmt"/>
+        <line num="175" count="1" type="stmt"/>
+        <line num="177" count="1" type="stmt"/>
+        <line num="178" count="1" type="stmt"/>
+        <line num="179" count="1" type="stmt"/>
+        <line num="181" count="1" type="stmt"/>
+        <line num="193" count="2" type="stmt"/>
+        <line num="194" count="1" type="stmt"/>
+        <line num="195" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="196" count="1" type="stmt"/>
+        <line num="197" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="198" count="0" type="stmt"/>
+        <line num="201" count="0" type="stmt"/>
+        <line num="202" count="0" type="stmt"/>
+        <line num="203" count="0" type="stmt"/>
+        <line num="204" count="0" type="stmt"/>
+        <line num="216" count="2" type="stmt"/>
+        <line num="217" count="1" type="stmt"/>
+        <line num="218" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="219" count="1" type="stmt"/>
+        <line num="221" count="0" type="stmt"/>
+        <line num="223" count="0" type="stmt"/>
+        <line num="224" count="0" type="stmt"/>
+        <line num="226" count="0" type="stmt"/>
+        <line num="238" count="2" type="stmt"/>
+        <line num="239" count="1" type="stmt"/>
+        <line num="240" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="241" count="1" type="stmt"/>
+        <line num="243" count="0" type="stmt"/>
+        <line num="245" count="0" type="stmt"/>
+        <line num="246" count="0" type="stmt"/>
+        <line num="248" count="0" type="stmt"/>
+        <line num="253" count="14" type="stmt"/>
+      </file>
+    </package>
+    <package name="Spotify-Backend.utils">
+      <metrics statements="83" coveredstatements="55" conditionals="36" coveredconditionals="19" methods="13" coveredmethods="10"/>
+      <file name="apiFeatures.js" path="C:\Users\Dell\Desktop\Spotify-Backend\utils\apiFeatures.js">
+        <metrics statements="52" coveredstatements="24" conditionals="24" coveredconditionals="8" methods="9" coveredmethods="6"/>
+        <line num="11" count="19" type="stmt"/>
+        <line num="12" count="19" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="43" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="44" count="4" type="stmt"/>
+        <line num="45" count="4" type="stmt"/>
+        <line num="47" count="4" type="stmt"/>
+        <line num="57" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
+        <line num="73" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="74" count="0" type="stmt"/>
+        <line num="75" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="85" count="7" type="stmt"/>
+        <line num="86" count="7" type="stmt"/>
+        <line num="91" count="7" type="stmt"/>
+        <line num="101" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="102" count="0" type="stmt"/>
+        <line num="104" count="0" type="cond" truecount="0" falsecount="4"/>
+        <line num="105" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="106" count="0" type="stmt"/>
+        <line num="107" count="0" type="stmt"/>
+        <line num="108" count="0" type="stmt"/>
+        <line num="109" count="0" type="stmt"/>
+        <line num="111" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="117" count="0" type="stmt"/>
+        <line num="122" count="0" type="stmt"/>
+        <line num="125" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="126" count="0" type="stmt"/>
+        <line num="133" count="0" type="stmt"/>
+        <line num="136" count="6" type="stmt"/>
+        <line num="137" count="6" type="stmt"/>
+        <line num="138" count="6" type="stmt"/>
+        <line num="140" count="6" type="stmt"/>
+        <line num="150" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="151" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="152" count="9" type="stmt"/>
+        <line num="154" count="9" type="stmt"/>
+        <line num="155" count="9" type="stmt"/>
+        <line num="159" count="11" type="stmt"/>
+      </file>
+      <file name="appError.js" path="C:\Users\Dell\Desktop\Spotify-Backend\utils\appError.js">
+        <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="12" count="33" type="stmt"/>
+        <line num="13" count="33" type="stmt"/>
+        <line num="14" count="33" type="cond" truecount="1" falsecount="1"/>
+        <line num="15" count="33" type="stmt"/>
+        <line num="19" count="14" type="stmt"/>
+      </file>
+      <file name="catchAsync.js" path="C:\Users\Dell\Desktop\Spotify-Backend\utils\catchAsync.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="19" count="11" type="stmt"/>
+        <line num="20" count="402" type="stmt"/>
+        <line num="21" count="56" type="stmt"/>
+      </file>
+      <file name="pagination.js" path="C:\Users\Dell\Desktop\Spotify-Backend\utils\pagination.js">
+        <metrics statements="23" coveredstatements="23" conditionals="10" coveredconditionals="10" methods="1" coveredmethods="1"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="26" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="31" count="3" type="stmt"/>
+        <line num="32" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="35" count="1" type="stmt"/>
+        <line num="38" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="39" count="2" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="44" count="3" type="stmt"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="46" count="3" type="stmt"/>
+        <line num="47" count="3" type="stmt"/>
+        <line num="48" count="3" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

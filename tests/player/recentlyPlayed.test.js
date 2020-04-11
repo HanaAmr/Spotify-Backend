@@ -317,7 +317,6 @@ describe('Adding to recently played list of a user', () => {
     })
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     playerController.addToRecentlyPlayed(request, response, (err) => {
-      console.log(err)
       expect(err).toEqual(expect.anything())
       expect(err.statusCode).toEqual(404)
       done()
