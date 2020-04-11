@@ -21,12 +21,12 @@ const albumController = require('./../controllers/albumController')
  * @const
  */
 const authController = require('./../controllers/authController')
-/**
- * Middleware to check authorization
- * @function
- * @memberof module:routes/tracks~tracksRouter
- * @inner
- */
+// /**
+//  * Middleware to check authorization
+//  * @function
+//  * @memberof module:routes/tracks~tracksRouter
+//  * @inner
+//  */
 // router.use(authController.protect)
 
 /**

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/uploadService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/uploadService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** Express service for Emailing
+ * @module services/uploadService
+ * @requires multer
+ */
+
+/**
+ * multer package for dealing with files
+ * @const
+ */
+const multer = require('multer')
+
+/**
+* AppError class file
+* @const
+*/
+const AppError = require('./../utils/appError')
+
+/**
+ * audio duration package for measuring duration of mp3
+ * @const
+ */
+const { getAudioDurationInSeconds } = require('get-audio-duration')
+
+/**
+ * User service
+ * @type {object}
+ * @const
+ */
+const userService = require('./../services/userService')
+const userServiceClass = new userService()
+
+/**
+* Multer Filter for setting storage path of album images to public/imgs/albums and naming the file with the following format:
+* artistid-album-albumname-data.fileextension
+* @function
+* @memberof module:services/uploadService
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {file} - The function takes the file passed in the form data as a parameter to access its body.
+* @param {cb} - The call back of the function
+*/
+const multerAlbumImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/imgs/albums')
+  },
+  filename: async (req, file, cb) => {
+    const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+    const albumName = req.body.name.split(' ').join('_')
+    const fileExtension = file.mimetype.split('/')[1]
+    cb(null, `${artistId}-album-${albumName}-${Date.now()}.${fileExtension}`)
+  }
+})
+
+/**
+* Multer Filter for setting storage path of track audio to /tracks and naming the file with the following format:
+* AlbumId-TrackName-Date.fileExtension
+* @function
+* @memberof module:services/uploadService
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {file} - The function takes the file passed in the form data as a parameter to access its body.
+* @param {cb} - The call back of the function
+*/
+const multerTrackStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'tracks')
+  },
+  filename: async (req, file, cb) => {
+    const AlbumId = req.params.id
+    const trackName = req.body.name.split(' ').join('_')
+    const fileExtension = file.mimetype.split('/')[1]
+    cb(null, `${AlbumId}-${trackName}-${Date.now()}.${fileExtension}`)
+  }
+})
+
+/**
+* Multer Filter function to filter only image fles
+* @function
+* @memberof module:services/uploadService
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {file} - The function takes the file passed in the form data as a parameter to access its body.
+* @param {cb} - The call back of the function
+*/
+const multerFilterImage = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true)
+  } else {
+    cb(new AppError('Not an image, Please upload only image!', 400), false)
+  }
+}
+
+/**
+* Multer Filter function to filter only audio fles
+* @function
+* @memberof module:services/uploadService
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {file} - The function takes the file passed in the form data as a parameter to access its body.
+* @param {cb} - The call back of the function
+*/
+const multerFilterAudio = (req, file, cb) => {
+  if (file.mimetype.startsWith('audio')) {
+    cb(null, true)
+  } else {
+    cb(new AppError('Not an mp3 file, Please upload only audio files!', 400), false)
+  }
+}
+
+/**
+* A function for creating multer object and assigning it to storage and filter for the albumImage
+* @function
+* @memberof module:services/uploadService
+*/
+const uploadImage = multer({
+  storage: multerAlbumImageStorage,
+  fileFilter: multerFilterImage
+})
+
+/**
+* A function for creating multer object and assigning it to storage and filter for the track
+* @function
+* @memberof module:services/uploadService
+*/
+const uploadTrack = multer({
+  storage: multerTrackStorage,
+  fileFilter: multerFilterAudio
+})
+
+/**
+* A middleware function for uploadingAlbumImage
+* @function
+* @memberof module:services/uploadService
+*/
+exports.uploadAlbumImage = uploadImage.single('image')
+
+/**
+* A middleware function for uploadingTrackAudio for artist
+* @function
+*  @function
+* @memberof module:services/uploadService
+*/
+exports.uploadTrackAudio = uploadTrack.single('trackAudio')
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_album.html">controllers/album</a></li><li><a href="module-controllers_artistAlbumsController.html">controllers/artistAlbumsController</a></li><li><a href="module-controllers_artistViewingController.html">controllers/artistViewingController</a></li><li><a href="module-controllers_auth.html">controllers/auth</a></li><li><a href="module-controllers_category.html">controllers/category</a></li><li><a href="module-controllers_errorController.html">controllers/errorController</a></li><li><a href="module-controllers_player.html">controllers/player</a></li><li><a href="module-controllers_playlist.html">controllers/playlist</a></li><li><a href="module-controllers_track.html">controllers/track</a></li><li><a href="module-controllers_user.html">controllers/user</a></li><li><a href="module-models_album.html">models/album</a></li><li><a href="module-models_category.html">models/category</a></li><li><a href="module-models_context.html">models/context</a></li><li><a href="module-models_player.html">models/player</a></li><li><a href="module-models_playHistory.html">models/playHistory</a></li><li><a href="module-models_playlist.html">models/playlist</a></li><li><a href="module-models_track.html">models/track</a></li><li><a href="module-models_user.html">models/user</a></li><li><a href="module-routes_albums.html">routes/albums</a></li><li><a href="module-routes_artistAlbumsRoutes.html">routes/artistAlbumsRoutes</a></li><li><a href="module-routes_artistRoutes.html">routes/artistRoutes</a></li><li><a href="module-routes_category.html">routes/category</a></li><li><a href="module-routes_player.html">routes/player</a></li><li><a href="module-routes_playlist.html">routes/playlist</a></li><li><a href="module-routes_track.html">routes/track</a></li><li><a href="module-routes_users.html">routes/users</a></li><li><a href="module-seeders_albums.html">seeders/albums</a></li><li><a href="module-seeders_categories.html">seeders/categories</a></li><li><a href="module-seeders_player.html">seeders/player</a></li><li><a href="module-seeders_playHistory.html">seeders/playHistory</a></li><li><a href="module-seeders_playlists.html">seeders/playlists</a></li><li><a href="module-seeders_tracks.html">seeders/tracks</a></li><li><a href="module-seeders_users.html">seeders/users</a></li><li><a href="module-services_uploadService.html">services/uploadService</a></li><li><a href="module-utils_catchAsync.html">utils/catchAsync</a></li><li><a href="module-utils_pagination.html">utils/pagination</a></li></ul><h3>Classes</h3><ul><li><a href="apiFeatures.html">apiFeatures</a></li><li><a href="global.html#appError">appError</a></li><li><a href="mailerService.html">mailerService</a></li><li><a href="playerService.html">playerService</a></li><li><a href="userService.html">userService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Album">Album</a></li><li><a href="global.html#AppError">AppError</a></li><li><a href="global.html#crypto">crypto</a></li><li><a href="global.html#dotenv">dotenv</a></li><li><a href="global.html#FacebookTokenStrategy">FacebookTokenStrategy</a></li><li><a href="global.html#httpMocks">httpMocks</a></li><li><a href="global.html#jwt">jwt</a></li><li><a href="global.html#mailerServices">mailerServices</a></li><li><a href="global.html#mongoose">mongoose</a></li><li><a href="global.html#nodemailer">nodemailer</a></li><li><a href="global.html#passport">passport</a></li><li><a href="global.html#Player">Player</a></li><li><a href="global.html#playerController">playerController</a></li><li><a href="global.html#PlayHistory">PlayHistory</a></li><li><a href="global.html#Playlist">Playlist</a></li><li><a href="global.html#sinon">sinon</a></li><li><a href="global.html#Track">Track</a></li><li><a href="global.html#User">User</a></li><li><a href="global.html#UserServices">UserServices</a></li><li><a href="global.html#userServices">userServices</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Apr 11 2020 22:54:52 GMT+0200 (Eastern European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

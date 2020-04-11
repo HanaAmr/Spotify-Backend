@@ -136,3 +136,5 @@ describe('test getting artist albums', () => {
     expect(response.body.data).not.toEqual(null)
     expect(response.body.data._id.toString()).toMatch(testArtist._id.toString())
   })
+
+})
