@@ -76,7 +76,7 @@ describe('Sign up functionality', () => {
             }
           })
     
-        console.log(request)
+        
         const response = httpMocks.createResponse()
         authContoller.signUp(request, response, (err) => {
           try {
