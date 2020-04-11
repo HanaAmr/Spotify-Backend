@@ -35,7 +35,8 @@ describe('test getting albums', () => {
       releaseDate: '2015-01-01',
       type: 'album',
       albumType: 'single',
-      releaseDate: '2018-01-01'
+      releaseDate: '2018-01-01',
+      totalTracks:2
     })
 
     await testAlbum.save()
@@ -49,7 +50,8 @@ describe('test getting albums', () => {
         releaseDate: '2015-01-01',
         type: 'album',
         albumType: 'single',
-        releaseDate: '2020-01-01'
+        releaseDate: '2020-01-01',
+        totalTracks: 1
       })
   
       await testAlbum2.save()
@@ -81,7 +83,7 @@ describe('test getting albums', () => {
 
   afterEach(async (done) => {
     sinon.restore()
-    await mongoose.connection.collection('albums').deleteMany({})
+    //await mongoose.connection.collection('albums').deleteMany({})
     await mongoose.connection.collection('tracks').deleteMany({})
     return server && server.close(done);
   })
