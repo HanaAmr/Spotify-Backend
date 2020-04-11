@@ -1,14 +1,22 @@
 /** MongoDB Model for the context object.
- * @module models
+ * @module models/context
  * @requires mongoose
  */
 
 const mongoose = require('mongoose')
 
 /**
- * Context object schema
- * @class context
- * @classdesc The context object that describes how did a user listen to a track, as a part of a playlist, or album or artist.
+ * Context schema
+ * @alias module:models/context
+ * @type {object}
+ * @property {String} href href of the playlist
+ * @property {String} externalUrls externalUrls of the playlist
+ * @property {String} type type of the context, album/artist/playlist
+ * @property {String} uri uri of the context (album/artist/playlist)
+ * @property {String} images images of the playlist
+ * @property {Number} followersCount The number of followers for this context
+ * @property {String} playHistoryId The id of the playHistory model that has this context
+ * @const
  */
 const contextSchema = new mongoose.Schema({
   externalUrls: [String],

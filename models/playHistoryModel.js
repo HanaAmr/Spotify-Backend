@@ -1,13 +1,18 @@
 /** MongoDB Model for the play history object.
+ * @module models/playHistory
  * @requires mongoose
  */
 const mongoose = require('mongoose')
 
 /**
- * Play History object schema
- * @memberof module:models~
- * @class playHistory
- * @classdesc The Play History object that contains details of a track playback that is used in recently played list.
+ * Play History schema
+ * @alias module:models/playHistory
+ * @type {object}
+ * @property {String} userId The id of the user that this play history belongs to
+ * @property {object} context The context that belongs to this play history object
+ * @property {Date} playedAt The time the track belonging to play history was played
+ * @property {object} track The track that the user has listened to in this play history
+ * @const
  */
 const playHistorySchema = new mongoose.Schema({
   userId: {
