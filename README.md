@@ -64,7 +64,7 @@ Run the following command to install Express and all other needed packages.
 To run unit tests without having a coverage test report, run the following command:  
 `$ npm test`  
 To run unit tests with code coverage, run the following command:   
-`$ npm test_coverage`
+`$ npm run test_coverage`
 ## How to run for developers
 To run for developers, run the following command:
 `$ npm dev`
