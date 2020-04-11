@@ -64,16 +64,18 @@ Run the following command to install Express and all other needed packages.
 To run unit tests without having a coverage test report, run the following command:  
 `$ npm test`  
 To run unit tests with code coverage, run the following command:   
-`$ npm test_coverage`
+`$ npm run test_coverage`
 ## How to run for developers
 To run for developers, run the following command:
-`$ npm dev`
+`$ npm run dev`
 ## How to run for production
 To run for production, run the following command:
 `$ npm start`
 ## Functional documentation generation
 To generate functional documentation, run the following command in the main directory:
 `$ node_modules/jsdoc/jsdoc.js`
+If it doesn't work, then try this :
+`$  jsdoc -r  Spotify-Backend`
 ## API documentation generation
 To generate API documentation, go to swagger and log-in. Then press the extract to button.
 
