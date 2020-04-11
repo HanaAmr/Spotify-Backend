@@ -1,5 +1,5 @@
 /** Express router providing artist's albums related routes
- * @module routes/astistAlbumsRoutes
+ * @module routes/artistAlbumsRoutes
  * @requires express
  */
 
@@ -40,14 +40,15 @@ const router = express.Router()
  * @inner
  */
 router.use(authController.protect)
+
 /**
  * Middleware to restrict this routes to only artist
  * @function
  * @memberof module:routes/artistAlbumsRoutes
  * @inner
- *
  */
 router.use(authController.restrictTo('artist'))
+
 
 /**
  * Route for artist's albums

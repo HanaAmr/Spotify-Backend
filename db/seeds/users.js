@@ -7,7 +7,6 @@
  * Users seeder to call to fill initial database.
  * @type {object}
  * @const
- * @namespace usersSeeder
  */
 
 const express = require('express')
@@ -53,7 +52,7 @@ db.on('error', err => {
 /**
  * A function that is used to create inital seed of users
  *
- * @memberof module:seeders/users~usersSeeder
+ * @memberof module:seeders/users
  *
  */
 createUsers = async () => {

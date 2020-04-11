@@ -1,12 +1,9 @@
 /**
  * Models module.
  * @module models/category
- * @requires express
+ * @requires mongoose
  */
-/**
- * express module
- * @const
- */
+
 const mongoose = require('mongoose')
 
 /**

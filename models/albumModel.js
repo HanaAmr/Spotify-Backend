@@ -1,18 +1,10 @@
 /**
  * Models module.
  * @module models/album
- * @requires express
- */
-
-/**
- * Album object
- * @type {object}
- * @const
- */
-
-/** MongoDB Model for the album object.
  * @requires mongoose
  */
+
+
 const mongoose = require('mongoose')
 
 /**

@@ -1,7 +1,8 @@
 /** MongoDB Model for the user object.
- * @module models
+ * @module models/user
  * @requires mongoose
  */
+
 
 const mongoose = require('mongoose')
 
@@ -20,11 +21,6 @@ const bcrypt = require('bcryptjs')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 
-/**
- * User object schema
- * @class user
- * @classdesc All the data of the user
- */
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
@@ -126,7 +122,7 @@ const userSchema = new Schema({
 
 /**
 * Encrypting password before saving
-* @alias module:models/userModel
+* @alias module:models/user
 * @inner
 * @param {string} save - encrypt password before saving in database.
 * @param {callback} middleware - function encrypts password.
@@ -142,7 +138,7 @@ userSchema.pre('save', async function (next) {
 
 /**
 * Encrypting password before saving
-* @alias module:models/userModel
+* @alias module:models/user
 * @inner
 * @param {string} candidate password - the input password.
 * @param {string} user password - the user's password saved in database.

@@ -1,7 +1,7 @@
-/** Jest unit testing for functions related to recently played
- * @module routes/player
- * @requires express
- */
+// /** Jest unit testing for functions related to recently played
+//  * @module routers/player
+//  * @requires express
+//  */
 
 /**
  * sinon
@@ -43,7 +43,6 @@ const User = require('../../models/userModel')
 const PlayHistory = require('../../models/playHistoryModel')
 
 /**
- * express module
  * Album model from the database
  * @const
  */

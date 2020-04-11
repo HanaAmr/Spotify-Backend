@@ -21,7 +21,6 @@ const artistViewingController = require('../controllers/artistViewingController'
  * Express router to mount artist related functions on.
  * @type {object}
  * @const
- * @namespace artistRouter
  */
 const router = express.Router()
 
@@ -29,7 +28,7 @@ const router = express.Router()
  * Route for requesting artists
  * @name /artists/
  * @function
- * @memberof module:routes/artistRouters
+ * @memberof module:routes/artistRoutes
  * @inner
  */
 router
@@ -40,7 +39,7 @@ router
  * Route for requesting a specific album
  * @name /artists/:artistId
  * @function
- * @memberof module:routes/artistRouters
+ * @memberof module:routes/artistRoutes
  * @inner
  * @param {string} artistId - artist id passed in query
  */
@@ -52,7 +51,7 @@ router
  * Route for requesting a specific album
  * @name /artists/:artistId/related-artists
  * @function
- * @memberof module:routes/artistRouters
+ * @memberof module:routes/artistRoutes
  * @inner
  * @param {string} artistId - artist id passed in query
  */
@@ -64,7 +63,7 @@ router
  * Route for requesting a specific album
  * @name /artists/:artistId/ralbums
  * @function
- * @memberof module:routes/artistRouters
+ * @memberof module:routes/artistRoutes
  * @inner
  * @param {string} artistId - artist ID passed in query
  */
@@ -76,7 +75,7 @@ router
  * Route for requesting a specific album
  * @name /artists/:artistId/top-tracks
  * @function
- * @memberof module:routes/artistRouters
+ * @memberof module:routes/artistRoutes
  * @inner
  * @param {string} artistId - artist ID passed in query
  */
@@ -89,7 +88,7 @@ router
  * Route for requesting artist Created Playlists
  * @name /artists/:artistId/artist-created-playlists
  * @function
- * @memberof module:routes/artistRouters
+ * @memberof module:routes/artistRoutes
  * @inner
  * @param {string} artistId - artist ID passed in query
  */

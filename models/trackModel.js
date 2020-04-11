@@ -1,13 +1,10 @@
 /**
  * Models module.
  * @module models/track
- * @requires express
+ * @requires mongoose
  */
 
-/**
- * express module
- * @const
- */
+
 const mongoose = require('mongoose')
 
 /**

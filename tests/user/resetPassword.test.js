@@ -1,7 +1,7 @@
-/** Jest unit testing for resettig the password
- * @module routes/users
- * @requires express
- */
+// /** Jest unit testing for resettig the password
+//  * @module routes/users
+//  * @requires express
+//  */
 
 /**
  * sinon

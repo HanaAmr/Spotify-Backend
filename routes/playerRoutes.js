@@ -1,5 +1,5 @@
 /** Express router providing player related routes
- * @module routers/player
+ * @module routes/player
  * @requires express
  */
 
@@ -25,7 +25,7 @@ const playerController = require('../controllers/playerController')
  * Route for adding a track to recently played
  * @name post/me/player/recentlyPlayed
  * @function
- * @memberof module:routers/player
+ * @memberof module:routes/player
  * @inner
  * @param {String} Path - The Express path
  * @param {Function} addToRecentlyPlayed - Adds currently played track to the recently played list for the user.
@@ -38,7 +38,7 @@ router
  * Route for adding a track to recently played
  * @name post/me/player/recentlyPlayed
  * @function
- * @memberof module:routers/player
+ * @memberof module:routes/player
  * @inner
  * @param {String} Path - The Express path
  * @param {Function} addToRecentlyPlayed - Adds currently played track to the recently played list for the user.
@@ -51,7 +51,7 @@ router
  * Route for getting recently played tracks (play history)
  * @name get/me/player/recentlyPlayed
  * @function
- * @memberof module:routers/player
+ * @memberof module:routes/player
  * @inner
  * @param {String} Path - The Express path
  * @param {Function} getRecentlyPlayed - Gets the recently played list for the user.

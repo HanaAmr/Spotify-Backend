@@ -1,7 +1,7 @@
-/** Express service for user
- * @module services/user
- * @requires express
- */
+// /** Express service for user
+//  * @module services/user
+//  * @requires express
+//  */
 
 /**
  * User model from the database
@@ -207,7 +207,7 @@ class userService {
 
   /**
  * Checks if the confirmation code is valid and thus make the user a premium/artist one.
- * @function upgradeUserRole
+ * @function 
  * @param {string} authToken - The authorization token for the user.
  * @param {string} confirmationCode - The confirmation code for the upgrade.
  */
