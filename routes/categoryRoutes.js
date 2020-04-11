@@ -35,7 +35,7 @@ const authController = require('./../controllers/authController')
  * @memberof module:routes/category
  * @inner
  */
-router.use(authController.protect)
+//router.use(authController.protect)
 
 /**
  * Route for requesting categories

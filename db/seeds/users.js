@@ -62,7 +62,7 @@ createUsers = async () => {
     email: 'dragonss@email.com',
     password: 'password1',
     gender: 'male',
-    dateOfBirth: '2000-1-10',
+    dateOfBirth: '1999-1-10',
     role: 'artist',
     artistInfo: {
       biography: "Imagine Dragons is an American rock band from Las Vegas, Nevada, consisting of lead vocalist Dan Reynolds, lead guitarist Wayne Sermon, bassist Ben McKee, and drummer Daniel Platzman.\nThe band's second studio album Smoke + Mirrors (2015) reached number one in the US, Canada and the UK.",
@@ -80,7 +80,7 @@ createUsers = async () => {
     email: 'sheeran@email.com',
     password: 'password2',
     gender: 'male',
-    dateOfBirth: '2002-2-15',
+    dateOfBirth: '1998-2-15',
     role: 'artist',
     artistInfo: {
       biography: "Ed Sheeran was born on February 17, 1991, in Halifax, West Yorkshire, in the United Kingdom.\n When he was young, he began playing guitar, showing early promise as a musical talent. When he was 11, Sheeran met singer-songwriter Damien Rice backstage at one of Rice's shows, and the young musician found added inspiration.",
@@ -98,7 +98,7 @@ createUsers = async () => {
     email: 'amr@email.com',
     password: 'password3',
     gender: 'male',
-    dateOfBirth: '2004-1-8',
+    dateOfBirth: '1952-1-8',
     role: 'artist',
     artistInfo: {
       biography: 'Amr Diab (Amr Abd-Albaset Abd-Alaziz Diab), born on the 11th of October 1961 in Port Said, Egypt, he is an Egyptian Singer, he is known as the Father of Mediterranean Music. ... Amr Diab has earned his bachelor degree in Arabic Music and graduated from the Cairo Academy of Arts in 1986.',
@@ -134,7 +134,7 @@ createUsers = async () => {
     email: 'ahmed@email.com',
     password: 'password5',
     gender: 'male',
-    dateOfBirth: '2006-5-7'
+    dateOfBirth: '1995-5-7'
   })
   await user5.save()
   await user5.updateOne({ href: `${process.env.API_URL}/users/${user5._id}` })
@@ -145,7 +145,7 @@ createUsers = async () => {
     email: 'omar@email.com',
     password: 'password6',
     gender: 'male',
-    dateOfBirth: '2006-5-7'
+    dateOfBirth: '1997-5-7'
   })
   await user6.save()
   await user6.updateOne({ href: `${process.env.API_URL}/users/${user6._id}` })

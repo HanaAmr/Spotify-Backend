@@ -1,14 +1,11 @@
-/** APIFeatures class for modifying responses
- * @module module:utils/apiFeatures
- * @requires express
- */
 
 class APIFeatures {
-  // query is the actual query os mongoose
-  // querty string => that is in the request
-
-  /**
- * @constructor
+ /**
+ * APIFeatures class for modifying responses
+ * @class apiFeatures
+ * @classdesc The apiFeatures class to modify the responses 
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   constructor (query, queryString) {
     this.query = query
@@ -17,8 +14,9 @@ class APIFeatures {
 
   /**
  * For filtering documents
- * @function
- * @memberof module:utils/pagination
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   filter () {
     const queryObj = { ...this.queryString }
@@ -37,8 +35,9 @@ class APIFeatures {
 
   /**
  * For sorting documents
- * @function
- * @memberof module:utils/pagination
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   sort () {
     if (this.queryString.sort) {
@@ -50,8 +49,9 @@ class APIFeatures {
 
   /**
  * For filtering fields
- * @function
- * @memberof module:utils/pagination
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   limitFields () {
     if (this.queryString.fields) {
@@ -65,8 +65,9 @@ class APIFeatures {
 
   /**
  * For filtering fields of playlists
- * @function
- * @memberof module:utils/pagination
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   limitFieldsPlaylist () {
     if (this.queryString.fields) {
@@ -92,8 +93,9 @@ class APIFeatures {
 
   /**
  * For filtering fields of tracks
- * @function
- * @memberof module:utils/pagination
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   limitFieldsTracks () {
     if (this.queryString.fields) {
@@ -140,8 +142,9 @@ class APIFeatures {
 
   /**
  * For paginating
- * @function
- * @memberof module:utils/pagination
+ * @memberof apiFeatures
+ * @param {String} query The query to be modified
+ * @param {String} queryString Query String of the request
  */
   paginate () {
     const page = this.queryString.page * 1 || 1

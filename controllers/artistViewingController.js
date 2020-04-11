@@ -1,21 +1,8 @@
 /** Express controller providing ArtistViewing related controls
- * @module controllers
+ * @module controllers/artistViewing
  * @requires express
  */
 
-/**
- * ArtistViewing controller to call when routing.
- * @type {object}
- * @const
- * @namespace artistViewingController
- */
-
-/**
- * express module
- * util to import promisify function
- * @const
- */
-// const express = require('express')
 
 /**
  * util to handle query parameters
@@ -24,28 +11,24 @@
 const APIFeatures = require('./../utils/apiFeatures')
 
 /**
- * mongoose module
  * mongoose model for user
  * @const
  */
 const User = require('./../models/userModel')
 
 /**
- * mongoose module
  * mongoose model for album
  * @const
  */
 const Album = require('./../models/albumModel')
 
 /**
- * mongoose module
  * mongoose model for playlist
  * @const
  */
 const Playlist = require('./../models/playlistModel')
 
 /**
- * mongoose module
  * mongoose model for track
  * @const
  */
@@ -96,12 +79,11 @@ exports.getArtists = catchAsync(async (req, res, next) => {
 })
 
 /**
-* A middleware function for Returning an artist whose id is specified in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
+ * A middleware function for Returning an artist whose id is specified in the query
+ *  @alias module:controllers/artistViewing
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
 */
 exports.getArtist = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id,
@@ -125,12 +107,11 @@ exports.getArtist = catchAsync(async (req, res, next) => {
 })
 
 /**
-* A middleware function for Returning related artists to the passed artist id in the query
-* @function
-* @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
+ * A middleware function for Returning related artists to the passed artist id in the query
+ *  @alias module:controllers/artistViewing
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
 */
 exports.getRelatedArtists = catchAsync(async (req, res) => {
   const artist = await User.findById(req.params.id)
@@ -164,11 +145,10 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
 
 /**
 * A middleware function for Returning albumss for artist whose id is passed in the query
-* @function
 * @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
+* @param {Object} req - The request passed.
+* @param {Object} res - The respond sent
+* @param {Function} next - The next function in the middleware
 */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
@@ -194,11 +174,10 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
 
 /**
 * A middleware function for TopTracks for artist whose id is passed in the query
-* @function
 * @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
+* @param {Object} req - The request passed.
+* @param {Object} res - The respond sent
+* @param {Function} next - The next function in the middleware
 */
 exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
@@ -223,11 +202,10 @@ exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
 
 /**
 * A middleware function for CreatedPlaylists for artist whose id is passed in the query
-* @function
 * @memberof module:controllers/artitViewingController
-* @param {Request}  - The function takes the request as a parameter to access its body.
-* @param {Respond} - The respond sent
-* @param {next} - The next function in the middleware
+* @param {Object} req - The request passed.
+* @param {Object} res - The respond sent
+* @param {Function} next - The next function in the middleware
 */
 exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
