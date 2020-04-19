@@ -68,10 +68,10 @@ const AppError = require('../utils/appError')
 exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   // Make sure list of recently played is freed if it has reached the limit
-  await playerService.deleteOneRecentlyPlayedIfFull(req.headers.authorization)
+  await playerService.deleteOneRecentlyPlayedIfFull(userId)
   // TODO: Instead of getting the context from the request, we should have it saved
   // when the user started playing
-  // const newContext = await playerService.getConext(req.headers.authorization)
+  // const newContext = await playerService.getConext(userId)
 
   // For now, we generate the context here
   const newContext = await playerService.generateContext(req.body.contextUri, req.body.contextType)

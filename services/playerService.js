@@ -122,10 +122,9 @@ class playerService {
     * Gets the context for the passed user.
     * @function
     * @inner
-    * @param {String} authToken - The authorization token.
+    * @param {String} userId - The ID of the user.
     */
-  async getContext (authToken) {
-    const userId = await userService.getUserId(authToken)
+  async getContext (userId) {
     const context = await Player.find({ userId: userId }).select('context')
     return context
   }
@@ -133,9 +132,26 @@ class playerService {
   /**
     * Checks if the user with this token has reached the maximum number of recently played items and if so deletes one recently played item.
     * @function
+    * @param {String} userId  - The ID of the user.
+    */
+  async deleteOneRecentlyPlayedIfFull (userId) {
+    const count = await PlayHistory.countDocuments({ userId: userId })
+    if (count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)) { // If we reached the limit of playHistory for this user
+      const oldestPlayHistory = await PlayHistory
+        .find()
+        .where('userId').equals(userId)
+        .sort('playedAt')
+        .limit(1)
+      await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
+    }
+  }
+
+    /**
+    * Shuffles the queue of songs for the player.
+    * @function
     * @param {String} authToken  - The authorization token of the user.
     */
-  async deleteOneRecentlyPlayedIfFull (authToken) {
+   async deleteOneRecentlyPlayedIfFull (authToken) {
     const userId = await userService.getUserId(authToken)
     const count = await PlayHistory.countDocuments({ userId: userId })
     if (count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)) { // If we reached the limit of playHistory for this user
@@ -147,6 +163,7 @@ class playerService {
       await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
     }
   }
+
 }
 
 module.exports = playerService
