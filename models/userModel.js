@@ -48,6 +48,7 @@ dotenv.config({ path: '.env' })
  * @property {String} upgradeTokenExpires upgradeTokenExpires of the user
  * @property {String} upgradeRole upgradeRole of the user
  * @property {String} uri uri of the user
+ * @property {Array} tracks tracks of the artist
  * @const
  */
 
@@ -135,6 +136,13 @@ const userSchema = new Schema({
 
     }
   },
+  trackObjects: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Track'
+
+    }
+  ],
   facebookId: {
     type: String,
     default: ''
