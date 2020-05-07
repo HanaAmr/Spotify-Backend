@@ -149,20 +149,22 @@ class playerService {
     /**
     * Shuffles the queue of songs for the player.
     * @function
-    * @param {String} authToken  - The authorization token of the user.
+    * @param {String} userId  - The ID of the user.
     */
-   async deleteOneRecentlyPlayedIfFull (authToken) {
-    const userId = await userService.getUserId(authToken)
-    const count = await PlayHistory.countDocuments({ userId: userId })
-    if (count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)) { // If we reached the limit of playHistory for this user
-      const oldestPlayHistory = await PlayHistory
-        .find()
-        .where('userId').equals(userId)
-        .sort('playedAt')
-        .limit(1)
-      await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
+   async shufflePlayerQueue (userId) {
+    const userPlayer = await Player.findOne({'userId':userId})
+    const userQueue = await userPlayer.queueTracksUris
+    //Using Fisher-Yates shuffling algorithm, shuffle the queue.
+    let i,j,x
+    for(i = userQueue.length-1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i+1)) 
+      x = userQueue[i]
+      userQueue[i] = userQueue[j]
+      userQueue[j] = x
     }
-  }
+    userPlayer.queueTracksUris = userQueue
+    await Player.updateOne({'userId':userId}, {$set: {'queueTracksUris': userQueue }})
+    }
 
 }
 
