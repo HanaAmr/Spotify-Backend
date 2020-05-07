@@ -132,3 +132,22 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
 //     }
 //   })
 // })
+
+
+/**
+ * Starts a playing context for the user.
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ */
+exports.startContext = catchAsync(async function (req, res, next) {
+  const userId = await userService.getUserId(req.headers.authorization)
+  const tracksUris = await playerService.generateContext(req.body.uri, req.body.type, userId)
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tracksUris
+    }
+  })
+})
