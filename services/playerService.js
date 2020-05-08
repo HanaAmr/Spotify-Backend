@@ -156,7 +156,7 @@ class playerService {
     const shuffledList = await this.shufflePlayerQueue(userId)
     userPlayer.queueTracksIds = shuffledList
     //Update the currently played track for the context
-    const currTrack = await Track.findOne({ '_id': userPlayer.queueTracksIds[userPlayer.queueOffset] })
+     const currTrack = await Track.findOne({ '_id': userPlayer.queueTracksIds[userPlayer.queueOffset] })
     newContext.href = currTrack.href
     await newContext.save()
     await userPlayer.save()
@@ -174,6 +174,18 @@ class playerService {
     const userPlayer = await Player.findOne({ userId: userId })
     const userContext = userPlayer.context
     return userContext
+  }
+
+  /**
+    * Gets the current track playing id.
+    * @function
+    * @inner
+    * @param {String} userId - The ID of the user.
+    */
+   async getCurrentTrack(userId) {
+    const userPlayer = await Player.findOne({ userId: userId })
+    const currTrack = userPlayer.queueTracksIds[userPlayer.queueOffset]
+    return currTrack
   }
 
   /**
