@@ -34,18 +34,6 @@ router
   .route('/recentlyPlayed')
   .post(playerController.addToRecentlyPlayed)
 
-/**
- * Route for adding a track to recently played
- * @name post/me/player/recentlyPlayed
- * @function
- * @memberof module:routes/player
- * @inner
- * @param {String} Path - The Express path
- * @param {Function} addToRecentlyPlayed - Adds currently played track to the recently played list for the user.
- */
-router
-  .route('/recentlyPlayed')
-  .post(playerController.addToRecentlyPlayed)
 
 /**
  * Route for getting recently played tracks (play history)
