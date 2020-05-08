@@ -301,6 +301,30 @@ describe('Starting playing context for a user', () => {
     const context = await playerService.getContext(userId)
     expect(context).not.toEqual(null)
   })
+
+  //Integration testing
+  it('Should start context successfully', async (done) => {
+
+    const request = httpMocks.createRequest({
+      method: 'PUT',
+      url: '/me/player/play',
+      body: {
+        id: artistId,
+        type: 'artist'
+      }
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.startContext(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(200)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 })
 
 // Testing validating track
@@ -455,8 +479,8 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
-    await playerService.finishTrack(userId,1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.finishTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
   })
 
@@ -466,8 +490,8 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 3
     await userPlayer.save()
-    await playerService.finishTrack(userId,1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.finishTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(0)
   })
 
@@ -478,8 +502,8 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 1
     await userPlayer.save()
-    await playerService.finishTrack(userId,-1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.finishTrack(userId, -1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(0)
   })
 
@@ -489,8 +513,8 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
-    await playerService.finishTrack(userId,-1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.finishTrack(userId, -1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(3)
   })
 
@@ -500,8 +524,8 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId,1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(1)
   })
@@ -511,17 +535,17 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     playerService = new playerServices()
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
-    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)-1
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10) - 1
     await userPlayer.save()
-    await playerService.skipTrack(userId,1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(parseInt(process.env.MAX_SKIPS, 10))
     expect(userPlayer.skipsRefreshAt >= Date.now()).toBeTruthy()
   })
 
 
-  it  ('Should skip normally in the queue as 1 hour has passed since we reached the limit of the skips', async () => {
+  it('Should skip normally in the queue as 1 hour has passed since we reached the limit of the skips', async () => {
     expect.assertions(2)
     playerService = new playerServices()
     let userPlayer = await Player.findOne({ 'userId': userId })
@@ -529,25 +553,155 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId,1)
-    userPlayer = await Player.findOne({userId:userId})
+    await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(1)
   })
 
-  
+
   it(`Shouldn't skip normally in the queue as less than 1 hour has passed since we reached the limit of the skips`, async () => {
     expect.assertions(1)
     playerService = new playerServices()
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
-    userPlayer.skipsRefreshAt = Date.now() + 3600*1000
+    userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000
     await userPlayer.save()
-    const skip = await playerService.skipTrack(userId,1)
-    userPlayer = await Player.findOne({userId:userId})
+    const skip = await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
     expect(skip).toEqual(false)
   })
 
-  
+  //Integration testing skipping
+  it('Should skip track when finished successfully', async (done) => {
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = 0
+    await userPlayer.save()
+    await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/finished'
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.finishedTrack(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  it('Should skip track when requesting next track successfully', async (done) => {
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = 0
+    await userPlayer.save()
+    await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
+
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/next'
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.skipToNextTrack(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  it(`Shouldn't skip track when requesting next track successfully`, async (done) => {
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000
+    await userPlayer.save()
+
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/next'
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.skipToNextTrack(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(403)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  it('Should skip track when requesting previous track successfully', async (done) => {
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = 0
+    await userPlayer.save()
+    await playerService.skipTrack(userId, 1)
+    userPlayer = await Player.findOne({ userId: userId })
+
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/previous'
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.skipToPrevTrack(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(204)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  it(`Shouldn't skip track when requesting previous track successfully`, async (done) => {
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000
+    await userPlayer.save()
+
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/previous'
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.skipToPrevTrack(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(403)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
 })
