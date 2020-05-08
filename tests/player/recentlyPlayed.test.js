@@ -64,6 +64,13 @@ const Track = require('../../models/trackModel')
 
 /**
  * express module
+ * Player model from the database
+ * @const
+ */
+const Player = require('../../models/playerModel')
+
+/**
+ * express module
  * player controller
  * @const
  */
@@ -75,6 +82,12 @@ const playerController = require('../../controllers/playerController')
  */
 const userServices = require('../../services/userService')
 
+/**
+ * Player service
+ * @const
+ */
+const playerServices = require('../../services/playerService')
+
 const mongoDB = process.env.DATABASE_LOCAL
 // Connecting to the database
 if (process.env.NODE_ENV === 'test') {
@@ -83,289 +96,171 @@ if (process.env.NODE_ENV === 'test') {
   throw new Error('Can\'t connect to db, make sure you run in test environment!')
 }
 
-// Before all tests, insert a track to the track collection
-beforeAll(async () => {
-  await mongoose.connection.collection('tracks').deleteMany()
-  const newTrack = new Track({
-    _id: '1234',
-    externalUrls: [],
-    popularity: 0,
-    artists: [],
-    name: 'track1',
-    uri: '1234',
-    href: 'asd',
-    trackNumber: 5,
-    isLocal: false,
-    durationMs: 123,
-    audioFilePath: 'anyDummyPath/artist/track'
-  })
-  await newTrack.save()
-  const newTrack2 = new Track({
-    _id: '12345',
-    externalUrls: [],
-    popularity: 0,
-    artists: [],
-    name: 'track2',
-    uri: '12345',
-    href: 'asdd',
-    trackNumber: 5,
-    isLocal: false,
-    durationMs: 123,
-    audioFilePath: 'anyDummyPath/artist/track2'
-  })
-  await newTrack2.save()
-})
-
-// Testing adding to recently played list for a user.
-describe('Adding to recently played list of a user', () => {
-  // Drop the whole users, playHistory collection before testing and add a simple user to test with
+// Testing adding to recently played
+describe('Adding to recently played for a user', () => {
+  var userId, artistId, ablumId, playlistId
+  // Add a simple user to test with
   beforeAll(async () => {
+    sinon.restore()
     await mongoose.connection.collection('users').deleteMany({})
     await mongoose.connection.collection('albums').deleteMany({})
     await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('playhistories').deleteMany({})
-    // Creating the valid user to assign the token to him
+    await mongoose.connection.collection('players').deleteMany({})
+    await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('contexts').deleteMany({})
+    // Creating the valid user to assign the al to him
     const validUser = new User({
       name: 'omar',
       email: 'omar@email.com',
       password: 'password'
     })
     await validUser.save()
-    const newArtist = new User({
-      _id: 'abcd',
-      role: 'user',
-      name: 'Low roar',
-      email: 'DS@2019.com',
+    userId = validUser._id
+    const validArtist = new User({
+      name: 'Low Roar',
+      email: 'LowRoar@email.com',
       password: 'password',
-      href: 'abcd',
-      uri: 'abcd',
-      externalUrls: []
+      role: 'artist'
     })
-    await newArtist.save()
-    const newAlbum = new Album({
-    _id: 'abcd',
-    name: 'Evolve',
-    albumType: 'album',
-    externalUrls: 'this should be an externalUrl',
-    type: 'album',
-    genre: 'Pop-rock',
-    label: 'Imagine Dragons Album',
-    copyrights: '© 2018 KIDinaKORNER/Interscope Records',
-    releaseDate: '2018-01-01',
-    artists: [newArtist._id],
-    totalTracks: 2,
-    popularity: 300000,
-    uri:"abcd",
-    href: "abcd"
+    await validArtist.save()
+    artistId = validArtist._id
+    //Creating the track to assign to the artist
+    testTrack = new Track({
+      _id: '5e8cfa4ffbfe6a5764b4238c',
+      name: 'Believer',
+      href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:5e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id]
     })
-    await newAlbum.save()
-    const newPlaylist = new Playlist({
-    _id: 'abcd',
-    name: 'Imagine Dragons Radio',
-    collaborative: false,
-    externalUrl: 'this should be an externalUrl',
-    description: 'Imagine Dragons',
-    owner: newArtist._id,
-    public: true,
-    snapshot_id: '5e729e8b3d8d0a432c70b59d',
-    type: 'playlist',
-    popularity: 24000000,
-    noOfFollowers: 2000000,
-    createdAt: Date.now(),
-    uri:"abcd",
-    href: "abcd"
+    testTrack2 = new Track({
+      _id: '6e8cfa4ffbfe6a5764b4238c',
+      name: 'Give Up',
+      href: 'http://127.0.0.1:7000/tracks/6e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:6e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id]
     })
-    await newPlaylist.save()
+    await testTrack.save()
+    await testTrack2.save()
+    testAlbum = new Album({
+      _id: '5e8cfa4b1493ec60bc89c970',
+      name: 'Evolve',
+      href: 'http://127.0.0.1:7000/albums/5e8cfa4b1493ec60bc89c970',
+      uri: 'spotify:albums:5e8cfa4b1493ec60bc89c970',
+      popularity: 60,
+      releaseDate: '2015-01-01',
+      type: 'album',
+      albumType: 'single',
+      releaseDate: '2018-01-01',
+      totalTracks: 2,
+      trackObjects: [testTrack._id, testTrack2._id]
+    })
+    await testAlbum.save()
+    albumId = testAlbum._id
+    testPlaylist = new Playlist({
+      _id: '5e729d853d8d0a432c70b59c',
+      name: 'Imagine Dragons Radio',
+      href: 'http://127.0.0.1:7000/playlists/5e729d853d8d0a432c70b59c',
+      uri: 'spotify:playlists:5e729d853d8d0a432c70b59c',
+      owner: [
+        '5e729e8b3d8d0a432c70b59d'
+      ],
+      images: ['imagine-dragons.jpg'],
+      trackObjects: ['5e8cfa4ffbfe6a5764b4238c'],
+      popularity: 60,
+      createdAt: '2015-01-01',
+      trackObjects: [testTrack2._id, testTrack._id]
+    })
+    await testPlaylist.save()
+    playlistId = testPlaylist._id
+    validArtist.trackObjects = [testTrack._id, testTrack2._id]
+    await validArtist.save()
+    const userPlayer = new Player({
+      userId: validUser._id
+    })
+    await userPlayer.save()
     // Mock the userServices get user id function to return the testing user id.
     sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
   })
 
+  beforeEach(async () => {
+    await mongoose.connection.collection('playhistories').deleteMany({})
+  })
   // Drop the whole users, playHistory collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
     await mongoose.connection.collection('albums').deleteMany({})
     await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('playhistories').deleteMany({})
-    sinon.restore()
+    await mongoose.connection.collection('players').deleteMany({})
+    await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('contexts').deleteMany({})
   })
 
-
-  // Testing adding to recently played linked with artist with no problems
-  it('Should add to recently played with no problems', async (done) => {
-    //Deletes recently played after each test
-    await mongoose.connection.collection('playhistories').deleteMany({})
-
+  // Testing starting context without problems with track for artist
+  it('Should start a context for the user using track of artist', async (done) => {
+    //Generate context first to be able to use in recently played
+    playerService = new playerServices()
+    await playerService.generateContext(artistId, 'artist', userId)
+    
+    
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
-      body: {
-        contextType: 'artist',
-        contextId: 'abcd',
-        trackId: '1234'
+      headers:{
+        authorization: ''
       }
     })
-
+    
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    await playerController.addToRecentlyPlayed(request, response)
+    playerController.addToRecentlyPlayed(request, response)
     response.on('end', async () => {
-      try {
-        const count = await PlayHistory.countDocuments()
-        expect(count).toEqual(1)
-        expect(response.statusCode).toEqual(204)
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-  })
-
-
-  // Testing adding to recently played linked with album with no problems
-  it('Should add to recently played linked with album with no problems', async (done) => {
-    //Deletes recently played after each test
-    await mongoose.connection.collection('playhistories').deleteMany({})
-
-    const request = httpMocks.createRequest({
-      method: 'POST',
-      url: '/me/player/recentlyPlayed',
-      body: {
-        contextType: 'album',
-        contextUri: 'abcd',
-        trackUri: '1234'
-      }
-    })
-
-    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    await playerController.addToRecentlyPlayed(request, response)
-    response.on('end', async () => {
-      try {
-        const count = await PlayHistory.countDocuments()
-        expect(count).toEqual(1)
-        expect(response.statusCode).toEqual(204)
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-  })
-
-  // Testing adding to recently played linked with playlist with no problems
-  it('Should add to recently played linked with playlist with no problems', async (done) => {
-    //Deletes recently played after each test
-    await mongoose.connection.collection('playhistories').deleteMany({})
-
-    const request = httpMocks.createRequest({
-      method: 'POST',
-      url: '/me/player/recentlyPlayed',
-      body: {
-        contextType: 'playlist',
-        contextUri: 'abcd',
-        trackUri: '1234'
-      }
-    })
-
-    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    await playerController.addToRecentlyPlayed(request, response)
-    response.on('end', async () => {
-      try {
-        const count = await PlayHistory.countDocuments()
-        expect(count).toEqual(1)
-        expect(response.statusCode).toEqual(204)
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-  })
-
-  // Testing adding to recently played with no problems after reaching limit of recently played
-  it('Should add to recently played with no problems even after reaching limit', async (done) => {
-    let env
-    env = process.env
-    process.env.PLAY_HISTORY_MAX_COUNT = 1
-
-    const request = httpMocks.createRequest({
-      method: 'POST',
-      url: '/me/player/recentlyPlayed',
-      body: {
-        contextType: 'artist',
-        contextUri: 'abcd',
-        trackUri: '12345'
-      }
-    })
-    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    await playerController.addToRecentlyPlayed(request, response)
-     response.on('end', async () => {
       try {
         const playHistoryAdded = await PlayHistory.findOne()
-        expect(playHistoryAdded.track.uri).toEqual('12345')
-        expect(response.statusCode).toEqual(204)
-        process.env = env
+        expect(playHistoryAdded.context.type).toEqual('artist')
         done()
       } catch (error) {
-        process.env = env
         done(error)
       }
     })
   })
 
-  // Testing adding to recently played with a track that doesn't exist
-  it('Shouldn\'t add to recently played as track doens\'t exist', async (done) => {
+  // Testing deleting recently played if we reached the maximum of recently played
+  it('Should delete the oldest recently played saved in player history as we reached the maximum', async (done) => {
+    expect.assertions(2)
+    //Generate context first to be able to use in recently played
+    playerService = new playerServices()
+    await playerService.generateContext(artistId, 'artist', userId)
+    
+    //Adding one recently played using requests
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
-      body: {
-        contextType: 'artist',
-        contextUri: 'abcd',
-        trackUri: 'invalidUri'
+      headers:{
+        authorization: ''
       }
     })
+    
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    playerController.addToRecentlyPlayed(request, response, (err) => {
-      expect(err).toEqual(expect.anything())
-      expect(err.statusCode).toEqual(404)
-      done()
-    })
-  })
-})
-
-// Testing getting recently played list for a user.
-describe('Getting recently played list for a user', () => {
-  // Sdd a simple user to test with
-  beforeAll(async () => {
-    // Creating the valid user to assign the token to him
-    const validUser = new User({
-      name: 'omar',
-      email: 'omar@email.com',
-      password: 'password'
-    })
-    await validUser.save()
-    // Mock the userServices get user id function to return the testing user id.
-    sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
-  })
-
-  // Drop the whole users, playHistory collection after finishing testing
-  afterAll(async () => {
-    await mongoose.connection.collection('users').deleteMany({})
-    await mongoose.connection.collection('playhistories').deleteMany({})
-  })
-
-  // Testing Getting recently played with no problems
-  it('Should get recently played with no problems', async (done) => {
-    const request = httpMocks.createRequest({
-      method: 'GET',
-      url: '/me/player/recentlyPlayed'
-    })
-
-    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-    await playerController.getRecentlyPlayed(request, response)
-    response.on('end', () => {
+    playerController.addToRecentlyPlayed(request, response)
+    response.on('end', async () => {
       try {
-        expect(response.statusCode).toEqual(200)
-        done()
+        const playHistoryAdded = await PlayHistory.findOne()
+        expect(playHistoryAdded.context.type).toEqual('artist')
       } catch (error) {
         done(error)
       }
+      const originalMaxRecentlyPlayed = parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)
+      process.env.PLAY_HISTORY_MAX_COUNT = 1
+      await playerService.deleteOneRecentlyPlayedIfFull(userId)
+      const playHistories = await PlayHistory.findOne()
+      expect(playHistories).toEqual(null)
+      process.env.PLAY_HISTORY_MAX_COUNT = originalMaxRecentlyPlayed
+      done()
     })
   })
 })
