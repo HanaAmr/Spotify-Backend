@@ -82,21 +82,22 @@ class playerService {
   /**
      *
     * Generates the context for the song playing at the moment of sending the request.
+    * Gets the list of track Ids from context and shuffles them
     * @function
-    * @param {String} uri - The uri of played conext.
+    * @param {String} id - The id of played conext.
     * @param {String} type - The type of played context.
     * @param {String} userId - The Id of the user.
     */
-  async generateContext(uri, type, userId) {
-    const user = User.findById(userId)
+  async generateContext(id, type, userId) {
+    const user = await User.findById(userId)
     //Create the queue of tracks
-    let queueTracksUris, tracks
+    let queueTracksIds, tracks
     //Create the context for the user    
     const newContext = new Context()
-    newContext.uri = uri
+    newContext.id = id
     newContext.type = type
     if (type === 'playlist') {
-      const contextPlaylist = await Playlist.findOne({ uri: uri })
+      const contextPlaylist = await Playlist.findOne({ _id: id })
       if (!contextPlaylist) return null
       newContext.externalUrls = contextPlaylist.external_urls
       newContext.href = contextPlaylist.href
@@ -104,9 +105,9 @@ class playerService {
       newContext.images = contextPlaylist.images
       newContext.followersCount = contextPlaylist.popularity
       tracks = await contextPlaylist.trackObjects
-      queueTracksUris = array.map(tracks => tracks.uri)
+      queueTracksUIds = array.map(tracks => tracks._id)
     } else if (type === 'album') {
-      const contextAlbum = await Album.findOne({ uri: uri })
+      const contextAlbum = await Album.findOne({ _id: id })
       if (!contextAlbum) return null
       newContext.externalUrls = contextAlbum.externalUrls
       newContext.href = contextAlbum.href
@@ -114,9 +115,9 @@ class playerService {
       newContext.images = contextAlbum.images
       newContext.followersCount = contextAlbum.popularity
       tracks = await contextAlbum.trackObjects
-      queueTracksUris = array.map(tracks => tracks.uri)
+      queueTracksIds = array.map(tracks => tracks._id)
     } else if (type === 'artist') {
-      const contextArtist = await User.findOne({ uri: uri })
+      const contextArtist = await User.findOne({ _id: id })
       if (contextArtist == null) return null
       newContext.externalUrls = contextArtist.externalUrls
       newContext.href = contextArtist.href
@@ -124,14 +125,22 @@ class playerService {
       newContext.images = contextArtist.images
       newContext.followersCount = contextArtist.followers.length
       tracks = await contextArtist.trackObjects
-      queueTracksUris = array.map(tracks => tracks.uri)
+      queueTracksIds = array.map(tracks => tracks._id)
     }
     user.context = newContext
     
     //Get user player and update the queue with shuffled list
     const userPlayer = await Player.findOne({'userId':userId})
-    userPlayer.queueTracksUris = queueTracksUris
-    this.shufflePlayerQueue(userId)
+    userPlayer.queueTracksIds = queueTracksIds
+    userPlayer.queueOffset = 0
+    await this.shufflePlayerQueue(userId)
+    await userPlayer.save()
+    await newContext.save()
+    await user.save()
+    console.log(newContext)
+    console.log(queueTracksIds)
+    console.log(userPlayer)
+    return userPlayer.queueTracksIds
   }
 
   /**
@@ -169,7 +178,7 @@ class playerService {
   */
   async shufflePlayerQueue(userId) {
     const userPlayer = await Player.findOne({ 'userId': userId })
-    const userQueue = await userPlayer.queueTracksUris
+    const userQueue = await userPlayer.queueTracksIds
     //Using Fisher-Yates shuffling algorithm, shuffle the queue.
     let i, j, x
     for (i = userQueue.length - 1; i > 0; i--) {
@@ -178,8 +187,8 @@ class playerService {
       userQueue[i] = userQueue[j]
       userQueue[j] = x
     }
-    userPlayer.queueTracksUris = userQueue
-    await Player.updateOne({ 'userId': userId }, { $set: { 'queueTracksUris': userQueue } })
+    userPlayer.queueTracksIds = userQueue
+    await Player.updateOne({ 'userId': userId }, { $set: { 'queueTracksIds': userQueue } })
   }
 
 }

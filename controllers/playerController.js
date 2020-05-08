@@ -143,11 +143,11 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
  */
 exports.startContext = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const tracksUris = await playerService.generateContext(req.body.uri, req.body.type, userId)
+  const tracksIds = await playerService.generateContext(req.body.id, req.body.type, userId)
   res.status(200).json({
     status: 'success',
     data: {
-      tracksUris
+      tracksIds
     }
   })
 })
