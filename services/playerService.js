@@ -93,6 +93,7 @@ class playerService {
     //If track requested isn't the one in order in the shuffled list
     if (userPlayer.queueTracksIds[userPlayer.queueOffset] != trackId)
       return -2
+    await this.finishTrack(userId, 1)
     userPlayer.queueOffset = (userPlayer.queueOffset + 1) % (userPlayer.queueTracksIds.length)
     await userPlayer.save()
     return 1
@@ -216,12 +217,43 @@ class playerService {
   * Increments the queueOffset to get the next track to be played
   * @function
   * @param {String} userId  - The ID of the user.
+  * @param {Number} inc - The increment to add, either 1 or -1.
   */
-  async finishTrack(userId) {
+  async finishTrack(userId, inc) {
     const userPlayer = await Player.findOne({ 'userId': userId })
-    const newQueueOffset =  (userPlayer.queueOffset + 1) % (userPlayer.queueTracksIds.length)
-    await Player.updateOne({userId: userId}, {queueOffset: newQueueOffset})
+    let newQueueOffset = (userPlayer.queueOffset + inc) % (userPlayer.queueTracksIds.length)
+    newQueueOffset = newQueueOffset < 0 ? userPlayer.queueTracksIds.length-1 : newQueueOffset
+    await Player.updateOne({ userId: userId }, { queueOffset: newQueueOffset })
+  }
+  /**
+  * Increments the queueOffset to get the next/previous track to be played if the user has skips
+  * @function
+  * @param {String} userId  - The ID of the user.
+  * @param {Number} dir - The dir of skipping, forward or backwards.
+  */
+  async skipTrack(userId, dir) {
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    if (userPlayer.skipsMade == process.env.MAX_SKIPS) {
+      if (Date.now() > userPlayer.skipsRefreshAt) {
+        await Player.updateOne({ userId: userId }, { skipsMade: 1 })
+        await this.finishTrack(userId,dir)
+        return true
+      }
+      else {
+        return false
+      }
+    }
+    const newSkipsMade = userPlayer.skipsMade + 1
+    await Player.updateOne({ userId: userId }, { skipsMade: newSkipsMade })
+    if (newSkipsMade == process.env.MAX_SKIPS) {
+      const newSkipRefreshAt = Date.now() + parseInt(process.env.SKIPS_REFRESH_TIME, 10) * 1000 // 60 minutes (*1000 to be in ms)
+      await Player.updateOne({ userId: userId }, { skipsRefreshAt: newSkipRefreshAt })
+    }
+    await this.finishTrack(userId,dir)
+    return true
   }
 }
+
+
 
 module.exports = playerService

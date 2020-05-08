@@ -422,6 +422,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
   var userId
   // Add a simple user to test with
   beforeAll(async () => {
+    await mongoose.connection.collection('players').deleteMany({})
     sinon.restore()
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -454,8 +455,42 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
-    await playerService.finishTrack(userId)
+    await playerService.finishTrack(userId,1)
     userPlayer = await Player.findOne({userId:userId})
     expect(userPlayer.queueOffset).toEqual(1)
+  })
+
+  it('Should increment the queue offset and wrap around', async () => {
+    expect.assertions(1)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 3
+    await userPlayer.save()
+    await playerService.finishTrack(userId,1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(0)
+  })
+
+
+  it('Should decrement the queue offset', async () => {
+    expect.assertions(1)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 1
+    await userPlayer.save()
+    await playerService.finishTrack(userId,-1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(0)
+  })
+
+  it('Should decrement the queue offset and wrap around', async () => {
+    expect.assertions(1)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    await userPlayer.save()
+    await playerService.finishTrack(userId,-1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(3)
   })
 })

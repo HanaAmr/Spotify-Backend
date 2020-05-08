@@ -161,7 +161,7 @@ exports.startContext = catchAsync(async function (req, res, next) {
  */
 exports.finishedTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  playerService.finishTrack(userId)
+  playerService.finishTrack(userId,1)
   res.status(204).send()
 })
 
@@ -174,6 +174,10 @@ exports.finishedTrack = catchAsync(async function (req, res, next) {
  * @param {Function} next - The next function in the middleware
  */
 exports.skipToNextTrack = catchAsync(async function (req, res, next) {
+  const userId = await userService.getUserId(req.headers.authorization)
+  const canSkip = await playerService.skipTrack(userId, 1)
+  if(canSkip) res.status(204).send()
+  else res.status(403).send()
 })
 
 /**
@@ -184,4 +188,8 @@ exports.skipToNextTrack = catchAsync(async function (req, res, next) {
  * @param {Function} next - The next function in the middleware
  */
 exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
+  const userId = await userService.getUserId(req.headers.authorization)
+  const canSkip = await playerService.skipTrack(userId, -1)
+  if(canSkip) res.status(204).send()
+  else res.status(403).send()
 })
