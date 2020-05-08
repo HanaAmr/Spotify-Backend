@@ -84,7 +84,7 @@ router
  * @param {Function} finishedTrack - Skips the song in the queue without it counting to skips limit for free user.
  */
 router
-.route('/play')
+.route('/finished')
 .post(playerController.finishedTrack)
 
 
@@ -98,7 +98,7 @@ router
  * @param {Function} skipToNextTrack - Skips the song in the queue to the next track while decrementing skip limit.
  */
 router
-.route('/play')
+.route('/next')
 .post(playerController.skipToNextTrack)
 
 
@@ -111,7 +111,7 @@ router
  * @param {Function} skipToPrevTrack - Skips the song in the queue to the previous track while decrementing skip limit.
  */
 router
-.route('/play')
+.route('/previous')
 .post(playerController.skipToPrevTrack)
 
 
