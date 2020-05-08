@@ -42,6 +42,13 @@ const Player = require('../models/playerModel')
 
 /**
  *
+ * Track model from the database
+ * @const
+ */
+const Track = require('../models/trackModel')
+
+/**
+ *
  * App error util
  * @const
  */
@@ -124,19 +131,18 @@ class playerService {
       newContext.followersCount = contextArtist.followers.length
       queueTracksIds = await contextArtist.trackObjects
     }
-    user.context = newContext
-    
-    //Get user player and update the queue with shuffled list
+    //Get user player and update the queue with shuffled list and the userPlayer context
     const userPlayer = await Player.findOne({'userId':userId})
+    userPlayer.context = newContext
     userPlayer.queueTracksIds = queueTracksIds
     userPlayer.queueOffset = 0
+    //Update the currently played track for the context
+    const currTrack = await Track.findOne({'_id': userPlayer.queueTracksIds[userPlayer.queueOffset]})
+    newContext.href = currTrack.href
     await this.shufflePlayerQueue(userId)
-    await userPlayer.save()
     await newContext.save()
+    await userPlayer.save()
     await user.save()
-    console.log(newContext)
-    console.log(queueTracksIds)
-    console.log(userPlayer)
     return userPlayer.queueTracksIds
   }
 
@@ -147,8 +153,9 @@ class playerService {
     * @param {String} userId - The ID of the user.
     */
   async getContext(userId) {
-    const context = await Player.find({ userId: userId }).select('context')
-    return context
+    const userPlayer = await Player.findOne({ userId: userId })
+    const userContext = userPlayer.context
+    return userContext
   }
 
   /**

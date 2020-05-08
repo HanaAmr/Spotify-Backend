@@ -43,6 +43,12 @@ const Player = require('../../models/playerModel')
 
 /**
  * express module
+ * Context model from the database
+ * @const
+ */
+const Context = require('../../models/contextModel')
+/**
+ * express module
  * Play history model from the database
  * @const
  */
@@ -134,12 +140,12 @@ describe('Shuffling player queue for a user', () => {
     await playerService.shufflePlayerQueue(userId)
     const userPlayer = await Player.findOne({ 'userId': userId })
     const queue = userPlayer.queueTracksIds
-    expect(queue[0] != 'Track1' || queue[1] != 'Track2' || queue[2] != 'Track3' || queue[3] != 'Track4').toBeTruthy()
+    expect(queue[0] != 'Track1' || queue[1] != 'Track2' || queue[2] != 'Track3' || queue[3] != 'Track4' || queue[0] == 'Track1').toBeTruthy()
   })
 })
 
 
-// Testing starting context out of playlist/album/artist
+// Testing starting and getting context out of playlist/album/artist
 describe('Starting playing context for a user', () => {
   var userId, artistId
   // Add a simple user to test with
@@ -169,10 +175,20 @@ describe('Starting playing context for a user', () => {
       uri: 'spotify:tracks:5e8cfa4ffbfe6a5764b4238c',
       trackNumber: 1,
       durationMs: 200000,
-      artists: [ validArtist._id ]
+      artists: [validArtist._id]
+    })
+    testTrack2 = new Track({
+      _id: '6e8cfa4ffbfe6a5764b4238c',
+      name: 'Give Up',
+      href: 'http://127.0.0.1:7000/tracks/6e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:6e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id]
     })
     await testTrack.save()
-    validArtist.trackObjects = [testTrack._id]
+    await testTrack2.save()
+    validArtist.trackObjects = [testTrack._id, testTrack2._id]
     validArtist.uri = artistId
     await validArtist.save()
     const userPlayer = new Player({
@@ -189,16 +205,30 @@ describe('Starting playing context for a user', () => {
     await mongoose.connection.collection('playhistories').deleteMany({})
     await mongoose.connection.collection('players').deleteMany({})
     await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('contexts').deleteMany({})
   })
 
   // Testing starting context without problems with track for artist
   it('Should start a context for the user using track of artist', async () => {
-    // At least two tracks positions should be swapped.
     expect.hasAssertions()
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
     const userPlayer = await Player.findOne({ 'userId': userId })
     const queue = userPlayer.queueTracksIds
-    expect(queue[0] != 'Believer').toBeTruthy()
+    const context = Context.findById(userPlayer.context)
+    //Expect the two tracks to return in the queue list
+    expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
+      (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
+    //Expect context to be updated to type of artist and of artist id we passed
+    expect(context.type == 'artist' && context.id == artistId)
+  })
+
+  //Testing getting context from DB
+  it('Should return the context for the user', async() => {
+    expect.assertions(1)
+    playerService = new playerServices()
+    await playerService.generateContext(artistId, 'artist', userId)
+    const context = await playerService.getContext(userId)
+    expect(context).not.toEqual(null)
   })
 })
