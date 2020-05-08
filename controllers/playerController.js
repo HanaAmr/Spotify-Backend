@@ -151,3 +151,34 @@ exports.startContext = catchAsync(async function (req, res, next) {
     }
   })
 })
+
+/**
+ * Skips the song in the queue without it counting to skips limit for free user.
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ */
+exports.finishedTrack = catchAsync(async function (req, res, next) {
+})
+
+
+/**
+ * Skips the song in the queue to the next track while decrementing skip limit.
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ */
+exports.skipToNextTrack = catchAsync(async function (req, res, next) {
+})
+
+/**
+ * Skips the song in the queue to the previous track while decrementing skip limit.
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ */
+exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
+})
