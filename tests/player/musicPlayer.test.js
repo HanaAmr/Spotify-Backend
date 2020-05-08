@@ -147,10 +147,17 @@ describe('Shuffling player queue for a user', () => {
 
 // Testing starting and getting context out of playlist/album/artist
 describe('Starting playing context for a user', () => {
-  var userId, artistId
+  var userId, artistId, ablumId, playlistId
   // Add a simple user to test with
   beforeAll(async () => {
     sinon.restore()
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+    await mongoose.connection.collection('playlists').deleteMany({})
+    await mongoose.connection.collection('playhistories').deleteMany({})
+    await mongoose.connection.collection('players').deleteMany({})
+    await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('contexts').deleteMany({})
     // Creating the valid user to assign the al to him
     const validUser = new User({
       name: 'omar',
@@ -188,6 +195,37 @@ describe('Starting playing context for a user', () => {
     })
     await testTrack.save()
     await testTrack2.save()
+    testAlbum = new Album({
+      _id: '5e8cfa4b1493ec60bc89c970',
+      name: 'Evolve',
+      href: 'http://127.0.0.1:7000/albums/5e8cfa4b1493ec60bc89c970',
+      uri: 'spotify:albums:5e8cfa4b1493ec60bc89c970',
+      popularity: 60,
+      releaseDate: '2015-01-01',
+      type: 'album',
+      albumType: 'single',
+      releaseDate: '2018-01-01',
+      totalTracks: 2,
+      trackObjects: [testTrack._id, testTrack2._id]
+    })
+    await testAlbum.save()
+    albumId = testAlbum._id
+    testPlaylist = new Playlist({
+      _id: '5e729d853d8d0a432c70b59c',
+      name: 'Imagine Dragons Radio',
+      href: 'http://127.0.0.1:7000/playlists/5e729d853d8d0a432c70b59c',
+      uri: 'spotify:playlists:5e729d853d8d0a432c70b59c',
+      owner: [
+        '5e729e8b3d8d0a432c70b59d'
+      ],
+      images: ['imagine-dragons.jpg'],
+      trackObjects: ['5e8cfa4ffbfe6a5764b4238c'],
+      popularity: 60,
+      createdAt: '2015-01-01',
+      trackObjects: [testTrack2._id, testTrack._id]
+    })
+    await testPlaylist.save()
+    playlistId = testPlaylist._id
     validArtist.trackObjects = [testTrack._id, testTrack2._id]
     validArtist.uri = artistId
     await validArtist.save()
@@ -202,6 +240,8 @@ describe('Starting playing context for a user', () => {
   // Drop the whole users, playHistory collection after finishing testing
   afterAll(async () => {
     await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+    await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('playhistories').deleteMany({})
     await mongoose.connection.collection('players').deleteMany({})
     await mongoose.connection.collection('tracks').deleteMany({})
@@ -210,21 +250,51 @@ describe('Starting playing context for a user', () => {
 
   // Testing starting context without problems with track for artist
   it('Should start a context for the user using track of artist', async () => {
-    expect.hasAssertions()
+    expect.assertions(2)
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
     const userPlayer = await Player.findOne({ 'userId': userId })
     const queue = userPlayer.queueTracksIds
-    const context = Context.findById(userPlayer.context)
+    const context = await Context.findById(userPlayer.context)
     //Expect the two tracks to return in the queue list
     expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
       (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
     //Expect context to be updated to type of artist and of artist id we passed
-    expect(context.type == 'artist' && context.id == artistId)
+    expect(context.type == 'artist' && context.id == artistId).toBeTruthy()
+  })
+
+  // Testing starting context without problems with track for album
+  it('Should start a context for the user using track of album', async () => {
+    expect.assertions(2)
+    playerService = new playerServices()
+    await playerService.generateContext(albumId, 'album', userId)
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    const queue = userPlayer.queueTracksIds
+    const context = await Context.findById(userPlayer.context)
+    //Expect the two tracks to return in the queue list
+    expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
+      (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
+    //Expect context to be updated to type of artist and of artist id we passed
+    expect(context.type == 'album' && context.id == albumId).toBeTruthy()
+  })
+
+  // Testing starting context without problems with track for playlist
+  it('Should start a context for the user using track of playlist', async () => {
+    expect.assertions(2)
+    playerService = new playerServices()
+    await playerService.generateContext(playlistId, 'playlist', userId)
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    const queue = userPlayer.queueTracksIds
+    const context = await Context.findById(userPlayer.context)
+    //Expect the two tracks to return in the queue list
+    expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
+      (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
+    //Expect context to be updated to type of artist and of artist id we passed
+    expect(context.type == 'playlist' && context.id == playlistId).toBeTruthy()
   })
 
   //Testing getting context from DB
-  it('Should return the context for the user', async() => {
+  it('Should return the context for the user', async () => {
     expect.assertions(1)
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
