@@ -27,10 +27,10 @@ const playerSchema = new mongoose.Schema({
   queueTracksIds: [{
     type: String
   }],
-  queueOffset: Number,
-  skipsMade: Number,
+  queueOffset: {type: Number, default: 0},
+  skipsMade: {type: Number, default: 0},
   skipsRefreshAt: Date,
-  adsPlayed: Number
+  adsPlayed: {type: Number, default: 0}
 })
 
 /**
