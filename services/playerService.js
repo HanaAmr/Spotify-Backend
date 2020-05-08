@@ -88,7 +88,7 @@ class playerService {
     if (userRole != 'user') return 1
     const userPlayer = await Player.findOne({ userId: userId })
     //If user should play one track
-    if (userPlayer.queueOffset / process.env.ADS_COUNTER > userPlayer.adsPlayed)
+    if (userPlayer.queueOffset / parseInt(process.env.ADS_COUNTER, 10) > userPlayer.adsPlayed)
       return -1
     //If track requested isn't the one in order in the shuffled list
     if (userPlayer.queueTracksIds[userPlayer.queueOffset] != trackId)
@@ -233,7 +233,7 @@ class playerService {
   */
   async skipTrack(userId, dir) {
     const userPlayer = await Player.findOne({ 'userId': userId })
-    if (userPlayer.skipsMade == process.env.MAX_SKIPS) {
+    if (userPlayer.skipsMade == parseInt(process.env.MAX_SKIPS, 10)) {
       if (Date.now() > userPlayer.skipsRefreshAt) {
         await Player.updateOne({ userId: userId }, { skipsMade: 1 })
         await this.finishTrack(userId,dir)
@@ -245,7 +245,7 @@ class playerService {
     }
     const newSkipsMade = userPlayer.skipsMade + 1
     await Player.updateOne({ userId: userId }, { skipsMade: newSkipsMade })
-    if (newSkipsMade == process.env.MAX_SKIPS) {
+    if (newSkipsMade == parseInt(process.env.MAX_SKIPS, 10)) {
       const newSkipRefreshAt = Date.now() + parseInt(process.env.SKIPS_REFRESH_TIME, 10) * 1000 // 60 minutes (*1000 to be in ms)
       await Player.updateOne({ userId: userId }, { skipsRefreshAt: newSkipRefreshAt })
     }

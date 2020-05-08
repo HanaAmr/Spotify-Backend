@@ -493,4 +493,61 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer = await Player.findOne({userId:userId})
     expect(userPlayer.queueOffset).toEqual(3)
   })
+
+  it('Should skip normally in the queue', async () => {
+    expect.assertions(2)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    await userPlayer.save()
+    await playerService.skipTrack(userId,1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(1)
+    expect(userPlayer.skipsMade).toEqual(1)
+  })
+
+  it('Should skip normally in the queue but reach the maximum number of skips', async () => {
+    expect.assertions(3)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)-1
+    await userPlayer.save()
+    await playerService.skipTrack(userId,1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(1)
+    expect(userPlayer.skipsMade).toEqual(parseInt(process.env.MAX_SKIPS, 10))
+    expect(userPlayer.skipsRefreshAt >= Date.now()).toBeTruthy()
+  })
+
+
+  it  ('Should skip normally in the queue as 1 hour has passed since we reached the limit of the skips', async () => {
+    expect.assertions(2)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = 0
+    await userPlayer.save()
+    await playerService.skipTrack(userId,1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(1)
+    expect(userPlayer.skipsMade).toEqual(1)
+  })
+
+  
+  it(`Shouldn't skip normally in the queue as less than 1 hour has passed since we reached the limit of the skips`, async () => {
+    expect.assertions(1)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
+    userPlayer.skipsRefreshAt = Date.now() + 3600*1000
+    await userPlayer.save()
+    const skip = await playerService.skipTrack(userId,1)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(skip).toEqual(false)
+  })
+
+  
 })
