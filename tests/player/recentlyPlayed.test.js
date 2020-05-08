@@ -87,6 +87,7 @@ if (process.env.NODE_ENV === 'test') {
 beforeAll(async () => {
   await mongoose.connection.collection('tracks').deleteMany()
   const newTrack = new Track({
+    _id: '1234',
     externalUrls: [],
     popularity: 0,
     artists: [],
@@ -100,6 +101,7 @@ beforeAll(async () => {
   })
   await newTrack.save()
   const newTrack2 = new Track({
+    _id: '12345',
     externalUrls: [],
     popularity: 0,
     artists: [],
@@ -130,6 +132,7 @@ describe('Adding to recently played list of a user', () => {
     })
     await validUser.save()
     const newArtist = new User({
+      _id: 'abcd',
       role: 'user',
       name: 'Low roar',
       email: 'DS@2019.com',
@@ -140,6 +143,7 @@ describe('Adding to recently played list of a user', () => {
     })
     await newArtist.save()
     const newAlbum = new Album({
+    _id: 'abcd',
     name: 'Evolve',
     albumType: 'album',
     externalUrls: 'this should be an externalUrl',
@@ -156,6 +160,7 @@ describe('Adding to recently played list of a user', () => {
     })
     await newAlbum.save()
     const newPlaylist = new Playlist({
+    _id: 'abcd',
     name: 'Imagine Dragons Radio',
     collaborative: false,
     externalUrl: 'this should be an externalUrl',
@@ -195,8 +200,8 @@ describe('Adding to recently played list of a user', () => {
       url: '/me/player/recentlyPlayed',
       body: {
         contextType: 'artist',
-        contextUri: 'abcd',
-        trackUri: '1234'
+        contextId: 'abcd',
+        trackId: '1234'
       }
     })
 

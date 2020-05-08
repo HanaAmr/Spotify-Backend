@@ -227,7 +227,6 @@ describe('Starting playing context for a user', () => {
     await testPlaylist.save()
     playlistId = testPlaylist._id
     validArtist.trackObjects = [testTrack._id, testTrack2._id]
-    validArtist.uri = artistId
     await validArtist.save()
     const userPlayer = new Player({
       userId: validUser._id
@@ -301,4 +300,119 @@ describe('Starting playing context for a user', () => {
     const context = await playerService.getContext(userId)
     expect(context).not.toEqual(null)
   })
+})
+
+// Testing validating track
+describe('Validating track to be played for a user', () => {
+  var userId, artistId
+  // Add a simple user to test with
+  beforeAll(async () => {
+    sinon.restore()
+    //Creating artist for the tracks
+    const validArtist = new User({
+      name: 'Low Roar',
+      email: 'LowRoar@email.com',
+      password: 'password',
+      role: 'artist'
+    })
+    await validArtist.save()
+    //Creating 2 tracks to test with it
+    testTrack = new Track({
+      _id: '5e8cfa4ffbfe6a5764b4238c',
+      name: 'Believer',
+      href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:5e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id]
+    })
+    await testTrack.save()
+    testTrack2 = new Track({
+      _id: '6e8cfa4ffbfe6a5764b4238c',
+      name: 'Give Up',
+      href: 'http://127.0.0.1:7000/tracks/6e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:6e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id]
+    })
+    await testTrack2.save()
+    validArtist.trackObjects = [testTrack._id, testTrack2._id]
+    await validArtist.save()
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
+    })
+    await validUser.save()
+    userId = validUser._id
+    artistId = validArtist._id
+    const userPlayer = new Player({
+      userId: validUser._id,
+      queueTracksIds: [testTrack._id, testTrack2._id]
+    })
+    await userPlayer.save()
+  })
+  
+  beforeEach(async () => {
+    sinon.restore()
+    // Mock the userServices get user id function to return the testing user id.
+    sinon.stub(userServices.prototype, 'getUserId').returns(userId)
+  })
+  // Drop the whole users, playHistory collection after finishing testing
+  afterAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('playhistories').deleteMany({})
+    await mongoose.connection.collection('players').deleteMany({})
+    await mongoose.connection.collection('tracks)').deleteMany({})
+    await mongoose.connection.collection('contexts)').deleteMany({})
+  })
+
+  // Testing for premium user
+  it('Should return 1 for validating the track for a premium user', async () => {
+    sinon.stub(userServices.prototype, 'getUserRole').returns('premium')
+    expect.assertions(1)
+    playerService = new playerServices()
+    const valid = await playerService.validateTrack('authToken', testTrack._id)
+    expect(valid).toEqual(1)
+  })
+
+  //Testing for a free user with no problems
+  it('Should return 1 for validating the track for a free user with the right track to request', async () => {
+    sinon.stub(userServices.prototype, 'getUserRole').returns('user')
+    expect.assertions(1)
+    playerService = new playerServices()
+    const tracksIds = await playerService.generateContext(artistId, 'artist', userId)
+    const trackToBePlayed = tracksIds[0]
+    const valid = await playerService.validateTrack('authToken', trackToBePlayed)
+    expect(valid).toEqual(1)
+  })
+
+  //Testing for a free user requesting a track that isn't in the right order
+  it('Should return -2 for validating the track for a free user while picking the wrong track to request', async () => {
+    sinon.stub(userServices.prototype, 'getUserRole').returns('user')
+    expect.assertions(1)
+    playerService = new playerServices()
+    const tracksIds = await playerService.generateContext(artistId, 'artist', userId)
+    const trackToBePlayed = tracksIds[1]
+    const valid = await playerService.validateTrack('authToken', trackToBePlayed)
+    expect(valid).toEqual(-2)
+  })
+
+  //Testing for a free user requesting a track but without playing the ads
+  it('Should return -1 for validating the track for a free user while having ads yet to play', async () => {
+    sinon.stub(userServices.prototype, 'getUserRole').returns('user')
+    expect.assertions(1)
+    playerService = new playerServices()
+    const tracksIds = await playerService.generateContext(artistId, 'artist', userId)
+    const trackToBePlayed = tracksIds[0]
+    const userPlayer = await Player.findOne( {userId : userId} )
+    userPlayer.adsPlayed = -1    
+    await userPlayer.save()
+    const valid = await playerService.validateTrack('authToken', trackToBePlayed)
+    expect(valid).toEqual(-1)
+  })
+
+  
 })
