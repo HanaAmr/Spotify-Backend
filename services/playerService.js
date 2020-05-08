@@ -76,20 +76,31 @@ class playerService {
   }
 
   /**
-    * Checks if track requested can be played by user or not
+    * Checks if track requested can be played by user or not.
+    * Returns 1 if can be played, -1 if can't be played because ad must be played, -2 if song requested isn't the one in the queue.
     * @function
     * @param {String} authToken - The authorization token of the user.
+    * @param {String} trackId - The id of the track to be played
     */
-  async validateTrack(authToken) {
+  async validateTrack(authToken, trackId) {
     const userId = await userService.getUserId(authToken)
     const userRole = await userService.getUserRole(authToken)
-    return true // TODO: Instead of returning true, compare with the current queue for this user if was free member.
+    if(userRole != 'user') return 1
+    const userPlayer = await Player.findOne( {userId : userId} )
+    if(userPlayer.queueOffset/process.env.ADS_COUNTER > userPlayer.adsPlayed)
+      return -1
+    if(userPlayer.queueTracksIds[userPlayer.queueOffset] != trackId)
+      return -2
+    userPlayer.queueOffset = (userPlayer.queueOffset+1)%(userPlayer.queueTracksIds.length)
+    await userPlayer.save()
+    return 1
   }
 
   /**
      *
     * Generates the context for the song playing at the moment of sending the request.
     * Gets the list of track Ids from context and shuffles them
+    * Returns the shuffled array of the tracks in queue.
     * @function
     * @param {String} id - The id of played conext.
     * @param {String} type - The type of played context.
@@ -136,14 +147,17 @@ class playerService {
     userPlayer.context = newContext
     userPlayer.queueTracksIds = queueTracksIds
     userPlayer.queueOffset = 0
+    userPlayer.adsPlayed = 0
+    await userPlayer.save()
+    const shuffledList = await this.shufflePlayerQueue(userId)
+    userPlayer.queueTracksIds = shuffledList
     //Update the currently played track for the context
     const currTrack = await Track.findOne({'_id': userPlayer.queueTracksIds[userPlayer.queueOffset]})
     newContext.href = currTrack.href
-    await this.shufflePlayerQueue(userId)
     await newContext.save()
     await userPlayer.save()
     await user.save()
-    return userPlayer.queueTracksIds
+    return shuffledList
   }
 
   /**
@@ -176,7 +190,7 @@ class playerService {
   }
 
   /**
-  * Shuffles the queue of songs for the player.
+  * Shuffles the queue of songs for the player. Returns the shuffled array.
   * @function
   * @param {String} userId  - The ID of the user.
   */
@@ -191,8 +205,7 @@ class playerService {
       userQueue[i] = userQueue[j]
       userQueue[j] = x
     }
-    userPlayer.queueTracksIds = userQueue
-    await Player.updateOne({ 'userId': userId }, { $set: { 'queueTracksIds': userQueue } })
+    return userQueue
   }
 
 }
