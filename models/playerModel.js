@@ -28,8 +28,8 @@ const playerSchema = new mongoose.Schema({
     type: String
   }],
   queueOffset: Number,
-  skipsAvailable: Number,
-  lastSkipTimeStamp: Date,
+  skipsMade: Number,
+  skipsRefreshAt: Date,
   adsPlayed: Number
 })
 
