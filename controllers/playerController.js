@@ -16,6 +16,16 @@
  */
 const PlayHistory = require('../models/playHistoryModel')
 /**
+ * Player model from the database
+ * @const
+ */
+const Player = require('../models/playerModel')
+/**
+ * Context model from the database
+ * @const
+ */
+const Context = require('../models/contextModel')
+/**
  * Track model from the database
  * @const
  */
@@ -69,22 +79,18 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   // Make sure list of recently played is freed if it has reached the limit
   await playerService.deleteOneRecentlyPlayedIfFull(userId)
-  // TODO: Instead of getting the context from the request, we should have it saved
-  // when the user started playing
-  // const newContext = await playerService.getConext(userId)
+  //Get the user context and save it to a new document
+  const newContext = await playerService.getContext(userId)
+  newContext._id = require('mongoose').Types.ObjectId()
+  newContext.isNew = true
+  await newContext.save()
 
-  // For now, we generate the context here
-  const newContext = await playerService.generateContext(req.body.contextUri, req.body.contextType)
-  if (!newContext) throw new AppError(`Couldn't generate context. ${req.body.contextType} uri doesn't exist`, 404)
-  const track = await Track.find().where('uri').equals(req.body.trackUri).select('_id')
-  if (track.length === 0) {
-    return next(new AppError('No track with this uri was found!', 404))
-  }
+  const currTrack = await playerService.getCurrentTrack(userId)
   const newPlayHistory = new PlayHistory({
     userId: userId,
     context: newContext._id,
     playedAt: Date.now(),
-    track: track[0]._id
+    track: currTrack
   })
   await newPlayHistory.save()
   // Update the context's playHistoryId
@@ -161,7 +167,7 @@ exports.startContext = catchAsync(async function (req, res, next) {
  */
 exports.finishedTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  playerService.finishTrack(userId,1)
+  playerService.finishTrack(userId, 1)
   res.status(204).send()
 })
 
@@ -176,7 +182,7 @@ exports.finishedTrack = catchAsync(async function (req, res, next) {
 exports.skipToNextTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   const canSkip = await playerService.skipTrack(userId, 1)
-  if(canSkip) res.status(204).send()
+  if (canSkip) res.status(204).send()
   else res.status(403).send()
 })
 
@@ -190,6 +196,6 @@ exports.skipToNextTrack = catchAsync(async function (req, res, next) {
 exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   const canSkip = await playerService.skipTrack(userId, -1)
-  if(canSkip) res.status(204).send()
+  if (canSkip) res.status(204).send()
   else res.status(403).send()
 })
