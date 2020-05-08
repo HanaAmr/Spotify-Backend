@@ -108,6 +108,7 @@ describe('Shuffling player queue for a user', () => {
   var userId
   // Add a simple user to test with
   beforeAll(async () => {
+    sinon.restore()
     // Creating the valid user to assign the token to him
     const validUser = new User({
       name: 'omar',
@@ -354,7 +355,7 @@ describe('Validating track to be played for a user', () => {
     })
     await userPlayer.save()
   })
-  
+
   beforeEach(async () => {
     sinon.restore()
     // Mock the userServices get user id function to return the testing user id.
@@ -407,12 +408,54 @@ describe('Validating track to be played for a user', () => {
     playerService = new playerServices()
     const tracksIds = await playerService.generateContext(artistId, 'artist', userId)
     const trackToBePlayed = tracksIds[0]
-    const userPlayer = await Player.findOne( {userId : userId} )
-    userPlayer.adsPlayed = -1    
+    const userPlayer = await Player.findOne({ userId: userId })
+    userPlayer.adsPlayed = -1
     await userPlayer.save()
     const valid = await playerService.validateTrack('authToken', trackToBePlayed)
     expect(valid).toEqual(-1)
   })
 
-  
+})
+
+// Testing finishing, skipping tracks
+describe('Skipping tracks either after finishing it or by skipping', () => {
+  var userId
+  // Add a simple user to test with
+  beforeAll(async () => {
+    sinon.restore()
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
+    })
+    await validUser.save()
+    userId = validUser._id
+    const userPlayer = new Player({
+      userId: validUser._id,
+      queueTracksIds: ['Track1', 'Track2', 'Track3', 'Track4']
+    })
+    await userPlayer.save()
+    // Mock the userServices get user id function to return the testing user id.
+    sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
+  })
+
+  // Drop the whole users, playHistory collection after finishing testing
+  afterAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('playhistories').deleteMany({})
+    await mongoose.connection.collection('players').deleteMany({})
+  })
+
+  // Testing finishing the track normally.
+  it('Should increment the queue offset', async () => {
+    expect.assertions(1)
+    playerService = new playerServices()
+    let userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.queueOffset = 0
+    await userPlayer.save()
+    await playerService.finishTrack(userId)
+    userPlayer = await Player.findOne({userId:userId})
+    expect(userPlayer.queueOffset).toEqual(1)
+  })
 })

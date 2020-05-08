@@ -160,6 +160,9 @@ exports.startContext = catchAsync(async function (req, res, next) {
  * @param {Function} next - The next function in the middleware
  */
 exports.finishedTrack = catchAsync(async function (req, res, next) {
+  const userId = await userService.getUserId(req.headers.authorization)
+  playerService.finishTrack(userId)
+  res.status(204).send()
 })
 
 
