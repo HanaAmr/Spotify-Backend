@@ -91,7 +91,7 @@ class playerService {
   async generateContext(id, type, userId) {
     const user = await User.findById(userId)
     //Create the queue of tracks
-    let queueTracksIds, tracks
+    let queueTracksIds
     //Create the context for the user    
     const newContext = new Context()
     newContext.id = id
@@ -104,8 +104,7 @@ class playerService {
       newContext.name = contextPlaylist.name
       newContext.images = contextPlaylist.images
       newContext.followersCount = contextPlaylist.popularity
-      tracks = await contextPlaylist.trackObjects
-      queueTracksUIds = array.map(tracks => tracks._id)
+      queueTracksIds = await contextPlaylist.trackObjects
     } else if (type === 'album') {
       const contextAlbum = await Album.findOne({ _id: id })
       if (!contextAlbum) return null
@@ -114,8 +113,7 @@ class playerService {
       newContext.name = contextAlbum.name
       newContext.images = contextAlbum.images
       newContext.followersCount = contextAlbum.popularity
-      tracks = await contextAlbum.trackObjects
-      queueTracksIds = array.map(tracks => tracks._id)
+      queueTracksIds = await contextAlbum.trackObjects
     } else if (type === 'artist') {
       const contextArtist = await User.findOne({ _id: id })
       if (contextArtist == null) return null
@@ -124,8 +122,7 @@ class playerService {
       newContext.name = contextArtist.name
       newContext.images = contextArtist.images
       newContext.followersCount = contextArtist.followers.length
-      tracks = await contextArtist.trackObjects
-      queueTracksIds = array.map(tracks => tracks._id)
+      queueTracksIds = await contextArtist.trackObjects
     }
     user.context = newContext
     
