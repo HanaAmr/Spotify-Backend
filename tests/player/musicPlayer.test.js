@@ -108,6 +108,9 @@ describe('Shuffling player queue for a user', () => {
   var userId
   // Add a simple user to test with
   beforeAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('playhistories').deleteMany({})
+    await mongoose.connection.collection('players').deleteMany({})
     sinon.restore()
     // Creating the valid user to assign the token to him
     const validUser = new User({
@@ -135,7 +138,6 @@ describe('Shuffling player queue for a user', () => {
 
   // Testing Shuffling without problems
   it('Should shuffle the player queue for the use', async () => {
-    // At least two tracks positions should be swapped.
     expect.hasAssertions()
     playerService = new playerServices()
     await playerService.shufflePlayerQueue(userId)
@@ -143,6 +145,88 @@ describe('Shuffling player queue for a user', () => {
     const queue = userPlayer.queueTracksIds
     expect(queue[0] != 'Track1' || queue[1] != 'Track2' || queue[2] != 'Track3' || queue[3] != 'Track4' || queue[0] == 'Track1').toBeTruthy()
   })
+})
+
+// Testing ads related functions
+describe('Testing incrementing ads played and getting ad functionality', () => {
+  var userId
+  // Add a simple user to test with
+  beforeAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('playhistories').deleteMany({})
+    await mongoose.connection.collection('players').deleteMany({})
+    sinon.restore()
+    // Creating the valid user to assign the token to him
+    const validUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
+    })
+    await validUser.save()
+    userId = validUser._id
+    const userPlayer = new Player({
+      userId: validUser._id
+    })
+    await userPlayer.save()
+    //Creating an ads account and ad track to test with
+    const validArtist = new User({
+      name: 'Cocacola',
+      email: 'CocaCola@email.com',
+      password: 'password',
+      role: 'artist'
+    })
+    await validArtist.save()
+    artistId = validArtist._id
+    //Creating the ad to assign to the artist
+    testAd = new Track({
+      name: 'Amir Eid CocaCola Ad',
+      href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:5e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id],
+      isAd: true
+    })
+    await testAd.save()
+    // Mock the userServices get user id function to return the testing user id.
+    sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
+  })
+
+  // Drop the whole users, playHistory collection after finishing testing
+  afterAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('playhistories').deleteMany({})
+    await mongoose.connection.collection('players').deleteMany({})
+  })
+
+  // Testing incrementing ads played for a user
+  it('Should increment number of ads played for a user', async () => {
+    expect.hasAssertions()
+    playerService = new playerServices()
+    await playerService.incrementAdsPlayed(userId)
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    expect(userPlayer.adsPlayed).toEqual(1)
+  })
+
+  // Testing getting a random ad for user 
+  it('Should return a random track object that is an ad', async () => {
+    expect.hasAssertions()
+    playerService = new playerServices()
+    const ad = await playerService.getRandomAd()
+    expect(ad.isAd).toEqual(true)
+  })
+
+  // Testing getting a random ad for user if no ad exist
+  it('Should return message saying no ads exist upon requesting ad', async () => {
+    expect.hasAssertions()
+    //Delete all tracks including ads
+    await Track.deleteMany({})
+    playerService = new playerServices()
+    const adRequested = await playerService.getRandomAd()
+    expect(adRequested).toEqual(`No Ads available now`)
+  })
+
 })
 
 
