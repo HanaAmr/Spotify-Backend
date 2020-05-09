@@ -113,9 +113,7 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
   const items = await features.query
   res.status(200).json({
     status: 'success',
-    data: {
-      items
-    }
+    data: JSON.stringify(items)
   })
 })
 
@@ -149,12 +147,11 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
  */
 exports.startContext = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const tracksIds = await playerService.generateContext(req.body.id, req.body.type, userId)
+  const tracks = await playerService.generateContext(req.body.id, req.body.type, userId)
+  const tracksIds = JSON.stringify(tracks)
   res.status(200).json({
     status: 'success',
-    data: {
-      tracksIds
-    }
+    data: JSON.stringify(tracksIds)
   })
 })
 
