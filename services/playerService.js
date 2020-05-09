@@ -109,12 +109,14 @@ class playerService {
     * @param {String} userId - The Id of the user.
     * @returns {Array} The shuffled array of tracks ids
     */
-  async generateContext(id, type, userId) {
-    const user = await User.findById(userId)
-    //Create the queue of tracks
-    let queueTracksIds
-    //Create the context for the user and update its id and type
-    const newContext = new Context()
+   async generateContext(id, type, userId) {
+     const user = await User.findById(userId)
+     //Get the user player
+     const userPlayer = await Player.findOne({ 'userId': userId })
+     //Create the queue of tracks
+     let queueTracksIds
+    //Get the context for the user if exists, if not create it.Then update its id and type
+    const newContext = userPlayer.context == null ? new Context() : userPlayer.context
     newContext.id = id
     newContext.type = type
     //Update the context and queueTracksIds based on type of context
@@ -147,13 +149,13 @@ class playerService {
       queueTracksIds = await contextArtist.trackObjects
     }
     //Get user player and update the queue with shuffled list and the userPlayer context
-    const userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.context = newContext
     userPlayer.queueTracksIds = queueTracksIds
     userPlayer.queueOffset = 0
     userPlayer.adsPlayed = 0
     await userPlayer.save()
-    const shuffledList = await this.shufflePlayerQueue(userId)
+    //Shuffle iff a normal user.
+    const shuffledList = user.role == 'user' ? await this.shufflePlayerQueue(userId) : queueTracksIds
     userPlayer.queueTracksIds = shuffledList
     //Update the currently played track for the context
      const currTrack = await Track.findOne({ '_id': userPlayer.queueTracksIds[userPlayer.queueOffset] })
