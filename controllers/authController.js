@@ -67,6 +67,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
     gender: req.body.gender
   })
 
+  //Create the player for the user
+  await Player.create({
+    userId: newUser._id
+  })
+
   // generate a token for the new user
   const token = signToken(newUser._id)
 
@@ -302,7 +307,7 @@ exports.createUser = catchAsync(async (name, email, password) => {
     password: password
   })
   //Create the player for the user
-  const userPlayer = await User.create({
+  const userPlayer = await Player.create({
     userId: newUser._id
   })
   return newUser
