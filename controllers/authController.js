@@ -22,6 +22,12 @@ const { promisify } = require('util')
 const User = require('../models/userModel')
 
 /**
+ * Player object
+ * @const
+ */
+const Player = require('../models/playerModel')
+
+/**
  * jwt for tokens
  * @const
  */
@@ -294,6 +300,10 @@ exports.createUser = catchAsync(async (name, email, password) => {
     name: name,
     email: email,
     password: password
+  })
+  //Create the player for the user
+  const userPlayer = await User.create({
+    userId: newUser._id
   })
   return newUser
 })
