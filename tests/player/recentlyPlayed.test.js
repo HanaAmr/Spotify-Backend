@@ -263,4 +263,51 @@ describe('Adding to recently played for a user', () => {
       done()
     })
   })
+
+  // Testing getting recently played for a user
+  it('Should return the recently played objects', async (done) => {
+    //Generate context first to be able to use in recently played
+    playerService = new playerServices()
+    await playerService.generateContext(artistId, 'artist', userId)
+    
+    //Adding one recently played using requests
+    const request = httpMocks.createRequest({
+      method: 'POST',
+      url: '/me/player/recentlyPlayed',
+      headers:{
+        authorization: ''
+      }
+    })
+    
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.addToRecentlyPlayed(request, response)
+    response.on('end', async () => {
+      try {
+        const playHistoryAdded = await PlayHistory.findOne()
+        expect(playHistoryAdded.context.type).toEqual('artist')
+      } catch (error) {
+        done(error)
+      }
+      const request2 = httpMocks.createRequest({
+        method: 'GET',
+        url: 'me/player/recentlyPlayed',
+        headers:{
+          authorization: ''
+        }
+      })
+      const response2 = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+      playerController.getRecentlyPlayed(request2,response2)
+      response2.on('end', async() => {
+        try {
+          const body = await response2._getJSONData()
+          const data = JSON.parse(body.data)
+          expect(body.status).toBe('success')
+          expect(data[0].context.type).toBe('artist')
+          done()
+        } catch (error) {
+          done(error)
+        }
+      })
+    })
+  })
 })
