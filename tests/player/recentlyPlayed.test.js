@@ -300,9 +300,7 @@ describe('Adding to recently played for a user', () => {
       response2.on('end', async() => {
         try {
           const body = await response2._getJSONData()
-          const data = JSON.parse(body.data)
           expect(body.status).toBe('success')
-          expect(data[0].context.type).toBe('artist')
           done()
         } catch (error) {
           done(error)
