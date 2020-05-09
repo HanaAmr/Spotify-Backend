@@ -266,6 +266,34 @@ class playerService {
     await this.finishTrack(userId,dir)
     return true
   }
+
+  /**
+    * Increments the ads played for the user
+    * @function
+    * @param {String} userId  - The ID of the user.
+    */
+   async incrementAdsPlayed(userId) {
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.adsPlayed = userPlayer.adsPlayed + 1
+    await userPlayer.save()
+  }
+
+  /**
+    * Gets a random ad for the user
+    * @function
+    * @returns {Object} Track object of the ad
+    */
+   async getRandomAd(userId) {
+     let i,j    
+    const ads = await Track.find({"isAd":true})
+    if(ads.length == 0 ) return `No Ads available now`
+    //Get random number <= ads.length
+    i = ads.length - 1
+    j = Math.floor(Math.random() * (i + 1))
+    const ad = ads[j]
+    return ad
+  }
+
 }
 
 

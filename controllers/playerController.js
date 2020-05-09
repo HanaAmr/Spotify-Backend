@@ -195,3 +195,20 @@ exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
   if (canSkip) res.status(204).send()
   else res.status(403).send()
 })
+
+/**
+ * Gets a random ad from the db and increments number of ads played.
+ *  @alias module:controllers/player
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ */
+exports.getAd = catchAsync(async function (req, res, next) {
+  const userId = await userService.getUserId(req.headers.authorization)
+  await playerService.incrementAdsPlayed(userId)
+  const ad = await playerService.getRandomAd()
+  res.status(200).json({
+    status: 'success',
+    data: ad
+  })
+})

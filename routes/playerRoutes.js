@@ -102,6 +102,17 @@ router
 .route('/previous')
 .post(playerController.skipToPrevTrack)
 
+/**
+ * Route for getting a random ad
+ * @name put/me/player/ad
+ * @function
+ * @memberof module:routes/player
+ * @inner
+ * @param {Function} getAd - Gets a random add from the db.
+ */
+router
+.route('/ad')
+.get(playerController.getAd)
 
 
 module.exports = router
