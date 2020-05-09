@@ -153,7 +153,7 @@ const userSchema = new Schema({
   upgradeTokenExpires: Date, // Date of expiration of Upgrade token
   upgradeRole: { // Role to upgrade to
     type: String,
-    enum: ['premium', 'artist']
+    enum: ['premium', 'artist', 'user']
   }
 
 })
