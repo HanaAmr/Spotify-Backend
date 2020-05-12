@@ -289,11 +289,11 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.createUser = catchAsync(async (name, email, password) => {
-  const newUser = await User.create({
-    name: name,
-    email: email,
-    password: password
-  })
-  return newUser
-})
+// exports.createUser = catchAsync(async (name, email, password) => {
+//   const newUser = await User.create({
+//     name: name,
+//     email: email,
+//     password: password
+//   })
+//   return newUser
+// })
