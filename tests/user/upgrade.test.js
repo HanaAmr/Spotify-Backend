@@ -29,10 +29,11 @@ dotenv.config()
 const mongoose = require('mongoose')
 
 /**
- * sinon
+ * JWT
  * @const
  */
 const jwt = require('jsonwebtoken')
+
 
 /**
  * express module
@@ -56,19 +57,22 @@ const userController = require('../../controllers/userController')
 const userServices = require('../../services/userService')
 
 /**
+ * Mailer services 
+ * @const
+ */
+const mailerServices = require('../../services/mailerService')
+
+/**
  * express module
  * error object
  * @const
  */
 const appError = require('../../utils/appError')
 
-const mongoDB = process.env.DATABASE_LOCAL
+const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-if (process.env.NODE_ENV === 'test') {
-  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-} else {
-  throw new Error('Can\'t connect to db, make sure you run in test environment!' + process.env.NODE_ENV)
-}
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+
 
 // Testing assigning the config code for upgrade to user
 describe('userService assigning config code to user functionality', () => {
@@ -229,9 +233,11 @@ describe('User can request to upgrade', () => {
     await validUser.save()
     userId = validUser._id
     //Stub the functions that uses authorization
-    sinon.stub(require('../../controllers/authController'),'protect').returns( () => {})
-    sinon.stub(userServices.prototype,'getUserId').returns(userId)
-    sinon.stub(userServices.prototype,'getUserMail').returns(validUser.email)
+    sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    sinon.stub(userServices.prototype, 'getUserId').returns(userId)
+    sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
+    //stubbing mailing functions
+    sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
   // Drop the whole users collection after finishing testing
@@ -258,7 +264,7 @@ describe('User can request to upgrade', () => {
     userController.requestBecomePremium(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({'email':'omar@email.com'})
+        const user = await User.findOne({ 'email': 'omar@email.com' })
         expect(user.upgradeRole).toEqual('premium')
         expect(response.statusCode).toEqual(204)
         done()
@@ -286,7 +292,7 @@ describe('User can request to upgrade', () => {
     userController.requestBecomeArtist(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({'email':'omar@email.com'})
+        const user = await User.findOne({ 'email': 'omar@email.com' })
         expect(user.upgradeRole).toEqual('artist')
         expect(response.statusCode).toEqual(204)
         done()
@@ -317,13 +323,15 @@ describe('User can confirm that he/she wants to upgrade', () => {
     await validUser.save()
     userId = validUser._id
     //Stub the functions that uses authorization
-    sinon.stub(require('../../controllers/authController'),'protect').returns( () => {})
-    sinon.stub(userServices.prototype,'getUserId').returns(userId)
-    sinon.stub(userServices.prototype,'getUserMail').returns(validUser.email)
-    sinon.stub(userServices.prototype,'getUserRole').returns( ()=> {
-      const user = User.findOne({email:'omar@email.com'})
+    sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    sinon.stub(userServices.prototype, 'getUserId').returns(userId)
+    sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
+    sinon.stub(userServices.prototype, 'getUserRole').returns(() => {
+      const user = User.findOne({ email: 'omar@email.com' })
       return user.role
     })
+    //stubbing mailing functions
+    sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
   // Drop the whole users collection after finishing testing
@@ -353,7 +361,7 @@ describe('User can confirm that he/she wants to upgrade', () => {
     userController.confirmUpgrade(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({'email':'omar@email.com'})
+        const user = await User.findOne({ 'email': 'omar@email.com' })
         expect(user.role).toEqual('premium')
         expect(response.statusCode).toEqual(204)
         done()
@@ -375,19 +383,21 @@ describe('User can request to cancel upgrade', () => {
     const validUser = new User({
       name: 'omar',
       email: 'omar@email.com',
-      password: 'password', 
+      password: 'password',
       role: 'premium'
     })
     await validUser.save()
     userId = validUser._id
     //Stub the functions that uses authorization
-    sinon.stub(require('../../controllers/authController'),'protect').returns( () => {})
-    sinon.stub(userServices.prototype,'getUserId').returns(userId)
-    sinon.stub(userServices.prototype,'getUserMail').returns(validUser.email)
-    sinon.stub(userServices.prototype,'getUserRole').returns( ()=> {
-      const user = User.findOne({email:'omar@email.com'})
+    sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    sinon.stub(userServices.prototype, 'getUserId').returns(userId)
+    sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
+    sinon.stub(userServices.prototype, 'getUserRole').returns(() => {
+      const user = User.findOne({ email: 'omar@email.com' })
       return user.role
     })
+    //stubbing mailing functions
+    sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
   // Drop the whole users collection after finishing testing
@@ -414,7 +424,7 @@ describe('User can request to cancel upgrade', () => {
     userController.cancelUpgrade(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({'email':'omar@email.com'})
+        const user = await User.findOne({ 'email': 'omar@email.com' })
         expect(user.upgradeRole).toEqual('user')
         expect(response.statusCode).toEqual(204)
         done()
@@ -446,13 +456,15 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
     await validUser.save()
     userId = validUser._id
     //Stub the functions that uses authorization
-    sinon.stub(require('../../controllers/authController'),'protect').returns( () => {})
-    sinon.stub(userServices.prototype,'getUserId').returns(userId)
-    sinon.stub(userServices.prototype,'getUserMail').returns(validUser.email)
-    sinon.stub(userServices.prototype,'getUserRole').returns( ()=> {
-      const user = User.findOne({email:'omar@email.com'})
+    sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    sinon.stub(userServices.prototype, 'getUserId').returns(userId)
+    sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
+    sinon.stub(userServices.prototype, 'getUserRole').returns(() => {
+      const user = User.findOne({ email: 'omar@email.com' })
       return user.role
     })
+    //stubbing mailing functions
+    sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
   // Drop the whole users collection after finishing testing
@@ -482,7 +494,7 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
     userController.confirmCancelUpgrade(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({'email':'omar@email.com'})
+        const user = await User.findOne({ 'email': 'omar@email.com' })
         expect(user.role).toEqual('user')
         expect(response.statusCode).toEqual(204)
         done()
