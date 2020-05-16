@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "219d09fd-e70e-4540-b65e-a12d9b0c317f",
+		"name": "MusicPlayer",
+		"description": "Testing the music player functionalities like Starting a context, adding to recently played, requesting to play songs and ads, skipping songs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign In.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOGNkMDU4MTJmYjI0N2RlODk1ZjA1MyIsImlhdCI6MTU4NjI5NjM3OSwiZXhwIjoxNTg4ODg4Mzc5fQ.W5oAo3qsG-tk2qNTQRNCJNXSDV4M67vej3QUjm6vyQc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"omarhadhoud@ymail.com\",\n\t\"password\":\"oldPassword\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3040/signIn",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"signIn"
+					]
+				},
+				"description": "Sign in before using the player."
+			},
+			"response": []
+		},
+		{
+			"name": "Play (Start Context)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":\"5ec04ebc3ee1fb3f1e9641ed\",\n\t\"type\":\"playlist\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3040/me/player/play",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"play"
+					]
+				},
+				"description": "Request to start context of playing an album/ artist or playlist to be able to use it in free limitations and recently played."
+			},
+			"response": []
+		},
+		{
+			"name": "Get track audio.",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"contextUri\":\"spotify:albums:5e8cdd61441b45225e452214\",\n\t\"trackUri\":\"spotify:tracks:5e8cdd63a66a56226feb1eed\",\n\t\"type\":\"album\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3040/tracks/5ec04ebb697c843efd01e907/audio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"tracks",
+						"5ec04ebb697c843efd01e907",
+						"audio"
+					]
+				},
+				"description": "Request to get the audio file of a certain track."
+			},
+			"response": []
+		},
+		{
+			"name": "Get ad.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/player/ad",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"ad"
+					]
+				},
+				"description": "Gets an ad to be played to be able to resume playing songs."
+			},
+			"response": []
+		},
+		{
+			"name": "Skip to next track.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/player/next",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"next"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Skip to previous track.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/player/previous",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"previous"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Skip to next track after finishing it.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/player/finished",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"finished"
+					]
+				},
+				"description": "Doesn't count in skips made."
+			},
+			"response": []
+		},
+		{
+			"name": "Adds the currently played tracks to recently played.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/player/recentlyPlayed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"recentlyPlayed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gets  recently played.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/player/recentlyPlayed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"player",
+						"recentlyPlayed"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
