@@ -93,9 +93,6 @@ class playerService {
     //If track requested isn't the one in order in the shuffled list
     if (userPlayer.queueTracksIds[userPlayer.queueOffset] != trackId)
       return -2
-    await this.finishTrack(userId, 1)
-    userPlayer.queueOffset = (userPlayer.queueOffset + 1) % (userPlayer.queueTracksIds.length)
-    await userPlayer.save()
     return 1
   }
 
