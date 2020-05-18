@@ -184,7 +184,7 @@ describe('notificationService generate notification tokens functionality', () =>
         expect.assertions(4)
         const notificationService = new notificationsServices()
         const message = await notificationService.generateNotification("Hello", "Hi", "1234") //Message sent using firebase
-        const notif = await Notification.findOne({"userId":"1234"})  //Notification added in db
+        const notif = await Notification.findOne({ "userId": "1234" })  //Notification added in db
         expect(notif.notification.title).toEqual('Hello')
         expect(notif.notification.body).toEqual('Hi')
         expect(message.notification.title).toEqual('Hello')
@@ -213,7 +213,7 @@ describe('notificationService sending notification functionality', () => {
         sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
         //stub firebase messaging
-        sinon.stub(require('firebase-admin'),'messaging').get(() => () => ({
+        sinon.stub(require('firebase-admin'), 'messaging').get(() => () => ({
             send: sinon.fake.returns()
         }))
     })
@@ -224,8 +224,8 @@ describe('notificationService sending notification functionality', () => {
         await mongoose.connection.collection('users').deleteMany({})
     })
 
-    // Testing getting tokens
-    it('Should update the web notifications token successfully', async () => {
+    // Testing sending notification
+    it('Should send notification successfully', async () => {
         expect.assertions(4)
         const notificationService = new notificationsServices()
         const message = await notificationService.generateNotification("Hello", "Hi", "1234")
@@ -234,6 +234,20 @@ describe('notificationService sending notification functionality', () => {
         expect(notif.notification.body).toEqual('Hi')
         expect(notif.token[0]).toEqual('webToken')
         expect(notif.token[1]).toEqual('androidToken')
+    })
+
+    // Testing sending notifications
+    it(`Shouldn't send notification successfully as no token is available `, async () => {
+        //remove tokens for user
+        const user = await User.findOne({"email":"omar@email.com"})
+        user.webNotifToken = ''
+        user.androidNotifToken = ''
+        await user.save()
+        expect.assertions(1)
+        const notificationService = new notificationsServices()
+        const message = await notificationService.generateNotification("Hello", "Hi", "1234")
+        const notif = await notificationService.sendNotification("", message)
+        expect(notif).toEqual(null)
     })
 })
 
@@ -257,7 +271,7 @@ describe('notificationService sending request to subscribe to topic', () => {
         sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
         //stub firebase messaging
-        sinon.stub(require('firebase-admin'),'messaging').get(() => () => ({
+        sinon.stub(require('firebase-admin'), 'messaging').get(() => () => ({
             subscribeToTopic: sinon.fake.returns()
         }))
     })
@@ -279,3 +293,113 @@ describe('notificationService sending request to subscribe to topic', () => {
     })
 })
 
+
+//Integration testing
+
+// Testing updating notification token
+describe('User can update his notification token', () => {
+    let validUserId
+    // Drop the whole users collection before testing and add a simple user to test with
+    beforeEach(async () => {
+        sinon.restore()
+        await mongoose.connection.collection('users').deleteMany({})
+
+        // Creating the valid user to assign the token to him
+        const validUser = new User({
+            name: 'omar',
+            email: 'omar@email.com',
+            password: 'password'
+        })
+        await validUser.save()
+        //stub functions that need authorization
+        validUserId = validUser._id
+        sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
+        sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    })
+
+    // Drop the whole users collection after finishing testing
+    afterAll(async () => {
+        sinon.restore()
+        await mongoose.connection.collection('users').deleteMany({})
+    })
+
+    // Testing updating webToken for notifications
+    it('Should update the notification token for web app', async (done) => {
+        const request = httpMocks.createRequest({
+            method: 'PUT',
+            url: '/me/notifications/token',
+            body: {
+                "type": "web",
+                "token": "atoken"
+            }
+        })
+
+        const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+        userController.updateNotificationsToken(request, response)
+        response.on('end', async () => {
+            try {
+                expect(response.statusCode).toEqual(204)
+                const usr = await User.findOne({ "email": "omar@email.com" })
+                expect(usr.webNotifToken).toEqual('atoken')
+                done()
+            } catch (error) {
+                done(error)
+            }
+        })
+    })
+})
+
+// Testing getting notifications 
+describe('User can get his notifications history', () => {
+    let validUserId
+    // Drop the whole users collection before testing and add a simple user to test with
+    beforeEach(async () => {
+        sinon.restore()
+        await mongoose.connection.collection('users').deleteMany({})
+
+        // Creating the valid user to assign the token to him
+        const validUser = new User({
+            name: 'omar',
+            email: 'omar@email.com',
+            password: 'password'
+        })
+        await validUser.save()
+        //stub functions that need authorization
+        validUserId = validUser._id
+        sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
+        sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    })
+
+    // Drop the whole users collection after finishing testing
+    afterAll(async () => {
+        sinon.restore()
+        await mongoose.connection.collection('users').deleteMany({})
+    })
+
+    // Testing getting user notifications
+    it('Should get the notifications for the user', async (done) => {
+        const notificationService = new notificationsServices()
+
+        const request = httpMocks.createRequest({
+            method: 'GET',
+            url: '/me/notifications'
+        })
+
+        //add notification to user to test with
+        await notificationService.generateNotification("Hello", "Hi2", validUserId)
+
+        const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+        userController.getNotifications(request, response)
+        response.on('end', async () => {
+            try {
+                expect(response.statusCode).toEqual(200)
+                const respArr = await response._getJSONData()
+                const resp = await respArr.data[0]
+                expect(resp.notification.body).toEqual('Hi2')
+                done()
+            } catch (error) {
+                done(error)
+            }
+        })
+    })
+})
