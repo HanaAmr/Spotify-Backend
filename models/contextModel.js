@@ -12,7 +12,7 @@ const mongoose = require('mongoose')
  * @property {String} href href of the playlist
  * @property {String} externalUrls externalUrls of the playlist
  * @property {String} type type of the context, album/artist/playlist
- * @property {String} uri uri of the context (album/artist/playlist)
+ * @property {String} id spotify id of the context (album/artist/playlist)
  * @property {String} images images of the playlist
  * @property {Number} followersCount The number of followers for this context
  * @property {String} playHistoryId The id of the playHistory model that has this context
@@ -29,9 +29,9 @@ const contextSchema = new mongoose.Schema({
     required: [true, 'Context must know the type of object, either artist, playlist or album'],
     enum: ['artist', 'playlist', 'album']
   },
-  uri: {
+  id: {
     type: String,
-    requried: [true, 'Context must have a URI']
+    requried: [true, 'Context must have a Spotify id']
   },
   name: String,
   images: {

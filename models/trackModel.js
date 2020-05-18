@@ -29,6 +29,7 @@ const mongoose = require('mongoose')
  * @property {String} audioFilePath audioFilePath of the track
  * @property {Number} durationMs durationMs of the track
  * @property {Number} trackNumber trackNumber in the album
+ * @property {Boolean} isAd Indicates of the track is an adverisement or not
  * @const
  */
 const trackSchema = new mongoose.Schema({
@@ -82,6 +83,10 @@ const trackSchema = new mongoose.Schema({
   audioFilePath: {
     type: String
     // required: [true, 'A track must have a path for its audio file to play.']
+  },
+  isAd: {
+    type: Boolean,
+    default: false
   }
 })
 

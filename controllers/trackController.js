@@ -105,10 +105,16 @@ exports.getTracks = catchAsync(async (req, res, next) => { //    if we have href
 exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
   const track = await Track.findById(req.params.trackId)
   // Check authorization first
-  const authorized = await playerService.validateTrack(req.headers.authorization)
-  if (authorized) { // Send file if authorize
+  const authorized = await playerService.validateTrack(req.headers.authorization, req.params.trackId)
+  if (track.isAd || authorized == 1) { // Send file if authorize
     res.download(track.audioFilePath)
-  } else {
-    res.status(403).send()
+  } else if(authorized == -1) {
+    res.status(403).json({
+      'reason': 'ad'
+    })
+  } else if(authorized == -2) {
+    res.status(403).json({
+      'reason': 'queue'
+    })
   }
 })

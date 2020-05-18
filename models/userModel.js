@@ -48,6 +48,7 @@ dotenv.config({ path: '.env' })
  * @property {String} upgradeTokenExpires upgradeTokenExpires of the user
  * @property {String} upgradeRole upgradeRole of the user
  * @property {String} uri uri of the user
+ * @property {Array} tracks tracks of the artist
  * @const
  */
 
@@ -109,6 +110,14 @@ const userSchema = new Schema({
   following: {
     type: [String]
   },
+  likedTracks: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Track'
+  }],
+  likedAlbums: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Album'
+  }],
   userStats: [{
     // type: Schema.Types.ObjectId, ref: 'userStats'
   }],
@@ -135,6 +144,13 @@ const userSchema = new Schema({
 
     }
   },
+  trackObjects: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Track'
+
+    }
+  ],
   facebookId: {
     type: String,
     default: ''
@@ -145,7 +161,7 @@ const userSchema = new Schema({
   upgradeTokenExpires: Date, // Date of expiration of Upgrade token
   upgradeRole: { // Role to upgrade to
     type: String,
-    enum: ['premium', 'artist']
+    enum: ['premium', 'artist', 'user']
   }
 
 })

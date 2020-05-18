@@ -167,8 +167,8 @@ const cancelUpgrade = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
   // At first we are creating a verification code then assign it to the user and send him an email with the verification code.
   const token = await userService.createTokenString(parseInt(process.env.PREM_CONF_CODE_SIZE, 10))
-  await userService.assignUpgradeConfirmCode(req.headers.authorization, token, 'premium')
-  // E-Mail subject and text to be sent]
+  await userService.assignUpgradeConfirmCode(req.headers.authorization, token, 'user')
+  // E-Mail subject and text to be sent
   const role = await userService.getUserRole(req.headers.authorization)
   const email = await userService.getUserMail(req.headers.authorization)
   const subject = `Cancel ${role} subscription mail!`

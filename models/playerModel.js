@@ -10,7 +10,7 @@ const mongoose = require('mongoose')
  * @type {object}
  * @property {String} userId The id of the user that this player belongs to
  * @property {object} Context The context of this player that keeps track of user activity
- * @property {String} queueTracksUris The list of tracks in the queue for free user
+ * @property {String} queueTracksIds The list of tracks ids in the queue for free user
  * @property {Number} queueOffset The offset of the queue, i.e. which track should be played
  * @const
  */
@@ -24,10 +24,13 @@ const playerSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Context'
   },
-  queueTracksUris: [{
+  queueTracksIds: [{
     type: String
   }],
-  queueOffset: Number
+  queueOffset: {type: Number, default: 0},
+  skipsMade: {type: Number, default: 0},
+  skipsRefreshAt: Date,
+  adsPlayed: {type: Number, default: 0}
 })
 
 /**

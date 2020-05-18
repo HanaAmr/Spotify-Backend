@@ -42,6 +42,13 @@ const Player = require('../models/playerModel')
 
 /**
  *
+ * Track model from the database
+ * @const
+ */
+const Track = require('../models/trackModel')
+
+/**
+ *
  * App error util
  * @const
  */
@@ -64,79 +71,131 @@ class playerService {
     * Constructs the player service
     * @param {*} userService
     */
-  constructor (userService) {
+  constructor(userService) {
     this.userService = userService
   }
 
   /**
-    * Checks if track requested can be played by user or not
+    * Checks if track requested can be played by user or not.
     * @function
     * @param {String} authToken - The authorization token of the user.
+    * @param {String} trackId - The id of the track to be played
+    * @returns {Number} 1 if can be played, -1 if can't be played because ad must be played, -2 if song requested isn't the one in the queue.
     */
-  async validateTrack (authToken) {
+  async validateTrack(authToken, trackId) {
     const userId = await userService.getUserId(authToken)
     const userRole = await userService.getUserRole(authToken)
-    return true // TODO: Instead of returning true, compare with the current queue for this user if was free member.
+    if (userRole != 'user') return 1
+    const userPlayer = await Player.findOne({ userId: userId })
+    //If user should play one track
+    if (userPlayer.queueOffset / parseInt(process.env.ADS_COUNTER, 10) > userPlayer.adsPlayed)
+      return -1
+    //If track requested isn't the one in order in the shuffled list
+    if (userPlayer.queueTracksIds[userPlayer.queueOffset] != trackId)
+      return -2
+    await this.finishTrack(userId, 1)
+    userPlayer.queueOffset = (userPlayer.queueOffset + 1) % (userPlayer.queueTracksIds.length)
+    await userPlayer.save()
+    return 1
   }
 
   /**
      *
     * Generates the context for the song playing at the moment of sending the request.
+    * Gets the list of track Ids from context and shuffles them
     * @function
-    * @param {String} uri - The uri of played conext.
+    * @param {String} id - The id of played conext.
     * @param {String} type - The type of played context.
+    * @param {String} userId - The Id of the user.
+    * @returns {Array} The shuffled array of tracks ids
     */
-  async generateContext (uri, type) {
-    const newContext = new Context()
-    newContext.uri = uri
+   async generateContext(id, type, userId) {
+     const user = await User.findById(userId)
+     //Get the user player
+     const userPlayer = await Player.findOne({ 'userId': userId })
+     //Create the queue of tracks
+     let queueTracksIds
+    //Get the context for the user if exists, if not create it.Then update its id and type
+    const newContext = userPlayer.context == null ? new Context() : userPlayer.context
+    newContext.id = id
     newContext.type = type
+    //Update the context and queueTracksIds based on type of context
     if (type === 'playlist') {
-      const contextPlaylist = await Playlist.findOne({ uri: uri })
+      const contextPlaylist = await Playlist.findOne({ _id: id })
       if (!contextPlaylist) return null
       newContext.externalUrls = contextPlaylist.external_urls
       newContext.href = contextPlaylist.href
       newContext.name = contextPlaylist.name
       newContext.images = contextPlaylist.images
       newContext.followersCount = contextPlaylist.popularity
+      queueTracksIds = await contextPlaylist.trackObjects
     } else if (type === 'album') {
-      const contextAlbum = await Album.findOne({ uri: uri })
+      const contextAlbum = await Album.findOne({ _id: id })
       if (!contextAlbum) return null
       newContext.externalUrls = contextAlbum.externalUrls
       newContext.href = contextAlbum.href
       newContext.name = contextAlbum.name
       newContext.images = contextAlbum.images
       newContext.followersCount = contextAlbum.popularity
+      queueTracksIds = await contextAlbum.trackObjects
     } else if (type === 'artist') {
-      const contextArtist = await User.findOne({ uri: uri })
+      const contextArtist = await User.findOne({ _id: id })
       if (contextArtist == null) return null
       newContext.externalUrls = contextArtist.externalUrls
       newContext.href = contextArtist.href
       newContext.name = contextArtist.name
       newContext.images = contextArtist.images
       newContext.followersCount = contextArtist.followers.length
+      queueTracksIds = await contextArtist.trackObjects
     }
-    return newContext
+    //Get user player and update the queue with shuffled list and the userPlayer context
+    userPlayer.context = newContext
+    userPlayer.queueTracksIds = queueTracksIds
+    userPlayer.queueOffset = 0
+    userPlayer.adsPlayed = 0
+    await userPlayer.save()
+    //Shuffle iff a normal user.
+    const shuffledList = user.role == 'user' ? await this.shufflePlayerQueue(userId) : queueTracksIds
+    userPlayer.queueTracksIds = shuffledList
+    //Update the currently played track for the context
+     const currTrack = await Track.findOne({ '_id': userPlayer.queueTracksIds[userPlayer.queueOffset] })
+    newContext.href = currTrack.href
+    await newContext.save()
+    await userPlayer.save()
+    await user.save()
+    return shuffledList
   }
 
   /**
     * Gets the context for the passed user.
     * @function
     * @inner
-    * @param {String} authToken - The authorization token.
+    * @param {String} userId - The ID of the user.
     */
-  async getContext (authToken) {
-    const userId = await userService.getUserId(authToken)
-    const context = await Player.find({ userId: userId }).select('context')
-    return context
+  async getContext(userId) {
+    const userPlayer = await Player.findOne({ userId: userId })
+    const userContext = userPlayer.context
+    return userContext
+  }
+
+  /**
+    * Gets the current track playing id.
+    * @function
+    * @inner
+    * @param {String} userId - The ID of the user.
+    */
+   async getCurrentTrack(userId) {
+    const userPlayer = await Player.findOne({ userId: userId })
+    const currTrack = userPlayer.queueTracksIds[userPlayer.queueOffset]
+    return currTrack
   }
 
   /**
     * Checks if the user with this token has reached the maximum number of recently played items and if so deletes one recently played item.
     * @function
-    * @param {String} authToken  - The authorization token of the user.
+    * @param {String} userId  - The ID of the user.
     */
-  async deleteOneRecentlyPlayedIfFull (authToken) {
-    const userId = await userService.getUserId(authToken)
+  async deleteOneRecentlyPlayedIfFull(userId) {
     const count = await PlayHistory.countDocuments({ userId: userId })
     if (count >= parseInt(process.env.PLAY_HISTORY_MAX_COUNT, 10)) { // If we reached the limit of playHistory for this user
       const oldestPlayHistory = await PlayHistory
@@ -147,6 +206,96 @@ class playerService {
       await PlayHistory.findByIdAndDelete(oldestPlayHistory[0]._id)
     }
   }
+
+  /**
+  * Shuffles the queue of songs for the player.
+  * @function
+  * @param {String} userId  - The ID of the user.
+  * @returns {Array} The shuffled array of tracks
+  */
+  async shufflePlayerQueue(userId) {
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    const userQueue = await userPlayer.queueTracksIds
+    //Using Fisher-Yates shuffling algorithm, shuffle the queue.
+    let i, j, x
+    for (i = userQueue.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1))
+      x = userQueue[i]
+      userQueue[i] = userQueue[j]
+      userQueue[j] = x
+    }
+    return userQueue
+  }
+
+  /**
+  * Increments the queueOffset to get the next track to be played
+  * @function
+  * @param {String} userId  - The ID of the user.
+  * @param {Number} inc - The increment to add, either 1 or -1.
+  */
+  async finishTrack(userId, inc) {
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    let newQueueOffset = (userPlayer.queueOffset + inc) % (userPlayer.queueTracksIds.length)
+    newQueueOffset = newQueueOffset < 0 ? userPlayer.queueTracksIds.length-1 : newQueueOffset
+    await Player.updateOne({ userId: userId }, { queueOffset: newQueueOffset })
+  }
+  /**
+  * Increments the queueOffset to get the next/previous track to be played if the user has skips
+  * @function
+  * @param {String} userId  - The ID of the user.
+  * @param {Number} dir - The dir of skipping, forward or backwards.
+  */
+  async skipTrack(userId, dir) {
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    if (userPlayer.skipsMade == parseInt(process.env.MAX_SKIPS, 10)) {
+      if (Date.now() > userPlayer.skipsRefreshAt) {
+        await Player.updateOne({ userId: userId }, { skipsMade: 1 })
+        await this.finishTrack(userId,dir)
+        return true
+      }
+      else {
+        return false
+      }
+    }
+    const newSkipsMade = userPlayer.skipsMade + 1
+    await Player.updateOne({ userId: userId }, { skipsMade: newSkipsMade })
+    if (newSkipsMade == parseInt(process.env.MAX_SKIPS, 10)) {
+      const newSkipRefreshAt = Date.now() + parseInt(process.env.SKIPS_REFRESH_TIME, 10) * 1000 // 60 minutes (*1000 to be in ms)
+      await Player.updateOne({ userId: userId }, { skipsRefreshAt: newSkipRefreshAt })
+    }
+    await this.finishTrack(userId,dir)
+    return true
+  }
+
+  /**
+    * Increments the ads played for the user
+    * @function
+    * @param {String} userId  - The ID of the user.
+    */
+   async incrementAdsPlayed(userId) {
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    userPlayer.adsPlayed = userPlayer.adsPlayed + 1
+    await userPlayer.save()
+  }
+
+  /**
+    * Gets a random ad for the user
+    * @function
+    * @returns {Object} Track object of the ad
+    */
+   async getRandomAd(userId) {
+     let i,j    
+    const ads = await Track.find({"isAd":true})
+    if(ads.length == 0 ) return `No Ads available now`
+    //Get random number <= ads.length
+    i = ads.length - 1
+    j = Math.floor(Math.random() * (i + 1))
+    const ad = ads[j]
+    return ad
+  }
+
 }
+
+
 
 module.exports = playerService

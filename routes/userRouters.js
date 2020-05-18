@@ -67,18 +67,33 @@ router.post('/loginWithFacebook', passport.authenticate('facebookToken', { sessi
 * @memberof module:routes/users
 * @inner
 * @param {string} path - Sign in path
-* @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - Sign in middleware.
 */
 router.post('/signIn', authController.signIn)
 
+
+
 /**
 * Route for requesting to get user profile
+* @name get/getUserProfile
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - get user profile path
+* @param {callback} middleware - get user profile middleware.
+*/
+router.get('/users/:id', authController.getUserProfile)
+
+
+
+/**
+* Route for requesting to get my profile
 * @name get/getMyProfile
 * @function
 * @memberof module:routes/users
 * @inner
 * @param {string} path - get my profile path
+* @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - get my profile middleware.
 */
 router.get('/me', authController.protect, authController.getMyProfile)
@@ -90,6 +105,7 @@ router.get('/me', authController.protect, authController.getMyProfile)
 * @memberof module:routes/users
 * @inner
 * @param {string} path - update profile path
+* @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - update profile middleware.
 */
 router.put('/me', authController.protect, authController.updateProfile)
@@ -101,6 +117,7 @@ router.put('/me', authController.protect, authController.updateProfile)
 * @memberof module:routes/users
 * @inner
 * @param {string} path - change password path
+* @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - change password middleware.
 */
 router.put('/me/changePassword', authController.protect, authController.changePassword)
@@ -112,9 +129,160 @@ router.put('/me/changePassword', authController.protect, authController.changePa
 * @memberof module:routes/users
 * @inner
 * @param {string} path - follow user path
+* @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - follow user middleware.
 */
 router.put('/me/following', authController.protect, authController.followArtistUser)
+
+
+/**
+* Route for requesting to unfollow user
+* @name delete/unfollowArtistUser
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - unfollow user path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - unfollow user middleware.
+*/
+router.delete('/me/following', authController.protect, authController.unfollowArtistUser)
+
+
+/**
+* Route for requesting to like track
+* @name put/likeTrack
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - like track path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - like track middleware.
+*/
+router.put('/me/likeTrack', authController.protect, authController.likeTrack)
+
+
+/**
+* Route for requesting to unlike track
+* @name delete/unlikeTrack
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - unlike track path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - unlike track middleware.
+*/
+router.delete('/me/unlikeTrack', authController.protect, authController.unlikeTrack)
+
+
+/**
+* Route for requesting to like album
+* @name put/likeAlbum
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - like album path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - like album middleware.
+*/
+router.put('/me/likeAlbum', authController.protect, authController.likeAlbum)
+
+
+
+/**
+* Route for requesting to unlike album
+* @name delete/unlikeAlbum
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - unlike album path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - unlike album middleware.
+*/
+router.delete('/me/unlikeAlbum', authController.protect, authController.unlikeAlbum)
+
+
+
+/**
+* Route for requesting to like playlist
+* @name put/likePlaylist
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - like playlist path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - like playlist middleware.
+*/
+router.put('/me/likePlaylist', authController.protect, authController.likePlaylist)
+
+
+
+/**
+* Route for requesting to unlike playlist
+* @name delete/unlikePlaylist
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - unlike playlist path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - unlike playlist middleware.
+*/
+router.delete('/me/unlikePlaylist', authController.protect, authController.unlikePlaylist)
+
+
+
+/**
+* Route for requesting to remove image
+* @name delete/removeImage
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - remove image path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - remove image middleware.
+*/
+router.delete('/me/image', authController.protect, authController.removeImage)
+
+
+/**
+* Route for requesting to change image
+* @name put/changeImage
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - change image path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - change image middleware.
+*/
+router.put('/me/image', authController.protect, authController.changeImage)
+
+
+
+/**
+* Route for requesting to create a playlist
+* @name post/createPlaylist
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - create a playlist path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - create a playlist middleware.
+*/
+router.post('/users/playlists', authController.protect, authController.createPlaylist)
+
+
+/**
+* Route for requesting to add track to a playlist
+* @name post/addTrackToPlaylist
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - add track to a playlist path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - add track to a playlist middleware.
+*/
+router.post('/playlists/:playlistId/tracks', authController.protect, authController.addTrackToPlaylist)
+
+
 
 /**
  * Route for requesting to reset password

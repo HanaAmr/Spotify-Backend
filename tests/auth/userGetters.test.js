@@ -85,10 +85,9 @@ describe('userService get user id functionality', () => {
     })
     await validUser.save()
     // get the id of the document in the db to use it to get authorization token
-    await User.findOne({}, (err, user) => {
-      id = user._id
-      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-    })
+    const svdUsr = await User.findOne({})
+    id = svdUsr._id
+    authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
   })
 
   // Drop the whole users collection after finishing testing
@@ -127,10 +126,10 @@ describe('userService get user role functionality', () => {
     })
     await validUser.save()
     // get the id of the document in the db to use it to get authorization token
-    await User.findOne({}, (err, user) => {
-      id = user._id
-      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-    })
+    // get the id of the document in the db to use it to get authorization token
+    const svdUsr = await User.findOne({})
+    const id = svdUsr._id
+    authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
   })
 
   // Drop the whole users collection after finishing testing
@@ -169,10 +168,10 @@ describe('userService get user email functionality', () => {
     })
     await validUser.save()
     // get the id of the document in the db to use it to get authorization token
-    await User.findOne({}, (err, user) => {
-      id = user._id
-      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-    })
+    // get the id of the document in the db to use it to get authorization token
+    const svdUsr = await User.findOne({})
+    const id = svdUsr._id
+    authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
   })
 
   // Drop the whole users collection after finishing testing
