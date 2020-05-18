@@ -544,6 +544,27 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     await userPlayer.save()
     // Mock the userServices get user id function to return the testing user id.
     sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
+    sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
+    //Creating an ads account and ad track to test with
+    const validArtist = new User({
+      name: 'Cocacola',
+      email: 'CocaCola@email.com',
+      password: 'password',
+      role: 'artist'
+    })
+    await validArtist.save()
+    artistId = validArtist._id
+    //Creating the ad to assign to the artist
+    testAd = new Track({
+      name: 'Amir Eid CocaCola Ad',
+      href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238c',
+      uri: 'spotify:tracks:5e8cfa4ffbfe6a5764b4238c',
+      trackNumber: 1,
+      durationMs: 200000,
+      artists: [validArtist._id],
+      isAd: true
+    })
+    await testAd.save()
   })
 
   // Drop the whole users, playHistory collection after finishing testing
@@ -785,4 +806,24 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     })
   })
 
+  // Testing getting an ad.
+  it('Should get an ad successfully', async (done) => {
+    playerService = new playerServices()
+
+    const request = httpMocks.createRequest({
+      method: 'get',
+      url: '/me/player/ad'
+    })
+
+    const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
+    playerController.getAd(request, response)
+    response.on('end', () => {
+      try {
+        expect(response.statusCode).toEqual(200)
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 })
