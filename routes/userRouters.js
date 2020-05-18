@@ -195,7 +195,7 @@ router.post('/me/artist', authController.protect, userController.requestBecomeAr
 
 /**
  * Route for requesting to cancel artist
- * @name post/me/artist
+ * @name delete/me/artist
  * @function
  * @memberof module:routes/users
  * @inner
@@ -206,7 +206,7 @@ router.delete('/me/artist', authController.protect, authController.restrictTo('a
 
 /**
  * Route for confirming to cancel artist
- * @name post/me/artist
+ * @name delete/me/artist
  * @function
  * @memberof module:routes/users
  * @inner
@@ -214,5 +214,27 @@ router.delete('/me/artist', authController.protect, authController.restrictTo('a
  * @param {function} confirmCancelUpgrade -  Cancels artist membership for the user.
  */
 router.delete('/me/artist/:confirmationCode', authController.protect, authController.restrictTo('artist'), userController.confirmCancelUpgrade)
+
+/**
+ * Route for updating notifications token of user
+ * @name post/me/notifications/token
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Request to update the notifications token.
+ * @param {function} updateNotificationsToken - Requests to update the notifications token.
+ */
+router.put('/me/notifications/token', authController.protect, userController.updateNotificationsToken)
+
+/**
+ * Route for getting notifications of user
+ * @name get/me/notifications
+ * @function
+ * @memberof module:routes/users
+ * @inner
+ * @param {string} path - Request to get the notifications of the user.
+ * @param {function} getNotifications - Requests to get the notifications of the user.
+ */
+router.get('/me/notifications', authController.protect, userController.getNotifications)
 
 module.exports = router
