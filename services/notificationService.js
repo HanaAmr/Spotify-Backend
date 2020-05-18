@@ -117,7 +117,7 @@ class notificationService {
   async sendNotification(authToken, notification) {
     const tokens = await this.getToken(authToken)
     //Check if no tokens available, then don't send notification.
-    if(tokens[0]=='' && tokens[1]== '') return
+    if(tokens[0]=='' && tokens[1]== '') return null
     let tokensToSend = []
     //Add existing tokens only
     if (tokens[0] != '') tokensToSend.push(tokens[0])
