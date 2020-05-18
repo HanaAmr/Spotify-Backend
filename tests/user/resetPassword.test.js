@@ -250,6 +250,7 @@ describe('User can request to reset his password', () => {
 describe('User can reset his password', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
+    sinon.restore()
     await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him

@@ -15,6 +15,12 @@
  */
 const catchAsync = require('../utils/catchAsync')
 
+
+/**
+ * Notifications model from db
+ * @const
+ */
+const Notifications = require('../models/notificationModel')
 /**
  * User services
  * @const
@@ -22,6 +28,11 @@ const catchAsync = require('../utils/catchAsync')
 const UserServices = require('../services/userService')
 const userService = new UserServices()
 
+/**
+ * APIFeatuer util
+ * @const
+ */
+const APIFeatures = require('../utils/apiFeatures')
 /**
  * AppError class file
  * @const
@@ -76,8 +87,7 @@ const requestResetPassword = catchAsync(async function (req, res, next) {
  */
 const resetPassword = catchAsync(async function (req, res, next) {
   // Calling asynchronous functions one after another
-  // At first we change the password if valid, then send an email informing the user.
-  if (req.params.token === undefined) return next(new AppError('No token is provided', 404))
+  // At first we change the password, then send an email informing the user.
   const email = await userService.resetChangePassword(req.params.token, req.body.newPassword, req.body.passwordConfirmation)
 
   // E-mail, subject and text
@@ -233,7 +243,6 @@ const updateNotificationsToken = catchAsync(async function (req, res, next) {
  */
 const getNotifications = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const Notifications = require('../models/notificationModel')
   const features = new APIFeatures(Notifications.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
   const items = await features.query
   res.status(200).json({
