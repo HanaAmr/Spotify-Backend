@@ -75,11 +75,10 @@ class notificationService {
   /**
     * Gets user notification tokens
     * @function
-    * @param {String} authToken - The authorization token of the user.
+    * @param {String} userId - The userId of the user.
     * @returns {Array} Array of 2 strings, first one is the web token for notifications, second is the android token for notifications
     */
-  async getToken(authToken) {
-    const userId = await userService.getUserId(authToken)
+  async getToken(userId) {
     const user = await User.findOne({ "_id": userId })
     const webToken = user.webNotifToken
     const androidToken = user.androidNotifToken
@@ -114,8 +113,8 @@ class notificationService {
     * @param {String} notification - The notification to be sent
     * @returns {Object} notification - The notification sent
     */
-  async sendNotification(authToken, notification) {
-    const tokens = await this.getToken(authToken)
+  async sendNotification(userId, notification) {
+    const tokens = await this.getToken(userId)
     //Check if no tokens available, then don't send notification.
     if(tokens[0]=='' && tokens[1]== '') return null
     let tokensToSend = []
@@ -130,12 +129,12 @@ class notificationService {
   /**
     * Subscribe to topic for user
     * @function
-    * @param {String} authToken - The authorization token of the user.
+    * @param {String} userId - The userId of the user.
     * @param {String} topic - The authorization token of the user.
     * @returns {Object} - The tokens used and the topic to subscribe to.
     */
-   async subscribeToTopic(authToken, topic) {
-    const tokens = await this.getToken(authToken)
+   async subscribeToTopic(userId, topic) {
+    const tokens = await this.getToken(userId)
     let tokensToSend = []
     if (tokens[0] != null) tokensToSend.push(tokens[0])
     if (tokens[1] != null) tokensToSend.push(tokens[1])

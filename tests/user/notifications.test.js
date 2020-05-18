@@ -131,6 +131,7 @@ describe('notificationService update token functionality', () => {
 
 // Testing Getting user notifications token 
 describe('notificationService getting notification tokens functionality', () => {
+    let userId
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
         sinon.restore()
@@ -145,6 +146,7 @@ describe('notificationService getting notification tokens functionality', () => 
             androidNotifToken: 'androidToken'
         })
         await validUser.save()
+        userId = validUser._id
         //stub functions that need authorization
         sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
@@ -157,10 +159,10 @@ describe('notificationService getting notification tokens functionality', () => 
     })
 
     // Testing getting tokens
-    it('Should update the web notifications token successfully', async () => {
+    it('Should get the web notifications token successfully', async () => {
         expect.assertions(2)
         const notificationService = new notificationsServices()
-        const tokens = await notificationService.getToken("")
+        const tokens = await notificationService.getToken(userId)
         expect(tokens[0]).toEqual('webToken')
         expect(tokens[1]).toEqual('androidToken')
     })
@@ -195,6 +197,7 @@ describe('notificationService generate notification tokens functionality', () =>
 
 // Testing Sending notificaton
 describe('notificationService sending notification functionality', () => {
+    let userId
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
         sinon.restore()
@@ -209,6 +212,7 @@ describe('notificationService sending notification functionality', () => {
             androidNotifToken: 'androidToken'
         })
         await validUser.save()
+        userId = validUser._id
         //stub functions that need authorization
         sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
@@ -229,7 +233,7 @@ describe('notificationService sending notification functionality', () => {
         expect.assertions(4)
         const notificationService = new notificationsServices()
         const message = await notificationService.generateNotification("Hello", "Hi", "1234")
-        const notif = await notificationService.sendNotification("", message)
+        const notif = await notificationService.sendNotification(userId, message)
         expect(notif.notification.title).toEqual('Hello')
         expect(notif.notification.body).toEqual('Hi')
         expect(notif.token[0]).toEqual('webToken')
@@ -246,13 +250,14 @@ describe('notificationService sending notification functionality', () => {
         expect.assertions(1)
         const notificationService = new notificationsServices()
         const message = await notificationService.generateNotification("Hello", "Hi", "1234")
-        const notif = await notificationService.sendNotification("", message)
+        const notif = await notificationService.sendNotification(userId, message)
         expect(notif).toEqual(null)
     })
 })
 
 // Testing Subscribing to topic
 describe('notificationService sending request to subscribe to topic', () => {
+    let userId
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
         sinon.restore()
@@ -267,6 +272,7 @@ describe('notificationService sending request to subscribe to topic', () => {
             androidNotifToken: 'androidToken'
         })
         await validUser.save()
+        userId = validUser._id
         //stub functions that need authorization
         sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
@@ -286,7 +292,7 @@ describe('notificationService sending request to subscribe to topic', () => {
     it('Should request to subscribe to topic with valid tokens', async () => {
         expect.assertions(3)
         const notificationService = new notificationsServices()
-        const sub = await notificationService.subscribeToTopic("", 'Amr Diab')
+        const sub = await notificationService.subscribeToTopic(userId, 'Amr Diab')
         expect(sub.topic).toEqual('Amr Diab')
         expect(sub.token[0]).toEqual('webToken')
         expect(sub.token[1]).toEqual('androidToken')
