@@ -49,6 +49,8 @@ dotenv.config({ path: '.env' })
  * @property {String} upgradeRole upgradeRole of the user
  * @property {String} uri uri of the user
  * @property {Array} tracks tracks of the artist
+ * @property {String} webNotifToken The token used for push notifications on the web
+ * @property {String} androidNotifToken The token used for push notifications on Android
  * @const
  */
 
@@ -154,8 +156,9 @@ const userSchema = new Schema({
   upgradeRole: { // Role to upgrade to
     type: String,
     enum: ['premium', 'artist', 'user']
-  }
-
+  },
+  webNotifToken: {type: String, default: ''},
+  androidNotifToken: {type: String, default: ''}
 })
 
 /**
