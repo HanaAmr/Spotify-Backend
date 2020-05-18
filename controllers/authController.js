@@ -63,6 +63,13 @@ const catchAsync = require('../utils/catchAsync')
  */
 const AppError = require('../utils/appError')
 
+/**
+ * Notifications services
+ * @const
+ */
+const NotificationServices = require('../services/notificationService')
+const notificationService = new NotificationServices()
+
 // generating token using user id
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
@@ -350,6 +357,14 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
 
   await user.save()
   await followedUser.save()
+
+  //Send followed notification to followedUser
+  const title = 'You have been followed!'
+  const body = `${user.name} has followed you!`
+  const followedUserId = followedUser._id
+  const data = {'uri': user.uri, 'id': user._id, 'href':user.href}
+  const notif = await notificationService.generateNotification(title,body,followedUserId,data)
+  await notificationService.sendNotification(followedUserId,notif)
 
   res.status(204).json({
     status: 'Success'
