@@ -1,4 +1,4 @@
-// /** Jest unit testing for getting user data
+  // /** Jest unit testing for getting user data
 //  * @module routes/users
 //  * @requires express
 //  */
@@ -61,13 +61,10 @@ const mailerServices = require('../../services/mailerService')
  */
 const appError = require('../../utils/appError')
 
-const mongoDB = process.env.DATABASE_LOCAL
+const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-if (process.env.NODE_ENV === 'test') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-} else {
-  throw new Error('Can\'t connect to db, make sure you run in test environment!')
-}
+
 
 // Testing userService get user id
 describe('userService get user id functionality', () => {

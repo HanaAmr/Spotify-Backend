@@ -88,14 +88,11 @@ class playerService {
     if (userRole != 'user') return 1
     const userPlayer = await Player.findOne({ userId: userId })
     //If user should play one track
-    if (userPlayer.queueOffset / parseInt(process.env.ADS_COUNTER, 10) > userPlayer.adsPlayed)
+    if (userPlayer.tracksPlayed / parseInt(process.env.ADS_COUNTER, 10) > userPlayer.adsPlayed)
       return -1
     //If track requested isn't the one in order in the shuffled list
     if (userPlayer.queueTracksIds[userPlayer.queueOffset] != trackId)
       return -2
-    await this.finishTrack(userId, 1)
-    userPlayer.queueOffset = (userPlayer.queueOffset + 1) % (userPlayer.queueTracksIds.length)
-    await userPlayer.save()
     return 1
   }
 
@@ -153,6 +150,7 @@ class playerService {
     userPlayer.queueTracksIds = queueTracksIds
     userPlayer.queueOffset = 0
     userPlayer.adsPlayed = 0
+    userPlayer.tracksPlayed = 0
     await userPlayer.save()
     //Shuffle iff a normal user.
     const shuffledList = user.role == 'user' ? await this.shufflePlayerQueue(userId) : queueTracksIds
@@ -237,7 +235,8 @@ class playerService {
     const userPlayer = await Player.findOne({ 'userId': userId })
     let newQueueOffset = (userPlayer.queueOffset + inc) % (userPlayer.queueTracksIds.length)
     newQueueOffset = newQueueOffset < 0 ? userPlayer.queueTracksIds.length-1 : newQueueOffset
-    await Player.updateOne({ userId: userId }, { queueOffset: newQueueOffset })
+    let newTracksPlayed = userPlayer.tracksPlayed + 1
+    await Player.updateOne({ userId: userId }, { queueOffset: newQueueOffset, tracksPlayed: newTracksPlayed })
   }
   /**
   * Increments the queueOffset to get the next/previous track to be played if the user has skips

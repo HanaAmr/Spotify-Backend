@@ -63,13 +63,10 @@ const mailerServices = require('../../services/mailerService')
  */
 const appError = require('../../utils/appError')
 
-const mongoDB = process.env.DATABASE_LOCAL
+const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-if (process.env.NODE_ENV === 'test') {
-  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-} else {
-  throw new Error('Can\'t connect to db, make sure you run in test environment!')
-}
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+
 
 // Testing userService create token string function
 describe('userService create token string functionality', () => {
@@ -142,27 +139,6 @@ describe('userService assigning token string to user functionality', () => {
   })
 })
 
-// Testing mailerServie send email
-describe('mailerServie send email functionality', () => {
-  // Drop the whole users collection before testing and add a simple user to test with
-  beforeEach(async () => {
-    sinon.restore()
-  })
-
-  // Drop the whole users collection after finishing testing
-  afterAll(async () => {
-    sinon.restore()
-  })
-
-  // Testing sending the email with no problems
-  it('Should send the email successfully', async () => {
-    const mailerService = new mailerServices()
-    const email = 'testingmail@testingmail.com'
-    const subject = 'testingsubject'
-    const text = 'testingtext'
-    await expect(mailerService.sendMail(email, subject, text)).resolves
-  })
-})
 
 // Testing userService change password after reset
 describe('userService change password after reset functionality', () => {
@@ -236,7 +212,8 @@ describe('User can request to reset his password', () => {
       password: 'password'
     })
     await validUser.save()
-
+    //stubbing mailing functions
+    sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
   // Drop the whole users collection after finishing testing
@@ -273,6 +250,7 @@ describe('User can request to reset his password', () => {
 describe('User can reset his password', () => {
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
+    sinon.restore()
     await mongoose.connection.collection('users').deleteMany({})
 
     // Creating the valid user to assign the token to him
@@ -284,7 +262,8 @@ describe('User can reset his password', () => {
       resetPasswordExpires: Date.now() + 360000
     })
     await validUser.save()
-
+    //stubbing mailing functions
+    sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
   // Drop the whole users collection after finishing testing
@@ -298,7 +277,7 @@ describe('User can reset his password', () => {
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
-      params: {token: 'atoken'},
+      params: { token: 'atoken' },
       body: {
         newPassword: 'newPassword',
         passwordConfirmation: 'newPassword'
