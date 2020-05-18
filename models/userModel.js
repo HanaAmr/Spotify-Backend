@@ -112,6 +112,14 @@ const userSchema = new Schema({
   following: {
     type: [String]
   },
+  likedTracks: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Track'
+  }],
+  likedAlbums: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Album'
+  }],
   userStats: [{
     // type: Schema.Types.ObjectId, ref: 'userStats'
   }],
