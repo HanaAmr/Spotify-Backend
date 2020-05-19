@@ -46,7 +46,7 @@ const playlistSchema = new mongoose.Schema({
   },
   images: {
     type: [String],
-    default: 'http://138.91.114.14/api/public/imgs/playlists/default.jpg'
+    default: `${process.env.API_URL}/public/imgs/playlists/default.jpg`
   },
   type: {
     description: 'The object type  “playlist”',

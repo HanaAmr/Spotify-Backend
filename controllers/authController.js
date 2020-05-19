@@ -64,6 +64,12 @@ const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
 
 /**
+ * API features utils file
+ * @const
+ */
+const APIFeatures = require('./../utils/apiFeatures')
+
+/**
  * Notifications services
  * @const
  */
@@ -411,6 +417,34 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
 })
 
 
+/**
+* A function to get liked tracks
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getLikedTracks=catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+
+  if (user.likedTracks.length==0) {
+    return next(new AppError('You did not like any track', 400))
+  }
+
+  const features = new APIFeatures(Track.find().where('_id').in(user.likedTracks), req.query).limitFieldsTracks().paginate()
+  const tracks = await features.query
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tracks
+    }
+  })
+
+})
+
+
 
 
 /**
@@ -449,6 +483,36 @@ exports.likeAlbum = catchAsync(async (req, res, next) => {
   })
 })
 
+/**
+* A function to get liked tracks
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getLikedAlbums=catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+
+  if (user.likedAlbums.length==0) {
+    return next(new AppError('You did not like any album', 400))
+  }
+
+  const albums = await Album.find().where('_id').in(user.likedAlbums).select('-__v').populate({
+    path: 'artists',
+    select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
+
+  })
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      albums
+    }
+  })
+
+})
+
 
 
 /**
@@ -463,7 +527,6 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   // get the user and the playlist
   const user = await User.findById(req.user.id)
   const playlist = await Playlist.findById(req.body.id)
-
 
   // check if the id of the playlist is given
   if (!playlist) {
@@ -492,6 +555,33 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'Success'
   })
+})
+
+/**
+* A function to get liked tracks
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getLikedPlaylists=catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+
+  if (user.likedPlaylists.length==0) {
+    return next(new AppError('You did not like any playlist', 400))
+  }
+
+  const features = new APIFeatures(Playlist.find().where('_id').in(user.likedPlaylists), req.query).paginate().limitFieldsPlaylist()
+  const playlists = await features.query
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      playlists
+    }
+  })
+
 })
 
 
