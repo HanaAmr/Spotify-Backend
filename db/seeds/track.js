@@ -110,6 +110,8 @@ createTracks = async () => {
   await track1.save()
   await track1.updateOne({ href: `${process.env.API_URL}/tracks/${track1._id}` })
   await track1.updateOne({ uri: `spotify:tracks:${track1._id}` })
+  await User.update({_id : user1Id}, { $push: {trackObjects: track1._id}}) //Update list of tracks of user
+  await Album.update({_id : album1Id}, { $push: {trackObjects: track1._id}}) //Update list of tracks of Album
 
   const track2 = new Track({
     name: 'Thunder',
@@ -127,6 +129,8 @@ createTracks = async () => {
   await track2.save()
   await track2.updateOne({ href: `${process.env.API_URL}/tracks/${track2._id}` })
   await track2.updateOne({ uri: `spotify:tracks:${track2._id}` })
+  await User.update({_id : user1Id}, { $push: {trackObjects: track2._id}}) //Update list of tracks of user
+  await Album.update({_id : album1Id}, { $push: {trackObjects: track2._id}}) //Update list of tracks of Album
 
   const track3 = new Track({
     name: 'Youm Talat',
@@ -144,6 +148,8 @@ createTracks = async () => {
   await track3.save()
   await track3.updateOne({ href: `${process.env.API_URL}/tracks/${track3._id}` })
   await track3.updateOne({ uri: `spotify:tracks:${track3._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track3._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track3._id}}) //Update list of tracks of Album
 
   const track4 = new Track({
     name: 'Odam Merayetha',
@@ -161,6 +167,8 @@ createTracks = async () => {
   await track4.save()
   await track4.updateOne({ href: `${process.env.API_URL}/tracks/${track4._id}` })
   await track4.updateOne({ uri: `spotify:tracks:${track4._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track4._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track4._id}}) //Update list of tracks of Album
 
   const track5 = new Track({
     name: 'Perfect',
@@ -177,6 +185,8 @@ createTracks = async () => {
   await track5.save()
   await track5.updateOne({ href: `${process.env.API_URL}/tracks/${track5._id}` })
   await track5.updateOne({ uri: `spotify:tracks:${track5._id}` })
+  await User.update({_id : user2Id}, { $push: {trackObjects: track5._id}}) //Update list of tracks of user
+  await Album.update({_id : album2Id}, { $push: {trackObjects: track5._id}}) //Update list of tracks of Album
 
   const track6 = new Track({
     name: 'Stressed Out',
@@ -193,7 +203,9 @@ createTracks = async () => {
   await track6.save()
   await track6.updateOne({ href: `${process.env.API_URL}/tracks/${track6._id}` })
   await track6.updateOne({ uri: `spotify:tracks:${track6._id}` })
-
+  await User.update({_id : user4Id}, { $push: {trackObjects: track6._id}}) //Update list of tracks of user
+  await Album.update({_id : album4Id}, { $push: {trackObjects: track6._id}}) //Update list of tracks of Album
+  
   const track7 = new Track({
     name: 'Ride',
     type: 'track',
@@ -209,6 +221,8 @@ createTracks = async () => {
   await track7.save()
   await track7.updateOne({ href: `${process.env.API_URL}/tracks/${track7._id}` })
   await track7.updateOne({ uri: `spotify:tracks:${track7._id}` })
+  await User.update({_id : user4Id}, { $push: {trackObjects: track7._id}}) //Update list of tracks of user
+  await Album.update({_id : album4Id}, { $push: {trackObjects: track7._id}}) //Update list of tracks of Album
 
   const track8 = new Track({
     name: 'Thinking Out Loud',
@@ -225,6 +239,8 @@ createTracks = async () => {
   await track8.save()
   await track8.updateOne({ href: `${process.env.API_URL}/tracks/${track8._id}` })
   await track8.updateOne({ uri: `spotify:tracks:${track8._id}` })
+  await User.update({_id : user4Id}, { $push: {trackObjects: track8._id}}) //Update list of tracks of user
+  await Album.update({_id : album4Id}, { $push: {trackObjects: track8._id}}) //Update list of tracks of Album
 
   process.exit()
 }

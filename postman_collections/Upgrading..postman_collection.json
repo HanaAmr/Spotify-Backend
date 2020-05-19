@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "7d537c3d-dd53-4b3b-957d-54c2bddee4e9",
+		"name": "Upgrading.",
+		"description": "Tests used for upgrading and cancelling upgrades from Free User to Premium/Artist and vice versa.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign Up. ",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOGNiMDRmYmU2ZDFhZGViYTI4NzExZCIsImlhdCI6MTU4NjI3OTkyMSwiZXhwIjoxNTg4ODcxOTIxfQ.4-jKB7aCgmmq8KQj5gNkUFwmxoelnOXMUkRqGtEpOYE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"omar\",\n\t\"email\":\"omarhadhoud@ymail.com\",\n\t\"password\":\"oldPassword\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3040/signUp",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"signUp"
+					]
+				},
+				"description": "Request to sign up at the beggining. Email is used to confirm upgrading or cancelling upgrade.\nToken is used for the following steps."
+			},
+			"response": []
+		},
+		{
+			"name": "Request to become premium.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2MjQyOSwiZXhwIjoxNTkyMjU0NDI5fQ.l9N5yAH0lK5NOXZ6auLfEUYGe3hqDjTFkgLZI_Gygyo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/premium",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"premium"
+					]
+				},
+				"description": "Requests to become a premium user and receive confirming email with confirming token."
+			},
+			"response": []
+		},
+		{
+			"name": "Request to become artist",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2MjQyOSwiZXhwIjoxNTkyMjU0NDI5fQ.l9N5yAH0lK5NOXZ6auLfEUYGe3hqDjTFkgLZI_Gygyo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/artist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"artist"
+					]
+				},
+				"description": "Requests to become an artist user and receive confirming email with confirming token."
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm upgrade",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2MjQyOSwiZXhwIjoxNTkyMjU0NDI5fQ.l9N5yAH0lK5NOXZ6auLfEUYGe3hqDjTFkgLZI_Gygyo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/premium",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"premium"
+					]
+				},
+				"description": "Confirms upgrade from free user to either artist or premium using verification code."
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm cancelling premium subscription.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2MjQyOSwiZXhwIjoxNTkyMjU0NDI5fQ.l9N5yAH0lK5NOXZ6auLfEUYGe3hqDjTFkgLZI_Gygyo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/premium/cbd118a029",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"premium",
+						"cbd118a029"
+					]
+				},
+				"description": "Confirms downgrading from Premium to free user using verification code."
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm cancelling artist subscription.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2MjQyOSwiZXhwIjoxNTkyMjU0NDI5fQ.l9N5yAH0lK5NOXZ6auLfEUYGe3hqDjTFkgLZI_Gygyo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/artist/cbd118a029",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"artist",
+						"cbd118a029"
+					]
+				},
+				"description": "Confirms downgrading from Artist to free user using verification code."
+			},
+			"response": []
+		},
+		{
+			"name": "Request to Cancel premium.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2MjQyOSwiZXhwIjoxNTkyMjU0NDI5fQ.l9N5yAH0lK5NOXZ6auLfEUYGe3hqDjTFkgLZI_Gygyo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3040/me/premium",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"premium"
+					]
+				},
+				"description": "Requests to cancel a premium user subscription and receive confirming email with confirming token."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

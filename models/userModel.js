@@ -19,7 +19,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 
 const dotenv = require('dotenv')
-dotenv.config({ path: '.env' })
+dotenv.config({ path: './../.env' })
 
 
 /**
@@ -48,6 +48,9 @@ dotenv.config({ path: '.env' })
  * @property {String} upgradeTokenExpires upgradeTokenExpires of the user
  * @property {String} upgradeRole upgradeRole of the user
  * @property {String} uri uri of the user
+ * @property {Array} tracks tracks of the artist
+ * @property {String} webNotifToken The token used for push notifications on the web
+ * @property {String} androidNotifToken The token used for push notifications on Android
  * @const
  */
 
@@ -101,7 +104,7 @@ const userSchema = new Schema({
   },
   images: {
     type: [String],
-    default: 'http://138.91.114.14/api/public/imgs/users/default.jpg'
+    default: `https://totallynotspotify.codes/public/imgs/users/default.jpg`
   },
   followers: {
     type: [String]
@@ -109,6 +112,14 @@ const userSchema = new Schema({
   following: {
     type: [String]
   },
+  likedTracks: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Track'
+  }],
+  likedAlbums: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Album'
+  }],
   userStats: [{
     // type: Schema.Types.ObjectId, ref: 'userStats'
   }],
@@ -135,6 +146,13 @@ const userSchema = new Schema({
 
     }
   },
+  trackObjects: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Track'
+
+    }
+  ],
   facebookId: {
     type: String,
     default: ''
@@ -145,9 +163,10 @@ const userSchema = new Schema({
   upgradeTokenExpires: Date, // Date of expiration of Upgrade token
   upgradeRole: { // Role to upgrade to
     type: String,
-    enum: ['premium', 'artist']
-  }
-
+    enum: ['premium', 'artist', 'user']
+  },
+  webNotifToken: {type: String, default: ''},
+  androidNotifToken: {type: String, default: ''}
 })
 
 /**

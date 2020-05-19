@@ -23,6 +23,15 @@ const { getAudioDurationInSeconds } = require('get-audio-duration')
  */
 const mongoose = require('mongoose')
 
+
+/**
+ * User model from the database
+ * @const
+ */
+const User = require('../models/userModel')
+
+
+
 /**
  * Album model from the database
  * @const
@@ -61,6 +70,13 @@ const userServiceClass = new userService()
 const catchAsync = require('./../utils/catchAsync')
 
 /**
+ * Notifications services
+ * @const
+ */
+const NotificationServices = require('../services/notificationService')
+const notificationService = new NotificationServices()
+
+/**
  * A middleware function for addingAlbum for artist
  *  @alias module:controllers/artistAlbumsController
  * @param {Object} req - The request passed.
@@ -87,6 +103,19 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true
   })
+
+  //Send notification to artist subscribers
+  let i, notif
+  const artist = User.findOne({"_id":artistId})
+  const followers = artist.followers
+  const title = `${artist.name} added an album!`
+  const body = `${artist.name} has added album called ${newAlbum.name}!`
+  const data = {'uri': newAlbum.uri, 'id': newAlbum._id, 'href':newAlbum.href}
+  for(i = 0; i < followers.length(); i++) 
+    notif = await notificationService.generateNotification(title,body,followers[i],data)
+  notif.topic = artistId
+  notif.token = undefined
+  await notificationService.sendNotification(notif)
 
   res.status(200).json({
     status: 'sucsess',
@@ -140,6 +169,21 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true
   })
+
+
+  //Send notification to artist subscribers
+  let i, notif
+  const artist = User.findOne({"_id":artistId})
+  const followers = artist.followers
+  const title = `${artist.name} added a track!`
+  const body = `${artist.name} has added track called ${newTrack.name}!`
+  const data = {'uri': newAlbum.uri, 'id': newAlbum._id, 'href':newAlbum.href}
+  for(i = 0; i < followers.length(); i++) 
+    notif = await notificationService.generateNotification(title,body,followers[i],data)
+  notif.topic = artistId
+  notif.token = undefined
+  await notificationService.sendNotification(notif)
+
 
   res.status(200).json({
     status: 'sucsess',

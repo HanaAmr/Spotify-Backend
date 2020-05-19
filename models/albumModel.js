@@ -25,6 +25,7 @@ const mongoose = require('mongoose')
  * @property {Date} releaseDate releaseDate of the album
  * @property {object} artists artists of the album
  * @property {Number} totalTracks totalTracks of the album
+ * @property {Array} tracks tracks of the album
  * @const
  */
 const albumSchema = new mongoose.Schema({
@@ -40,7 +41,7 @@ const albumSchema = new mongoose.Schema({
   image: {
     type: String,
     required: [true, 'An album must have an image'],
-    default: 'http://138.91.114.14/api/public/imgs/albums/default.jpg'
+    default: `${process.env.API_URL}/public/imgs/albums/default.jpg`
   },
   albumType: {
     type: String,
@@ -93,7 +94,14 @@ const albumSchema = new mongoose.Schema({
     description: 'The total number of tracks inside the album',
     type: Number,
     default: 0
-  }
+  },
+  trackObjects: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Track'
+
+    }
+  ]
 })
 
 const Album = mongoose.model('Album', albumSchema)

@@ -22,6 +22,30 @@ const { promisify } = require('util')
 const User = require('../models/userModel')
 
 /**
+ * track object
+ * @const
+ */
+const Track = require('../models/trackModel')
+
+/**
+ * album object
+ * @const
+ */
+const Album = require('../models/albumModel')
+
+/**
+ * playlist object
+ * @const
+ */
+const Playlist = require('../models/playlistModel')
+
+/**
+ * Player object
+ * @const
+ */
+const Player = require('../models/playerModel')
+
+/**
  * jwt for tokens
  * @const
  */
@@ -38,6 +62,19 @@ const catchAsync = require('../utils/catchAsync')
  * @const
  */
 const AppError = require('../utils/appError')
+
+/**
+ * API features utils file
+ * @const
+ */
+const APIFeatures = require('./../utils/apiFeatures')
+
+/**
+ * Notifications services
+ * @const
+ */
+const NotificationServices = require('../services/notificationService')
+const notificationService = new NotificationServices()
 
 // generating token using user id
 const signToken = id => {
@@ -59,6 +96,11 @@ exports.signUp = catchAsync(async (req, res, next) => {
     name: req.body.name,
     dateOfBirth: req.body.dateOfBirth,
     gender: req.body.gender
+  })
+
+  //Create the player for the user
+  await Player.create({
+    userId: newUser._id
   })
 
   // generate a token for the new user
@@ -175,7 +217,7 @@ exports.restrictTo = (...roles) => {
 }
 
 /**
-* A function to get user profile
+* A function to get my profile
 * @alias module:controllers/auth
 * @param {Request}  - The function takes the request as a parameter to access its body.
 * @param {Respond} - The respond sent
@@ -200,6 +242,44 @@ exports.getMyProfile = catchAsync(async (req, res, next) => {
     role: newUser.role
   })
 })
+
+
+
+/**
+* A function to get user profile
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getUserProfile = catchAsync(async (req, res, next) => {
+  // get the user from database and send his data
+  const newUser = await User.findById(req.params.id)
+
+  if(!newUser) {
+    return next(new AppError('Please enter a valid id', 400))
+  }
+
+  res.status(200).json({
+    name: newUser.name,
+    email: newUser.email,
+    gender: newUser.gender,
+    dateOfBirth: newUser.dateOfBirth,
+    images: newUser.images,
+    followers: newUser.followers,
+    following: newUser.following,
+    uri: newUser.uri,
+    href: newUser.href,
+    userStats: newUser.userStats,
+    artistInfo: newUser.artistInfo,
+    role: newUser.role
+  })
+})
+
+
+
+
+
 
 /**
 * A function to change user password
@@ -284,16 +364,493 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
   await user.save()
   await followedUser.save()
 
+  //Send followed notification to followedUser
+  const title = 'You have been followed!'
+  const body = `${user.name} has followed you!`
+  const followedUserId = followedUser._id
+  const data = {'uri': user.uri, 'id': user._id, 'href':user.href}
+  const notif = await notificationService.generateNotification(title,body,followedUserId,data)
+  await notificationService.sendNotification(followedUserId,notif)
+
+  //Subscribe to the artist
+  await notificationService.subscribeToTopic(user._id,followedUserId._id)
+
   res.status(204).json({
     status: 'Success'
   })
 })
 
-exports.createUser = catchAsync(async (name, email, password) => {
-  const newUser = await User.create({
-    name: name,
-    email: email,
-    password: password
+
+
+/**
+* A function to like a track
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.likeTrack = catchAsync(async (req, res, next) => {
+
+  // get the user and the track
+  const user = await User.findById(req.user.id)
+  const track = await Track.findById(req.body.id)
+
+
+  // check if the id of the track is given
+  if (!track) {
+    return next(new AppError('Please enter the id of the track you want to like', 400))
+  }
+
+  // check if it is not the first time to like this track
+  if (user.likedTracks.includes(req.body.id)) {
+    return next(new AppError('Already like this track', 400))
+  }
+
+  // user like the track
+  user.likedTracks.push(req.body.id)
+
+  await user.save()
+
+  res.status(204).json({
+    status: 'Success'
   })
-  return newUser
 })
+
+
+/**
+* A function to get liked tracks
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getLikedTracks=catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+
+  if (user.likedTracks.length==0) {
+    return next(new AppError('You did not like any track', 400))
+  }
+
+  const features = new APIFeatures(Track.find().where('_id').in(user.likedTracks), req.query).limitFieldsTracks().paginate()
+  const tracks = await features.query
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tracks
+    }
+  })
+
+})
+
+
+
+
+/**
+* A function to like an album
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.likeAlbum = catchAsync(async (req, res, next) => {
+
+  // get the user and the album
+  const user = await User.findById(req.user.id)
+  const album = await Album.findById(req.body.id)
+
+
+  // check if the id of the album is given
+  if (!album) {
+    return next(new AppError('Please enter the id of the album you want to like', 400))
+  }
+
+  // check if it is not the first time to like this album
+  if (user.likedAlbums.includes(req.body.id)) {
+    return next(new AppError('Already like this album', 400))
+  }
+
+  // user like the album
+  user.likedAlbums.push(req.body.id)
+
+  await user.save()
+
+  console.log(user.likedAlbums)
+
+  res.status(204).json({
+    status: 'Success'
+  })
+})
+
+/**
+* A function to get liked tracks
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getLikedAlbums=catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+
+  if (user.likedAlbums.length==0) {
+    return next(new AppError('You did not like any album', 400))
+  }
+
+  const albums = await Album.find().where('_id').in(user.likedAlbums).select('-__v').populate({
+    path: 'artists',
+    select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
+
+  })
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      albums
+    }
+  })
+
+})
+
+
+
+/**
+* A function to like a playlist
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.likePlaylist = catchAsync(async (req, res, next) => {
+
+  // get the user and the playlist
+  const user = await User.findById(req.user.id)
+  const playlist = await Playlist.findById(req.body.id)
+
+  // check if the id of the playlist is given
+  if (!playlist) {
+    return next(new AppError('Please enter the id of the playlist you want to like', 400))
+  }
+
+  // check if it is not the first time to like this playlist
+  if (user.likedPlaylists.includes(req.body.id)) {
+    return next(new AppError('Already like this playlist', 400))
+  }
+
+  // user like the playlist
+  user.likedPlaylists.push(req.body.id)
+  await user.save()
+
+  //Send like notification to playlist owner
+  const title = 'Someone liked a playlist you own!'
+  const body = `${user.name} has liked the playlist ${playlist.name}!`
+  const ownerId = playlist.owner
+  const data = {'uri': user.uri, 'id': user._id, 'href':user.href}
+  const notif = await notificationService.generateNotification(title,body,ownerId,data)
+  await notificationService.sendNotification(ownerId,notif)
+
+  console.log(user.likedPlaylists)
+
+  res.status(204).json({
+    status: 'Success'
+  })
+})
+
+/**
+* A function to get liked tracks
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getLikedPlaylists=catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+
+  if (user.likedPlaylists.length==0) {
+    return next(new AppError('You did not like any playlist', 400))
+  }
+
+  const features = new APIFeatures(Playlist.find().where('_id').in(user.likedPlaylists), req.query).paginate().limitFieldsPlaylist()
+  const playlists = await features.query
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      playlists
+    }
+  })
+
+})
+
+
+
+/**
+* A function to unfollow artist or user
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
+  // get the requesting user and the user who is going to be unfollowed from database
+  const user = await User.findById(req.user.id)
+  const unfollowedUser = await User.findById(req.body.id)
+
+  // check if the id of the unfollowed user is given
+  if (!unfollowedUser) {
+    return next(new AppError('Please enter the id of the user you want to unfollow', 400))
+  }
+
+  // check if you are not following this user
+  if (!user.following.includes(req.body.id)) {
+    return next(new AppError('You are not following this user', 400))
+  }
+
+  console.log(user.following)
+  console.log(unfollowedUser.followers)
+
+  // user unfollows the unfollowed user
+  const toBeRemoved = (element) => element == req.body.id;
+  user.following.splice(user.following.findIndex(toBeRemoved), 1)
+
+  const toBeRemoved1 = (element) => element == req.user.id;
+  unfollowedUser.followers.splice(unfollowedUser.followers.findIndex(toBeRemoved1), 1)
+
+  await user.save()
+  await unfollowedUser.save()
+
+  console.log(user.following)
+  console.log(unfollowedUser.followers)
+
+  res.status(204).json({
+    status: 'Success'
+  })
+})
+
+
+
+
+
+
+/**
+* A function to unlike a track
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.unlikeTrack = catchAsync(async (req, res, next) => {
+
+  // get the user and the track
+  const user = await User.findById(req.user.id)
+  
+  if(!req.body.id || !user.likedTracks.includes(req.body.id)) {
+    return next(new AppError("User doesn't like this track", 400))
+  }
+
+  const toBeRemoved = (element) => element == req.body.id;
+  
+  user.likedTracks.splice(user.likedTracks.findIndex(toBeRemoved), 1)
+  await user.save()
+
+  console.log(user.likedTracks)
+
+  res.status(204).json({
+    status: 'Success'
+  })
+})
+
+
+
+
+/**
+* A function to unlike a album
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.unlikeAlbum = catchAsync(async (req, res, next) => {
+
+  // get the user and the alvum
+  const user = await User.findById(req.user.id)
+  
+  if(!req.body.id || !user.likedAlbums.includes(req.body.id)) {
+    return next(new AppError("User doesn't like this album", 400))
+  }
+
+  const toBeRemoved = (element) => element == req.body.id;
+  
+  user.likedAlbums.splice(user.likedAlbums.findIndex(toBeRemoved), 1)
+  await user.save()
+
+  console.log(user.likedAlbums)
+
+  res.status(204).json({
+    status: 'Success'
+  })
+})
+
+
+
+/**
+* A function to unlike a Playlist
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.unlikePlaylist = catchAsync(async (req, res, next) => {
+
+  // get the user and the playlist
+  const user = await User.findById(req.user.id)
+  
+  if(!req.body.id || !user.likedPlaylists.includes(req.body.id)) {
+    return next(new AppError("User doesn't like this Playlist", 400))
+  }
+
+  const toBeRemoved = (element) => element == req.body.id;
+  
+  user.likedPlaylists.splice(user.likedPlaylists.findIndex(toBeRemoved), 1)
+  await user.save()
+
+  console.log(user.likedPlaylists)
+
+  res.status(204).json({
+    status: 'Success'
+  })
+})
+
+
+
+/**
+* A function to remove image
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.removeImage = catchAsync(async (req, res, next) => {
+
+  // get the user 
+  const user = await User.findById(req.user.id)
+  
+  //check if he doesn't has an image
+  if(!user.images[0]) {
+    return next(new AppError("User doesn't has an image", 400))
+  }
+
+  //remove image
+  user.images = []
+  await user.save()
+
+  
+  res.status(200).json({
+    status: 'Image removed successfully'
+  })
+})
+
+
+
+
+/**
+* A function to change image
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.changeImage = catchAsync(async (req, res, next) => {
+
+  // get the user 
+  const user = await User.findById(req.user.id)
+  
+  if(!req.body.url) {
+    return next(new AppError("Enter the new image", 400))
+  }
+
+  //change image
+  user.images = req.body.url
+  await user.save()
+  
+  res.status(200).json({
+    status: 'Image updated'
+  })
+})
+
+
+
+
+
+
+/**
+* A function to create playlist
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.createPlaylist = catchAsync(async (req, res, next) => {
+
+  // get the user 
+  const user = await User.findById(req.user.id)
+
+  // create a new playlist with the input data
+  const playlist = await Playlist.create({
+    name: req.body.name,
+    description: req.body.description,
+    public: req.body.public,
+    collaborative: req.body.collaborative    
+  })
+
+  playlist.owner = user
+  await playlist.save()
+
+  user.createdPlaylists.push(playlist._id)
+  await user.save()
+
+  res.status(200).json({
+    playlist
+  })
+})
+
+
+
+
+/**
+* A function to add track to a playlist
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.addTrackToPlaylist = catchAsync(async (req, res, next) => {
+ 
+  const playlist = await Playlist.findById(req.params.playlistId)
+  const track = await Track.findById(req.body.id)
+
+
+  console.log(playlist)
+
+  if(!playlist) {
+    return next(new AppError("There is no playlist with this id", 400))
+  }
+
+  if(!track) {
+    return next(new AppError("Enter the track id", 400))
+  }
+
+  if(playlist.trackObjects.includes(req.body.id)) {
+    return next(new AppError("This track is already in the playlist", 400))
+  }
+
+  playlist.trackObjects.push(req.body.id)
+  await playlist.save()
+
+  res.status(200).json({
+    playlist
+  })
+})
+
