@@ -127,6 +127,17 @@ class notificationService {
   }
 
   /**
+    * Sends notification to topic subscribers
+    * @function
+    * @param {String} authToken - The authorization token of the user.
+    * @param {String} notification - The notification to be sent
+    * @returns {Object} notification - The notification sent
+    */
+   async sendNotificationTopic(notification) {
+    await admin.messaging().send(notification)
+  }
+
+  /**
     * Subscribe to topic for user
     * @function
     * @param {String} userId - The userId of the user.
