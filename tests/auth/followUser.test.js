@@ -4,8 +4,10 @@ const httpMocks = require('node-mocks-http')
 const mongoose = require('mongoose')
 const User = require('./../../models/userModel')
 const authContoller = require('./../../controllers/authController')
+const notificationsService = require('../../services/notificationService')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
+const sinon = require('sinon')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.DATABASE_LOCAL
 
@@ -25,7 +27,9 @@ describe('Follow user functionality', () => {
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
-  
+      sinon.stub(notificationsService.prototype,'sendNotification').returns()
+      sinon.stub(notificationsService.prototype,'subscribeToTopic').returns()
+
       // Creating a user to follow another user
       const firstUser = new User({
         name: 'ahmed',
@@ -57,6 +61,7 @@ describe('Follow user functionality', () => {
     //Drop the whole users collection after finishing testing
     afterAll(async () => {
       await mongoose.connection.collection('users').deleteMany({})
+      sinon.restore()
     })
   
     
