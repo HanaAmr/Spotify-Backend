@@ -253,6 +253,14 @@ describe('notificationService sending notification functionality', () => {
         const notif = await notificationService.sendNotification(userId, message)
         expect(notif).toEqual(null)
     })
+
+    // Testing sending notifications to topic
+    it('Should send notification successfully to topic', async () => {
+        const notificationService = new notificationsServices()
+        const message = await notificationService.generateNotification("Hello", "Hi", "1234")
+        message.topic = "Amr Diab"
+        const notif = await notificationService.sendNotificationTopic(message)
+    })
 })
 
 // Testing Subscribing to topic
