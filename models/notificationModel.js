@@ -10,7 +10,7 @@ const mongoose = require('mongoose')
  * @type {object}
  * @property {String} userId The id of the user that this notification belongs to
  * @property {Object} notification The title and body of notification to be sent
- * @property {Object} uri The data sent to the app (like uri of the notification object (artist, playlist, user, etc))
+ * @property {Object} data The data sent to the app (like uri of the notification object (artist, playlist, user, etc))
  * @property {Date} time The date of the notification
  * @const
  */
@@ -23,7 +23,8 @@ const notificationSchema = new mongoose.Schema({
         title: String,
         body: String
     },
-    data: Object
+    data: Object,
+    time: Date 
 })
 
 const Notification = mongoose.model('Notification', notificationSchema)
