@@ -367,13 +367,14 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
   //Send followed notification to followedUser
   const title = 'You have been followed!'
   const body = `${user.name} has followed you!`
-  const followedUserId = followedUser._id
-  const data = {'uri': user.uri, 'id': user._id, 'href':user.href}
+  const followedUserId = await followedUser._id.toString()
+  const userId = await user._id.toString()
+  const data = {'uri': user.uri, 'id': userId, 'href':user.href}
   const notif = await notificationService.generateNotification(title,body,followedUserId,data)
   await notificationService.sendNotification(followedUserId,notif)
 
   //Subscribe to the artist
-  await notificationService.subscribeToTopic(user._id,followedUserId._id)
+  await notificationService.subscribeToTopic(user._id,followedUserId)
 
   res.status(204).json({
     status: 'Success'
@@ -545,8 +546,9 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   //Send like notification to playlist owner
   const title = 'Someone liked a playlist you own!'
   const body = `${user.name} has liked the playlist ${playlist.name}!`
-  const ownerId = playlist.owner
-  const data = {'uri': user.uri, 'id': user._id, 'href':user.href}
+  const ownerId = playlist.owner.toString()
+  const userId = user._id.toString()
+  const data = {'uri': user.uri, 'id': userId, 'href':user.href}
   const notif = await notificationService.generateNotification(title,body,ownerId,data)
   await notificationService.sendNotification(ownerId,notif)
 

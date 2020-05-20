@@ -112,7 +112,7 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
   const body = `${artist.name} has added album called ${newAlbum.name}!`
   const data = {'uri': newAlbum.uri, 'id': newAlbum._id, 'href':newAlbum.href}
   for(i = 0; i < followers.length(); i++) 
-    notif = await notificationService.generateNotification(title,body,followers[i],data)
+    notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
   notif.topic = artistId
   notif.token = undefined
   await notificationService.sendNotification(notif)
@@ -179,7 +179,7 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   const body = `${artist.name} has added track called ${newTrack.name}!`
   const data = {'uri': newAlbum.uri, 'id': newAlbum._id, 'href':newAlbum.href}
   for(i = 0; i < followers.length(); i++) 
-    notif = await notificationService.generateNotification(title,body,followers[i],data)
+    notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
   notif.topic = artistId
   notif.token = undefined
   await notificationService.sendNotification(notif)
