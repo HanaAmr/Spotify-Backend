@@ -218,7 +218,9 @@ describe('notificationService sending notification functionality', () => {
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
         //stub firebase messaging
         sinon.stub(require('firebase-admin'), 'messaging').get(() => () => ({
-            send: sinon.fake.returns()
+            send: sinon.fake.returns(),
+            sendMulticast: sinon.fake.returns(),
+            subscribeToTopic: sinon.fake.returns
         }))
     })
 
@@ -236,8 +238,8 @@ describe('notificationService sending notification functionality', () => {
         const notif = await notificationService.sendNotification(userId, message)
         expect(notif.notification.title).toEqual('Hello')
         expect(notif.notification.body).toEqual('Hi')
-        expect(notif.token[0]).toEqual('webToken')
-        expect(notif.token[1]).toEqual('androidToken')
+        expect(notif.tokens[0]).toEqual('webToken')
+        expect(notif.tokens[1]).toEqual('androidToken')
     })
 
     // Testing sending notifications
@@ -286,7 +288,9 @@ describe('notificationService sending request to subscribe to topic', () => {
         sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
         //stub firebase messaging
         sinon.stub(require('firebase-admin'), 'messaging').get(() => () => ({
-            subscribeToTopic: sinon.fake.returns()
+            send: sinon.fake.returns(),
+            sendMulticast: sinon.fake.returns(),
+            subscribeToTopic: sinon.fake.returns
         }))
     })
 
@@ -302,8 +306,8 @@ describe('notificationService sending request to subscribe to topic', () => {
         const notificationService = new notificationsServices()
         const sub = await notificationService.subscribeToTopic(userId, 'Amr Diab')
         expect(sub.topic).toEqual('Amr Diab')
-        expect(sub.token[0]).toEqual('webToken')
-        expect(sub.token[1]).toEqual('androidToken')
+        expect(sub.tokens[0]).toEqual('webToken')
+        expect(sub.tokens[1]).toEqual('androidToken')
     })
 })
 

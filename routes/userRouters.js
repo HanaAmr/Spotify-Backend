@@ -444,7 +444,7 @@ router.delete('/me/artist/:confirmationCode', authController.protect, authContro
 
 /**
  * Route for updating notifications token of user
- * @name post/me/notifications/token
+ * @name put/me/notifications/token
  * @function
  * @memberof module:routes/users
  * @inner
