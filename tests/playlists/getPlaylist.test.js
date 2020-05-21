@@ -4,15 +4,19 @@ const httpMocks = require('node-mocks-http')
 const mongoose = require('mongoose')
 const Playlist = require('../../models/playlistModel')
 const Track = require('../../models/trackModel')
+const User = require('../../models/userModel')
 const playlistController = require('../../controllers/playlistController')
 const trackController = require('../../controllers/trackController')
 const sinon = require('sinon')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
-const mongoDB = process.env.DATABASE_LOCAL
+const mongoDB = process.env.TEST_DATABASE
 let server, agent;
+const recommendationService = require('./../../services/recommendationService')
+const authController = require('./../../controllers/authController')
+const jwt = require('jsonwebtoken')
+let authToken = 'token'
 
-//jest.setTimeout(10000)
 
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -37,6 +41,17 @@ describe('test getting playlist', () => {
     })
 
     await testTrack.save()
+
+    testTrack2 = new Track({
+      _id: '5e8cfa4ffbfe6a5764b4238d',
+      name: 'Thunder',
+      href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238d',
+      uri: 'spotify:tracks:5e8cfa4ffbfe6a5764b4238d',
+      trackNumber: 1,
+      durationMs: 200000
+    })
+
+    await testTrack2.save()
 
     await mongoose.connection.collection('playlists').deleteMany({})
     testPlaylist = new Playlist({
@@ -69,6 +84,21 @@ describe('test getting playlist', () => {
     await testPlaylist.save()
     await testPlaylist2.save()
 
+    await mongoose.connection.collection('users').deleteMany({})
+    const firstUser = new User({
+        _id:'5e8cfa4b1493ec60bc89c971',
+        name: 'omar',
+        email: 'omar@email.com',
+        password: 'password',
+    })
+    await firstUser.save()
+
+    await User.findOne({}, (err, user) => {
+      id='5e8cfa4b1493ec60bc89c971'
+      authToken = 'Bearer ' + jwt.sign({id}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    }) 
+    
+
     server = app.listen(5010, (err) => {
     if (err) return done(err);
 
@@ -83,6 +113,7 @@ describe('test getting playlist', () => {
     sinon.restore()
     await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('users').deleteMany({})
     return server && server.close(done);
   })
 
@@ -197,4 +228,27 @@ describe('test getting playlist', () => {
     expect(response.body.data.playlist[1]._id.toString()).toMatch(testPlaylist2._id.toString())
   })
 
+
+  it('Test getting recommended tracks for playlist checking that existing track will not be returned', async () => {
+    const tracks = await recommendationService("5e729d853d8d0a432c70b59c")
+    expect(tracks.excludeTracks[0]._id.toString()).toMatch(testTrack._id.toString())
+    expect(tracks.limit).toBe(3)
+    expect(tracks.page).toBe(1)
+  })
+
+  it('Test getting recommended tracks for an empty playlist', async () => {
+    const tracks = await recommendationService("5e8cfa54b90c6060e809d649")
+    expect(tracks.excludeTracks.length).toBe(0)
+    expect(tracks.limit).toBe(3)
+    expect(tracks.page).toBe(1)
+  })
+
+  it('Get recommended playlists', async () => {
+    const response = await agent.get('/playlists/recommended').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.playlist).not.toEqual(null)
+    expect(response.body.data.playlist.length).toBe(2)
+  })
+  
 })

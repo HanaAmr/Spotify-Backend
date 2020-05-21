@@ -40,6 +40,7 @@ const catchAsync = require('./../utils/catchAsync')
  */
 const AppError = require('./../utils/appError')
 
+
 /**
  * A function that is used to get all categories.
  *  @alias module:controllers/category

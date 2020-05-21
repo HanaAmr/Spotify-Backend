@@ -16,19 +16,13 @@ const router = express.Router()
  * @const
  */
 const playlistController = require('./../controllers/playlistController')
+
 /**
  * Authorization controller to call when routing.
  * @type {object}
  * @const
  */
 const authController = require('./../controllers/authController')
-/**
- * Middleware to check authorization
- * @function
- * @memberof module:routes/tracks~tracksRouter
- * @inner
- */
-// router.use(authController.protect)
 
 /**
  * Route for requesting to get top playlists
@@ -40,6 +34,17 @@ const authController = require('./../controllers/authController')
 router
   .route('/top')
   .get(playlistController.getSortedPlaylist)
+
+/**
+ * Route for requesting to get recommended playlists
+ * @name get/playlists/recommended
+ * @function
+ * @memberof module:routes/playlist
+ * @inner
+ */
+router
+  .route('/recommended') 
+  .get(playlistController.getRecommendedPlaylists)  
 
 /**
  * Route for requesting to get a playlist
@@ -76,5 +81,18 @@ router
 router
   .route('/:playlistId/tracks')
   .get(playlistController.getPlaylistTracks)
+
+
+/**
+ * Route for requesting to get recommended tracks for playlist
+ * @name get/playlists/:playlistId/tracks/recommended
+ * @function
+ * @memberof module:routes/playlist
+ * @inner
+ * @param {string} id - PLaylist ID
+ */
+router
+  .route('/:playlistId/tracks/recommended')
+  .get(authController.protect,playlistController.getRecommendedPlaylistTracks)
 
 module.exports = router
