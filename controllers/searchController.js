@@ -57,6 +57,11 @@ const paginatedResults = require('./../utils/pagination')
  */
 exports.getSearchedForTracks = catchAsync(async (req, res, next) => {
 
+    if(!req.query.q)
+    {
+        return next(new AppError('Please enter a keyword to search with', 404))
+    }
+    
     let idArray = await searchService(req.query.q)
 
     if (idArray.length==0) {
