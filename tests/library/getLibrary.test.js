@@ -15,7 +15,7 @@ const jwt = require('jsonwebtoken')
 let server, agent;
 let authToken = 'token'
 let authToken2 = 'token'
-let id1
+let id1,id3
 
 
 if (process.env.TEST === '1') {
@@ -85,6 +85,16 @@ describe('test getting library components', () => {
     await firstUser.save()
     id1 = firstUser._id
 
+    const thirdUser = new User({
+      _id:'5e8cfa4b1493ec60bc89c97e',
+      name: 'ali',
+      email: 'ali@email.com',
+      password: 'password',
+      role: 'artist'
+    })
+    await thirdUser.save()
+    id3=thirdUser._id
+
     const secondUser = new User({
         _id:'5e8cfa4b1493ec60bc89c971',
         name: 'ahmed',
@@ -96,7 +106,7 @@ describe('test getting library components', () => {
         likedTracks:['5e8cfa4ffbfe6a5764b4238c'],
         likedPlaylists:['5e729d853d8d0a432c70b59c'],
         followers:[id1],
-        following:[id1]
+        following:[thirdUser._id]
         })
     await secondUser.save()
 
@@ -135,7 +145,7 @@ describe('test getting library components', () => {
     const response = await agent.get('/me/following').set('Authorization', authToken)
     expect(response.status).toBe(200)
     expect(response.body.status).toBe('success')
-    expect(response.body.data.users[0]._id.toString()).toMatch(id1.toString())
+    expect(response.body.data.users[0]._id.toString()).toMatch(id3.toString())
   })
 
 
@@ -156,6 +166,38 @@ describe('test getting library components', () => {
         expect(err.statusCode).toEqual(404)
         expect(err.status).toEqual('fail')
         expect(err.message).toEqual('You did not follow any artist/user')
+
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  it('Test the request to get artists I follow', async () => {
+    const response = await agent.get('/me/likedArtists').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.users[0]._id.toString()).toMatch(id3.toString())
+  })
+
+  it('Test the request to get artists I follow when I dont have any followed artists', done => {
+    let request = httpMocks.createRequest({
+      method: 'GET',
+      url: '/me/likedArtists',
+      headers: {
+        'Authorization': authToken2
+      }
+    })
+    request.user={}
+    request.user.id=id1
+    const response = httpMocks.createResponse()
+    authController.getfollowedArtists(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(404)
+        expect(err.status).toEqual('fail')
+        expect(err.message).toEqual('You did not follow any artist')
 
         done()
       } catch (error) {

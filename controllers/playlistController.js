@@ -180,6 +180,12 @@ exports.getRecommendedPlaylists = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns an array of the recommended tracks for a playlist
  */
 exports.getRecommendedPlaylistTracks = catchAsync(async (req, res, next) => { 
+  let playlistId = await Playlist.findById(req.params.playlistId)
+
+  if(!playlistId)
+  {
+    return next(new AppError('There is no playlist with this ID', 404))
+  }
 
   let tracksArray= await recommendationService(req.params.playlistId)
   req.query.limit=tracksArray.limit
@@ -187,6 +193,11 @@ exports.getRecommendedPlaylistTracks = catchAsync(async (req, res, next) => {
 
   const features = new APIFeatures(Track.find().where('_id').nin(tracksArray.excludeTracks), req.query).limitFieldsTracks().paginate()
   const tracks = await features.query
+
+  if(tracks.length==0)
+  {
+    return next(new AppError('There is no recommended tracks for this playlist', 404))
+  }
 
   res.status(200).json({
     status: 'success',
