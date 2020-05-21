@@ -408,6 +408,31 @@ exports.getfollowedArtistUser= catchAsync(async (req, res, next) => {
 })
 
 /**
+* A function to get followed artists 
+* @alias module:controllers/auth
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {Respond} - The respond sent
+* @param {next} - The next function in the middleware
+*/
+exports.getfollowedArtists= catchAsync(async (req, res, next) => {
+
+  const user = await User.findById(req.user.id)
+  const users = await User.find({role:'artist'}).where('_id').in(user.following).select('_id name uri href externalUrls images role followers userStats artistInfo')
+
+  if (users.length==0) {
+    return next(new AppError('You did not follow any artist', 404))
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
+    }
+  })
+
+})
+
+/**
 * A function to get user's followers 
 * @alias module:controllers/auth
 * @param {Request}  - The function takes the request as a parameter to access its body.

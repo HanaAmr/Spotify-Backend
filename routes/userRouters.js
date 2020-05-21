@@ -171,6 +171,17 @@ router.get('/me/followers', authController.protect, authController.getUserfollow
 */
 router.delete('/me/following', authController.protect, authController.unfollowArtistUser)
 
+/**
+* Route for getting followed artists
+* @name get/me/likedArtists
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - follow user path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - follow user middleware.
+*/
+router.get('/me/likedArtists', authController.protect, authController.getfollowedArtists)
 
 /**
 * Route for requesting to like track
