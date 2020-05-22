@@ -242,5 +242,244 @@ createTracks = async () => {
   await User.update({_id : user4Id}, { $push: {trackObjects: track8._id}}) //Update list of tracks of user
   await Album.update({_id : album4Id}, { $push: {trackObjects: track8._id}}) //Update list of tracks of Album
 
+  const track9 = new Track({
+    name: 'Alby Etmannah',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 3,
+    durationMs: 222000,
+    popularity: 100000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track9.mp3'
+
+  })
+  await track9.save()
+  await track9.updateOne({ href: `${process.env.API_URL}/tracks/${track9._id}` })
+  await track9.updateOne({ uri: `spotify:tracks:${track9._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track9._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track9._id}}) //Update list of tracks of Album
+
+  const track10 = new Track({
+    name: 'Ana Gheir',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 4,
+    durationMs: 222000,
+    popularity: 600000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track10.mp3'
+
+  })
+  await track10.save()
+  await track10.updateOne({ href: `${process.env.API_URL}/tracks/${track10._id}` })
+  await track10.updateOne({ uri: `spotify:tracks:${track10._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track10._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track10._id}}) //Update list of tracks of Album
+
+  const track11 = new Track({
+    name: 'Awel Youm fel Bo3d',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 5,
+    durationMs: 222000,
+    popularity: 130000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track11.mp3'
+
+  })
+  await track11.save()
+  await track11.updateOne({ href: `${process.env.API_URL}/tracks/${track11._id}` })
+  await track11.updateOne({ uri: `spotify:tracks:${track11._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track11._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track11._id}}) //Update list of tracks of Album
+
+const track12 = new Track({
+    name: 'Aam El Tabeeb',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 6,
+    durationMs: 222000,
+    popularity: 120000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track12.mp3'
+
+  })
+  await track12.save()
+  await track12.updateOne({ href: `${process.env.API_URL}/tracks/${track12._id}` })
+  await track12.updateOne({ uri: `spotify:tracks:${track12._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track12._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track12._id}}) //Update list of tracks of Album
+
+
+
+const track13 = new Track({
+    name: 'Ana W Enta',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 7,
+    durationMs: 222000,
+    popularity: 130000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track13.mp3'
+
+  })
+  await track13.save()
+  await track13.updateOne({ href: `${process.env.API_URL}/tracks/${track13._id}` })
+  await track13.updateOne({ uri: `spotify:tracks:${track13._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track13._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track13._id}}) //Update list of tracks of Album
+
+
+const track14 = new Track({
+    name: 'Amar Eah',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 8,
+    durationMs: 222000,
+    popularity: 140000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track14.mp3'
+
+  })
+  await track14.save()
+  await track14.updateOne({ href: `${process.env.API_URL}/tracks/${track14._id}` })
+  await track14.updateOne({ uri: `spotify:tracks:${track14._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track14._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track14._id}}) //Update list of tracks of Album
+  
+
+const track15 = new Track({
+    name: 'Ah Habiby',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 9,
+    durationMs: 222000,
+    popularity: 150000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track15.mp3'
+
+  })
+  await track15.save()
+  await track15.updateOne({ href: `${process.env.API_URL}/tracks/${track15._id}` })
+  await track15.updateOne({ uri: `spotify:tracks:${track15._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track15._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track15._id}}) //Update list of tracks of Album
+  
+
+const track16 = new Track({
+    name: 'Awel Kol Haga',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 10,
+    durationMs: 222000,
+    popularity: 160000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track16.mp3'
+
+  })
+  await track16.save()
+  await track16.updateOne({ href: `${process.env.API_URL}/tracks/${track16._id}` })
+  await track16.updateOne({ uri: `spotify:tracks:${track16._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track16._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track16._id}}) //Update list of tracks of Album
+
+
+const track17 = new Track({
+    name: 'Agmal Eyoun',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 11,
+    durationMs: 222000,
+    popularity: 170000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track17.mp3'
+
+  })
+  await track17.save()
+  await track17.updateOne({ href: `${process.env.API_URL}/tracks/${track17._id}` })
+  await track17.updateOne({ uri: `spotify:tracks:${track17._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track17._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track17._id}}) //Update list of tracks of Album
+
+
+const track18 = new Track({
+    name: 'Ahla W Ahla',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 12,
+    durationMs: 222000,
+    popularity: 180000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track18.mp3'
+
+  })
+  await track18.save()
+  await track18.updateOne({ href: `${process.env.API_URL}/tracks/${track18._id}` })
+  await track18.updateOne({ uri: `spotify:tracks:${track18._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track18._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track18._id}}) //Update list of tracks of Album
+  
+  
+const track19 = new Track({
+    name: 'Aks Ba3d',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 13,
+    durationMs: 222000,
+    popularity: 190000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track19.mp3'
+
+  })
+  await track19.save()
+  await track19.updateOne({ href: `${process.env.API_URL}/tracks/${track19._id}` })
+  await track19.updateOne({ uri: `spotify:tracks:${track19._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track19._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track19._id}}) //Update list of tracks of Album
+  
+
+const track20 = new Track({
+    name: 'Ala Hobak',
+    type: 'track',
+    externalUrl: 'this should be an externalUrl',
+    externalId: 'this should be an externalId',
+    trackNumber: 14,
+    durationMs: 222000,
+    popularity: 200000,
+    album: album3Id,
+    artists: user3Id,
+    audioFilePath: 'tracks/track20.mp3'
+
+  })
+  await track20.save()
+  await track20.updateOne({ href: `${process.env.API_URL}/tracks/${track20._id}` })
+  await track20.updateOne({ uri: `spotify:tracks:${track20._id}` })
+  await User.update({_id : user3Id}, { $push: {trackObjects: track20._id}}) //Update list of tracks of user
+  await Album.update({_id : album3Id}, { $push: {trackObjects: track20._id}}) //Update list of tracks of Album
+  
+
+
   process.exit()
 }
