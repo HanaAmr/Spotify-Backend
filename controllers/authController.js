@@ -369,7 +369,8 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
   const body = `${user.name} has followed you!`
   const followedUserId = await followedUser._id.toString()
   const userId = await user._id.toString()
-  const data = {'uri': user.uri, 'id': userId, 'href':user.href}
+  const images = user.images
+  const data = {'uri': user.uri, 'id': userId, 'href':user.href, 'images':images}
   const notif = await notificationService.generateNotification(title,body,followedUserId,data)
   await notificationService.sendNotification(followedUserId,notif)
 
@@ -624,7 +625,8 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   const body = `${user.name} has liked the playlist ${playlist.name}!`
   const ownerId = playlist.owner.toString()
   const userId = user._id.toString()
-  const data = {'uri': user.uri, 'id': userId, 'href':user.href}
+  const images = user.images
+  const data = {'uri': user.uri, 'id': userId, 'href':user.href, 'images':images}
   const notif = await notificationService.generateNotification(title,body,ownerId,data)
   await notificationService.sendNotification(ownerId,notif)
 
