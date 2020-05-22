@@ -412,8 +412,8 @@ describe('User can get his notifications history', () => {
             try {
                 expect(response.statusCode).toEqual(200)
                 const respArr = await response._getJSONData()
-                const resp = await respArr.data[0]
-                expect(resp.notification.body).toEqual('Hi2')
+                const resp = await respArr.data
+                expect(resp.results.items[0].notification.body).toEqual('Hi2')
                 done()
             } catch (error) {
                 done(error)
