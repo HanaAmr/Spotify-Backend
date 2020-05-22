@@ -146,6 +146,8 @@ class notificationService {
     */
   async subscribeToTopic(userId, topic) {
     const tokens = await this.getToken(userId)
+    //Check if no tokens available, then don't send notification.
+    if (tokens[0] == '' && tokens[1] == '') return null
     let tokensToSend = []
     if (tokens[0] != null) tokensToSend.push(tokens[0])
     if (tokens[1] != null) tokensToSend.push(tokens[1])
