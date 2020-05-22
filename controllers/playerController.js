@@ -62,11 +62,12 @@ const playerService = new PlayerServices()
  */
 const AppError = require('../utils/appError')
 
-// /**
-//  * Pagination file
-//  * @const
-//  */
-// const paginatedResults = require('./../utils/pagination')
+/**
+ * Pagination utils
+ * @const
+ */
+const paginatedResults = require('./../utils/pagination')
+
 
 /**
  * Adds a track to the recently played list
@@ -109,33 +110,16 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
  */
 exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
-  const items = await features.query
+  const results = await paginatedResults(req, await PlayHistory.find().where('userId').equals(userId).countDocuments().exec())
+  const features = new APIFeatures(PlayHistory.find().where('userId').sort({'playedAt':-1}).equals(userId), req.query).paginate()
+  results.items = await features.query.select('-userId -_id -__v')
   res.status(200).json({
     status: 'success',
-    data: (items)
+    data: {
+      results
+    }
   })
 })
-
-// /**
-//  * A function that is used to get the recently played list
-//   *  @alias module:controllers/player
-//  * @param {Request}  - The function takes the request as a parameter to access its body.
-//  * @param {Respond} - The respond sent
-//  * @param {next} - The next function in the middleware
-//  */
-// exports.getRecentlyPlayed = catchAsync(async function (req, res, next) { //Paginated
-//   const userId = await userService.getUserId(req.headers.authorization)
-//   const results = await paginatedResults(req, await PlayHistory.find().where('userId').equals(userId).countDocuments().exec())
-//   const features = new APIFeatures(PlayHistory.find().where('userId').equals(userId), req.query).paginate()
-//   results.items = await features.query.select('-userId -_id -__v')
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
 
 
 /**
@@ -206,9 +190,11 @@ exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
 exports.getAd = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   await playerService.incrementAdsPlayed(userId)
-  const ad = await playerService.getRandomAd()
+  const track = await playerService.getRandomAd()
   res.status(200).json({
     status: 'success',
-    data: ad
+    data: {
+      track
+    }
   })
 })
