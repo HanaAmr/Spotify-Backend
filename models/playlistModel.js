@@ -32,7 +32,8 @@ const playlistSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'The name of the playlist'],
-    unique: true
+    unique: false,
+    default: 'New Playlist'
   },
   collaborative: {
     type: Boolean,

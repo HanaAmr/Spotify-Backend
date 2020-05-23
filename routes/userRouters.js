@@ -31,6 +31,12 @@ const userController = require('../controllers/userController')
 const authController = require('../controllers/authController')
 
 /**
+ * uploadService that has uploading middlewares to call when routing
+ * @const
+ */
+const uploadService = require('./../services/uploadService')
+
+/**
  * express module
  * passport for connecting with facebook
  * @const
@@ -287,6 +293,19 @@ router.get('/me/likedPlaylists', authController.protect, authController.getLiked
 
 
 /**
+* Route for getting created playlists
+* @name get/me/createdPlaylists
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - get created playlists path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - get created playlists middleware.
+*/
+router.get('/me/createdPlaylists', authController.protect, authController.getCreatedPlaylists)
+
+
+/**
 * Route for requesting to unlike playlist
 * @name delete/unlikePlaylist
 * @function
@@ -323,7 +342,7 @@ router.delete('/me/image', authController.protect, authController.removeImage)
 * @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - change image middleware.
 */
-router.put('/me/image', authController.protect, authController.changeImage)
+router.put('/me/image', authController.protect, uploadService.uploadUserImage, authController.changeImage)
 
 
 

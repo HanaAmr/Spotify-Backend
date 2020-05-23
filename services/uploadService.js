@@ -50,6 +50,28 @@ const multerAlbumImageStorage = multer.diskStorage({
   }
 })
 
+
+
+/**
+* Multer Filter for setting storage path of user images to public/imgs/users and naming the file with the following format:
+* userid-data.fileextension
+* @function
+* @memberof module:services/uploadService
+* @param {Request}  - The function takes the request as a parameter to access its body.
+* @param {file} - The function takes the file passed in the form data as a parameter to access its body.
+* @param {cb} - The call back of the function
+*/
+const multerUserImageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/imgs/users')
+  },
+  filename: async (req, file, cb) => {
+    const userId = await (userServiceClass.getUserId(req.headers.authorization))
+    const fileExtension = file.mimetype.split('/')[1]
+    cb(null, `${userId}-${Date.now()}.${fileExtension}`)
+  }
+})
+
 /**
 * Multer Filter for setting storage path of track audio to /tracks and naming the file with the following format:
 * AlbumId-TrackName-Date.fileExtension
@@ -80,6 +102,7 @@ const multerTrackStorage = multer.diskStorage({
 * @param {cb} - The call back of the function
 */
 const multerFilterImage = (req, file, cb) => {
+  
   if (file.mimetype.startsWith('image')) {
     cb(null, true)
   } else {
@@ -113,6 +136,18 @@ const uploadImage = multer({
   fileFilter: multerFilterImage
 })
 
+
+/**
+* A function for creating multer object and assigning it to storage and filter for the userImage
+* @function
+* @memberof module:services/uploadService
+*/
+const changeImage = multer({
+  storage: multerUserImageStorage,
+  fileFilter: multerFilterImage
+})
+
+
 /**
 * A function for creating multer object and assigning it to storage and filter for the track
 * @function
@@ -129,6 +164,15 @@ const uploadTrack = multer({
 * @memberof module:services/uploadService
 */
 exports.uploadAlbumImage = uploadImage.single('image')
+
+
+/**
+* A middleware function for uploadingUserImage
+* @function
+* @memberof module:services/uploadService
+*/
+exports.uploadUserImage = changeImage.single('image')
+
 
 /**
 * A middleware function for uploadingTrackAudio for artist
