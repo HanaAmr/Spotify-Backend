@@ -295,12 +295,12 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzA1MmRkY2YzNjhkNDA1ZGRmY2NjMyIsImlhdCI6MTU4OTY2ODI3MCwiZXhwIjoxNTkyMjYwMjcwfQ.ytwpz21N-jH0JRKy8BFw7iMFFFpwZptWjg56kGCn9C8",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZDA0MmNkYmNjMWE0M2U1NGQxNzdkMCIsImlhdCI6MTU5MDcwNjg5MywiZXhwIjoxNTkzMjk4ODkzfQ.maftjXUykMauyOPrhEZr_9wJG8NYZN9xQmwPSfjT4aM",
 							"type": "string"
 						}
 					]
 				},
-				"method": "POST",
+				"method": "GET",
 				"header": [],
 				"url": {
 					"raw": "http://localhost:3040/me/player/recentlyPlayed",
