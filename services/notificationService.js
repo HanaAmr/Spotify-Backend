@@ -8,10 +8,14 @@
  * Firebase needed for notifications apis
  * @const
  */
-const admin = require('firebase-admin')
+var admin = require("firebase-admin")
+
+var serviceAccount = require("../../service-account-file.json")
+
 admin.initializeApp({
-  credential: admin.credential.applicationDefault()
-})
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://totally-not-spotify.firebaseio.com"
+});
 
 /**
  * User model from the database
@@ -123,7 +127,7 @@ class notificationService {
     //Add existing tokens only
     if (tokens[0] != '') tokensToSend.push(tokens[0])
     if (tokens[1] != '') tokensToSend.push(tokens[1])
-    notification.tokens = tokensToSend
+    notification.tokens = tokensToSend 
     await admin.messaging().sendMulticast(notification)
     return notification
   }

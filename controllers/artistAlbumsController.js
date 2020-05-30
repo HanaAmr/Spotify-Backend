@@ -182,6 +182,7 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   const body = `${artist.name} has added track called ${newTrack.name}!`
   const images = artist.images
   const data = {'uri': newTrack.uri, 'id': newTrack._id, 'href':newTrack.href, 'images':newTrack.images}
+
   for(i = 0; i < followers.length(); i++) 
     notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
   notif.topic = artistId
