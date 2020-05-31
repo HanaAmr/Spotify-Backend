@@ -166,6 +166,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
  * @return {JSON} Returns JSON array of album objects if id is valid and artist have albums. Otherwise, returns an error object
  */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
+
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 

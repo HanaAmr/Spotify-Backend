@@ -92,7 +92,7 @@ const notificationService = new NotificationServices()
  * @param {Object} res - The respond sent
  * @param {Function} next - The next function in the middleware
  * @param {String} token - userArtist Token passed in header
- * @return {JSON} Returns album object created if album is created sucessfully or error object otherwise
+ * @return {JSON} Returns album object created if album is created successfully or error object otherwise
  */
 exports.addAlbum = catchAsync(async (req, res, next) => {
   if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename}`}
@@ -118,7 +118,7 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
   })
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: newAlbum
   })
 })
@@ -131,13 +131,15 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
  * @param {Function} next - The next function in the middleware
  * @param {String} token - userArtist Token passed in header
  * @param {String} albumId - album ID to add track to , passed in query
- * @return {JSON} Returns JSON object of added track if request is sucessful, an error object otherwise
+ * @return {JSON} Returns JSON object of added track if request is successful, an error object otherwise
  */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
 
-  
+  //getting artist info and album for updating them latter
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const artist = User.findById(artistId)
   const album = await Album.find({ _id: req.params.id, artists: artistId })
+  //make sure that the artist owns this album and the audio file is passed
   if (album.length === 0) { throw (new AppError('You are not authorized, you cannot add tracks to albums other than yours!', 484)) }
 
   if (req.file) {
@@ -156,12 +158,9 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   req.body.artists.push(new mongoose.Types.ObjectId(artistId))
   req.body.album = new mongoose.Types.ObjectId(req.params.id)
 
-  // updating album to increment number of tracks
-  //TODO:: adding track in album & user
-  let numberofTracks = (await Album.findById(req.params.id)).totalTracks
-  numberofTracks++
-  await Album.findByIdAndUpdate(req.params.id, { totalTracks: numberofTracks })
-
+  // getting track number
+  const trackAlbum=await Album.findById(req.params.id)
+  let numberofTracks = trackAlbum.totalTracks+1
   req.body.trackNumber = numberofTracks
   let newTrack = await Track.create(req.body)
 
@@ -173,25 +172,32 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
     runValidators: true
   })
 
+  //updating track album's number of tracks and track objects
+  await Album.findByIdAndUpdate(req.params.id, { totalTracks: numberofTracks,$push:{trackObjects: newTrack._id} })
+  //adding track to artist's track object
+  await User.findByIdAndUpdate(artistId,{$push:{trackObjects: newTrack._id}})
 
   //Send notification to artist subscribers
   let i, notif
-  const artist = User.findOne({"_id":artistId})
   const followers = artist.followers
   const title = `${artist.name} added a track!`
   const body = `${artist.name} has added track called ${newTrack.name}!`
   const images = artist.images
-  const data = {'uri': newTrack.uri, 'id': newTrack._id, 'href':newTrack.href, 'images':newTrack.images}
+  const data = {'uri': newTrack.uri, 'id': newTrack._id, 'href':newTrack.href, 'image':trackAlbum.image}
 
-  for(i = 0; i < followers.length(); i++) 
+  //sending notification if artist has followers
+  if(followers)
+  {
+    for(i = 0; i < followers.length(); i++) 
     notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
-  notif.topic = artistId
-  notif.token = undefined
-  await notificationService.sendNotification(notif)
+    notif.topic = artistId
+    notif.token = undefined
+    await notificationService.sendNotification(notif)
+  }
 
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: newTrack
   })
 })
@@ -223,7 +229,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   if (albums.length === 0) { throw (new AppError('You did not create any albums yet!', 484)) }
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: albums
   })
 })
