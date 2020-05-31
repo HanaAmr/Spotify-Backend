@@ -33,6 +33,13 @@ const userService = new UserServices()
  * @const
  */
 const APIFeatures = require('../utils/apiFeatures')
+
+/**
+ * Pagination utils
+ * @const
+ */
+const paginatedResults = require('./../utils/pagination')
+
 /**
  * AppError class file
  * @const
@@ -243,11 +250,14 @@ const updateNotificationsToken = catchAsync(async function (req, res, next) {
  */
 const getNotifications = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const features = new APIFeatures(Notifications.find().where('userId').equals(userId).select('-userId -_id'), req.query).limitFields().paginate()
-  const items = await features.query
+  const results = await paginatedResults(req, await Notifications.find().where('userId').equals(userId).countDocuments().exec())
+  const features = new APIFeatures(Notifications.find().where('userId').equals(userId).sort({'time': -1}).select('-userId -_id'), req.query).limitFields().paginate()
+  results.items = await features.query
   res.status(200).json({
     status: 'success',
-    data: (items)
+    data:{
+      results
+    }
   })
 })
 

@@ -67,7 +67,6 @@ createUsers = async () => {
       biography: "Imagine Dragons is an American rock band from Las Vegas, Nevada, consisting of lead vocalist Dan Reynolds, lead guitarist Wayne Sermon, bassist Ben McKee, and drummer Daniel Platzman.\nThe band's second studio album Smoke + Mirrors (2015) reached number one in the US, Canada and the UK.",
       popularity: 100000,
       genres: ['pop rock']
-      // albums: [album1],
     }
   })
   await user1.save()
@@ -85,7 +84,6 @@ createUsers = async () => {
       biography: "Ed Sheeran was born on February 17, 1991, in Halifax, West Yorkshire, in the United Kingdom.\n When he was young, he began playing guitar, showing early promise as a musical talent. When he was 11, Sheeran met singer-songwriter Damien Rice backstage at one of Rice's shows, and the young musician found added inspiration.",
       popularity: 5000,
       genres: ['pop', 'pop rock']
-      // albums: [album2],
     }
   })
   await user2.save()

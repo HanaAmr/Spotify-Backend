@@ -54,6 +54,14 @@ const Track = require('../models/trackModel')
  */
 const AppError = require('../utils/appError')
 
+
+/**
+ * API features utils file
+ * @const
+ */
+const APIFeatures = require('./../utils/apiFeatures')
+
+
 /**
  * User services class
  * @const
@@ -132,7 +140,7 @@ class playerService {
       newContext.externalUrls = contextAlbum.externalUrls
       newContext.href = contextAlbum.href
       newContext.name = contextAlbum.name
-      newContext.images = contextAlbum.images
+      newContext.images[0] = contextAlbum.image
       newContext.followersCount = contextAlbum.popularity
       queueTracksIds = await contextAlbum.trackObjects
     } else if (type === 'artist') {
@@ -282,15 +290,17 @@ class playerService {
     * @function
     * @returns {Object} Track object of the ad
     */
-   async getRandomAd(userId) {
+   async getRandomAd() {
      let i,j    
-    const ads = await Track.find({"isAd":true})
-    if(ads.length == 0 ) return `No Ads available now`
+    const adsIds = await Track.find({"isAd":true})
+    if(adsIds.length == 0 ) return `No Ads available now`
     //Get random number <= ads.length
-    i = ads.length - 1
+    i = adsIds.length - 1
     j = Math.floor(Math.random() * (i + 1))
-    const ad = ads[j]
-    return ad
+    const adId = adsIds[j]._id
+    const features = new APIFeatures(Track.findById(adId), '').limitFieldsTracks()
+    const ads = await features.query
+    return ads
   }
 
 }

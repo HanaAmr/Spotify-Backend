@@ -115,7 +115,7 @@ createAlbums = async () => {
     copyrights: '© 2020 Nay',
     releaseDate: '2020-01-01',
     artists: [user3Id],
-    totalTracks: 2,
+    totalTracks: 14,
     popularity: 400000
   })
   await album3.save()

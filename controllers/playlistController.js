@@ -23,6 +23,12 @@ const Playlist = require('./../models/playlistModel')
 const Track = require('./../models/trackModel')
 
 /**
+ * user object
+ * @const
+ */
+const User = require('../models/userModel')
+
+/**
  * API features utils file
  * @const
  */
@@ -40,11 +46,13 @@ const catchAsync = require('./../utils/catchAsync')
  */
 const AppError = require('./../utils/appError')
 
-// /**
-//  * Pagination file
-//  * @const
-//  */
-// const paginatedResults = require('./../utils/pagination')
+/**
+ * Recommendation Service file
+ * @const
+ */
+const recommendationService = require('./../services/recommendationService')
+
+
 
 /**
  * Get one Playlist given its ID
@@ -120,25 +128,6 @@ exports.getPlaylistTracks = catchAsync(async (req, res, next) => { //  not pagin
   })
 })
 
-// exports.getPlaylistTracks = catchAsync(async (req, res, next) => { //  paginated
-
-//   let query = Playlist.findById(req.params.playlistId)
-//   query = await query.select('trackObjects')
-
-//   const results=await paginatedResults(req,await Track.find().where('_id').in(query.trackObjects).countDocuments().exec())
-
-//   const features = new APIFeatures(Track.find().where('_id').in(query.trackObjects), req.query).limitFieldsTracks().paginate()
-
-//   results.items = await features.query
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
-
 /**
  * Get the top playlists
  *  @alias module:controllers/playlist
@@ -159,17 +148,63 @@ exports.getSortedPlaylist = catchAsync(async (req, res, next) => { //  not pagin
   })
 })
 
-// exports.getSortedPlaylist = catchAsync(async (req, res, next) => { //  paginated
-//   console.log(req.originalUrl)
-//   const results=await paginatedResults(req,await Playlist.find().countDocuments().exec())
+/**
+ * Get the recommended playlists
+ *  @alias module:controllers/playlist
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @return {JSON} Returns an array of the recommended playlists.
+ */
+exports.getRecommendedPlaylists = catchAsync(async (req, res, next) => { 
 
-//   const features = new APIFeatures(Playlist.find(), req.query).sort().limitFieldsPlaylist().paginate()
-//   results.items = await features.query
+  const playlist = await Playlist.aggregate([
+    {$sample: {size: 5}},
+    { $project: { "__v": 0 , "trackObjects":0 , "owner":0} }
+  ])
 
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
+  res.status(200).json({
+    status: 'success',
+    data: {
+      playlist
+    }
+  })
+})
+
+/**
+ * Get the recommended tracks for a playlist
+ *  @alias module:controllers/playlist
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @return {JSON} Returns an array of the recommended tracks for a playlist
+ */
+exports.getRecommendedPlaylistTracks = catchAsync(async (req, res, next) => { 
+  let playlistId = await Playlist.findById(req.params.playlistId)
+
+  if(!playlistId)
+  {
+    return next(new AppError('There is no playlist with this ID', 404))
+  }
+
+  let tracksArray= await recommendationService(req.params.playlistId)
+  req.query.limit=tracksArray.limit
+  req.query.page=tracksArray.page
+
+  const features = new APIFeatures(Track.find().where('_id').nin(tracksArray.excludeTracks), req.query).limitFieldsTracks().paginate()
+  const tracks = await features.query
+
+  if(tracks.length==0)
+  {
+    return next(new AppError('There is no recommended tracks for this playlist', 404))
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tracks
+    }
+  })
+
+})
+

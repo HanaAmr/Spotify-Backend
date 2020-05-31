@@ -1,0 +1,95 @@
+{
+	"info": {
+		"_postman_id": "3fd8d061-cb49-484a-9152-943ae102ea03",
+		"name": "GetRecommendedPlaylistsandTracks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signUp",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"hana2@gmail.com\",\n\t\"password\":\"gygjjjjjy\",\n\t\"name\":\"hanaamr\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:6000/signUp",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "6000",
+					"path": [
+						"signUp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get  recommended tracks for playlist",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYzZmZGEyMjU4NGFlM2RiNDUyYTMyMyIsImlhdCI6MTU5MDA5OTM2MiwiZXhwIjoxNTkyNjkxMzYyfQ.4MBuGoet43uKQorLiDaCJ3Z5xo2Y9Ad4yjj-hPlI7MU",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:6000/playlists/5ec687f73603f54f9c81bf28/tracks/recommended",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "6000",
+					"path": [
+						"playlists",
+						"5ec687f73603f54f9c81bf28",
+						"tracks",
+						"recommended"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Recommended Playlists",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:6000/playlists/recommended",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "6000",
+					"path": [
+						"playlists",
+						"recommended"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

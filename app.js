@@ -18,9 +18,11 @@ const trackRouter = require('./routes/trackRoutes')
 const albumRouter = require('./routes/albumRoutes.js')
 const playerRouter = require('./routes/playerRoutes')
 const artistAlbumRouter = require('./routes/artistAlbumRoutes')
+const searchRouter = require('./routes/searchRoutes')
 
 // Mounting the Routers
 app.use('/', userRouter)
+app.use('/search',searchRouter)
 app.use('/artists', artistRouter)
 app.use('/browse/categories', categoryRouter) //   act as middleware for this route only
 app.use('/playlists', playlistRouter)
@@ -28,6 +30,7 @@ app.use('/tracks', trackRouter)
 app.use('/albums', albumRouter)
 app.use('/me/player', playerRouter)
 app.use('/me/albums', artistAlbumRouter)
+
 
 // Middlewares
 // after all handeled routes

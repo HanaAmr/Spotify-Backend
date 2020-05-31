@@ -31,6 +31,12 @@ const userController = require('../controllers/userController')
 const authController = require('../controllers/authController')
 
 /**
+ * uploadService that has uploading middlewares to call when routing
+ * @const
+ */
+const uploadService = require('./../services/uploadService')
+
+/**
  * express module
  * passport for connecting with facebook
  * @const
@@ -134,6 +140,30 @@ router.put('/me/changePassword', authController.protect, authController.changePa
 */
 router.put('/me/following', authController.protect, authController.followArtistUser)
 
+/**
+* Route for getting followed users
+* @name get/me/following
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - follow user path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - follow user middleware.
+*/
+router.get('/me/following', authController.protect, authController.getfollowedArtistUser)
+
+/**
+* Route for getting user's followers
+* @name get/me/followers
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - follow user path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - follow user middleware.
+*/
+router.get('/me/followers', authController.protect, authController.getUserfollowers)
+
 
 /**
 * Route for requesting to unfollow user
@@ -147,6 +177,17 @@ router.put('/me/following', authController.protect, authController.followArtistU
 */
 router.delete('/me/following', authController.protect, authController.unfollowArtistUser)
 
+/**
+* Route for getting followed artists
+* @name get/me/likedArtists
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - follow user path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - follow user middleware.
+*/
+router.get('/me/likedArtists', authController.protect, authController.getfollowedArtists)
 
 /**
 * Route for requesting to like track
@@ -162,7 +203,7 @@ router.put('/me/likeTrack', authController.protect, authController.likeTrack)
 
 /**
 * Route for getting to liked tracks
-* @name get/likedTracks
+* @name get/me/likedTracks
 * @function
 * @memberof module:routes/users
 * @inner
@@ -200,7 +241,7 @@ router.put('/me/likeAlbum', authController.protect, authController.likeAlbum)
 
 /**
 * Route for getting liked albums
-* @name get/likedAlbums
+* @name get/me/likedAlbums
 * @function
 * @memberof module:routes/users
 * @inner
@@ -240,7 +281,7 @@ router.put('/me/likePlaylist', authController.protect, authController.likePlayli
 
 /**
 * Route for getting liked playlists
-* @name get/likedPlaylists
+* @name get/me/likedPlaylists
 * @function
 * @memberof module:routes/users
 * @inner
@@ -249,6 +290,19 @@ router.put('/me/likePlaylist', authController.protect, authController.likePlayli
 * @param {callback} middleware - get liked playlists middleware.
 */
 router.get('/me/likedPlaylists', authController.protect, authController.getLikedPlaylists)
+
+
+/**
+* Route for getting created playlists
+* @name get/me/createdPlaylists
+* @function
+* @memberof module:routes/users
+* @inner
+* @param {string} path - get created playlists path
+* @param {callback} middleware - Protect middleware.
+* @param {callback} middleware - get created playlists middleware.
+*/
+router.get('/me/createdPlaylists', authController.protect, authController.getCreatedPlaylists)
 
 
 /**
@@ -288,7 +342,7 @@ router.delete('/me/image', authController.protect, authController.removeImage)
 * @param {callback} middleware - Protect middleware.
 * @param {callback} middleware - change image middleware.
 */
-router.put('/me/image', authController.protect, authController.changeImage)
+router.put('/me/image', authController.protect, uploadService.uploadUserImage, authController.changeImage)
 
 
 
@@ -420,7 +474,7 @@ router.delete('/me/artist/:confirmationCode', authController.protect, authContro
 
 /**
  * Route for updating notifications token of user
- * @name post/me/notifications/token
+ * @name put/me/notifications/token
  * @function
  * @memberof module:routes/users
  * @inner
