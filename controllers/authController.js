@@ -735,7 +735,9 @@ exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
   console.log(unfollowedUser.followers)
 
   //UnSubscribe to the artist
-  await notificationService.subscribeToTopic(user._id,followedUserId,0)
+  const unfollowedUserId = await unfollowedUser._id.toString()
+  await notificationService.subscribeToTopic(user._id,unfollowedUserId,0)
+  
 
 
   res.status(204).json({
