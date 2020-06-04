@@ -72,7 +72,8 @@ exports.getArtists = catchAsync(async (req, res, next) => {
       images: 1,
       type: 1,
       followers: 1,
-      artistInfo: 1
+      artistInfo: 1,
+      role:1
     }), req.query)
     .filter()
     .sort()
@@ -110,7 +111,7 @@ exports.getArtist = catchAsync(async (req, res, next) => {
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: artist
   })
 })
@@ -149,7 +150,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   if (relatedArtists.length === 0) { throw (new AppError('No related artists found for this artist!', 404)) }
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: relatedArtists
   })
 })
@@ -165,6 +166,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
  * @return {JSON} Returns JSON array of album objects if id is valid and artist have albums. Otherwise, returns an error object
  */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
+
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
@@ -181,7 +183,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   if (albums.length === 0) { throw (new AppError('No albums for this artist!', 404)) }
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: albums
   })
 })
@@ -232,11 +234,6 @@ exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
 
   if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
-  // const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
-  //   .filter()
-  //   .sort()
-  //   .limitFieldsPlaylist()
-  //   .paginate()
 
   const playlists = await Playlist.find({ owner: req.params.id })
   if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 404)) }

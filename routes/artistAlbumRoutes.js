@@ -16,6 +16,11 @@ const express = require('express')
 const artistAlbumController = require('./../controllers/artistAlbumsController')
 
 /**
+ * album controller to call when routing.
+ * @const
+ */
+const albumController = require('./../controllers/albumController')
+/**
  * uploadService that has uploading middlewares to call when routing
  * @const
  */
@@ -62,6 +67,19 @@ router
   .post(uploadService.uploadAlbumImage, artistAlbumController.addAlbum)
   .get(artistAlbumController.getArtistAlbums)
 
+  /**
+  * Route for specific album
+  * @name /me/albums
+  * @function
+  * @memberof module:routes/artistAlbumsRoutes
+  * @param {string} albumId - album id passed in query
+  * @inner
+  */
+router
+.route('/:id')
+.delete(artistAlbumController.deleteAlbum)
+.patch(uploadService.updateAlbumImage,artistAlbumController.editAlbum)
+
 /**
   * Route for artist's albums tracks
   * @name /me/albums
@@ -72,6 +90,22 @@ router
   */
 router
   .route('/:id/tracks')
+  .get(albumController.getAlbumTracks)
   .post(uploadService.uploadTrackAudio, artistAlbumController.addTracktoAlbum)
+
+
+/**
+  * Route for specific album
+  * @name /me/albums
+  * @function
+  * @memberof module:routes/artistAlbumsRoutes
+  * @param {string} albumId - album id passed in query
+  * @param {string} trackID - track id passed in query
+  * @inner
+  */
+router
+  .route('/:albumId/tracks/:id')
+  .delete(artistAlbumController.deleteTrack)
+  .patch(artistAlbumController.editTrack)
 
 module.exports = router

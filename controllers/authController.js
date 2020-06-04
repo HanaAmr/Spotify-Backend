@@ -369,13 +369,13 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
   const body = `${user.name} has followed you!`
   const followedUserId = await followedUser._id.toString()
   const userId = await user._id.toString()
-  const images = user.images
+  const images = user.images[0]
   const data = {'uri': user.uri, 'id': userId, 'href':user.href, 'images':images}
   const notif = await notificationService.generateNotification(title,body,followedUserId,data)
   await notificationService.sendNotification(followedUserId,notif)
 
   //Subscribe to the artist
-  await notificationService.subscribeToTopic(user._id,followedUserId)
+  await notificationService.subscribeToTopic(user._id,followedUserId,1)
 
   res.status(204).json({
     status: 'Success'
@@ -624,7 +624,7 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   const body = `${user.name} has liked the playlist ${playlist.name}!`
   const ownerId = playlist.owner.toString()
   const userId = user._id.toString()
-  const images = user.images
+  const images = user.images[0]
   const data = {'uri': user.uri, 'id': userId, 'href':user.href, 'images':images}
   const notif = await notificationService.generateNotification(title,body,ownerId,data)
   await notificationService.sendNotification(ownerId,notif)
@@ -726,6 +726,12 @@ exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
 
   await user.save()
   await unfollowedUser.save()
+
+
+  //UnSubscribe to the artist
+  const unfollowedUserId = await unfollowedUser._id.toString()
+  await notificationService.subscribeToTopic(user._id,unfollowedUserId,0)
+  
 
 
   res.status(204).json({
