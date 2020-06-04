@@ -125,10 +125,10 @@ exports.getArtist = catchAsync(async (req, res, next) => {
     })
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
-  let isFollowing=0
+  let isFollowing=false
   if(artist.followers && userid)
     if(artist.followers.includes(userid))
-      isFollowing=1
+      isFollowing=true
   
 
   res.status(200).json({
