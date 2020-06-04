@@ -107,11 +107,9 @@ exports.getArtist = catchAsync(async (req, res, next) => {
 
   let userid=null
   if(req.headers.authorization)
-  {
     userid = await (userServiceClass.getUserId(req.headers.authorization))
-  }
 
-  let artist = await User.findById(req.params.id,
+  const artist = await User.findById(req.params.id,
     {
       _id: 1,
       name: 1,
@@ -125,15 +123,15 @@ exports.getArtist = catchAsync(async (req, res, next) => {
     })
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
-  let isFollowing=false
+  let following=false
   if(artist.followers && userid)
     if(artist.followers.includes(userid))
-      isFollowing=true
+      following=true
   
 
   res.status(200).json({
     status: 'success',
-    data: {artist,isFollowing}
+    data: {artist,following}
   })
 })
 
