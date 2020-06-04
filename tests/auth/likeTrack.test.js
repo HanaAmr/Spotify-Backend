@@ -3,11 +3,10 @@ const app = require('./../../app')
 const httpMocks = require('node-mocks-http')
 const mongoose = require('mongoose')
 const User = require('./../../models/userModel')
+const Track = require('./../../models/trackModel')
 const authContoller = require('./../../controllers/authController')
-const notificationsService = require('../../services/notificationService')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
-const sinon = require('sinon')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.TEST_DATABASE
 
@@ -20,26 +19,26 @@ if (process.env.TEST === '1') {
 }
 
 
-describe('Follow user functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
-    let id2 = ''
-    let id3 = ''
-    // Drop the whole users collection before testing and add a simple user to test with
+describe('Like track functionality', () => {
+    let authToken = ''
+    let id = ''
+    let trackId = ''
+    let trackId2 = ''
+    // Drop the whole collections before testing and add a simple user to test with
     beforeEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
-     // sinon.stub(notificationsService.prototype,'sendNotification').returns()
-     // sinon.stub(notificationsService.prototype,'subscribeToTopic').returns()
+      await mongoose.connection.collection('tracks').deleteMany({})
+
 
       // Creating a user to follow another user
-      const firstUser = new User({
+      const user = new User({
         name: 'ahmed',
         email: 'ahmed@email.com',
         password: 'password',
         dateOfBirth: '1999-7-14',
         gender: 'male'
       })
-      await firstUser.save()
+      await user.save()
       // get the id of the document in the db to use it to get authorization token
       await User.findOne({}, (err, user) => {
         id = user._id
@@ -47,63 +46,60 @@ describe('Follow user functionality', () => {
       })
 
       
-      // Creating a user to be followed
-       const secondUser = new User({
-        name: 'omar',
-        email: 'omar@email.com',
-        password: 'password',
+       const track = new Track({
+        name: 'cry',
+        trackNumber: 1,
+        durationMs: 204000,
       })
-      await secondUser.save()
-      id2 = secondUser._id
+      await track.save()
+      trackId = track._id
 
 
-      const thirdUser = new User({
-        name: 'ali',
-        email: 'ali@email.com',
-        password: 'password',
+      const track2 = new Track({
+        name: 'laugh',
+        trackNumber: 1,
+        durationMs: 204000,
       })
-      await thirdUser.save()
-      id3 = thirdUser._id
+      await track2.save()
+      trackId2 = track2._id
 
-
-      firstUser.following.push(id3)
-      await firstUser.save()
-
+      user.likedTracks.push(trackId2)
+      await user.save()
     })
   
     //Drop the whole users collection after finishing testing
     afterAll(async () => {
       await mongoose.connection.collection('users').deleteMany({})
-      sinon.restore()
+      await mongoose.connection.collection('tracks').deleteMany({})
     })
   
     
-    // Testing follow user successfully
-    it('Should follow user successfully', async () => {
-        const response = await supertest(app).put('/me/following').send({
-            id: id2
+    // Testing like track successfully
+    it('Should like track successfully', async () => {
+        const response = await supertest(app).put('/me/likeTrack').send({
+            id: trackId
         }).set('Authorization', authToken)
   
         expect(response.status).toBe(204)
     })
 
 
-   
-    it('Should not follow user', done => {
+
+    it('Should not like track', done => {
     
       const request = httpMocks.createRequest({
         method: 'PUT',
-        url: '/me/following',
+        url: '/me/likeTrack',
         user: {
           id
       },
         body: {
-            "id": "5ed837386e30fe3278081114"
+            "id": id
         }
       })
   
       const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
+      authContoller.likeTrack(request, response, (err) => {
         try {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(400)
@@ -117,21 +113,21 @@ describe('Follow user functionality', () => {
     })
    
 
-    it('Should not follow user', done => {
+    it('Should not like track', done => {
     
       const request = httpMocks.createRequest({
         method: 'PUT',
-        url: '/me/following',
+        url: '/me/likeTrack',
         user: {
           id
       },
         body: {
-            "id": id3
+            "id": trackId2
         }
       })
   
       const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
+      authContoller.likeTrack(request, response, (err) => {
         try {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(400)
@@ -143,4 +139,6 @@ describe('Follow user functionality', () => {
         }
       })
     })
+
+    
 })

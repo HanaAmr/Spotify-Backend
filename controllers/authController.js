@@ -554,7 +554,6 @@ exports.likeAlbum = catchAsync(async (req, res, next) => {
 
   await user.save()
 
-  console.log(user.likedAlbums)
 
   res.status(204).json({
     status: 'Success'
@@ -630,7 +629,6 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   const notif = await notificationService.generateNotification(title,body,ownerId,data)
   await notificationService.sendNotification(ownerId,notif)
 
-  console.log(user.likedPlaylists)
 
   res.status(204).json({
     status: 'Success'
@@ -718,8 +716,6 @@ exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
     return next(new AppError('You are not following this user', 400))
   }
 
-  console.log(user.following)
-  console.log(unfollowedUser.followers)
 
   // user unfollows the unfollowed user
   const toBeRemoved = (element) => element == req.body.id;
@@ -731,8 +727,6 @@ exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
   await user.save()
   await unfollowedUser.save()
 
-  console.log(user.following)
-  console.log(unfollowedUser.followers)
 
   res.status(204).json({
     status: 'Success'
@@ -761,7 +755,6 @@ exports.unlikeTrack = catchAsync(async (req, res, next) => {
   user.likedTracks.splice(user.likedTracks.findIndex(toBeRemoved), 1)
   await user.save()
 
-  console.log(user.likedTracks)
 
   res.status(204).json({
     status: 'Success'
@@ -792,7 +785,6 @@ exports.unlikeAlbum = catchAsync(async (req, res, next) => {
   user.likedAlbums.splice(user.likedAlbums.findIndex(toBeRemoved), 1)
   await user.save()
 
-  console.log(user.likedAlbums)
 
   res.status(204).json({
     status: 'Success'
@@ -822,7 +814,6 @@ exports.unlikePlaylist = catchAsync(async (req, res, next) => {
   user.likedPlaylists.splice(user.likedPlaylists.findIndex(toBeRemoved), 1)
   await user.save()
 
-  console.log(user.likedPlaylists)
 
   res.status(204).json({
     status: 'Success'
@@ -936,7 +927,6 @@ exports.addTrackToPlaylist = catchAsync(async (req, res, next) => {
   const track = await Track.findById(req.body.id)
 
 
-  console.log(playlist)
 
   if(!playlist) {
     return next(new AppError("There is no playlist with this id", 400))

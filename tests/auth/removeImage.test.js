@@ -1,9 +1,9 @@
 const supertest = require('supertest')
-const app = require('./../../app')
+const app = require('../../app')
 const httpMocks = require('node-mocks-http')
 const mongoose = require('mongoose')
-const User = require('./../../models/userModel')
-const authContoller = require('./../../controllers/authController')
+const User = require('../../models/userModel')
+const authContoller = require('../../controllers/authController')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
@@ -18,9 +18,10 @@ if (process.env.TEST === '1') {
 }
 
 
-describe('Get my profile functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
+describe('Get remove image functionality', () => {
+    let authToken = ''
+    let id = ''
+    let id2 = ''
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
@@ -39,6 +40,21 @@ describe('Get my profile functionality', () => {
         id = user._id
         authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
       })
+
+
+      const secondUser = new User({
+        name: 'omar',
+        email: 'omar@email.com',
+        password: 'password',
+      })
+      await secondUser.save()
+      id2 = secondUser._id
+      console.log(secondUser.images)
+      secondUser.images = []
+      await secondUser.save()
+      console.log(secondUser.images)
+
+
     })
   
     // Drop the whole users collection after finishing testing
@@ -46,63 +62,39 @@ describe('Get my profile functionality', () => {
       await mongoose.connection.collection('users').deleteMany({})
     })
   
-    // Testing getting user profile successfully.
-    it('Should get user profile successfully', async () => {
+    // Testing getting remove image successfully.
+    it('Should get remove image successfully', async () => {
 
-      const response = await supertest(app).get('/me').set('Authorization', authToken)
+      const response = await supertest(app).delete('/me/image').set('Authorization', authToken)
 
       expect(response.status).toBe(200)
-      expect(response.body.name).toBe('ahmed')
-      expect(response.body.email).toBe('ahmed@email.com')
-      expect(response.body.gender).toBe('male')
-      expect(response.body.dateOfBirth).toBe('1999-7-14')
+      expect(response.body.status).toBe('Image removed successfully')
     })
 
 
-    it('Should not get user profile because token not provided', done => {
+
+    it('Should not remove image', done => {
     
       const request = httpMocks.createRequest({
-        method: 'GET',
-        url: '/me'
+        method: 'DELETE',
+        url: '/me/image',
+        user: {
+          id2
+        }
       })
   
       const response = httpMocks.createResponse()
-      authContoller.protect(request, response, (err) => {
+      authContoller.removeImage(request, response, (err) => {
         try {
+          console.log(err)
           expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(401)
-          expect(err.status).toEqual('fail')
-  
+
           done()
         } catch (error) {
           done(error)
         }
       })
     })
-  
 
-    it('Should not get user profile because token is incorrect', done => {
-    
-      const request = httpMocks.createRequest({
-        method: 'GET',
-        url: '/me',
-        headers: {
-          authorization: 'incorrect token'
-        }
-      })
-  
-      const response = httpMocks.createResponse()
-      authContoller.protect(request, response, (err) => {
-        try {
-          expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(401)
-          expect(err.status).toEqual('fail')
-  
-          done()
-        } catch (error) {
-          done(error)
-        }
-      })
-    })
     
 })
