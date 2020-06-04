@@ -7,7 +7,7 @@ const authContoller = require('./../../controllers/authController')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
-const mongoDB = process.env.DATABASE_LOCAL
+const mongoDB = process.env.TEST_DATABASE
 
 jest.setTimeout(10000)
 
