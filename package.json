@@ -4,7 +4,7 @@
   "description": "Spotify's api backend, using nodejs, express and MongoDB.",
   "main": "app.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --runInBand --testTimeout=10000 removeImage.test.js",
+    "test": "jest --detectOpenHandles --forceExit --runInBand --testTimeout=10000 ",
     "test_coverage": "jest --detectOpenHandles --forceExit --coverage --runInBand --testTimeout=10000 ",
     "start": "node server.js",
     "dev": "nodemon server.js",
