@@ -41,6 +41,20 @@ const AppError = require('./../utils/appError')
 const Track = require('./../models/trackModel')
 
 /**
+ * User model from the database
+ * @const
+ */
+const User=require('./../models/userModel')
+
+/**
+ * user Service Class
+ * @const
+ */
+const userService = require('./../services/userService')
+const userServiceClass = new userService()
+
+
+/**
  * A function that is used to get albums with ids.
  *  @alias module:controllers/album
  * @param {Object} req - The request passed.
@@ -108,12 +122,25 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns an array of the tracks of the album in a json form.
  */
 exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginated
+
+  const album = await Album.findById(req.params.albumId)
+  if (!album)
+    return next(new AppError('No album found with that ID', 404))
+
+  let artist=null
+  if(req.headers.authorization)
+  {
+    const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+    artist = User.find({_id:artistId,role:'artist'})
+  }
+  
+  
   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId).select('-__v'), req.query).paginate().limitFieldsTracks()
 
   const tracksArray = await features.query
 
-  if (tracksArray.length === 0) {
-    return next(new AppError('No album found with that ID', 404))
+  if (tracksArray.length === 0 && !artist) {
+    return next(new AppError('Album has no tracks', 404))
   }
 
   res.status(200).json({

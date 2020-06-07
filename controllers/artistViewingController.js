@@ -54,6 +54,14 @@ const AppError = require('../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
 
 /**
+ * user Service Class to be able to get user ID from token
+ * @const
+ */
+const userService = require('./../services/userService')
+const userServiceClass = new userService()
+
+
+/**
  * A middleware function for Returning An array of Artists (with only public fields)
  * @alias module:controllers/artistViewingController
  * @param {Object} req - The request passed.
@@ -96,6 +104,11 @@ exports.getArtists = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns JSON object of artist if id is valid or an error object Otherwise
  */
 exports.getArtist = catchAsync(async (req, res, next) => {
+
+  let userid=null
+  if(req.headers.authorization)
+    userid = await (userServiceClass.getUserId(req.headers.authorization))
+
   const artist = await User.findById(req.params.id,
     {
       _id: 1,
@@ -110,9 +123,15 @@ exports.getArtist = catchAsync(async (req, res, next) => {
     })
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
+  let following=false
+  if(artist.followers && userid)
+    if(artist.followers.includes(userid))
+      following=true
+  
+
   res.status(200).json({
     status: 'success',
-    data: artist
+    data: {artist,following}
   })
 })
 
