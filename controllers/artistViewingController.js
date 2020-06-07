@@ -54,6 +54,14 @@ const AppError = require('../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
 
 /**
+ * user Service Class to be able to get user ID from token
+ * @const
+ */
+const userService = require('./../services/userService')
+const userServiceClass = new userService()
+
+
+/**
  * A middleware function for Returning An array of Artists (with only public fields)
  * @alias module:controllers/artistViewingController
  * @param {Object} req - The request passed.
@@ -72,7 +80,8 @@ exports.getArtists = catchAsync(async (req, res, next) => {
       images: 1,
       type: 1,
       followers: 1,
-      artistInfo: 1
+      artistInfo: 1,
+      role:1
     }), req.query)
     .filter()
     .sort()
@@ -95,6 +104,11 @@ exports.getArtists = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns JSON object of artist if id is valid or an error object Otherwise
  */
 exports.getArtist = catchAsync(async (req, res, next) => {
+
+  let userid=null
+  if(req.headers.authorization)
+    userid = await (userServiceClass.getUserId(req.headers.authorization))
+
   const artist = await User.findById(req.params.id,
     {
       _id: 1,
@@ -109,9 +123,15 @@ exports.getArtist = catchAsync(async (req, res, next) => {
     })
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
+  let following=false
+  if(artist.followers && userid)
+    if(artist.followers.includes(userid))
+      following=true
+  
+
   res.status(200).json({
-    status: 'sucsess',
-    data: artist
+    status: 'success',
+    data: {artist,following}
   })
 })
 
@@ -149,7 +169,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   if (relatedArtists.length === 0) { throw (new AppError('No related artists found for this artist!', 404)) }
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: relatedArtists
   })
 })
@@ -165,6 +185,7 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
  * @return {JSON} Returns JSON array of album objects if id is valid and artist have albums. Otherwise, returns an error object
  */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
+
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
@@ -181,7 +202,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
   if (albums.length === 0) { throw (new AppError('No albums for this artist!', 404)) }
 
   res.status(200).json({
-    status: 'sucsess',
+    status: 'success',
     data: albums
   })
 })
@@ -232,11 +253,6 @@ exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
 
   if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
-  // const features = new APIFeatures(Playlist.find({ owner: req.params.id }), req.query)
-  //   .filter()
-  //   .sort()
-  //   .limitFieldsPlaylist()
-  //   .paginate()
 
   const playlists = await Playlist.find({ owner: req.params.id })
   if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 404)) }

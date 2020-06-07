@@ -8,10 +8,14 @@
  * Firebase needed for notifications apis
  * @const
  */
-const admin = require('firebase-admin')
+var admin = require("firebase-admin")
+
+var serviceAccount = require("../../service-account-file.json")
+
 admin.initializeApp({
-  credential: admin.credential.applicationDefault()
-})
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://totally-not-spotify.firebaseio.com"
+});
 
 /**
  * User model from the database
@@ -123,7 +127,7 @@ class notificationService {
     //Add existing tokens only
     if (tokens[0] != '') tokensToSend.push(tokens[0])
     if (tokens[1] != '') tokensToSend.push(tokens[1])
-    notification.tokens = tokensToSend
+    notification.tokens = tokensToSend 
     await admin.messaging().sendMulticast(notification)
     return notification
   }
@@ -138,20 +142,24 @@ class notificationService {
   }
 
   /**
-    * Subscribe to topic for user
+    * Subscribe/Unsubscribe to topic for user
     * @function
     * @param {String} userId - The userId of the user.
     * @param {String} topic - The authorization token of the user.
+    * @param {Bool} subscribe -The type of the request, if 1 then it is subscribe, if 0 then it is unsubscribe
     * @returns {Object} - The tokens used and the topic to subscribe to.
     */
-  async subscribeToTopic(userId, topic) {
+  async subscribeToTopic(userId, topic, subscribe) {
     const tokens = await this.getToken(userId)
     //Check if no tokens available, then don't send notification.
     if (tokens[0] == '' && tokens[1] == '') return null
     let tokensToSend = []
     if (tokens[0] != null) tokensToSend.push(tokens[0])
     if (tokens[1] != null) tokensToSend.push(tokens[1])
-    await admin.messaging().subscribeToTopic(tokensToSend, topic)
+    if(subscribe)
+      await admin.messaging().subscribeToTopic(tokensToSend, topic)
+    else 
+      await admin.messaging().unsubscribeFromTopic(tokensToSend, topic)
     const subscription = {
       'tokens': tokensToSend,
       'topic': topic

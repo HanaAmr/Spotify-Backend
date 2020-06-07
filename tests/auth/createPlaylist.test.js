@@ -18,20 +18,19 @@ if (process.env.TEST === '1') {
 }
 
 
-describe('Get my profile functionality', () => {
+describe('Create functionality', () => {
     let authToken = 'token'
     let id = 'testid'
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
+      await mongoose.connection.collection('playlists').deleteMany({})
   
       // Creating the valid user to assign the token to him
       const validUser = new User({
-        name: 'ahmed',
-        email: 'ahmed@email.com',
-        password: 'password',
-        dateOfBirth: '1999-7-14',
-        gender: 'male'
+        name: 'mohamed',
+        email: 'mohamed@email.com',
+        password: 'password'
       })
       await validUser.save()
       // get the id of the document in the db to use it to get authorization token
@@ -44,50 +43,37 @@ describe('Get my profile functionality', () => {
     // Drop the whole users collection after finishing testing
     afterAll(async () => {
       await mongoose.connection.collection('users').deleteMany({})
+      await mongoose.connection.collection('playlists').deleteMany({})
     })
-  
-    // Testing getting user profile successfully.
-    it('Should get user profile successfully', async () => {
 
-      const response = await supertest(app).get('/me').set('Authorization', authToken)
+
+
+
+    // Testing create playlist successfully
+    it('Should create playlist successfully', async () => {
+
+      const response = await supertest(app).post('/users/playlists').send({
+        name: "New Playlist",
+        description: "any description",
+        public: "true",
+        collaborative: "false"
+      }).set('Authorization', authToken)
+
 
       expect(response.status).toBe(200)
-      expect(response.body.name).toBe('ahmed')
-      expect(response.body.email).toBe('ahmed@email.com')
-      expect(response.body.gender).toBe('male')
-      expect(response.body.dateOfBirth).toBe('1999-7-14')
     })
 
 
-    it('Should not get user profile because token not provided', done => {
+    it('Should not create playlist due to not providing token', done => {
     
       const request = httpMocks.createRequest({
-        method: 'GET',
-        url: '/me'
-      })
-  
-      const response = httpMocks.createResponse()
-      authContoller.protect(request, response, (err) => {
-        try {
-          expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(401)
-          expect(err.status).toEqual('fail')
-  
-          done()
-        } catch (error) {
-          done(error)
-        }
-      })
-    })
-  
-
-    it('Should not get user profile because token is incorrect', done => {
-    
-      const request = httpMocks.createRequest({
-        method: 'GET',
-        url: '/me',
-        headers: {
-          authorization: 'incorrect token'
+        method: 'POST',
+        url: '/users/playlists',
+        body: {
+          name: "New Playlist",
+          description: "any description",
+          public: "true",
+          collaborative: "false"
         }
       })
   
@@ -104,5 +90,6 @@ describe('Get my profile functionality', () => {
         }
       })
     })
-    
+     
+
 })
