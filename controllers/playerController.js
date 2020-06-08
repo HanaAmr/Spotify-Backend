@@ -32,6 +32,12 @@ const Context = require('../models/contextModel')
 const Track = require('../models/trackModel')
 
 /**
+ * Album model from the database
+ * @const
+ */
+const Album = require('../models/albumModel')
+
+/**
  * catchAsync utils file
  * @const
  */
@@ -106,12 +112,11 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   await newContext.save()
 
   //adding listen to album and track stats
-  /*
-  // user like the track
+  const track=await Track.findById(currTrack)
   await artistService.altertrackOrAlbumObjectListens(track)
+
   let album=await Album.findById(track.album)
   await artistService.altertrackOrAlbumObjectListens(album)
-  */
  
   res.status(204).send()
 })

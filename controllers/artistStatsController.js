@@ -56,66 +56,6 @@ const artistService = require('./../services/artistService')
 const artistServiceClass = new artistService()
 
 /**
- * A middleware function for getting last 30 days likes statitics for track uploaded by artist
- *  @alias module:controllers/artistAlbumsController
- * @param {Object} req - The request passed.
- * @param {Object} res - The respond sent
- * @param {Function} next - The next function in the middleware
- * @param {String} token - userArtist Token passed in header
- * @return {JSON} Returns an array of objects containing the day and number of likes per day
- */
-exports.getDailyTrackStats=catchAsync(async (req, res, next) => {
-
-  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-
-    const track= await Track.findById(req.params.id)
-    if(!track)
-      throw (new AppError('No track with this ID', 404))
-    
-    if(!(track.artists.includes(artistId)))
-      throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
-
-    const likedObjects=track.likesHistory
-    let likes30Days=[]
-
-    //If Track has more than 30 days of likes history take only last 30 days
-    if(likedObjects.length>30)
-      for(var i=30;i<30;i++)
-        likes30Days.push(likedObjects.pop())
-
-    //if track has less than 30 days of likes history , Insert zeros at begining(past history)
-    else if(likedObjects.length<30)
-      {
-        console.log(30-likedObjects.length)
-        console.log(likedObjects[0].day)
-
-        var oldDate=new Date(likedObjects[0].day)
-        oldDate.setDate(oldDate.getDate()-(30-likedObjects.length))
-        for(var i=0;i<30-likedObjects.length;i++)
-          {
-            let likesPerDayObj=new Object()
-            likesPerDayObj.day=new Date(oldDate)
-            likesPerDayObj.numberOfLikes=0
-            likes30Days.push(likesPerDayObj)
-            oldDate.setDate(oldDate.getDate()+1)
-          }
-          //adding history already saved in track
-          for(var i=0;i<likedObjects.length;i++)
-            likes30Days.push(likedObjects[i])
-      }
-    //If track has likes history of exactly 30 days
-    else
-      likes30Days=likedObjects
-    
-    res.status(200).json({
-        status: 'success',
-        data: likes30Days
-      })
-})
-
-
-
-/**
  * A middleware function for getting last 30 days listens statitics for track uploaded by artist
  *  @alias module:controllers/artistAlbumsController
  * @param {Object} req - The request passed.
@@ -134,7 +74,7 @@ exports.getTrackDailyListensStats=catchAsync(async (req, res, next) => {
   if(!(track.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
 
-  listensDailyStats=await artistServiceClass.calculateNumberOfDailyLikes(track)
+  listensDailyStats=await artistServiceClass.getDailyListensStats(track)
   
   res.status(200).json({
     status: 'success',
@@ -162,7 +102,7 @@ exports.getAlbumDailyListensStats=catchAsync(async (req, res, next) => {
   if(!(album.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
 
-  listensDailyStats=await artistServiceClass.calculateNumberOfDailyLikes(album)
+  listensDailyStats=await artistServiceClass.getDailyListensStats(album)
   
   res.status(200).json({
     status: 'success',
@@ -170,5 +110,176 @@ exports.getAlbumDailyListensStats=catchAsync(async (req, res, next) => {
   })
 
 })
+
+/**
+ * A middleware function for getting last 12 month listens statitics for track uploaded by artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns an array of 12 objects containing the day and number of listens per month
+ */
+exports.getTrackMonthlyListensStats=catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const track= await Track.findById(req.params.id)
+  if(!track)
+      throw (new AppError('No track with this ID', 404))
+
+  if(!(track.artists.includes(artistId)))
+    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"monthly","listens")
+  
+  res.status(200).json({
+    status: 'success',
+    data: listensMonthlyStats
+  })
+
+})
+
+/**
+ * A middleware function for getting last 12 months listens statitics for album uploaded by artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns an array of 12 objects containing the day and number of listens per month
+ */
+exports.getAlbumMonthlyListensStats=catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const album= await Album.findById(req.params.id)
+  if(!album)
+      throw (new AppError('No album with this ID', 404))
+
+  if(!(album.artists.includes(artistId)))
+    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"monthly","listens")
+  
+  res.status(200).json({
+    status: 'success',
+    data: listensMonthlyStats
+  })
+
+})
+
+
+/**
+ * A middleware function for getting last 5 years listens statitics for track uploaded by artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns an array of 12 objects containing the day and number of listens per month
+ */
+exports.getTrackYearlyListensStats=catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const track= await Track.findById(req.params.id)
+  if(!track)
+      throw (new AppError('No track with this ID', 404))
+
+  if(!(track.artists.includes(artistId)))
+    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"yearly","listens")
+  
+  res.status(200).json({
+    status: 'success',
+    data: listensMonthlyStats
+  })
+
+})
+
+/**
+ * A middleware function for getting last 12 months listens statitics for album uploaded by artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns an array of 12 objects containing the day and number of listens per month
+ */
+exports.getAlbumYearlyListensStats=catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const album= await Album.findById(req.params.id)
+  if(!album)
+      throw (new AppError('No album with this ID', 404))
+
+  if(!(album.artists.includes(artistId)))
+    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+
+  const listensYearlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"yearly","listens")
+  
+  res.status(200).json({
+    status: 'success',
+    data: listensYearlyStats
+  })
+
+})
+
+
+/**
+ * A middleware function for getting last 30 days likes statitics for track uploaded by artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns an array of objects containing the day and number of listens per day
+ */
+exports.getTrackDailyLikesStats=catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const track= await Track.findById(req.params.id)
+  if(!track)
+      throw (new AppError('No track with this ID', 404))
+
+  if(!(track.artists.includes(artistId)))
+    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+
+  likesDailyStats=await artistServiceClass.getDalyLikesStats(track)
+  
+  res.status(200).json({
+    status: 'success',
+    data: likesDailyStats
+  })
+
+})
+
+/**
+ * A middleware function for getting last 12 months likes statitics for track uploaded by artist
+ *  @alias module:controllers/artistAlbumsController
+ * @param {Object} req - The request passed.
+ * @param {Object} res - The respond sent
+ * @param {Function} next - The next function in the middleware
+ * @param {String} token - userArtist Token passed in header
+ * @return {JSON} Returns an array of objects containing the day and number of listens per day
+ */
+exports.getTrackMonthlyLikesStats=catchAsync(async (req, res, next) => {
+
+  const artistId = await (userServiceClass.getUserId(req.headers.authorization))
+  const track= await Track.findById(req.params.id)
+  if(!track)
+      throw (new AppError('No track with this ID', 404))
+
+  if(!(track.artists.includes(artistId)))
+    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+
+  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"monthly","likes")
+  
+  res.status(200).json({
+    status: 'success',
+    data: likesMonthlyStats
+  })
+
+})
+
 //Used for filtering l hagat l rag3a
 //let likedObjects=track.likesPerDay.filter(likesPerDay=> likesPerDay.day>= today.toDate())

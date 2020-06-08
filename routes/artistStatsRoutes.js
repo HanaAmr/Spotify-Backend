@@ -51,8 +51,9 @@ router.use(authController.restrictTo('artist'))
  * @inner
  */
 router
-  .route('likes/daily/tracks/:id')
-  .get(artistStatsController.getDailyTrackStats)
+  .route('/likes/daily/tracks/:id')
+  .get(artistStatsController.getTrackDailyLikesStats)
+
 
 router
   .route('/listens/daily/tracks/:id')
@@ -61,4 +62,26 @@ router
   router
     .route('/listens/daily/albums/:id')
     .get(artistStatsController.getAlbumDailyListensStats)
+
+
+  router
+    .route('/listens/monthly/tracks/:id')
+    .get(artistStatsController.getTrackMonthlyListensStats)
+  
+  router
+    .route('/likes/monthly/tracks/:id')
+    .get(artistStatsController.getTrackMonthlyLikesStats)
+    
+  router
+    .route('/listens/monthly/albums/:id')
+    .get(artistStatsController.getAlbumMonthlyListensStats)
+
+  router
+    .route('/listens/yearly/tracks/:id')
+    .get(artistStatsController.getTrackYearlyListensStats)
+
+  router
+    .route('/listens/yearly/albums/:id')
+    .get(artistStatsController.getAlbumYearlyListensStats)
+
   module.exports = router
