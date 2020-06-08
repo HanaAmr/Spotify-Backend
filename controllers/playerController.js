@@ -58,6 +58,13 @@ const PlayerServices = require('../services/playerService')
 const playerService = new PlayerServices()
 
 /**
+ * artist Service Class for adding necessary listens stats when adding track to recently played
+ * @const
+ */
+const artistService = require('./../services/artistService')
+const artistServiceClass = new artistService()
+
+/**
  * @const
  */
 const AppError = require('../utils/appError')
@@ -98,6 +105,14 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   newContext.playHistoryId = newPlayHistory._id
   await newContext.save()
 
+  //adding listen to album and track stats
+  /*
+  // user like the track
+  await artistService.altertrackOrAlbumObjectListens(track)
+  let album=await Album.findById(track.album)
+  await artistService.altertrackOrAlbumObjectListens(album)
+  */
+ 
   res.status(204).send()
 })
 

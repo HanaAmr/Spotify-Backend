@@ -4,12 +4,6 @@
  * @requires express
  */
 
-/**
- * Artist albums controller to call when routing.
- * @type {object}
- * @const
- */
-
 
  /**
  * Get Audio Duration Package, used to get duration of uploaded tracks
@@ -99,6 +93,7 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
   else
   throw (new AppError('No file received, can\'t add album without an image', 484))
     
+
 
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 
@@ -226,7 +221,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
 
   })
 
-  if (albums.length === 0) { throw (new AppError('You did not create any albums yet!', 484)) }
+  if (albums.length === 0) { throw (new AppError('You did not create any albums yet!', 404)) }
 
   res.status(200).json({
     status: 'success',
