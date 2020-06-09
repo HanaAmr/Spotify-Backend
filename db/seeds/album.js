@@ -98,10 +98,10 @@ createAlbums = async () => {
   let date5=new Date(2019,11,2)
   date5.setUTCHours(0,0,0)
 
-  let date6= new Date(2020,0,1)
+  let date6= new Date(2020,0,25)
   date6.setUTCHours(0,0,0)
   
-  let date7= new Date(2020,3,4)
+  let date7= new Date(2020,1,4)
   date7.setUTCHours(0,0,0)
 
   const album1 = new Album({
@@ -211,6 +211,7 @@ createAlbums = async () => {
   await album2.updateOne({ uri: `spotify:albums:${album2._id}` })
 
   const album3 = new Album({
+    _id:"5edefb5fd1537f3f33f91340",
     name: 'Sahran',
     image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
     albumType: 'album',

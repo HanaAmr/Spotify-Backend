@@ -248,6 +248,7 @@ createTracks = async () => {
   await Album.update({_id : album1Id}, { $push: {trackObjects: track2._id}}) //Update list of tracks of Album
 
   const track3 = new Track({
+    _id:"5edefb60f3962c3f42577069",
     name: 'Youm Talat',
     type: 'track',
     externalUrl: 'this should be an externalUrl',
@@ -514,6 +515,7 @@ createTracks = async () => {
   await Album.update({_id : album3Id}, { $push: {trackObjects: track9._id}}) //Update list of tracks of Album
 
   const track10 = new Track({
+    _id:"5edefb60f3962c3f4257708f",
     name: 'Ana Gheir',
     type: 'track',
     externalUrl: 'this should be an externalUrl',
