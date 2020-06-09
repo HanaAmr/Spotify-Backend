@@ -75,6 +75,21 @@ createTracks = async () => {
   start = user4.indexOf(':')
   const user4Id = user4.substring(start + 2, start + 26)
 
+  let user5 = User.find({ name: 'Omar' }).select('_id')
+  user5 = (await user5).toString()
+  start = user5.indexOf(':')
+  const user5Id = user5.substring(start + 2, start + 26)
+  
+  let user6 = User.find({ name: 'Hana' }).select('_id')
+  user6 = (await user6).toString()
+  start = user6.indexOf(':')
+  const user6Id = user6.substring(start + 2, start + 26)
+
+  let user7 = User.find({ name: 'Nada' }).select('_id')
+  user7 = (await user7).toString()
+  start = user7.indexOf(':')
+  const user7Id = user7.substring(start + 2, start + 26)
+
   let album1 = Album.find({ name: 'Evolve' }).select('_id')
   album1 = (await album1).toString()
   start = album1.indexOf(':')
@@ -95,6 +110,28 @@ createTracks = async () => {
   start = album4.indexOf(':')
   const album4Id = album4.substring(start + 2, start + 26)
 
+  let date1=new Date(2016,5,4)
+  date1.setUTCHours(0,0,0)
+
+  let date2=new Date(2017,1,2)
+  date2.setUTCHours(0,0,0)
+
+  let date3=new Date(2017,8,9)
+  date3.setUTCHours(0,0,0)
+
+  let date4=new Date(2018,0,2)
+  date4.setUTCHours(0,0,0)
+
+  let date5=new Date(2019,11,2)
+  date5.setUTCHours(0,0,0)
+
+  let date6= new Date(2020,0,1)
+  date6.setUTCHours(0,0,0)
+  
+  let date7= new Date(2020,3,4)
+  date7.setUTCHours(0,0,0)
+
+
   const track1 = new Track({
     name: 'Believer',
     type: 'track',
@@ -105,7 +142,46 @@ createTracks = async () => {
     popularity: 12000000,
     album: album1Id,
     artists: user1Id,
-    audioFilePath: 'tracks/track1.mp3'
+    audioFilePath: 'tracks/track1.mp3',
+    listensHistory:[
+      {
+        day: date1,
+        numberOfListens: 100
+      },
+      {
+        day: date2,
+        numberOfListens: 2500
+      },
+      {
+        day: date4,
+        numberOfListens: 25
+      },
+      {
+        day: date5,
+        numberOfListens: 125
+      },
+      {
+        day: date6,
+        numberOfListens: 5
+      },
+      {
+        day: date7,
+        numberOfListens: 500
+      }],
+      likesHistory:[
+        {
+          day: date6,
+          userID: user7Id
+        },
+        {
+          day: date6,
+          userID: user6Id
+        },
+        {
+          day: date7,
+          userID: user5Id
+        }
+      ]
   })
   await track1.save()
   await track1.updateOne({ href: `${process.env.API_URL}/tracks/${track1._id}` })
@@ -123,7 +199,46 @@ createTracks = async () => {
     popularity: 300000,
     album: album1Id,
     artists: user1Id,
-    audioFilePath: 'tracks/track2.mp3'
+    audioFilePath: 'tracks/track2.mp3',
+    listensHistory:[
+      {
+        day: date1,
+        numberOfListens: 100
+      },
+      {
+        day: date2,
+        numberOfListens: 2500
+      },
+      {
+        day: date4,
+        numberOfListens: 25
+      },
+      {
+        day: date5,
+        numberOfListens: 125
+      },
+      {
+        day: date6,
+        numberOfListens: 5
+      },
+      {
+        day: date7,
+        numberOfListens: 500
+      }],
+      likesHistory:[
+        {
+          day: date5,
+          userID: user7Id
+        },
+        {
+          day: date6,
+          userID: user6Id
+        },
+        {
+          day: date6,
+          userID: user5Id
+        }
+      ]
 
   })
   await track2.save()
@@ -142,7 +257,42 @@ createTracks = async () => {
     popularity: 200000,
     album: album3Id,
     artists: user3Id,
-    audioFilePath: 'tracks/track3.mp3'
+    audioFilePath: 'tracks/track3.mp3',
+    listensHistory:[
+      {
+        day: date1,
+        numberOfListens: 30000
+      },
+      {
+        day: date2,
+        numberOfListens: 25000
+      },
+      {
+        day: date5,
+        numberOfListens: 115
+      },
+      {
+        day: date6,
+        numberOfListens: 750
+      },
+      {
+        day: date7,
+        numberOfListens: 600
+      }],
+      likesHistory:[
+        {
+          day: date1,
+          userID: user7Id
+        },
+        {
+          day: date7,
+          userID: user6Id
+        },
+        {
+          day: date7,
+          userID: user5Id
+        }
+      ]
 
   })
   await track3.save()
@@ -161,7 +311,42 @@ createTracks = async () => {
     popularity: 200000,
     album: album3Id,
     artists: user3Id,
-    audioFilePath: 'tracks/track4.mp3'
+    audioFilePath: 'tracks/track4.mp3',
+    listensHistory:[
+      {
+        day: date1,
+        numberOfListens: 30000
+      },
+      {
+        day: date2,
+        numberOfListens: 25000
+      },
+      {
+        day: date5,
+        numberOfListens: 115
+      },
+      {
+        day: date6,
+        numberOfListens: 757
+      },
+      {
+        day: date7,
+        numberOfListens: 600
+      }],
+      likesHistory:[
+        {
+          day: date1,
+          userID: user7Id
+        },
+        {
+          day: date2,
+          userID: user6Id
+        },
+        {
+          day: date7,
+          userID: user5Id
+        }
+      ]
 
   })
   await track4.save()
@@ -234,7 +419,39 @@ createTracks = async () => {
     popularity: 900000,
     album: album4Id,
     artists: user4Id,
-    audioFilePath: 'tracks/track8.mp3'
+    audioFilePath: 'tracks/track8.mp3',
+    listensHistory:[
+      
+      {
+        day: date2,
+        numberOfListens: 50000
+      },
+      {
+        day: date5,
+        numberOfListens: 20050
+      },
+      {
+        day: date6,
+        numberOfListens: 106666
+      },
+      {
+        day: date7,
+        numberOfListens: 107000
+      }],
+      likesHistory:[
+        {
+          day: date5,
+          userID: user7Id
+        },
+        {
+          day: date6,
+          userID: user6Id
+        },
+        {
+          day: date7,
+          userID: user5Id
+        }
+      ]
   })
   await track8.save()
   await track8.updateOne({ href: `${process.env.API_URL}/tracks/${track8._id}` })
@@ -252,7 +469,42 @@ createTracks = async () => {
     popularity: 100000,
     album: album3Id,
     artists: user3Id,
-    audioFilePath: 'tracks/track9.mp3'
+    audioFilePath: 'tracks/track9.mp3',
+    listensHistory:[
+      {
+        day: date1,
+        numberOfListens: 100
+      },
+      {
+        day: date2,
+        numberOfListens: 50
+      },
+      {
+        day: date5,
+        numberOfListens: 1
+      },
+      {
+        day: date6,
+        numberOfListens: 153500
+      },
+      {
+        day: date7,
+        numberOfListens: 10
+      }],
+      likesHistory:[
+        {
+          day: date1,
+          userID: user7Id
+        },
+        {
+          day: date1,
+          userID: user6Id
+        },
+        {
+          day: date2,
+          userID: user5Id
+        }
+      ]
 
   })
   await track9.save()
