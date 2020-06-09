@@ -76,6 +76,13 @@ const APIFeatures = require('./../utils/apiFeatures')
 const NotificationServices = require('../services/notificationService')
 const notificationService = new NotificationServices()
 
+/**
+ * Artist services
+ * @const
+ */
+const ArtistServices=require('../services/artistService')
+const artistService= new ArtistServices()
+
 // generating token using user id
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
@@ -396,7 +403,7 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
 
   // get the user and the track
   const user = await User.findById(req.user.id)
-  const track = await Track.findById(req.body.id)
+  let track = await Track.findById(req.body.id)
 
 
   // check if the id of the track is given
@@ -408,8 +415,8 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
   if (user.likedTracks.includes(req.body.id)) {
     return next(new AppError('Already like this track', 400))
   }
-
-  // user like the track
+  
+  await artistService.alterTrackortrackOrAlbumObjectLikes(track,req.user.id)
   user.likedTracks.push(req.body.id)
 
   await user.save()
@@ -447,6 +454,9 @@ exports.likeAlbum = catchAsync(async (req, res, next) => {
   if (user.likedAlbums.includes(req.body.id)) {
     return next(new AppError('Already like this album', 400))
   }
+
+  //adding like to artist stats
+  await artistService.alterTrackortrackOrAlbumObjectLikes(album,req.user.id)
 
   // user like the album
   user.likedAlbums.push(req.body.id)

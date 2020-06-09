@@ -32,6 +32,12 @@ const Context = require('../models/contextModel')
 const Track = require('../models/trackModel')
 
 /**
+ * Album model from the database
+ * @const
+ */
+const Album = require('../models/albumModel')
+
+/**
  * catchAsync utils file
  * @const
  */
@@ -56,6 +62,13 @@ const userService = new UserServices()
  */
 const PlayerServices = require('../services/playerService')
 const playerService = new PlayerServices()
+
+/**
+ * artist Service Class for adding necessary listens stats when adding track to recently played
+ * @const
+ */
+const artistService = require('./../services/artistService')
+const artistServiceClass = new artistService()
 
 /**
  * @const
@@ -98,6 +111,13 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   newContext.playHistoryId = newPlayHistory._id
   await newContext.save()
 
+  //adding listen to album and track stats
+  const track=await Track.findById(currTrack)
+  await artistService.altertrackOrAlbumObjectListens(track)
+
+  let album=await Album.findById(track.album)
+  await artistService.altertrackOrAlbumObjectListens(album)
+ 
   res.status(204).send()
 })
 

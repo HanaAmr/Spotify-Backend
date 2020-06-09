@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "9e42c4b9-e262-4c9e-98c4-b89cccce2fab",
+		"name": "SigningUp&SigningIn",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sign up",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"user\",\n\t\"email\": \"user@gmail.com\",\n\t\"password\": \"password\",\n\t\"gender\": \"male\",\n\t\"dateOfBirth\": \"1999-7-14\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/signUp",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"signUp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign in",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\t\n\t\"email\": \"user@gmail.com\",\n\t\"password\": \"password\"\n}\t",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/signIn",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"signIn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "loginWithFacebook",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"access_token\": \"EAAkIghlwWBsBAKeWZCsz3WvccD5EYtvr4f0LosGWQ4V6f5d4ZCQuMKbhANVFKNQWPHEimCpuqTZARqltYwkDRlxmKeZAiQtCrqYvOawOWn9RUU86et9cXIDZC2GoBTZBJh0cFb7ZBU2SasRwXbN3TBrcZAZCY23DAcXO0XZBdkEEhZBmgZDZD\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/loginWithFacebook",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"loginWithFacebook"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

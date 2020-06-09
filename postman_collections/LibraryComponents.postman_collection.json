@@ -1,0 +1,341 @@
+{
+	"info": {
+		"_postman_id": "4d2f16a6-cc27-4d6d-ae1c-3bef4142cf49",
+		"name": "LibraryComponents",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "like track",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebda69e3665aa320050cd67\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/likeTrack",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"likeTrack"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "like album",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebda68f1519e733cc0cf7dd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/likeAlbum",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"likeAlbum"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unlike track",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebda69e3665aa320050cd65\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/unlikeTrack",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"unlikeTrack"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unlike album",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebda68f1519e733cc0cf7dd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/unlikeAlbum",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"unlikeAlbum"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "like playlist",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebde0ac2f9ff825ac7ef128\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/likePlaylist",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"likePlaylist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unlike playlist",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebde0ac2f9ff825ac7ef128\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/unlikePlaylist",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"unlikePlaylist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create a playlist",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"New Playlist\",\n\t\"description\": \"any description\",\n\t\"public\": \"true\",\n\t\"collaborative\": \"false\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/users/playlists",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"users",
+						"playlists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add track to playlist",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebda69e3665aa320050cd67\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/playlists/:playlistId/tracks",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"playlists",
+						":playlistId",
+						"tracks"
+					],
+					"variable": [
+						{
+							"key": "playlistId",
+							"value": "5ebde0ad2f9ff825ac7ef12f"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get created playlists",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:3040/me/createdPlaylists",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"createdPlaylists"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

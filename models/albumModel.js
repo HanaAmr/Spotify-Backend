@@ -101,7 +101,18 @@ const albumSchema = new mongoose.Schema({
       ref: 'Track'
 
     }
-  ]
+  ],
+  listensHistory:
+  [{
+      day: Date,
+      numberOfListens: Number
+
+    }],
+  likesHistory:
+  [{
+    userID: mongoose.Schema.ObjectId,
+    day:  Date
+  }]
 })
 
 const Album = mongoose.model('Album', albumSchema)
