@@ -1,0 +1,290 @@
+{
+	"info": {
+		"_postman_id": "7d4d5268-7125-4453-a4ef-cd7f24879726",
+		"name": "UserInteraction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "unfollow user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebdcbe2a35ab6321c425d83\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/following",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"following"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "follow artist or user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": \"5ebdcbe2a35ab6321c425d83\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/following",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"following"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "remove image",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:3040/me/image",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change image",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/D:/khatib/Images/IMG-20151111-WA0045.jpg"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/image",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"image"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/users/:id",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "5ebda67e59cf6f120c466300"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change password",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOGFjMjYxZThhMDk4MDg0MDVjYmUwOCIsImlhdCI6MTU4NjE1MjgxMSwiZXhwIjoxNTg4NzQ0ODExfQ.1GvvfFovfaV5rzBvU5kdOO06lyrJ9uGO6XoJTvje2tM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"passwordConfirmation\": \"passwordd\",\n\t\"newPassword\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/changePassword",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"changePassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get my profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlYmRhNzY4ZjA1NzlkMGE0YzdlZWYyMyIsImlhdCI6MTU4OTQ4NzQ2NCwiZXhwIjoxNTkyMDc5NDY0fQ.1l2sdW23aLSczVrr_AIGkXiWqLWirZ4hL6EmoJTb1QM",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:3040/me",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOGFjMjYxZThhMDk4MDg0MDVjYmUwOCIsImlhdCI6MTU4NjE1MjgxMSwiZXhwIjoxNTg4NzQ0ODExfQ.1GvvfFovfaV5rzBvU5kdOO06lyrJ9uGO6XoJTvje2tM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"name\": \"user\",\n        \"email\": \"user@gmail.com\",\n        \"gender\": \"male\",\n        \"dateOfBirth\": \"2018-5-5\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
