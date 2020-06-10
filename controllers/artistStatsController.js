@@ -53,7 +53,7 @@ const userServiceClass = new userService()
  * @const
  */
 const artistService = require('./../services/artistService')
-const artistServiceClass = new artistService()
+const artistServiceClass = new artistService.artistService()
 
 /**
  * A middleware function for getting last 30 days listens statitics for track uploaded by artist

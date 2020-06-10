@@ -68,7 +68,7 @@ const playerService = new PlayerServices()
  * @const
  */
 const artistService = require('./../services/artistService')
-const artistServiceClass = new artistService()
+const artistServiceClass = new artistService.artistService()
 
 /**
  * @const

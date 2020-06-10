@@ -13,22 +13,9 @@
 const mongoose = require('mongoose')
 
 /**
- * Album model from the database
- * @const
- */
-const Album = require('../models/albumModel')
-
-/**
- * Track model from the database
- * @const
- */
-const Track = require('../models/trackModel')
-
-
-/**
  * Class reprensenting the player services needed to handle artist Functionalities
  */
-class artistService {
+exports.artistService=class artistService {
 
   /**
   * A function that increments number of litens for the current date. in track or album object when a user listens to a track it 
@@ -298,16 +285,14 @@ class artistService {
 
 }
 
-module.exports=artistService
-
-
 //utility functions that are exported only for testing
+
 /**
   * A function that intializes date for calulating yearly stats
   * @function
   * @param {object} DateToBeRetrieved -The date to be adjusted
   */
-function intializeDateForYearStats(DateToBeRetrieved)
+intializeDateForYearStats= function (DateToBeRetrieved)
 {
     DateToBeRetrieved.setUTCMilliseconds(0)
     DateToBeRetrieved.setUTCHours(0,0,0)
@@ -321,7 +306,7 @@ function intializeDateForYearStats(DateToBeRetrieved)
   * @function
   * @param {object} DateToBeRetrieved -The date to be adjusted
   */
-function intializeDateForMonthStats(DateToBeRetrieved)
+intializeDateForMonthStats=function (DateToBeRetrieved)
 {
     DateToBeRetrieved.setUTCMilliseconds(0)
     DateToBeRetrieved.setUTCHours(0,0,0)
@@ -337,7 +322,7 @@ function intializeDateForMonthStats(DateToBeRetrieved)
   * @param {DateToBeRetrieved} Date - The date to be retieved which will be adjusted
   * @return {Date} -he upper limit of checking for date
   */
-function intializeDateLimits(likesOrListens,monthlyOrYearly,length,trackOrAlbumObject,DateToBeRetrieved)
+intializeDateLimits= function (likesOrListens,monthlyOrYearly,length,trackOrAlbumObject,DateToBeRetrieved)
   {
     let lastDate
 
@@ -372,7 +357,7 @@ function intializeDateLimits(likesOrListens,monthlyOrYearly,length,trackOrAlbumO
   * @param {DateToBeRetrieved} Date - The date to be retieved which will be adjusted
   * @param {nextDate} Date - the upper limit of checking for date which will be adjusted
   */
-function intializeStatsObject(likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved,nextDate)
+intializeStatsObject=function (likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved,nextDate)
 {
         //update the range of date to check
         if(monthlyOrYearly=="monthly")
@@ -394,3 +379,9 @@ function intializeStatsObject(likesOrListens,monthlyOrYearly,listensObject,DateT
             listensObject.numberOfLikes=0
 
 }
+
+//exporting utility functions:
+exports.intializeDateForMonthStats=intializeDateForMonthStats
+exports.intializeDateForYearStats=intializeDateForYearStats
+exports.intializeDateLimits=intializeDateLimits
+exports.intializeStatsObject=intializeStatsObject

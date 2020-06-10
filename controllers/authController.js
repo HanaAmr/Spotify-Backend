@@ -81,7 +81,7 @@ const notificationService = new NotificationServices()
  * @const
  */
 const ArtistServices=require('../services/artistService')
-const artistService= new ArtistServices()
+const artistService= new ArtistServices.artistService()
 
 // generating token using user id
 const signToken = id => {
