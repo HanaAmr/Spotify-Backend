@@ -155,6 +155,10 @@ describe('Adding to recently played for a user', () => {
       totalTracks: 2,
       trackObjects: [testTrack._id, testTrack2._id]
     })
+    testTrack.album = testAlbum._id
+    testTrack2.album = testAlbum._id
+    await testTrack.save()
+    await testTrack2.save()
     await testAlbum.save()
     albumId = testAlbum._id
     testPlaylist = new Playlist({
