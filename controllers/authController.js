@@ -416,7 +416,7 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
     return next(new AppError('Already like this track', 400))
   }
   
-  await artistService.alterTrackortrackOrAlbumObjectLikes(track,req.user.id)
+  await artistService.alterTrackorAlbumObjectLikes(track,req.user.id)
   user.likedTracks.push(req.body.id)
 
   await user.save()
@@ -456,7 +456,7 @@ exports.likeAlbum = catchAsync(async (req, res, next) => {
   }
 
   //adding like to artist stats
-  await artistService.alterTrackortrackOrAlbumObjectLikes(album,req.user.id)
+  await artistService.alterTrackorAlbumObjectLikes(album,req.user.id)
 
   // user like the album
   user.likedAlbums.push(req.body.id)

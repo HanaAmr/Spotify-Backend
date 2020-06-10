@@ -38,11 +38,7 @@ class artistService {
  async altertrackOrAlbumObjectListens(trackOrAlbumObject)
  {
    let todayDate=new Date(Date.now()) 
-   todayDate+=todayDate.getTimezoneOffset()
    todayDate.setUTCHours(0,0,0,0)
-   console.log(todayDate.getTime())
-   console.log(todayDate)
-   console.log(`Today's date is: ${todayDate}`)
    //Call alter album listens since it's not the same function
    let lastDate=0
    //Getting the last date that was added in the listens history of the trackOrAlbumObject
@@ -77,7 +73,7 @@ class artistService {
   * @param {object} trackOrAlbumObject - The  album or track object
   * @param {string} userID - The ID of the user
   */
- async alterTrackortrackOrAlbumObjectLikes(trackOrAlbumObject,userID)
+ async alterTrackorAlbumObjectLikes(trackOrAlbumObject,userID)
  {
   const length=trackOrAlbumObject.likesHistory.length
   var index=0
@@ -89,7 +85,9 @@ class artistService {
   if(index==length)
   {
     let likesObject=new Object()
-    likesObject.day=new Date(Date.now())
+    let date=new Date(Date.now())
+    date.setUTCHours(0,0,0,0)
+    likesObject.day=new Date(date)
     likesObject.userID=new  mongoose.Types.ObjectId(userID)
     trackOrAlbumObject.likesHistory.push(likesObject)
     await trackOrAlbumObject.save()
@@ -302,7 +300,7 @@ class artistService {
     let likesDailyStatus=[]
 
     let DateToBeRetrieved=new Date(Date.now())
-    DateToBeRetrieved.setUTCHours(0,0,0)
+    DateToBeRetrieved.setUTCHours(0,0,0,0)
     let lastCheckedIndex=-1
     let currentNumberOfStatsObjects=0
 
@@ -329,10 +327,10 @@ class artistService {
       else
       {
         likesDailyStatus.unshift(likesObject)
-        DateToBeRetrieved.setUTCDate(DateToBeRetrieved.getUTCDate()+1)
+        DateToBeRetrieved.setUTCDate(DateToBeRetrieved.getUTCDate()-1)
         likesObject=new Object()
         likesObject.day=new Date(DateToBeRetrieved)
-        likesObject.numberOfListens=0
+        likesObject.numberOfLikes=0
         currentNumberOfStatsObjects++
       }
     }
@@ -342,7 +340,7 @@ class artistService {
     {
       likesDailyStatus.unshift(likesObject)
       likesObject=new Object()
-      DateToBeRetrieved.setUTCDate(DateToBeRetrieved.getUTCDate()+1)
+      DateToBeRetrieved.setUTCDate(DateToBeRetrieved.getUTCDate()-1)
       likesObject.day=new Date(DateToBeRetrieved)
       likesObject.numberOfLikes=0
       currentNumberOfStatsObjects++
