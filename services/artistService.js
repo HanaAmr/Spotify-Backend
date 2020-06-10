@@ -161,7 +161,7 @@ class artistService {
     intializeDateForYearStats(DateToBeRetrieved)
     requiredNumberOfStatsObjects=5
   }
-    
+ 
   let nextDate=new Date(Date.now())
   let index=-1
 
@@ -298,6 +298,10 @@ class artistService {
 
 }
 
+module.exports=artistService
+
+
+//utility functions that are exported only for testing
 /**
   * A function that intializes date for calulating yearly stats
   * @function
@@ -390,5 +394,3 @@ function intializeStatsObject(likesOrListens,monthlyOrYearly,listensObject,DateT
             listensObject.numberOfLikes=0
 
 }
-
-module.exports = artistService
