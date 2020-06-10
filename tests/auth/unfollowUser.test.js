@@ -20,7 +20,7 @@ if (process.env.TEST === '1') {
 }
 
 
-describe('Follow user functionality', () => {
+describe('unfollow user functionality', () => {
     let authToken = 'token'
     let id = 'testid'
     let id2 = ''
@@ -31,7 +31,7 @@ describe('Follow user functionality', () => {
      // sinon.stub(notificationsService.prototype,'sendNotification').returns()
      // sinon.stub(notificationsService.prototype,'subscribeToTopic').returns()
 
-      // Creating a user to follow another user
+      // Creating a user to unfollow another user
       const firstUser = new User({
         name: 'ahmed',
         email: 'ahmed@email.com',
@@ -47,7 +47,7 @@ describe('Follow user functionality', () => {
       })
 
       
-      // Creating a user to be followed
+      // Creating a user to be unfollowed
        const secondUser = new User({
         name: 'omar',
         email: 'omar@email.com',
@@ -55,6 +55,10 @@ describe('Follow user functionality', () => {
       })
       await secondUser.save()
       id2 = secondUser._id
+
+      firstUser.following.push(secondUser._id)
+      await firstUser.save()
+
 
 
       const thirdUser = new User({
@@ -64,10 +68,6 @@ describe('Follow user functionality', () => {
       })
       await thirdUser.save()
       id3 = thirdUser._id
-
-
-      firstUser.following.push(id3)
-      await firstUser.save()
 
     })
   
@@ -79,8 +79,8 @@ describe('Follow user functionality', () => {
   
     
     // Testing follow user successfully
-    it('Should follow user successfully', async () => {
-        const response = await supertest(app).put('/me/following').send({
+    it('Should unfollow user successfully', async () => {
+        const response = await supertest(app).delete('/me/following').send({
             id: id2
         }).set('Authorization', authToken)
   
@@ -88,11 +88,10 @@ describe('Follow user functionality', () => {
     })
 
 
-   
-    it('Should not follow user', done => {
+    it('Should not unfollow user', done => {
     
       const request = httpMocks.createRequest({
-        method: 'PUT',
+        method: 'DELETE',
         url: '/me/following',
         user: {
           id
@@ -103,7 +102,7 @@ describe('Follow user functionality', () => {
       })
   
       const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
+      authContoller.unfollowArtistUser(request, response, (err) => {
         try {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(400)
@@ -117,10 +116,10 @@ describe('Follow user functionality', () => {
     })
    
 
-    it('Should not follow user', done => {
+    it('Should not unfollow user', done => {
     
       const request = httpMocks.createRequest({
-        method: 'PUT',
+        method: 'DELETE',
         url: '/me/following',
         user: {
           id
@@ -131,7 +130,7 @@ describe('Follow user functionality', () => {
       })
   
       const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
+      authContoller.unfollowArtistUser(request, response, (err) => {
         try {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(400)
@@ -143,4 +142,5 @@ describe('Follow user functionality', () => {
         }
       })
     })
+   
 })

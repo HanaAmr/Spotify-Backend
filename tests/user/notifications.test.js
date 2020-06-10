@@ -304,7 +304,7 @@ describe('notificationService sending request to subscribe to topic', () => {
     it('Should request to subscribe to topic with valid tokens', async () => {
         expect.assertions(3)
         const notificationService = new notificationsServices()
-        const sub = await notificationService.subscribeToTopic(userId, 'Amr Diab')
+        const sub = await notificationService.subscribeToTopic(userId, 'Amr Diab',1)
         expect(sub.topic).toEqual('Amr Diab')
         expect(sub.tokens[0]).toEqual('webToken')
         expect(sub.tokens[1]).toEqual('androidToken')

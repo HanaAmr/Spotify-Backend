@@ -3,11 +3,10 @@ const app = require('./../../app')
 const httpMocks = require('node-mocks-http')
 const mongoose = require('mongoose')
 const User = require('./../../models/userModel')
+const Album = require('./../../models/albumModel')
 const authContoller = require('./../../controllers/authController')
-const notificationsService = require('../../services/notificationService')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
-const sinon = require('sinon')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.TEST_DATABASE
 
@@ -20,26 +19,25 @@ if (process.env.TEST === '1') {
 }
 
 
-describe('Follow user functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
-    let id2 = ''
-    let id3 = ''
+describe('Unike album functionaly', () => {
+    let authToken = ''
+    let id = ''
+    let albumId = ''
+    let albumId2 = ''
     // Drop the whole users collection before testing and add a simple user to test with
     beforeEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
-     // sinon.stub(notificationsService.prototype,'sendNotification').returns()
-     // sinon.stub(notificationsService.prototype,'subscribeToTopic').returns()
+      await mongoose.connection.collection('albums').deleteMany({})
 
-      // Creating a user to follow another user
-      const firstUser = new User({
+      // Creating a user 
+      const user = new User({
         name: 'ahmed',
         email: 'ahmed@email.com',
         password: 'password',
         dateOfBirth: '1999-7-14',
         gender: 'male'
       })
-      await firstUser.save()
+      await user.save()
       // get the id of the document in the db to use it to get authorization token
       await User.findOne({}, (err, user) => {
         id = user._id
@@ -47,63 +45,63 @@ describe('Follow user functionality', () => {
       })
 
       
-      // Creating a user to be followed
-       const secondUser = new User({
-        name: 'omar',
-        email: 'omar@email.com',
-        password: 'password',
+      
+       const album = new Album({
+        name: 'Divide',
+        image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
+        albumType: 'album',
+        genre: 'Pop-rock'
       })
-      await secondUser.save()
-      id2 = secondUser._id
+      await album.save()
+      albumId = album._id
+
+      user.likedAlbums.push(album._id)
+      await user.save()
 
 
-      const thirdUser = new User({
-        name: 'ali',
-        email: 'ali@email.com',
-        password: 'password',
+      const album2 = new Album({
+        name: 'album2',
+        image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
+        albumType: 'album',
+        genre: 'Pop-rock'
       })
-      await thirdUser.save()
-      id3 = thirdUser._id
-
-
-      firstUser.following.push(id3)
-      await firstUser.save()
+      await album2.save()
+      albumId2 = album2._id
 
     })
-  
-    //Drop the whole users collection after finishing testing
+
+    //Drop the whole collections
     afterAll(async () => {
       await mongoose.connection.collection('users').deleteMany({})
-      sinon.restore()
+      await mongoose.connection.collection('albums').deleteMany({})
     })
   
     
-    // Testing follow user successfully
-    it('Should follow user successfully', async () => {
-        const response = await supertest(app).put('/me/following').send({
-            id: id2
+    // Testing unlike album successfully
+    it('Should unlike album successfully', async () => {
+        const response = await supertest(app).delete('/me/unlikeAlbum').send({
+            id: albumId
         }).set('Authorization', authToken)
   
         expect(response.status).toBe(204)
     })
 
 
-   
-    it('Should not follow user', done => {
+    it('Should not unlike album', done => {
     
       const request = httpMocks.createRequest({
-        method: 'PUT',
-        url: '/me/following',
+        method: 'DELETE',
+        url: '/me/unlikeAlbum',
         user: {
           id
       },
         body: {
-            "id": "5ed837386e30fe3278081114"
+            "id": id
         }
       })
   
       const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
+      authContoller.unlikeAlbum(request, response, (err) => {
         try {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(400)
@@ -115,23 +113,23 @@ describe('Follow user functionality', () => {
         }
       })
     })
-   
 
-    it('Should not follow user', done => {
+
+    it('Should not unlike album', done => {
     
       const request = httpMocks.createRequest({
-        method: 'PUT',
-        url: '/me/following',
+        method: 'DELETE',
+        url: '/me/unlikeAlbum',
         user: {
           id
       },
         body: {
-            "id": id3
+            "id": albumId2
         }
       })
   
       const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
+      authContoller.unlikeAlbum(request, response, (err) => {
         try {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(400)
@@ -143,4 +141,6 @@ describe('Follow user functionality', () => {
         }
       })
     })
+
+   
 })

@@ -4,12 +4,6 @@
  * @requires express
  */
 
-/**
- * Artist albums controller to call when routing.
- * @type {object}
- * @const
- */
-
 
  /**
  * Get Audio Duration Package, used to get duration of uploaded tracks
@@ -100,6 +94,7 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
   throw (new AppError('No file received, can\'t add album without an image', 484))
     
 
+
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 
   //adding the id of the artist to the newly created album
@@ -189,10 +184,10 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   if(followers)
   {
     for(i = 0; i < followers.length(); i++) 
-    notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
+      notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
     notif.topic = artistId
-    notif.token = undefined
-    await notificationService.sendNotification(notif)
+    delete notif.token
+    await notificationService.sendNotificationTopic(notif)
   }
 
 
@@ -226,7 +221,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
 
   })
 
-  if (albums.length === 0) { throw (new AppError('You did not create any albums yet!', 484)) }
+  if (albums.length === 0) { throw (new AppError('You did not create any albums yet!', 404)) }
 
   res.status(200).json({
     status: 'success',

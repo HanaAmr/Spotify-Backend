@@ -1,0 +1,442 @@
+{
+	"info": {
+		"_postman_id": "68c574e4-69a6-4513-a566-3b17a5f0d479",
+		"name": "Artist_Stats",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Yearly Likes Stats for album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/likes/yearly/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"likes",
+						"yearly",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Monthly Likes Stats for album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZDE1ODkwOTA2NWQ1NzExZTNjYWYxMyIsImlhdCI6MTU5MDc3ODAwMSwiZXhwIjoxNTkzMzcwMDAxfQ.HKmfoVenzju_GPg869TZS0Hc_DfaF8j47JJcK8G9Lxg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/likes/monthly/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"likes",
+						"monthly",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Monthly Listens Stats for track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/listens/monthly/tracks/5edefb60f3962c3f42577069",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"listens",
+						"monthly",
+						"tracks",
+						"5edefb60f3962c3f42577069"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Yearly Listens Stats for album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/listens/yearly/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"listens",
+						"yearly",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Monthly Likes Stats for track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/likes/monthly/tracks/5edefb60f3962c3f42577069",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"likes",
+						"monthly",
+						"tracks",
+						"5edefb60f3962c3f42577069"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Daily Listens status for album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/listens/daily/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"listens",
+						"daily",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Daily Listens Stats for track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/listens/daily/tracks/5edefb60f3962c3f42577069",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"listens",
+						"daily",
+						"tracks",
+						"5edefb60f3962c3f42577069"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Yearly Likes Stats for track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/likes/yearly/tracks/5edefb60f3962c3f42577069",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"likes",
+						"yearly",
+						"tracks",
+						"5edefb60f3962c3f42577069"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Monthly Listens Stats for album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/listens/monthly/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"listens",
+						"monthly",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Daily Likes Stats for Album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/likes/daily/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"likes",
+						"daily",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Daily Likes Stats for Track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/likes/daily/tracks/5edefb60f3962c3f42577069",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"likes",
+						"daily",
+						"tracks",
+						"5edefb60f3962c3f42577069"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Yearly Listens Stats for Track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/stats/listens/yearly/tracks/5edefb60f3962c3f42577069",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"stats",
+						"listens",
+						"yearly",
+						"tracks",
+						"5edefb60f3962c3f42577069"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

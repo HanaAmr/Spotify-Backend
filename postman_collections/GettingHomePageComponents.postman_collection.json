@@ -1,0 +1,397 @@
+{
+	"info": {
+		"_postman_id": "70c13d98-e2f3-4294-8493-a12d4bb2aa6c",
+		"name": "GettingHomePageComponents",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Get all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/browse/categories?limit=2&offset=1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"browse",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get playlists of a category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/browse/categories/5e6bb5687987a65a549ea1cd/playlists",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"browse",
+								"categories",
+								"5e6bb5687987a65a549ea1cd",
+								"playlists"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Playlists",
+			"item": [
+				{
+					"name": "Get a playlist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/playlists/5e6bccbhh987aa549ea1d1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"playlists",
+								"5e6bccbhh987aa549ea1d1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a playlist cover image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/playlists/5e6bccb17987a65a549ea1d1/image",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"playlists",
+								"5e6bccb17987a65a549ea1d1",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a playlist tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/playlists/5e6bd29f3c629b5a5419d750/tracks",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"playlists",
+								"5e6bd29f3c629b5a5419d750",
+								"tracks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get sorted playlists",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOGNmYTc5OTdjN2ZlNWFmMDhmZjgzOSIsImlhdCI6MTU4NjI5NzQ2NSwiZXhwIjoxNTg4ODg5NDY1fQ.rrsui7PfTN30X4Te8wByh9SOOlcm43CwtbGAqxVa3oU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:6000/playlists/recommended",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "6000",
+							"path": [
+								"playlists",
+								"recommended"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-createdAt",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Tracks",
+			"item": [
+				{
+					"name": "Get a track",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/tracks/5e6cb8283c629b5a5419d751",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"tracks",
+								"5e6cb8283c629b5a5419d751"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:7000/api/v1/tracks/?_id=5e6cb8283c629b5a5419d751,5e6cb74b7987a65a549ea1d3",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"tracks",
+								""
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "5e6cb8283c629b5a5419d751,5e6cb74b7987a65a549ea1d3"
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "Get album tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:7000/api/v1/albums/5e71766d3d8d0a432c70b594/tracks",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"albums",
+								"5e71766d3d8d0a432c70b594",
+								"tracks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get an album",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:7000/api/v1/albums/5e71766d3d8d0a432c70b594",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "7000",
+							"path": [
+								"api",
+								"v1",
+								"albums",
+								"5e71766d3d8d0a432c70b594"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get albums",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNzUxZGJjYmU0ZDFjNTY3Y2QyMDRlOCIsImlhdCI6MTU4NDczMzYzMCwiZXhwIjoxNTg3MzI1NjMwfQ.wA5Ssij8yrGwlMT6UT2n_CQ3COv5az-ro-YWpk2ndtI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:6000/api/v1/albums?_id=5e71766d3d8d0a432c70b594,5e7179c78875f5432cff40ad",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "6000",
+							"path": [
+								"api",
+								"v1",
+								"albums"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "5e71766d3d8d0a432c70b594,5e7179c78875f5432cff40ad"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get sorted albums",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlNzUxZGJjYmU0ZDFjNTY3Y2QyMDRlOCIsImlhdCI6MTU4NDczMzYzMCwiZXhwIjoxNTg3MzI1NjMwfQ.wA5Ssij8yrGwlMT6UT2n_CQ3COv5az-ro-YWpk2ndtI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:6000/api/v1/albums/top?sort=-releaseDate",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "6000",
+							"path": [
+								"api",
+								"v1",
+								"albums",
+								"top"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "-popularity",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "-releaseDate"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
