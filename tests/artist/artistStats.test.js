@@ -140,7 +140,7 @@ describe('Testing adding user to empty likes/ listens object of a track or album
     // Testing adding like whe user haven't likes album before
     it('Should add the user id and cuurent date to 1st object in album likes array', async () => {
       //expect.hasAssertions()
-      artistServiceClass = new artistService()
+      artistServiceClass = new artistService.artistService()
       let albumObject=await Album.findById("5edefb5fd1537f3f33f91340")
       await artistServiceClass.alterTrackorAlbumObjectLikes(albumObject,'5edeec8390345d81372ea819')
       albumObject=await Album.findById("5edefb5fd1537f3f33f91340")
@@ -151,7 +151,7 @@ describe('Testing adding user to empty likes/ listens object of a track or album
 
     
     it('Should add cuurent date to 1st object in track listens array, and number of likes =1', async () => {
-        artistServiceClass = new artistService()
+        artistServiceClass = new artistService.artistService()
         let track=await Track.findById("5edefb60f3962c3f4257708f")
         await artistServiceClass.altertrackOrAlbumObjectListens(track,'5edeec8390345d81372ea819')
         track=await Track.findById("5edefb60f3962c3f4257708f")
@@ -214,7 +214,7 @@ describe('Testing adding user to likes object of a track or album', () => {
     
     //Testing alter likes object in track with the user already liking it, so length of likes array should equal 1
     it('Testing ater likes for a track when user liked the track before, should not add a new likes object to like history array', async () => {
-        artistServiceClass = new artistService()
+        artistServiceClass = new artistService.artistService()
         let track=await Track.findById("5edefb60f3962c3f4257708f")
         await artistServiceClass.alterTrackorAlbumObjectLikes(track,'5edeec8390345d81372ea819')
         track=await Track.findById("5edefb60f3962c3f4257708f")
@@ -223,7 +223,7 @@ describe('Testing adding user to likes object of a track or album', () => {
    
       //Testing alter listens object in track where date already exists in listensHistory, should add number of listens instead of creating a new listens object
     it('Testing ater listens for a track when date already exists in listensHistory, number of listens should be incremented', async () => {
-        artistServiceClass = new artistService()
+        artistServiceClass = new artistService.artistService()
         let track=await Track.findById("5edefb60f3962c3f4257708f")
         await artistServiceClass.altertrackOrAlbumObjectListens(track,'5edeec8390345d81372ea819')
         track=await Track.findById("5edefb60f3962c3f4257708f")
@@ -318,9 +318,23 @@ describe('Testing calculating daily listens and likes statitics for albums and t
       await mongoose.connection.collection('tracks').deleteMany({})
     })
     
+    it('Testing getting intial date checking limit from an album object for yearly stats', async () => {
+      let lowerLimitDate=new Date(todayDate)
+      const album=await Album.findById("5edefb5fd1537f3f33f91340")
+      const length=album.listensHistory.length
+      let upperLimitDate=new Date(intializeDateLimits("listens","yearly",length,album,lowerLimitDate))
+
+      expect(lowerLimitDate.getUTCDate()).toEqual(1)
+      expect(lowerLimitDate.getUTCMonth()).toEqual(0)
+      expect(lowerLimitDate.getUTCFullYear()).toEqual(date2.getUTCFullYear())
+      expect(upperLimitDate.getUTCFullYear()).toEqual(lowerLimitDate.getUTCFullYear()+1)
+      expect(upperLimitDate.getUTCDate()).toEqual(1)
+      expect(upperLimitDate.getUTCMonth()).toEqual(0)
+    })
+
     //Testing getting daily likes statistics for track, dates should be sequential
     it('Testing getting daily likes stats for track, likes object should have sequential ', async () => {
-        artistServiceClass = new artistService()
+        artistServiceClass = new artistService.artistService()
         let track=await Track.findById("5edefb60f3962c3f4257708f")
         const dailyStats=await artistServiceClass.getDalyLikesStats(track)
         let dateTobeChecked= new Date(date2)
@@ -337,7 +351,7 @@ describe('Testing calculating daily listens and likes statitics for albums and t
       
      //Testing getting daily listens statistics for album, dates should be sequential
     it('Testing getting daily listens stats for album, likes object should have sequential dates', async () => {
-        artistServiceClass = new artistService()
+        artistServiceClass = new artistService.artistService()
         album=await Album.findById("5edefb5fd1537f3f33f91340")
         const dailyStats=await artistServiceClass.getDailyListensStats(album)
         expect(dailyStats.length).toEqual(30)
@@ -428,7 +442,7 @@ describe('Testing get Monthly and yearly likes/listens stats for album and track
 
   //Testing getting yearly listens stats for track
   it('Testing getting yearly listens stats for track, stats object should have sequential dates', async () => {
-    artistServiceClass = new artistService()
+    artistServiceClass = new artistService.artistService()
     let track=await Track.findById("5edefb60f3962c3f4257708f")
     const yearlyStats=await artistServiceClass.getMonthlyOrYearlyStats(track,"yearly","listens")
     let dateTobeChecked= new Date(date2020)
@@ -450,7 +464,7 @@ describe('Testing get Monthly and yearly likes/listens stats for album and track
   //Testing getting monthly likes stats for album
   it('Testing getting monthly likes stats for album, stats object should have sequential dates', async () => {
 
-    artistServiceClass = new artistService()
+    artistServiceClass = new artistService.artistService()
     album=await Album.findById("5edefb5fd1537f3f33f91340")
     const monthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(album,"monthly","likes")
     expect(monthlyStats.length).toEqual(12)
@@ -472,20 +486,51 @@ describe('Testing get Monthly and yearly likes/listens stats for album and track
 })
 
 
-   ///////////////////////////////
-   /*
-  //Testing Date related functions
+  //Testing Date related functions & intializing new empty objects
 describe('Testing intializing dates', () => {
 
     beforeAll(async () => {
       sinon.restore()
     })
 
-    //Testing intializing date for monnthly listens
-    it('Testing gintializing date for monnthly listens, should return day a date with same month, and day =1', async () => {
+    
+    it('Testing intializing date for monnthly stats, should return day a date with same month, and day =1', async () => {
         let date=new Date(2020,4,5)
+        let prevMonth=date.getUTCMonth()
+        let prevYear=date.getUTCFullYear()
+        artistService.intializeDateForMonthStats(date)
+        expect(date.getUTCDate()).toEqual(1)
+        expect(date.getUTCMonth()).toEqual(prevMonth)
+        expect(date.getUTCFullYear()).toEqual(prevYear)
+        expect(date.getUTCHours()).toEqual(0)
+      })
 
+      it('Testing intializing date for yearly stats, should return day a date with same year, month=0, and day =1', async () => {
+        let date=new Date(2020,4,5)
+        let prevYear=date.getUTCFullYear()
+        artistService.intializeDateForYearStats(date)
+        expect(date.getUTCDate()).toEqual(1)
+        expect(date.getUTCMonth()).toEqual(0)
+        expect(date.getUTCFullYear()).toEqual(prevYear)
+        expect(date.getUTCHours()).toEqual(0)
+      })
+      
+      it('Testing intializing empty object that returns object with nuber of likes/listen=0 and day=date to be retrieved then adjusts dates', async () => {
+        let lowerLimitDate=new Date(2020,4,1)
+        let prevYearLowerLimt=lowerLimitDate.getUTCFullYear()
+        let prevMonthLowerLimt=lowerLimitDate.getUTCMonth()
+        let upperLimitDate= new Date(2020,5,1)
+        let prevYearupperLimit=upperLimitDate.getUTCFullYear()
+        let prevMonthupperLimit=upperLimitDate.getUTCMonth()
+        let listensObject=new Object()
 
+        artistService.intializeStatsObject("listens","monthly",listensObject,lowerLimitDate,upperLimitDate)
+        expect(lowerLimitDate.getUTCMonth()).toEqual(prevMonthLowerLimt-1)
+        expect(lowerLimitDate.getUTCFullYear()).toEqual(prevYearLowerLimt)
+        expect(upperLimitDate.getUTCMonth()).toEqual(prevMonthupperLimit-1)
+        expect(upperLimitDate.getUTCFullYear()).toEqual(prevYearupperLimit)
+        expect(listensObject.numberOfListens).toEqual(0)
+        expect(listensObject.day.getDate()).toEqual(lowerLimitDate.getDate())
       })
   })
-  */
+
