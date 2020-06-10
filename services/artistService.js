@@ -43,22 +43,17 @@ class artistService {
    let lastDate=0
    //Getting the last date that was added in the listens history of the trackOrAlbumObject
    if(trackOrAlbumObject.listensHistory.length!=0)
-   {
      lastDate=trackOrAlbumObject.listensHistory[trackOrAlbumObject.listensHistory.length-1].day
-     console.log("Last day is: ",lastDate)
-   }
 
    //If there were previous listens for the trackOrAlbumObject on the same day
    if(lastDate && lastDate.getTime()==todayDate.getTime())
    {
-     console.log("same date")
      trackOrAlbumObject.listensHistory[trackOrAlbumObject.listensHistory.length-1].numberOfListens++
      await trackOrAlbumObject.save()
    }
    //if there were not any listens before or this is the first listen for today
    else
    {
-     console.log("new date")
      let listensObject= new Object()
      listensObject.day=new Date(todayDate)
      listensObject.numberOfListens=1
@@ -147,31 +142,29 @@ class artistService {
   * @param {String}  monthlyOrYearly - a string that tells whether required stats are monthly or yearly
   * @return {object} -An array of daily listens object
   */
- async getMonthlyOrYearlyListensStats(trackOrAlbumObject,monthlyOrYearly,likesOrListens)
+ async getMonthlyOrYearlyStats(trackOrAlbumObject,monthlyOrYearly,likesOrListens)
 {
-  let listensStats=[]
-  let statsObjectNumber
-  //intializations if object has no listens yet
+  let statsObjectsArray=[]
+  let requiredNumberOfStatsObjects
+  let currentNumberOfStatsObjects=0
+
+  //intializations of date in case album/track has no listens/ likes yet
   let DateToBeRetrieved=new Date(Date.now())
   if(monthlyOrYearly=="monthly")
   {
     intializeDateForMonthStats(DateToBeRetrieved)
-    statsObjectNumber=12
+    requiredNumberOfStatsObjects=12
   }
     
   else
   {
     intializeDateForYearStats(DateToBeRetrieved)
-    statsObjectNumber=5
+    requiredNumberOfStatsObjects=5
   }
     
-  let nextDate=0
+  let nextDate=new Date(Date.now())
   let index=-1
 
-  function updataDateLimits(likesOrListens,trackOrAlbumObject)
-  {
-    
-  }
   let length
   if(likesOrListens=="listens")
     length=trackOrAlbumObject.listensHistory.length
@@ -179,43 +172,24 @@ class artistService {
     length=trackOrAlbumObject.likesHistory.length
 
 
-  //get last date of listens from track or album object if it has listens
+  //get last date of listens/likes from track or album object if it has listens/likes
   if(length!=0)
   {
-    let lastDate
-
-    if(likesOrListens=="listens")
-      lastDate=new Date(trackOrAlbumObject.listensHistory[length-1].day)
-    else
-      lastDate=new Date(trackOrAlbumObject.likesHistory[length-1].day)
-    
-    DateToBeRetrieved=new Date(lastDate)
-    if(monthlyOrYearly=="monthly")
-      intializeDateForMonthStats(DateToBeRetrieved)
-     else
-      intializeDateForYearStats(DateToBeRetrieved)
-
-    nextDate= new Date(DateToBeRetrieved)
-    if(monthlyOrYearly=="monthly")
-      nextDate.setMonth(nextDate.getMonth()+1)
-    else
-      nextDate.setFullYear(nextDate.getFullYear()+1)
-
+    nextDate=new Date(intializeDateLimits(likesOrListens,monthlyOrYearly,length,trackOrAlbumObject,DateToBeRetrieved))
     index=length-1
   }
 
-    let currentNumberOfStatsObjects=0
     //intializing listens object
-    let listensObject=new Object()
-    listensObject.day=new Date(DateToBeRetrieved)
+    let statsObject=new Object()
+    statsObject.day=new Date(DateToBeRetrieved)
 
     if(likesOrListens=="listens")
-      listensObject.numberOfListens=0
+      statsObject.numberOfListens=0
     else
-      listensObject.numberOfLikes=0
+      statsObject.numberOfLikes=0
 
-    //Checking on objects likes
-    while(index>-1 && currentNumberOfStatsObjects<12)
+    //Checking if date t e retrieved has stats object in album/track object
+    while(index>-1 && currentNumberOfStatsObjects<requiredNumberOfStatsObjects)
     {
       let isBigger
       let isSmaller
@@ -234,47 +208,31 @@ class artistService {
       if(isBigger&&isSmaller )
       {
         if(likesOrListens=="listens")
-          listensObject.numberOfListens+=trackOrAlbumObject.listensHistory[index].numberOfListens
+          statsObject.numberOfListens+=trackOrAlbumObject.listensHistory[index].numberOfListens
         else
-          listensObject.numberOfLikes++
+          statsObject.numberOfLikes++
         index--
       } 
       else
       {
         //Insert new object
-        listensStats.unshift(listensObject)
+        statsObjectsArray.unshift(statsObject)
         //update the range of date to check
-        if(monthlyOrYearly=="monthly")
-        {
-            DateToBeRetrieved.setMonth(DateToBeRetrieved.getMonth()-1)
-            nextDate.setMonth(nextDate.getMonth()-1)
-        }
-        else
-        {
-            DateToBeRetrieved.setFullYear(DateToBeRetrieved.getFullYear()-1)
-            nextDate.setFullYear(nextDate.getFullYear()-1)
-        }
-          
-          //Intializing new listens object
-          listensObject=new Object()
-          listensObject.day=new Date(DateToBeRetrieved)
-          if(likesOrListens=="listens")
-            listensObject.numberOfListens=0
-          else
-            listensObject.numberOfLikes=0
+        statsObject=new Object()
+        intializeStatsObject(likesOrListens,monthlyOrYearly,statsObject,DateToBeRetrieved,nextDate)
           
           currentNumberOfStatsObjects++
        }
       }
-    
     //if data didn't get 12 month(if monthly) or 5 years(if yearly) fill the rest stats with zeros
-    while(currentNumberOfStatsObjects <statsObjectNumber)
+    while(currentNumberOfStatsObjects <requiredNumberOfStatsObjects)
     {
-      listensStats.unshift(listensObject)
-      fillnewObject(likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved)
+      statsObjectsArray.unshift(statsObject)
+      statsObject=new Object()
+      intializeStatsObject(likesOrListens,monthlyOrYearly,statsObject,DateToBeRetrieved,nextDate)
       currentNumberOfStatsObjects++
     }
-    return listensStats
+    return statsObjectsArray
   }
 
   /**
@@ -347,6 +305,7 @@ class artistService {
   */
 function intializeDateForYearStats(DateToBeRetrieved)
 {
+    DateToBeRetrieved.setUTCMilliseconds(0)
     DateToBeRetrieved.setUTCHours(0,0,0)
     DateToBeRetrieved.setUTCDate(1)
     DateToBeRetrieved.setUTCMonth(0)
@@ -360,23 +319,76 @@ function intializeDateForYearStats(DateToBeRetrieved)
   */
 function intializeDateForMonthStats(DateToBeRetrieved)
 {
+    DateToBeRetrieved.setUTCMilliseconds(0)
     DateToBeRetrieved.setUTCHours(0,0,0)
     DateToBeRetrieved.setUTCDate(1)
 }
 
-function fillnewObject(likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved)
-{
-    listensObject=new Object()
-    if(monthlyOrYearly=="monthly")
-    DateToBeRetrieved.setMonth(DateToBeRetrieved.getMonth()-1)
-    else
-      DateToBeRetrieved.setFullYear(DateToBeRetrieved.getFullYear()-1)
+/**
+  * A function that intializes Date liits from rack or album object last pushed lkes/listen stats history
+  * @function
+  * @param {likesOrListens} string - a string that tells us whether the required stats is likes or listens
+  *  @param {monthlyOrYearly} string - a string that tells us the type os statistics monthly/yearly 
+  * @param {object} listensObject - an empty object that needs adjustment
+  * @param {DateToBeRetrieved} Date - The date to be retieved which will be adjusted
+  * @return {Date} -he upper limit of checking for date
+  */
+function intializeDateLimits(likesOrListens,monthlyOrYearly,length,trackOrAlbumObject,DateToBeRetrieved)
+  {
+    let lastDate
 
-    listensObject.day=new Date(DateToBeRetrieved)
     if(likesOrListens=="listens")
-      listensObject.numberOfListens=0
+      lastDate=new Date(trackOrAlbumObject.listensHistory[length-1].day)
     else
-      listensObject.numberOfLikes=0
+      lastDate=new Date(trackOrAlbumObject.likesHistory[length-1].day)
+   
+    DateToBeRetrieved.setUTCDate(lastDate.getUTCDate())
+    DateToBeRetrieved.setUTCMonth(lastDate.getUTCMonth())
+
+    if(monthlyOrYearly=="monthly")
+      intializeDateForMonthStats(DateToBeRetrieved)
+     else
+      intializeDateForYearStats(DateToBeRetrieved)
+
+    nextDate= new Date(DateToBeRetrieved)
+    if(monthlyOrYearly=="monthly")
+      nextDate.setMonth(nextDate.getMonth()+1)
+    else
+      nextDate.setFullYear(nextDate.getFullYear()+1)
+    
+      return nextDate
+  }
+
+  /**
+  * A function that intializes a stats object by adjusting its date and setting likes or listens to zero
+  * @function
+  * @param {likesOrListens} string - a string that tells us whether the required stats is likes or listens
+  *  @param {monthlyOrYearly} string - a string that tells us the type os statistics monthly/yearly
+  * @param {object} listensObject - an empty object that needs adjustment
+  * @param {DateToBeRetrieved} Date - The date to be retieved which will be adjusted
+  * @param {nextDate} Date - the upper limit of checking for date which will be adjusted
+  */
+function intializeStatsObject(likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved,nextDate)
+{
+        //update the range of date to check
+        if(monthlyOrYearly=="monthly")
+        {
+            DateToBeRetrieved.setMonth(DateToBeRetrieved.getMonth()-1)
+            nextDate.setMonth(nextDate.getMonth()-1)
+        }
+        else
+        {
+            DateToBeRetrieved.setFullYear(DateToBeRetrieved.getFullYear()-1)
+            nextDate.setFullYear(nextDate.getFullYear()-1)
+        }
+          
+          //filling the data of new listens object
+          listensObject.day=new Date(DateToBeRetrieved)
+          if(likesOrListens=="listens")
+            listensObject.numberOfListens=0
+          else
+            listensObject.numberOfLikes=0
+
 }
 
 module.exports = artistService

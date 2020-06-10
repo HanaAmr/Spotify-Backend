@@ -186,7 +186,7 @@ exports.getTrackMonthlyListensStats=catchAsync(async (req, res, next) => {
   if(!(track.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"monthly","listens")
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(track,"monthly","listens")
   
   res.status(200).json({
     status: 'success',
@@ -214,7 +214,7 @@ exports.getAlbumMonthlyListensStats=catchAsync(async (req, res, next) => {
   if(!(album.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"monthly","listens")
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(album,"monthly","listens")
   
   res.status(200).json({
     status: 'success',
@@ -242,7 +242,7 @@ exports.getTrackMonthlyLikesStats=catchAsync(async (req, res, next) => {
   if(!(track.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
 
-  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"monthly","likes")
+  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(track,"monthly","likes")
   
   res.status(200).json({
     status: 'success',
@@ -270,7 +270,7 @@ exports.getAlbumMonthlyLikesStats=catchAsync(async (req, res, next) => {
   if(!(album.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
 
-  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"monthly","likes")
+  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(album,"monthly","likes")
   
   res.status(200).json({
     status: 'success',
@@ -298,7 +298,7 @@ exports.getTrackYearlyListensStats=catchAsync(async (req, res, next) => {
   if(!(track.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"yearly","listens")
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(track,"yearly","listens")
   
   res.status(200).json({
     status: 'success',
@@ -326,7 +326,7 @@ exports.getAlbumYearlyListensStats=catchAsync(async (req, res, next) => {
   if(!(album.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
 
-  const listensYearlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"yearly","listens")
+  const listensYearlyStats=await artistServiceClass.getMonthlyOrYearlyStats(album,"yearly","listens")
   
   res.status(200).json({
     status: 'success',
@@ -354,7 +354,7 @@ exports.getTrackYearlyLikesStats=catchAsync(async (req, res, next) => {
   if(!(track.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"yearly","likes")
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(track,"yearly","likes")
   
   res.status(200).json({
     status: 'success',
@@ -381,7 +381,7 @@ exports.getAlbumYearlyLikesStats=catchAsync(async (req, res, next) => {
   if(!(album.artists.includes(artistId)))
     throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"yearly","likes")
+  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyStats(album,"yearly","likes")
   
   res.status(200).json({
     status: 'success',
