@@ -254,7 +254,7 @@ class artistService {
             DateToBeRetrieved.setFullYear(DateToBeRetrieved.getFullYear()-1)
             nextDate.setFullYear(nextDate.getFullYear()-1)
         }
-          currentNumberOfStatsObjects++
+          
           //Intializing new listens object
           listensObject=new Object()
           listensObject.day=new Date(DateToBeRetrieved)
@@ -263,30 +263,19 @@ class artistService {
           else
             listensObject.numberOfLikes=0
           
+          currentNumberOfStatsObjects++
        }
       }
     
-    //if data didn't get 12 month, fill the rest month with zeros
+    //if data didn't get 12 month(if monthly) or 5 years(if yearly) fill the rest stats with zeros
     while(currentNumberOfStatsObjects <statsObjectNumber)
     {
       listensStats.unshift(listensObject)
-      listensObject=new Object()
-      if(monthlyOrYearly=="monthly")
-      DateToBeRetrieved.setMonth(DateToBeRetrieved.getMonth()-1)
-      else
-        DateToBeRetrieved.setFullYear(DateToBeRetrieved.getFullYear()-1)
-
-      listensObject.day=new Date(DateToBeRetrieved)
-      if(likesOrListens=="listens")
-        listensObject.numberOfListens=0
-      else
-        listensObject.numberOfLikes=0
+      fillnewObject(likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved)
       currentNumberOfStatsObjects++
     }
     return listensStats
   }
-
-
 
   /**
   * A function that calculates the daily likes stats of album or track for 30 days
@@ -373,6 +362,21 @@ function intializeDateForMonthStats(DateToBeRetrieved)
 {
     DateToBeRetrieved.setUTCHours(0,0,0)
     DateToBeRetrieved.setUTCDate(1)
+}
+
+function fillnewObject(likesOrListens,monthlyOrYearly,listensObject,DateToBeRetrieved)
+{
+    listensObject=new Object()
+    if(monthlyOrYearly=="monthly")
+    DateToBeRetrieved.setMonth(DateToBeRetrieved.getMonth()-1)
+    else
+      DateToBeRetrieved.setFullYear(DateToBeRetrieved.getFullYear()-1)
+
+    listensObject.day=new Date(DateToBeRetrieved)
+    if(likesOrListens=="listens")
+      listensObject.numberOfListens=0
+    else
+      listensObject.numberOfLikes=0
 }
 
 module.exports = artistService
