@@ -219,6 +219,78 @@ describe('Testing calculating daily listens and likes statitics for albums and t
       await mongoose.connection.collection('albums').deleteMany({})
       await mongoose.connection.collection('tracks').deleteMany({})
       sinon.restore()
+    
+      
+
+    //adding track with 1 one likes object of user
+    const track= new Track({
+        _id:"5edefb60f3962c3f4257708f",
+        name: 'Ana Gheir',
+        type: 'track',
+        externalUrl: 'this should be an externalUrl',
+        externalId: 'this should be an externalId',
+        trackNumber: 4,
+        durationMs: 222000,
+        popularity: 600000,
+        album: "5edefb5fd1537f3f33f91340",
+        audioFilePath: 'tracks/track10.mp3',
+        listensHistory:[
+            {
+              day: todayDate,
+              numberOfListens: 99
+            }],
+            likesHistory:[
+                {
+                  day: todayDate,
+                  userID: new mongoose.Types.ObjectId('5edeec8390345d81372ea819')
+                },
+                {
+                    day: todayDate,
+                    userID: new mongoose.Types.ObjectId('5edd8e684739973be7409f8d')
+                  },
+                  {
+                    day: todayDate,
+                    userID: new mongoose.Types.ObjectId('5edd0d2b97aa101fa834e42e')
+                  },
+                  {
+                    day: todayDate,
+                    userID: new mongoose.Types.ObjectId('5ed158909065d5711e3caf13')
+                  },
+                  {
+                    day: date2,
+                    userID: new mongoose.Types.ObjectId('5edcf97b98403513f44d2da6')
+                  }
+                ]
+      })
+      await track.save()
+
+      //adding album without any listens or likes history
+      const album = new Album({
+        _id:"5edefb5fd1537f3f33f91340",
+        name: 'Sahran',
+        image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
+        albumType: 'album',
+        externalUrls: 'this should be an externalUrl',
+        type: 'album',
+        genre: 'Arabic',
+        totalTracks: 14,
+        popularity: 400000,
+        listensHistory:[
+            {
+              day: todayDate,
+              numberOfListens: 60000
+            },
+            {
+              day: date1,
+              numberOfListens: 50000
+            },
+            {
+              day: date2,
+              numberOfListens: 230
+            }
+            ]
+    })
+    await album.save()
 
     })
 
