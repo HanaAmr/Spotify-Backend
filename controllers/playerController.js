@@ -113,10 +113,10 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
 
   //adding listen to album and track stats
   const track=await Track.findById(currTrack)
-  await artistService.altertrackOrAlbumObjectListens(track)
+  await artistServiceClass.altertrackOrAlbumObjectListens(track)
 
   let album=await Album.findById(track.album)
-  await artistService.altertrackOrAlbumObjectListens(album)
+  await artistServiceClass.altertrackOrAlbumObjectListens(album)
  
   res.status(204).send()
 })
