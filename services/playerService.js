@@ -92,9 +92,21 @@ class playerService {
     */
   async validateTrack(authToken, trackId) {
     const userId = await userService.getUserId(authToken)
-    const userRole = await userService.getUserRole(authToken)
-    if (userRole != 'user') return 1
     const userPlayer = await Player.findOne({ userId: userId })
+    const userRole = await userService.getUserRole(authToken)
+    if (userRole != 'user') {
+      let newQueueOffset = userPlayer.queueOffset
+      let max = 0
+      while (userPlayer.queueTracksIds[newQueueOffset] != trackId && max != userPlayer.queueTracksIds.length + 5) {
+        newQueueOffset = (newQueueOffset + 1) % (userPlayer.queueTracksIds.length)
+        max++
+      }
+      if (userPlayer.queueTracksIds[newQueueOffset] != trackId)
+        return -3
+      userPlayer.queueOffset = newQueueOffset
+      userPlayer.save()
+      return 1
+    }
     //If user should play one track
     if (userPlayer.tracksPlayed / parseInt(process.env.ADS_COUNTER, 10) > userPlayer.adsPlayed)
       return -1
@@ -114,12 +126,12 @@ class playerService {
     * @param {String} userId - The Id of the user.
     * @returns {Array} The shuffled array of tracks ids
     */
-   async generateContext(id, type, userId) {
-     const user = await User.findById(userId)
-     //Get the user player
-     const userPlayer = await Player.findOne({ 'userId': userId })
-     //Create the queue of tracks
-     let queueTracksIds
+  async generateContext(id, type, userId) {
+    const user = await User.findById(userId)
+    //Get the user player
+    const userPlayer = await Player.findOne({ 'userId': userId })
+    //Create the queue of tracks
+    let queueTracksIds
     //Get the context for the user if exists, if not create it.Then update its id and type
     const newContext = userPlayer.context == null ? new Context() : userPlayer.context
     newContext.id = id
@@ -164,7 +176,7 @@ class playerService {
     const shuffledList = user.role == 'user' ? await this.shufflePlayerQueue(userId) : queueTracksIds
     userPlayer.queueTracksIds = shuffledList
     //Update the currently played track for the context
-     const currTrack = await Track.findOne({ '_id': userPlayer.queueTracksIds[userPlayer.queueOffset] })
+    const currTrack = await Track.findOne({ '_id': userPlayer.queueTracksIds[userPlayer.queueOffset] })
     newContext.href = currTrack.href
     await newContext.save()
     await userPlayer.save()
@@ -190,7 +202,7 @@ class playerService {
     * @inner
     * @param {String} userId - The ID of the user.
     */
-   async getCurrentTrack(userId) {
+  async getCurrentTrack(userId) {
     const userPlayer = await Player.findOne({ userId: userId })
     const currTrack = userPlayer.queueTracksIds[userPlayer.queueOffset]
     return currTrack
@@ -242,7 +254,7 @@ class playerService {
   async finishTrack(userId, inc) {
     const userPlayer = await Player.findOne({ 'userId': userId })
     let newQueueOffset = (userPlayer.queueOffset + inc) % (userPlayer.queueTracksIds.length)
-    newQueueOffset = newQueueOffset < 0 ? userPlayer.queueTracksIds.length-1 : newQueueOffset
+    newQueueOffset = newQueueOffset < 0 ? userPlayer.queueTracksIds.length - 1 : newQueueOffset
     let newTracksPlayed = userPlayer.tracksPlayed + 1
     await Player.updateOne({ userId: userId }, { queueOffset: newQueueOffset, tracksPlayed: newTracksPlayed })
   }
@@ -251,13 +263,18 @@ class playerService {
   * @function
   * @param {String} userId  - The ID of the user.
   * @param {Number} dir - The dir of skipping, forward or backwards.
+  * @param {Bool} userRole - The role of the user
   */
-  async skipTrack(userId, dir) {
+  async skipTrack(userId, dir, userRole) {
+    if (userRole != 'user') {
+      await this.finishTrack(userId, dir)
+      return true
+    }
     const userPlayer = await Player.findOne({ 'userId': userId })
     if (userPlayer.skipsMade == parseInt(process.env.MAX_SKIPS, 10)) {
       if (Date.now() > userPlayer.skipsRefreshAt) {
         await Player.updateOne({ userId: userId }, { skipsMade: 1 })
-        await this.finishTrack(userId,dir)
+        await this.finishTrack(userId, dir)
         return true
       }
       else {
@@ -270,7 +287,7 @@ class playerService {
       const newSkipRefreshAt = Date.now() + parseInt(process.env.SKIPS_REFRESH_TIME, 10) * 1000 // 60 minutes (*1000 to be in ms)
       await Player.updateOne({ userId: userId }, { skipsRefreshAt: newSkipRefreshAt })
     }
-    await this.finishTrack(userId,dir)
+    await this.finishTrack(userId, dir)
     return true
   }
 
@@ -279,7 +296,7 @@ class playerService {
     * @function
     * @param {String} userId  - The ID of the user.
     */
-   async incrementAdsPlayed(userId) {
+  async incrementAdsPlayed(userId) {
     const userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.adsPlayed = userPlayer.adsPlayed + 1
     await userPlayer.save()
@@ -290,10 +307,10 @@ class playerService {
     * @function
     * @returns {Object} Track object of the ad
     */
-   async getRandomAd() {
-     let i,j    
-    const adsIds = await Track.find({"isAd":true})
-    if(adsIds.length == 0 ) return `No Ads available now`
+  async getRandomAd() {
+    let i, j
+    const adsIds = await Track.find({ "isAd": true })
+    if (adsIds.length == 0) return `No Ads available now`
     //Get random number <= ads.length
     i = adsIds.length - 1
     j = Math.floor(Math.random() * (i + 1))

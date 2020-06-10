@@ -181,7 +181,8 @@ exports.finishedTrack = catchAsync(async function (req, res, next) {
  */
 exports.skipToNextTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const canSkip = await playerService.skipTrack(userId, 1)
+  const userRole = await userService.getUserRole(req.headers.authorization)
+  const canSkip = await playerService.skipTrack(userId, 1, userRole)
   if (canSkip) res.status(204).send()
   else res.status(403).send()
 })
@@ -195,7 +196,8 @@ exports.skipToNextTrack = catchAsync(async function (req, res, next) {
  */
 exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const canSkip = await playerService.skipTrack(userId, -1)
+  const userRole = await userService.getUserRole(req.headers.authorization)
+  const canSkip = await playerService.skipTrack(userId, -1, userRole)
   if (canSkip) res.status(204).send()
   else res.status(403).send()
 })
