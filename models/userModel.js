@@ -142,9 +142,14 @@ const userSchema = new Schema({
       popularity: Number,
       genres: [String], // Array of genres
       albums: [String] // Contains Albums IDs
-      // popularSong: [String] // contains songs IDs
 
-    }
+    },
+    default:
+      {
+        biography: "",
+        popularity: 0,
+        genres:[""]
+      }
   },
   trackObjects: [
     {
