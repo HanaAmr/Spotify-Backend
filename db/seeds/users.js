@@ -91,6 +91,7 @@ createUsers = async () => {
   await user2.updateOne({ uri: `spotify:users:${user2._id}` })
 
   const user3 = new User({
+    _id: '5edeec8390345d81372ea819',
     name: 'Amr Diab',
     email: 'amr@email.com',
     password: 'password3',

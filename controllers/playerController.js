@@ -68,7 +68,7 @@ const playerService = new PlayerServices()
  * @const
  */
 const artistService = require('./../services/artistService')
-const artistServiceClass = new artistService()
+const artistServiceClass = new artistService.artistService()
 
 /**
  * @const
@@ -113,10 +113,10 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
 
   //adding listen to album and track stats
   const track=await Track.findById(currTrack)
-  await artistService.altertrackOrAlbumObjectListens(track)
+  await artistServiceClass.altertrackOrAlbumObjectListens(track)
 
   let album=await Album.findById(track.album)
-  await artistService.altertrackOrAlbumObjectListens(album)
+  await artistServiceClass.altertrackOrAlbumObjectListens(album)
  
   res.status(204).send()
 })
@@ -181,7 +181,8 @@ exports.finishedTrack = catchAsync(async function (req, res, next) {
  */
 exports.skipToNextTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const canSkip = await playerService.skipTrack(userId, 1)
+  const userRole = await userService.getUserRole(req.headers.authorization)
+  const canSkip = await playerService.skipTrack(userId, 1, userRole)
   if (canSkip) res.status(204).send()
   else res.status(403).send()
 })
@@ -195,7 +196,8 @@ exports.skipToNextTrack = catchAsync(async function (req, res, next) {
  */
 exports.skipToPrevTrack = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
-  const canSkip = await playerService.skipTrack(userId, -1)
+  const userRole = await userService.getUserRole(req.headers.authorization)
+  const canSkip = await playerService.skipTrack(userId, -1, userRole)
   if (canSkip) res.status(204).send()
   else res.status(403).send()
 })

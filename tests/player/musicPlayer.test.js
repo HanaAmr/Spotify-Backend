@@ -564,6 +564,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
       artists: [validArtist._id],
       isAd: true
     })
+    sinon.stub(userServices.prototype, 'getUserRole').returns('user')
     await testAd.save()
   })
 
@@ -626,7 +627,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     let userPlayer = await Player.findOne({ 'userId': userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1)
+    await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(1)
@@ -639,7 +640,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10) - 1
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1)
+    await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(parseInt(process.env.MAX_SKIPS, 10))
@@ -655,7 +656,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1)
+    await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(1)
@@ -670,7 +671,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000
     await userPlayer.save()
-    const skip = await playerService.skipTrack(userId, 1)
+    const skip = await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
     expect(skip).toEqual(false)
   })
@@ -683,7 +684,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1)
+    await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
     const request = httpMocks.createRequest({
       method: 'POST',
@@ -709,7 +710,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1)
+    await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
 
     const request = httpMocks.createRequest({
@@ -761,7 +762,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1)
+    await playerService.skipTrack(userId, 1, "user")
     userPlayer = await Player.findOne({ userId: userId })
 
     const request = httpMocks.createRequest({

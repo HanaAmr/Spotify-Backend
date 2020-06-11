@@ -117,4 +117,9 @@ exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
       'reason': 'queue'
     })
   }
+  else {
+    res.status(500).json({
+      'reason': 'unkown'
+    })
+  }
 })

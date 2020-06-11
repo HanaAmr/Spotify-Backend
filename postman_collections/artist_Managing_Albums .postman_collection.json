@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "a60b7924-43ae-4296-9170-80f7750ae9d0",
+		"name": "Artist Managing Albums ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add new album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Amr Diab new Album",
+							"type": "text"
+						},
+						{
+							"key": "genre",
+							"value": "rock",
+							"type": "text"
+						},
+						{
+							"key": "albumType",
+							"value": "single",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/nada/Downloads/albumclipArt.jpeg"
+						}
+					],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums/5edefb5fd1537f3f33f91340",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums",
+						"5edefb5fd1537f3f33f91340"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new track to album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Gamila",
+							"type": "text"
+						},
+						{
+							"key": "isLocal",
+							"value": "true",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "durationMs",
+							"value": "5000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "trackAudio",
+							"type": "file",
+							"src": "/home/nada/Downloads/Queen - Love of My Life.mp3"
+						}
+					],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums/5edefb5fd1537f3f33f91340/tracks",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums",
+						"5edefb5fd1537f3f33f91340",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get artist  albums",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAlbumTracks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3000/api/v1/me/albums/5e88fdf2ba0d7f5329ab98f8/tracks",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"me",
+						"albums",
+						"5e88fdf2ba0d7f5329ab98f8",
+						"tracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums/5ed186abea225102d073d281/tracks/5edefb60f3962c3f4257708f",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums",
+						"5ed186abea225102d073d281",
+						"tracks",
+						"5edefb60f3962c3f4257708f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums/5ed186abea225102d073d281",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums",
+						"5ed186abea225102d073d281"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit artist Track",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"updated name\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums/5ed270c94230c31dc2a00cf5/tracks/5ed2d7188e958942d15bf260",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums",
+						"5ed270c94230c31dc2a00cf5",
+						"tracks",
+						"5ed2d7188e958942d15bf260"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Album",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZGVlYzgzOTAzNDVkODEzNzJlYTgxOSIsImlhdCI6MTU5MTY3MTI4NywiZXhwIjoxNTk0MjYzMjg3fQ.JgSi69huV0CXyzYpKexaJ85RMY0yRWLDDTLIA2ePqIk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "new Name",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/nada/Downloads/AlbumArt_{72947EB4-DBC4-487F-9780-0907D23D7EAC}_Large.jpg"
+						}
+					],
+					"options": {
+						"formdata": {}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:3040/me/albums/5ed2d009b586303f6d6a4734",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "3040",
+					"path": [
+						"me",
+						"albums",
+						"5ed2d009b586303f6d6a4734"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

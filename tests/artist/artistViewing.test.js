@@ -94,6 +94,7 @@ if (process.env.TEST === '1') {
         uri: 'spotify:users:5e8cfa4ffbfe6a5764b4238c',
         role: 'artist',
         password: '12378211',
+        role: 'artist',
         artistInfo:
         {
           genres: ["rock"]
@@ -273,8 +274,8 @@ if (process.env.TEST === '1') {
       expect(response.status).toBe(200)
       expect(response.body.status).toBe('success')
       expect(response.body.data).not.toEqual(null)
-      expect(response.body.data.role).toEqual('artist')
-      expect(response.body.data._id.toString()).toMatch("5e8cfa4ffbfe6a5764b4238c")
+      expect(response.body.data.artist.role).toEqual('artist')
+      expect(response.body.data.artist._id.toString()).toMatch("5e8cfa4ffbfe6a5764b4238c")
     })
 
     //integration testing to test get artist endpoint when passing a normal user
