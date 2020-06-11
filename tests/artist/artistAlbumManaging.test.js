@@ -50,7 +50,7 @@ const mongoDB = process.env.TEST_DATABASE
   describe('Testing artist album managmenet module', () => {
       let authToken
     // Add a simple user to test with
-    beforeAll(async () => {
+    beforeEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
       await mongoose.connection.collection('albums').deleteMany({})
       await mongoose.connection.collection('tracks').deleteMany({})
@@ -93,7 +93,8 @@ const mongoDB = process.env.TEST_DATABASE
         album.artists.push("5edeec8390345d81372ea819")
         await album.save()
 
-    const track= new Track({
+        const albums= await Album.find({})
+      const track= new Track({
         _id:"5edefb60f3962c3f4257708f",
         name: 'Ana Gheir',
         type: 'track',
@@ -115,7 +116,7 @@ const mongoDB = process.env.TEST_DATABASE
     })
 
     // Drop the whole users, playHistory collection after finishing testing
-    afterAll(async () => {
+    afterEach(async () => {
       await mongoose.connection.collection('users').deleteMany({})
       await mongoose.connection.collection('tracks').deleteMany({})
     })
@@ -169,18 +170,16 @@ const mongoDB = process.env.TEST_DATABASE
           })
         
         const response = httpMocks.createResponse()
-        artistAlbumController.deleteTrack(request, response, (err) => {
-          response.on('end', async () => {
+     
             try {
               expect(response.statusCode).toEqual(200)
               done()
             } catch (error) {
               done(error)
             }
-          })
         })
         
-      })
+     
 
       it('Testing uploading album with no image, album should not be uploaded', done => {
     
@@ -213,7 +212,7 @@ const mongoDB = process.env.TEST_DATABASE
       })
 
       it('Testing uploading track with no audio file, track should not be uploaded', done => {
-    
+        
         const request = httpMocks.createRequest({
           method: 'POST',
           url: '/me/albums/5edefb5fd1537f3f33f91340/tracks',
@@ -229,7 +228,6 @@ const mongoDB = process.env.TEST_DATABASE
     
         const response = httpMocks.createResponse()
         artistAlbumController.addTracktoAlbum(request, response, (err) => {
-          response.on('end', async () => {
             try {
               expect(err).toEqual(expect.anything())
               expect(err.statusCode).toEqual(484)
@@ -239,7 +237,6 @@ const mongoDB = process.env.TEST_DATABASE
             } catch (error) {
               done(error)
             }
-          })
       })
     })
 
