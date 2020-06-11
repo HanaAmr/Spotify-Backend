@@ -129,7 +129,6 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns JSON object of added track if request is successful, an error object otherwise
  */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
-
   //getting artist info and album for updating them latter
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   const artist = User.findById(artistId)
@@ -238,6 +237,7 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  */
 exports.deleteAlbum=catchAsync(async (req, res, next) => {
+
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   const album=await Album.findById(req.params.id)
 
@@ -246,7 +246,8 @@ exports.deleteAlbum=catchAsync(async (req, res, next) => {
 
   if(!(album.artists.includes(artistId)))
     throw (new AppError('You are not allowed to delete albums that are not yours', 405))
-
+  await Track.deleteMany({album:req.params.id})
+  
   await Album.findByIdAndDelete(req.params.id)
   
   res.status(204).json({
@@ -266,12 +267,16 @@ exports.deleteAlbum=catchAsync(async (req, res, next) => {
 exports.deleteTrack=catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   const track= await Track.findById(req.params.id)
-
+  
   if(!track)
      throw (new AppError('Can\'t find track with such an id', 404))
 
   if(!(track.artists.includes(artistId)))
     throw (new AppError('You are not allowed to delete tracks that are not yours', 405))
+  //removing track refernce from album
+  const album=await Album.findById(track.album)
+  album.trackObjects=album.trackObjects.filter(track=>track!=req.params.id)
+  await album.save()
 
   await Track.findByIdAndDelete(req.params.id)
   res.status(204).json({

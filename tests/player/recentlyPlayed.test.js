@@ -142,6 +142,7 @@ describe('Adding to recently played for a user', () => {
     })
     await testTrack.save()
     await testTrack2.save()
+    
     testAlbum = new Album({
       _id: '5e8cfa4b1493ec60bc89c970',
       name: 'Evolve',
@@ -161,6 +162,10 @@ describe('Adding to recently played for a user', () => {
     await testTrack2.save()
     await testAlbum.save()
     albumId = testAlbum._id
+    testTrack.album = testAlbum._id
+    await testTrack.save()
+    testTrack2.album=testAlbum._id
+    await testTrack2.save()
     testPlaylist = new Playlist({
       _id: '5e729d853d8d0a432c70b59c',
       name: 'Imagine Dragons Radio',
