@@ -154,11 +154,15 @@ const mongoDB = process.env.TEST_DATABASE
         expect(tracks.length).toEqual(0)
       })
 
-      it('Testing delete track endpoint', async () => {
+      it('Testing delete track endpoint', done => {
 
         const request = httpMocks.createRequest({
             method: 'DELETE',
             url: '/me/albums/5edefb5fd1537f3f33f91340/tracks/5edefb60f3962c3f4257708f',
+            params:{
+              albumId:"5edefb5fd1537f3f33f91340",
+              id:"5edefb60f3962c3f4257708f"
+            },
             headers: {
                 'Authorization': authToken
               }
@@ -166,12 +170,14 @@ const mongoDB = process.env.TEST_DATABASE
         
         const response = httpMocks.createResponse()
         artistAlbumController.deleteTrack(request, response, (err) => {
-          try {
-            expect(response.status).toBe(204)
-            done()
-          } catch (error) {
-            done(error)
-          }
+          response.on('end', async () => {
+            try {
+              expect(response.statusCode).toEqual(200)
+              done()
+            } catch (error) {
+              done(error)
+            }
+          })
         })
         
       })
@@ -223,16 +229,19 @@ const mongoDB = process.env.TEST_DATABASE
     
         const response = httpMocks.createResponse()
         artistAlbumController.addTracktoAlbum(request, response, (err) => {
-          try {
-            expect(err).toEqual(expect.anything())
-            expect(err.statusCode).toEqual(484)
-            expect(err.status).toEqual('fail')
-            done()
-          } catch (error) {
-            done(error)
-          }
-        })
+          response.on('end', async () => {
+            try {
+              expect(err).toEqual(expect.anything())
+              expect(err.statusCode).toEqual(484)
+              expect(err.status).toEqual('fail')
+              expect(err.message).toEqual('No audio file received, can\'t add track without mp3 file')
+              done()
+            } catch (error) {
+              done(error)
+            }
+          })
       })
+    })
 
       it('Testing getting artist albums endpoint', async () => {
         const request = httpMocks.createRequest({
@@ -245,17 +254,19 @@ const mongoDB = process.env.TEST_DATABASE
         
         const response = httpMocks.createResponse()
         artistAlbumController.getArtistAlbums(request, response, (err) => {
+          response.on('end', async () => {
           try {
             expect(response.status).toBe(204)
             expect(response.body).not.toEqual(null)
             expect(response.body.status).toEqual("success")
             expect(response.body.data._id).toEqual("5edefb5fd1537f3f33f91340")
-
+            
             done()
           } catch (error) {
             done(error)
           }
         })
+      })
       })
 
   })
