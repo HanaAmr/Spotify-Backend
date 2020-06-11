@@ -332,7 +332,11 @@ if (process.env.TEST === '1') {
 
       const request = httpMocks.createRequest({
         method: 'GET',
-        url: '/artists/5e88aa247a5804327d51b9be/related-artists/'
+        url: '/artists/5e88aa247a5804327d51b9be/related-artists/',
+        params:
+        {
+          id:"5e88aa247a5804327d51b9be"
+        }
       })
       
       const response = httpMocks.createResponse()
@@ -341,7 +345,7 @@ if (process.env.TEST === '1') {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(404)
           expect(err.status).toEqual('fail')
-          expect(err.message).toEqual('No artist with such an ID')
+          expect(err.message).toEqual('No related artists found for this artist!')
   
           done()
         } catch (error) {
@@ -363,12 +367,15 @@ if (process.env.TEST === '1') {
       }
     })
 
-    //todo::
+    
     it('tests that get artist albums returns error if artist has empty albums or no albums at all', done => {
 
       const request = httpMocks.createRequest({
         method: 'GET',
-        url: '/artists/5e88aa247a5804327d51b9be/albums'
+        url: '/artists/5e88aa247a5804327d51b9be/albums',
+        params: {
+          id: "5e88aa247a5804327d51b9be"
+        }
       })
       
       const response = httpMocks.createResponse()
@@ -377,7 +384,7 @@ if (process.env.TEST === '1') {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(404)
           expect(err.status).toEqual('fail')
-          expect(err.message).toEqual('No artist with such an ID')
+          expect(err.message).toEqual('No albums for this artist!')
   
           done()
         } catch (error) {
@@ -394,12 +401,16 @@ if (process.env.TEST === '1') {
       for(index=0;index<response.body.data.length;index++)
         expect(response.body.data[index].artists).toEqual(expect.arrayContaining([{"_id": "5e8cfa4ffbfe6a5764b4238c", "artistInfo": {"genres": ["rock"]}, "externalUrls": [""], "followers": [], "href": "http://127.0.0.1:7000/users/5e8cfa4ffbfe6a5764b4238c", "images": ["https://totallynotspotify.codes/public/imgs/users/default.jpg"], "name": "Queen", "role": "artist", "uri": "spotify:users:5e8cfa4ffbfe6a5764b4238c", "userStats": []}]))
     })
-    //todo::
+    
     it('tests that get artist albums returns error if artist has empty albums or no albums at all', done => {
 
       const request = httpMocks.createRequest({
         method: 'GET',
-        url: '/artists/5e721f6f9d44b25581a41b5d/top-tracks'
+        url: '/artists/5e721f6f9d44b25581a41b5d/top-tracks',
+        params:
+        {
+          id:"5e721f6f9d44b25581a41b5d"
+        }
       })
       
       const response = httpMocks.createResponse()
@@ -408,7 +419,7 @@ if (process.env.TEST === '1') {
           expect(err).toEqual(expect.anything())
           expect(err.statusCode).toEqual(404)
           expect(err.status).toEqual('fail')
-          expect(err.message).toEqual('No artist with such an ID')
+          expect(err.message).toEqual('No tracks for artist')
   
           done()
         } catch (error) {
@@ -416,7 +427,5 @@ if (process.env.TEST === '1') {
         }
       })
     })
-
-  //TODO:: playlist testing - check why some tests are not working
 
   })
