@@ -12,11 +12,10 @@ dotenv.config({ path: '.env' })
 const mongoDB = process.env.TEST_DATABASE
 const authController = require('./../../controllers/authController')
 const jwt = require('jsonwebtoken')
-let server, agent;
+let server, agent
 let authToken = 'token'
 let authToken2 = 'token'
-let id1,id3
-
+let id1, id3
 
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -27,9 +26,7 @@ if (process.env.TEST === '1') {
 let testPlaylist
 describe('test getting library components', () => {
   beforeEach(async (done) => {
-    
     sinon.restore()
-
 
     await mongoose.connection.collection('tracks').deleteMany({})
     testTrack = new Track({
@@ -42,7 +39,6 @@ describe('test getting library components', () => {
     })
 
     await testTrack.save()
-
 
     await mongoose.connection.collection('playlists').deleteMany({})
     testPlaylist = new Playlist({
@@ -72,64 +68,60 @@ describe('test getting library components', () => {
       type: 'album',
       albumType: 'single',
       releaseDate: '2018-01-01',
-      totalTracks:2
+      totalTracks: 2
     })
     await testAlbum.save()
 
     await mongoose.connection.collection('users').deleteMany({})
     const firstUser = new User({
-        name: 'omar',
-        email: 'omar@email.com',
-        password: 'password',
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
     })
     await firstUser.save()
     id1 = firstUser._id
 
     const thirdUser = new User({
-      _id:'5e8cfa4b1493ec60bc89c97e',
+      _id: '5e8cfa4b1493ec60bc89c97e',
       name: 'ali',
       email: 'ali@email.com',
       password: 'password',
       role: 'artist'
     })
     await thirdUser.save()
-    id3=thirdUser._id
+    id3 = thirdUser._id
 
     const secondUser = new User({
-        _id:'5e8cfa4b1493ec60bc89c971',
-        name: 'ahmed',
-        email: 'ahmed@email.com',
-        password: 'password',
-        dateOfBirth: '1999-7-14',
-        gender: 'male',
-        likedAlbums:['5e8cfa4b1493ec60bc89c970'],
-        likedTracks:['5e8cfa4ffbfe6a5764b4238c'],
-        likedPlaylists:['5e729d853d8d0a432c70b59c'],
-        followers:[id1],
-        following:[thirdUser._id]
-        })
+      _id: '5e8cfa4b1493ec60bc89c971',
+      name: 'ahmed',
+      email: 'ahmed@email.com',
+      password: 'password',
+      dateOfBirth: '1999-7-14',
+      gender: 'male',
+      likedAlbums: ['5e8cfa4b1493ec60bc89c970'],
+      likedTracks: ['5e8cfa4ffbfe6a5764b4238c'],
+      likedPlaylists: ['5e729d853d8d0a432c70b59c'],
+      followers: [id1],
+      following: [thirdUser._id]
+    })
     await secondUser.save()
 
     await User.findOne({}, (err, user) => {
-        id='5e8cfa4b1493ec60bc89c971'
-        authToken = 'Bearer ' + jwt.sign({id}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-    }) 
+      id = '5e8cfa4b1493ec60bc89c971'
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
 
     await User.findOne({}, (err, user) => {
-        id=id1
-        authToken2 = 'Bearer ' + jwt.sign({id}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-    }) 
-
-
+      id = id1
+      authToken2 = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
 
     server = app.listen(5010, (err) => {
-        if (err) return done(err);
-        agent = supertest.agent(server); 
-        done();
-    });
-   
+      if (err) return done(err)
+      agent = supertest.agent(server)
+      done()
+    })
   })
-
 
   afterEach(async (done) => {
     sinon.restore()
@@ -137,10 +129,9 @@ describe('test getting library components', () => {
     await mongoose.connection.collection('tracks').deleteMany({})
     await mongoose.connection.collection('albums').deleteMany({})
     await mongoose.connection.collection('users').deleteMany({})
-    return server && server.close(done);
+    return server && server.close(done)
   })
 
-  
   it('Test the request to get users I follow', async () => {
     const response = await agent.get('/me/following').set('Authorization', authToken)
     expect(response.status).toBe(200)
@@ -148,17 +139,16 @@ describe('test getting library components', () => {
     expect(response.body.data.users[0]._id.toString()).toMatch(id3.toString())
   })
 
-
   it('Test the request to get users I follow when I dont have any followed users', done => {
-    let request = httpMocks.createRequest({
+    const request = httpMocks.createRequest({
       method: 'GET',
       url: '/me/following',
       headers: {
-        'Authorization': authToken2
+        Authorization: authToken2
       }
     })
-    request.user={}
-    request.user.id=id1
+    request.user = {}
+    request.user.id = id1
     const response = httpMocks.createResponse()
     authController.getfollowedArtistUser(request, response, (err) => {
       try {
@@ -182,15 +172,15 @@ describe('test getting library components', () => {
   })
 
   it('Test the request to get artists I follow when I dont have any followed artists', done => {
-    let request = httpMocks.createRequest({
+    const request = httpMocks.createRequest({
       method: 'GET',
       url: '/me/likedArtists',
       headers: {
-        'Authorization': authToken2
+        Authorization: authToken2
       }
     })
-    request.user={}
-    request.user.id=id1
+    request.user = {}
+    request.user.id = id1
     const response = httpMocks.createResponse()
     authController.getfollowedArtists(request, response, (err) => {
       try {
@@ -206,8 +196,6 @@ describe('test getting library components', () => {
     })
   })
 
-
-
   it('Test the request to get users who followed me', async () => {
     const response = await agent.get('/me/followers').set('Authorization', authToken)
     expect(response.status).toBe(200)
@@ -216,15 +204,15 @@ describe('test getting library components', () => {
   })
 
   it('Test the request to get users who followed me when I dont have any followers', done => {
-    let request = httpMocks.createRequest({
+    const request = httpMocks.createRequest({
       method: 'GET',
       url: '/me/followers',
       headers: {
-        'Authorization': authToken2
+        Authorization: authToken2
       }
     })
-    request.user={}
-    request.user.id=id1
+    request.user = {}
+    request.user.id = id1
     const response = httpMocks.createResponse()
     authController.getUserfollowers(request, response, (err) => {
       try {
@@ -248,15 +236,15 @@ describe('test getting library components', () => {
   })
 
   it('Test the request to get liked tracks when I dont like any track', done => {
-    let request = httpMocks.createRequest({
+    const request = httpMocks.createRequest({
       method: 'GET',
       url: '/me/likedTracks',
       headers: {
-        'Authorization': authToken2
+        Authorization: authToken2
       }
     })
-    request.user={}
-    request.user.id=id1
+    request.user = {}
+    request.user.id = id1
     const response = httpMocks.createResponse()
     authController.getLikedTracks(request, response, (err) => {
       try {
@@ -280,15 +268,15 @@ describe('test getting library components', () => {
   })
 
   it('Test the request to get liked albums when I dont like any album', done => {
-    let request = httpMocks.createRequest({
+    const request = httpMocks.createRequest({
       method: 'GET',
       url: '/me/likedAlbums',
       headers: {
-        'Authorization': authToken2
+        Authorization: authToken2
       }
     })
-    request.user={}
-    request.user.id=id1
+    request.user = {}
+    request.user.id = id1
     const response = httpMocks.createResponse()
     authController.getLikedAlbums(request, response, (err) => {
       try {
@@ -312,15 +300,15 @@ describe('test getting library components', () => {
   })
 
   it('Test the request to get liked playlists when I dont like any playlist', done => {
-    let request = httpMocks.createRequest({
+    const request = httpMocks.createRequest({
       method: 'GET',
       url: '/me/likedPlaylists',
       headers: {
-        'Authorization': authToken2
+        Authorization: authToken2
       }
     })
-    request.user={}
-    request.user.id=id1
+    request.user = {}
+    request.user.id = id1
     const response = httpMocks.createResponse()
     authController.getLikedPlaylists(request, response, (err) => {
       try {
@@ -335,6 +323,4 @@ describe('test getting library components', () => {
       }
     })
   })
-
-
 })

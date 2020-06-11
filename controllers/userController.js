@@ -15,7 +15,6 @@
  */
 const catchAsync = require('../utils/catchAsync')
 
-
 /**
  * Notifications model from db
  * @const
@@ -52,7 +51,6 @@ const AppError = require('./../utils/appError')
  */
 const MailerServices = require('../services/mailerService')
 const mailerService = new MailerServices()
-
 
 /**
  * Notifications services
@@ -251,16 +249,15 @@ const updateNotificationsToken = catchAsync(async function (req, res, next) {
 const getNotifications = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   const results = await paginatedResults(req, await Notifications.find().where('userId').equals(userId).countDocuments().exec())
-  const features = new APIFeatures(Notifications.find().where('userId').equals(userId).sort({'time': -1}).select('-userId -_id'), req.query).limitFields().paginate()
+  const features = new APIFeatures(Notifications.find().where('userId').equals(userId).sort({ time: -1 }).select('-userId -_id'), req.query).limitFields().paginate()
   results.items = await features.query
   res.status(200).json({
     status: 'success',
-    data:{
+    data: {
       results
     }
   })
 })
-
 
 // Handling which module to export
 const userController = {}

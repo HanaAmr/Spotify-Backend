@@ -4,8 +4,7 @@
  * @requires express
  */
 
-
- /**
+/**
  * Get Audio Duration Package, used to get duration of uploaded tracks
  * @const
  */
@@ -33,7 +32,7 @@ const User = require('../models/userModel')
  * artistAlbum controller to call when routing.
  * @const
  */
-const uploadService=require('../services/uploadService')
+const uploadService = require('../services/uploadService')
 
 /**
  * Album model from the database
@@ -89,15 +88,11 @@ const notificationService = new NotificationServices()
  * @return {JSON} Returns album object created if album is created successfully or error object otherwise
  */
 exports.addAlbum = catchAsync(async (req, res, next) => {
-  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename}`}
-  else
-  throw (new AppError('No file received, can\'t add album without an image', 484))
-    
-
+  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename}` } else { throw (new AppError('No file received, can\'t add album without an image', 484)) }
 
   if (req.body.totalTracks) { req.body.totalTracks = 0 }
 
-  //adding the id of the artist to the newly created album
+  // adding the id of the artist to the newly created album
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   req.body.artists = []
   req.body.artists.push(new mongoose.Types.ObjectId(artistId))
@@ -129,11 +124,11 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns JSON object of added track if request is successful, an error object otherwise
  */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
-  //getting artist info and album for updating them latter
+  // getting artist info and album for updating them latter
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   const artist = User.findById(artistId)
   const album = await Album.find({ _id: req.params.id, artists: artistId })
-  //make sure that the artist owns this album and the audio file is passed
+  // make sure that the artist owns this album and the audio file is passed
   if (album.length === 0) { throw (new AppError('You are not authorized, you cannot add tracks to albums other than yours!', 484)) }
 
   if (req.file) {
@@ -141,9 +136,7 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
     await getAudioDurationInSeconds(`${__dirname}/../tracks/${req.file.filename}`).then((duration) => {
       req.body.durationMs = duration * 1000
     })
-  }
-  else
-  {
+  } else {
     throw (new AppError('No audio file received, can\'t add track without mp3 file', 484))
   }
 
@@ -153,8 +146,8 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
   req.body.album = new mongoose.Types.ObjectId(req.params.id)
 
   // getting track number
-  const trackAlbum=await Album.findById(req.params.id)
-  let numberofTracks = trackAlbum.totalTracks+1
+  const trackAlbum = await Album.findById(req.params.id)
+  const numberofTracks = trackAlbum.totalTracks + 1
   req.body.trackNumber = numberofTracks
   let newTrack = await Track.create(req.body)
 
@@ -166,29 +159,26 @@ exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
     runValidators: true
   })
 
-  //updating track album's number of tracks and track objects
-  await Album.findByIdAndUpdate(req.params.id, { totalTracks: numberofTracks,$push:{trackObjects: newTrack._id} })
-  //adding track to artist's track object
-  await User.findByIdAndUpdate(artistId,{$push:{trackObjects: newTrack._id}})
+  // updating track album's number of tracks and track objects
+  await Album.findByIdAndUpdate(req.params.id, { totalTracks: numberofTracks, $push: { trackObjects: newTrack._id } })
+  // adding track to artist's track object
+  await User.findByIdAndUpdate(artistId, { $push: { trackObjects: newTrack._id } })
 
-  //Send notification to artist subscribers
+  // Send notification to artist subscribers
   let i, notif
   const followers = artist.followers
   const title = `${artist.name} added a track!`
   const body = `${artist.name} has added track called ${newTrack.name}!`
   const images = artist.images
-  const data = {'uri': newTrack.uri, 'id': newTrack._id, 'href':newTrack.href, 'image':trackAlbum.image}
+  const data = { uri: newTrack.uri, id: newTrack._id, href: newTrack.href, image: trackAlbum.image }
 
-  //sending notification if artist has followers
-  if(followers)
-  {
-    for(i = 0; i < followers.length(); i++) 
-      notif = await notificationService.generateNotification(title,body,followers[i].toString(),data)
+  // sending notification if artist has followers
+  if (followers) {
+    for (i = 0; i < followers.length(); i++) { notif = await notificationService.generateNotification(title, body, followers[i].toString(), data) }
     notif.topic = artistId
     delete notif.token
     await notificationService.sendNotificationTopic(notif)
   }
-
 
   res.status(200).json({
     status: 'success',
@@ -236,25 +226,21 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
  * @param {Function} next - The next function in the middleware
  * @param {String} token - userArtist Token passed in header
  */
-exports.deleteAlbum=catchAsync(async (req, res, next) => {
-
+exports.deleteAlbum = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album=await Album.findById(req.params.id)
+  const album = await Album.findById(req.params.id)
 
-  if(!album)
-    throw (new AppError('Can\'t find album with such an id', 404))
+  if (!album) { throw (new AppError('Can\'t find album with such an id', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to delete albums that are not yours', 405))
-  await Track.deleteMany({album:req.params.id})
-  
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to delete albums that are not yours', 405)) }
+  await Track.deleteMany({ album: req.params.id })
+
   await Album.findByIdAndDelete(req.params.id)
-  
+
   res.status(204).json({
     status: 'success'
   })
 })
-
 
 /**
  * A middleware function of deleting a track in a specific album
@@ -264,18 +250,16 @@ exports.deleteAlbum=catchAsync(async (req, res, next) => {
  * @param {Function} next - The next function in the middleware
  * @param {String} token - userArtist Token passed in header
  */
-exports.deleteTrack=catchAsync(async (req, res, next) => {
+exports.deleteTrack = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  
-  if(!track)
-     throw (new AppError('Can\'t find track with such an id', 404))
+  const track = await Track.findById(req.params.id)
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to delete tracks that are not yours', 405))
-  //removing track refernce from album
-  const album=await Album.findById(track.album)
-  album.trackObjects=album.trackObjects.filter(track=>track!=req.params.id)
+  if (!track) { throw (new AppError('Can\'t find track with such an id', 404)) }
+
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to delete tracks that are not yours', 405)) }
+  // removing track refernce from album
+  const album = await Album.findById(track.album)
+  album.trackObjects = album.trackObjects.filter(track => track !== req.params.id)
   await album.save()
 
   await Track.findByIdAndDelete(req.params.id)
@@ -293,33 +277,28 @@ exports.deleteTrack=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns the newly created album
  */
-exports.editAlbum=catchAsync(async (req, res, next) => {
-
-  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename}` }
-  else if(req.body.name)
-  {
+exports.editAlbum = catchAsync(async (req, res, next) => {
+  if (req.file) { req.body.image = `${process.env.API_URL}/public/imgs/albums/${req.file.filename}` } else if (req.body.name) {
     const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-    const oldAlbum=await Album.findById(req.params.id)
-    if(!(oldAlbum.artists.includes(artistId)))
-      throw (new AppError('You are not allowed to delete albums that are not yours', 405))
+    const oldAlbum = await Album.findById(req.params.id)
+    if (!(oldAlbum.artists.includes(artistId))) { throw (new AppError('You are not allowed to delete albums that are not yours', 405)) }
 
-    req.body.image=await uploadService.renameImage(req.body.name,oldAlbum.image)
-
+    req.body.image = await uploadService.renameImage(req.body.name, oldAlbum.image)
   }
 
-  const updatedAlbum= await Album.findByIdAndUpdate(req.params.id,req.body,{
+  const updatedAlbum = await Album.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
-})
+  })
 
-res.status(200).json(
+  res.status(200).json(
     {
-        status: "success",
-        data: {
-          updatedAlbum
-        }
+      status: 'success',
+      data: {
+        updatedAlbum
+      }
     }
-)
+  )
 })
 
 /**
@@ -331,24 +310,23 @@ res.status(200).json(
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns the newly created track
  */
-exports.editTrack=catchAsync(async (req, res, next) => {
+exports.editTrack = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
+  const track = await Track.findById(req.params.id)
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to edit tracks that are not yours', 405))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to edit tracks that are not yours', 405)) }
 
-  const updatedtrack= await Track.findByIdAndUpdate(req.params.id,req.body,{
+  const updatedtrack = await Track.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
-})
+  })
 
-res.status(200).json(
-  {
-      status: "success",
+  res.status(200).json(
+    {
+      status: 'success',
       data: {
         updatedtrack
       }
-  }
-)
+    }
+  )
 })

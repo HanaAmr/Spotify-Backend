@@ -10,7 +10,6 @@
  * @const
  */
 
-
 /**
  * AppError class file
  * @const

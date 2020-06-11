@@ -1,7 +1,6 @@
 
 const paginatedResults = require('./../utils/pagination')
 
-
 test('paginatedResults with limit specified and in the last page ', async () => {
   const req = {}
   req.query = {}
@@ -17,7 +16,6 @@ test('paginatedResults with limit specified and in the last page ', async () => 
   expect(results.href).toBe(`${process.env.API_URL}/browse/categories/5e85f1b37031746730dc71dc/playlists`)
 })
 
-
 test('paginatedResults with no limit specified and in the first page ', async () => {
   const req = {}
   req.query = {}
@@ -31,5 +29,3 @@ test('paginatedResults with no limit specified and in the first page ', async ()
   expect(results.previous).toBe(null)
   expect(results.href).toBe(`${process.env.API_URL}/browse/categories/5e85f1b37031746730dc71dc/playlists`)
 })
-
-

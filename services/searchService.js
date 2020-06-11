@@ -4,7 +4,6 @@
  * @requires express
  */
 
-
 /**
  * API features utils file
  * @const
@@ -25,15 +24,13 @@ const Track = require('./../models/trackModel')
 * @return {tracksArray} The results object containing the ids of the tracks found.
 */
 module.exports = async function (searchQuery) {
-    let search=searchQuery;
-    search.replace("%20"," ")
+  const search = searchQuery
+  search.replace('%20', ' ')
 
-    let tracksArray = await Track.find({ name:{$regex: `^${search}`, $options: 'i'}}).select("_id")
-    if(tracksArray.length==0) 
-    {
-        tracksArray = await Track.find({ name:{$regex: `${search}`, $options: 'i'}}).select("_id")
-    }
+  let tracksArray = await Track.find({ name: { $regex: `^${search}`, $options: 'i' } }).select('_id')
+  if (tracksArray.length == 0) {
+    tracksArray = await Track.find({ name: { $regex: `${search}`, $options: 'i' } }).select('_id')
+  }
 
-    return tracksArray
-
+  return tracksArray
 }

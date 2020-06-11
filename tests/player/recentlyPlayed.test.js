@@ -90,7 +90,7 @@ const playerServices = require('../../services/playerService')
 
 const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Testing adding to recently played
 describe('Adding to recently played for a user', () => {
@@ -121,7 +121,7 @@ describe('Adding to recently played for a user', () => {
     })
     await validArtist.save()
     artistId = validArtist._id
-    //Creating the track to assign to the artist
+    // Creating the track to assign to the artist
     testTrack = new Track({
       _id: '5e8cfa4ffbfe6a5764b4238c',
       name: 'Believer',
@@ -142,7 +142,7 @@ describe('Adding to recently played for a user', () => {
     })
     await testTrack.save()
     await testTrack2.save()
-    
+
     testAlbum = new Album({
       _id: '5e8cfa4b1493ec60bc89c970',
       name: 'Evolve',
@@ -164,7 +164,7 @@ describe('Adding to recently played for a user', () => {
     albumId = testAlbum._id
     testTrack.album = testAlbum._id
     await testTrack.save()
-    testTrack2.album=testAlbum._id
+    testTrack2.album = testAlbum._id
     await testTrack2.save()
     testPlaylist = new Playlist({
       _id: '5e729d853d8d0a432c70b59c',
@@ -208,19 +208,18 @@ describe('Adding to recently played for a user', () => {
 
   // Testing starting context without problems with track for artist
   it('Should start a context for the user using track of artist', async (done) => {
-    //Generate context first to be able to use in recently played
+    // Generate context first to be able to use in recently played
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
-    
-    
+
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
-      headers:{
+      headers: {
         authorization: ''
       }
     })
-    
+
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     playerController.addToRecentlyPlayed(request, response)
     response.on('end', async () => {
@@ -237,19 +236,19 @@ describe('Adding to recently played for a user', () => {
   // Testing deleting recently played if we reached the maximum of recently played
   it('Should delete the oldest recently played saved in player history as we reached the maximum', async (done) => {
     expect.assertions(2)
-    //Generate context first to be able to use in recently played
+    // Generate context first to be able to use in recently played
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
-    
-    //Adding one recently played using requests
+
+    // Adding one recently played using requests
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
-      headers:{
+      headers: {
         authorization: ''
       }
     })
-    
+
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     playerController.addToRecentlyPlayed(request, response)
     response.on('end', async () => {
@@ -271,19 +270,19 @@ describe('Adding to recently played for a user', () => {
 
   // Testing getting recently played for a user
   it('Should return the recently played objects', async (done) => {
-    //Generate context first to be able to use in recently played
+    // Generate context first to be able to use in recently played
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
-    
-    //Adding one recently played using requests
+
+    // Adding one recently played using requests
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/player/recentlyPlayed',
-      headers:{
+      headers: {
         authorization: ''
       }
     })
-    
+
     const response = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
     playerController.addToRecentlyPlayed(request, response)
     response.on('end', async () => {
@@ -296,13 +295,13 @@ describe('Adding to recently played for a user', () => {
       const request2 = httpMocks.createRequest({
         method: 'GET',
         url: 'me/player/recentlyPlayed',
-        headers:{
+        headers: {
           authorization: ''
         }
       })
       const response2 = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter })
-      playerController.getRecentlyPlayed(request2,response2)
-      response2.on('end', async() => {
+      playerController.getRecentlyPlayed(request2, response2)
+      response2.on('end', async () => {
         try {
           const body = await response2._getJSONData()
           expect(body.status).toBe('success')

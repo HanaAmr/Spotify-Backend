@@ -71,16 +71,10 @@ const artistService = require('./../services/artistService')
 const artistServiceClass = new artistService.artistService()
 
 /**
- * @const
- */
-const AppError = require('../utils/appError')
-
-/**
  * Pagination utils
  * @const
  */
 const paginatedResults = require('./../utils/pagination')
-
 
 /**
  * Adds a track to the recently played list
@@ -93,7 +87,7 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   // Make sure list of recently played is freed if it has reached the limit
   await playerService.deleteOneRecentlyPlayedIfFull(userId)
-  //Get the user context and save it to a new document
+  // Get the user context and save it to a new document
   const newContext = await playerService.getContext(userId)
   newContext._id = require('mongoose').Types.ObjectId()
   newContext.isNew = true
@@ -111,13 +105,13 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
   newContext.playHistoryId = newPlayHistory._id
   await newContext.save()
 
-  //adding listen to album and track stats
-  const track=await Track.findById(currTrack)
+  // adding listen to album and track stats
+  const track = await Track.findById(currTrack)
   await artistServiceClass.altertrackOrAlbumObjectListens(track)
 
-  let album=await Album.findById(track.album)
+  const album = await Album.findById(track.album)
   await artistServiceClass.altertrackOrAlbumObjectListens(album)
- 
+
   res.status(204).send()
 })
 
@@ -131,7 +125,7 @@ exports.addToRecentlyPlayed = catchAsync(async function (req, res, next) {
 exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
   const userId = await userService.getUserId(req.headers.authorization)
   const results = await paginatedResults(req, await PlayHistory.find().where('userId').equals(userId).countDocuments().exec())
-  const features = new APIFeatures(PlayHistory.find().where('userId').sort({'playedAt':-1}).equals(userId), req.query).paginate()
+  const features = new APIFeatures(PlayHistory.find().where('userId').sort({ playedAt: -1 }).equals(userId), req.query).paginate()
   results.items = await features.query.select('-userId -_id -__v')
   res.status(200).json({
     status: 'success',
@@ -140,7 +134,6 @@ exports.getRecentlyPlayed = catchAsync(async function (req, res, next) {
     }
   })
 })
-
 
 /**
  * Starts a playing context for the user.
@@ -170,7 +163,6 @@ exports.finishedTrack = catchAsync(async function (req, res, next) {
   playerService.finishTrack(userId, 1)
   res.status(204).send()
 })
-
 
 /**
  * Skips the song in the queue to the next track while decrementing skip limit.

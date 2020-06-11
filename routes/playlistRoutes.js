@@ -43,8 +43,8 @@ router
  * @inner
  */
 router
-  .route('/recommended') 
-  .get(playlistController.getRecommendedPlaylists)  
+  .route('/recommended')
+  .get(playlistController.getRecommendedPlaylists)
 
 /**
  * Route for requesting to get a playlist
@@ -82,7 +82,6 @@ router
   .route('/:playlistId/tracks')
   .get(playlistController.getPlaylistTracks)
 
-
 /**
  * Route for requesting to get recommended tracks for playlist
  * @name get/playlists/:playlistId/tracks/recommended
@@ -93,6 +92,6 @@ router
  */
 router
   .route('/:playlistId/tracks/recommended')
-  .get(authController.protect,playlistController.getRecommendedPlaylistTracks)
+  .get(authController.protect, playlistController.getRecommendedPlaylistTracks)
 
 module.exports = router

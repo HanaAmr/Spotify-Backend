@@ -39,7 +39,6 @@ const authController = require('./../controllers/authController')
  */
 router.post('/recentlyPlayed', authController.protect, playerController.addToRecentlyPlayed)
 
-
 /**
  * Route for getting recently played tracks (play history)
  * @name get/me/player/recentlyPlayed
@@ -51,8 +50,7 @@ router.post('/recentlyPlayed', authController.protect, playerController.addToRec
  */
 router.get('/recentlyPlayed', authController.protect, playerController.getRecentlyPlayed)
 
-
-  /**
+/**
  * Route for starting a playing context
  * @name put/me/player/play
  * @function
@@ -64,8 +62,7 @@ router.get('/recentlyPlayed', authController.protect, playerController.getRecent
  */
 router.put('/play', authController.protect, playerController.startContext)
 
-
-  /**
+/**
  * Route when track being played is finished normally
  * @name post/me/player/finished
  * @function
@@ -75,8 +72,7 @@ router.put('/play', authController.protect, playerController.startContext)
  */
 router.post('/finished', authController.protect, playerController.finishedTrack)
 
-
-  /**
+/**
  * Route for skipping the track to the next one
  * @name post/me/player/next
  * @function
@@ -86,7 +82,7 @@ router.post('/finished', authController.protect, playerController.finishedTrack)
  */
 router.post('/next', authController.protect, playerController.skipToNextTrack)
 
-  /**
+/**
  * Route for skipping the track to the previous one
  * @name post/me/player/previous
  * @function
@@ -105,7 +101,5 @@ router.post('/previous', authController.protect, playerController.skipToPrevTrac
  * @param {Function} getAd - Gets a random add from the db.
  */
 router.get('/ad', authController.protect, playerController.getAd)
-
-
 
 module.exports = router

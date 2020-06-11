@@ -15,16 +15,16 @@ const mongoose = require('mongoose')
  * @const
  */
 const notificationSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: [true, 'Notification must belong to a certain user']
-    },
-    notification: {
-        title: String,
-        body: String
-    },
-    data: Object,
-    time: Date 
+  userId: {
+    type: String,
+    required: [true, 'Notification must belong to a certain user']
+  },
+  notification: {
+    title: String,
+    body: String
+  },
+  data: Object,
+  time: Date
 })
 
 const Notification = mongoose.model('Notification', notificationSchema)

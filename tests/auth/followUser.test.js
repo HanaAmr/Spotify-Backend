@@ -19,128 +19,117 @@ if (process.env.TEST === '1') {
   throw new Error('Can\'t connect to db, make sure you run in test environment!')
 }
 
-
 describe('Follow user functionality', () => {
-    let authToken = 'token'
-    let id = 'testid'
-    let id2 = ''
-    let id3 = ''
-    // Drop the whole users collection before testing and add a simple user to test with
-    beforeEach(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-     // sinon.stub(notificationsService.prototype,'sendNotification').returns()
-     // sinon.stub(notificationsService.prototype,'subscribeToTopic').returns()
+  let authToken = 'token'
+  let id = 'testid'
+  let id2 = ''
+  let id3 = ''
+  // Drop the whole users collection before testing and add a simple user to test with
+  beforeEach(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    // sinon.stub(notificationsService.prototype,'sendNotification').returns()
+    // sinon.stub(notificationsService.prototype,'subscribeToTopic').returns()
 
-      // Creating a user to follow another user
-      const firstUser = new User({
-        name: 'ahmed',
-        email: 'ahmed@email.com',
-        password: 'password',
-        dateOfBirth: '1999-7-14',
-        gender: 'male'
-      })
-      await firstUser.save()
-      // get the id of the document in the db to use it to get authorization token
-      await User.findOne({}, (err, user) => {
-        id = user._id
-        authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      })
-
-      
-      // Creating a user to be followed
-       const secondUser = new User({
-        name: 'omar',
-        email: 'omar@email.com',
-        password: 'password',
-      })
-      await secondUser.save()
-      id2 = secondUser._id
-
-
-      const thirdUser = new User({
-        name: 'ali',
-        email: 'ali@email.com',
-        password: 'password',
-      })
-      await thirdUser.save()
-      id3 = thirdUser._id
-
-
-      firstUser.following.push(id3)
-      await firstUser.save()
-
+    // Creating a user to follow another user
+    const firstUser = new User({
+      name: 'ahmed',
+      email: 'ahmed@email.com',
+      password: 'password',
+      dateOfBirth: '1999-7-14',
+      gender: 'male'
     })
-  
-    //Drop the whole users collection after finishing testing
-    afterAll(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      sinon.restore()
-    })
-  
-    
-    // Testing follow user successfully
-    it('Should follow user successfully', async () => {
-        const response = await supertest(app).put('/me/following').send({
-            id: id2
-        }).set('Authorization', authToken)
-  
-        expect(response.status).toBe(204)
+    await firstUser.save()
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      id = user._id
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
     })
 
+    // Creating a user to be followed
+    const secondUser = new User({
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
+    })
+    await secondUser.save()
+    id2 = secondUser._id
 
-   
-    it('Should not follow user', done => {
-    
-      const request = httpMocks.createRequest({
-        method: 'PUT',
-        url: '/me/following',
-        user: {
-          id
+    const thirdUser = new User({
+      name: 'ali',
+      email: 'ali@email.com',
+      password: 'password'
+    })
+    await thirdUser.save()
+    id3 = thirdUser._id
+
+    firstUser.following.push(id3)
+    await firstUser.save()
+  })
+
+  // Drop the whole users collection after finishing testing
+  afterAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    sinon.restore()
+  })
+
+  // Testing follow user successfully
+  it('Should follow user successfully', async () => {
+    const response = await supertest(app).put('/me/following').send({
+      id: id2
+    }).set('Authorization', authToken)
+
+    expect(response.status).toBe(204)
+  })
+
+  it('Should not follow user', done => {
+    const request = httpMocks.createRequest({
+      method: 'PUT',
+      url: '/me/following',
+      user: {
+        id
       },
-        body: {
-            "id": "5ed837386e30fe3278081114"
-        }
-      })
-  
-      const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
-        try {
-          expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(400)
-          expect(err.status).toEqual('fail')
-  
-          done()
-        } catch (error) {
-          done(error)
-        }
-      })
+      body: {
+        id: '5ed837386e30fe3278081114'
+      }
     })
-   
 
-    it('Should not follow user', done => {
-    
-      const request = httpMocks.createRequest({
-        method: 'PUT',
-        url: '/me/following',
-        user: {
-          id
-      },
-        body: {
-            "id": id3
-        }
-      })
-  
-      const response = httpMocks.createResponse()
-      authContoller.followArtistUser(request, response, (err) => {
-        try {
-          expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(400)
-          expect(err.status).toEqual('fail')
-  
-          done()
-        } catch (error) {
-          done(error)
-        }
-      })
+    const response = httpMocks.createResponse()
+    authContoller.followArtistUser(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(400)
+        expect(err.status).toEqual('fail')
+
+        done()
+      } catch (error) {
+        done(error)
+      }
     })
+  })
+
+  it('Should not follow user', done => {
+    const request = httpMocks.createRequest({
+      method: 'PUT',
+      url: '/me/following',
+      user: {
+        id
+      },
+      body: {
+        id: id3
+      }
+    })
+
+    const response = httpMocks.createResponse()
+    authContoller.followArtistUser(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(400)
+        expect(err.status).toEqual('fail')
+
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 })

@@ -1,4 +1,4 @@
-  // /** Jest unit testing for getting user data
+// /** Jest unit testing for getting user data
 //  * @module routes/users
 //  * @requires express
 //  */
@@ -63,8 +63,7 @@ const appError = require('../../utils/appError')
 
 const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Testing userService get user id
 describe('userService get user id functionality', () => {
@@ -110,7 +109,7 @@ describe('userService get user id functionality', () => {
 // Testing userService get user role
 describe('userService get user role functionality', () => {
   let authToken = 'token'
-  let id = 'testid'
+  const id = 'testid'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     await mongoose.connection.collection('users').deleteMany({})
@@ -152,7 +151,7 @@ describe('userService get user role functionality', () => {
 // Testing userService get user email
 describe('userService get user email functionality', () => {
   let authToken = 'token'
-  let id = 'testid'
+  const id = 'testid'
   // Drop the whole users collection before testing and add a simple user to test with
   beforeEach(async () => {
     await mongoose.connection.collection('users').deleteMany({})

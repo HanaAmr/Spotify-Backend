@@ -11,10 +11,10 @@ const sinon = require('sinon')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.TEST_DATABASE
-let server, agent;
+let server, agent
 const searchService = require('./../../services/searchService')
 
-//jest.setTimeout(10000)
+// jest.setTimeout(10000)
 
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,7 +25,6 @@ if (process.env.TEST === '1') {
 let testPlaylist
 describe('test getting playlist', () => {
   beforeEach(async (done) => {
-    
     sinon.restore()
 
     await mongoose.connection.collection('tracks').deleteMany({})
@@ -41,31 +40,30 @@ describe('test getting playlist', () => {
     await testTrack.save()
 
     server = app.listen(5010, (err) => {
-    if (err) return done(err);
+      if (err) return done(err)
 
-    agent = supertest.agent(server); 
-    done();
-    });
-   
+      agent = supertest.agent(server)
+      done()
+    })
   })
   afterEach(async (done) => {
     sinon.restore()
     await mongoose.connection.collection('tracks').deleteMany({})
-    return server && server.close(done);
+    return server && server.close(done)
   })
 
   it('test searching with letter B', async () => {
-    const tracks = await searchService("B")
+    const tracks = await searchService('B')
     expect(tracks[0]._id.toString()).toMatch(testTrack._id.toString())
   })
 
   it('test searching with letter ver', async () => {
-    const tracks = await searchService("ver")
+    const tracks = await searchService('ver')
     expect(tracks[0]._id.toString()).toMatch(testTrack._id.toString())
   })
 
   it('test searching with letter T', async () => {
-    const tracks = await searchService("T")
+    const tracks = await searchService('T')
     expect(tracks.length).toBe(0)
   })
 
@@ -89,5 +87,4 @@ describe('test getting playlist', () => {
     expect(response.body.status).toBe('success')
     expect(response.body.data.results.total).toBe(0)
   })
-
 })

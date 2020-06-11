@@ -67,7 +67,6 @@ const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
-
 // Testing userService create token string function
 describe('userService create token string functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
@@ -139,7 +138,6 @@ describe('userService assigning token string to user functionality', () => {
   })
 })
 
-
 // Testing userService change password after reset
 describe('userService change password after reset functionality', () => {
   // Drop the whole users collection before testing and add a simple user to test with
@@ -196,8 +194,7 @@ describe('userService change password after reset functionality', () => {
   })
 })
 
-
-//Integration testing
+// Integration testing
 
 // Testing requesting for resetting password
 describe('User can request to reset his password', () => {
@@ -212,7 +209,7 @@ describe('User can request to reset his password', () => {
       password: 'password'
     })
     await validUser.save()
-    //stubbing mailing functions
+    // stubbing mailing functions
     sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
@@ -224,7 +221,6 @@ describe('User can request to reset his password', () => {
 
   // Testing requesting to reset the password
   it('Should request to reset the password successfully and send email', done => {
-
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/resetPassword',
@@ -262,7 +258,7 @@ describe('User can reset his password', () => {
       resetPasswordExpires: Date.now() + 360000
     })
     await validUser.save()
-    //stubbing mailing functions
+    // stubbing mailing functions
     sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
@@ -295,5 +291,4 @@ describe('User can reset his password', () => {
       }
     })
   })
-
 })

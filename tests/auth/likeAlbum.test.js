@@ -18,129 +18,117 @@ if (process.env.TEST === '1') {
   throw new Error('Can\'t connect to db, make sure you run in test environment!')
 }
 
-
 describe('Like album functionaly', () => {
-    let authToken = ''
-    let id = ''
-    let albumId = ''
-    let albumId2 = ''
-    // Drop the whole users collection before testing and add a simple user to test with
-    beforeEach(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      await mongoose.connection.collection('albums').deleteMany({})
+  let authToken = ''
+  let id = ''
+  let albumId = ''
+  let albumId2 = ''
+  // Drop the whole users collection before testing and add a simple user to test with
+  beforeEach(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
 
-      // Creating a user 
-      const user = new User({
-        name: 'ahmed',
-        email: 'ahmed@email.com',
-        password: 'password',
-        dateOfBirth: '1999-7-14',
-        gender: 'male'
-      })
-      await user.save()
-      // get the id of the document in the db to use it to get authorization token
-      await User.findOne({}, (err, user) => {
-        id = user._id
-        authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-      })
-
-      
-      
-       const album = new Album({
-        name: 'Divide',
-        image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
-        albumType: 'album',
-        genre: 'Pop-rock'
-      })
-      await album.save()
-      albumId = album._id
-
-
-      const album2 = new Album({
-        name: 'album2',
-        image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
-        albumType: 'album',
-        genre: 'Pop-rock'
-      })
-      await album2.save()
-      albumId2 = album2._id
-
-      user.likedAlbums.push(albumId2)
-      await user.save()
-
+    // Creating a user
+    const user = new User({
+      name: 'ahmed',
+      email: 'ahmed@email.com',
+      password: 'password',
+      dateOfBirth: '1999-7-14',
+      gender: 'male'
+    })
+    await user.save()
+    // get the id of the document in the db to use it to get authorization token
+    await User.findOne({}, (err, user) => {
+      id = user._id
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
     })
 
-    //Drop the whole collections
-    afterAll(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      await mongoose.connection.collection('albums').deleteMany({})
+    const album = new Album({
+      name: 'Divide',
+      image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
+      albumType: 'album',
+      genre: 'Pop-rock'
     })
-  
-    
-    // Testing like album successfully
-    it('Should like album successfully', async () => {
-        const response = await supertest(app).put('/me/likeAlbum').send({
-            id: albumId
-        }).set('Authorization', authToken)
-  
-        expect(response.status).toBe(204)
+    await album.save()
+    albumId = album._id
+
+    const album2 = new Album({
+      name: 'album2',
+      image: `${process.env.API_URL}/public/imgs/albums/Divide.jpg`,
+      albumType: 'album',
+      genre: 'Pop-rock'
     })
+    await album2.save()
+    albumId2 = album2._id
 
+    user.likedAlbums.push(albumId2)
+    await user.save()
+  })
 
-    it('Should not like album', done => {
-    
-      const request = httpMocks.createRequest({
-        method: 'PUT',
-        url: '/me/likeAlbum',
-        user: {
-          id
+  // Drop the whole collections
+  afterAll(async () => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+  })
+
+  // Testing like album successfully
+  it('Should like album successfully', async () => {
+    const response = await supertest(app).put('/me/likeAlbum').send({
+      id: albumId
+    }).set('Authorization', authToken)
+
+    expect(response.status).toBe(204)
+  })
+
+  it('Should not like album', done => {
+    const request = httpMocks.createRequest({
+      method: 'PUT',
+      url: '/me/likeAlbum',
+      user: {
+        id
       },
-        body: {
-            "id": id
-        }
-      })
-  
-      const response = httpMocks.createResponse()
-      authContoller.likeAlbum(request, response, (err) => {
-        try {
-          expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(400)
-          expect(err.status).toEqual('fail')
-  
-          done()
-        } catch (error) {
-          done(error)
-        }
-      })
+      body: {
+        id: id
+      }
     })
 
+    const response = httpMocks.createResponse()
+    authContoller.likeAlbum(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(400)
+        expect(err.status).toEqual('fail')
 
-    it('Should not like album', done => {
-    
-      const request = httpMocks.createRequest({
-        method: 'PUT',
-        url: '/me/likeAlbum',
-        user: {
-          id
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
+
+  it('Should not like album', done => {
+    const request = httpMocks.createRequest({
+      method: 'PUT',
+      url: '/me/likeAlbum',
+      user: {
+        id
       },
-        body: {
-            "id": albumId2
-        }
-      })
-  
-      const response = httpMocks.createResponse()
-      authContoller.likeAlbum(request, response, (err) => {
-        try {
-          expect(err).toEqual(expect.anything())
-          expect(err.statusCode).toEqual(400)
-          expect(err.status).toEqual('fail')
-  
-          done()
-        } catch (error) {
-          done(error)
-        }
-      })
+      body: {
+        id: albumId2
+      }
     })
 
-   
+    const response = httpMocks.createResponse()
+    authContoller.likeAlbum(request, response, (err) => {
+      try {
+        expect(err).toEqual(expect.anything())
+        expect(err.statusCode).toEqual(400)
+        expect(err.status).toEqual('fail')
+
+        done()
+      } catch (error) {
+        done(error)
+      }
+    })
+  })
 })

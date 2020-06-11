@@ -3,19 +3,18 @@
 //  * @requires express
 //  */
 
-
 /**
  * Firebase needed for notifications apis
  * @const
  */
-var admin = require("firebase-admin")
+var admin = require('firebase-admin')
 
-var serviceAccount = require("./../service-account-file.json")
+var serviceAccount = require('./../service-account-file.json')
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://totally-not-spotify.firebaseio.com"
-});
+  databaseURL: 'https://totally-not-spotify.firebaseio.com'
+})
 
 /**
  * User model from the database
@@ -28,7 +27,6 @@ const User = require('../models/userModel')
  * @const
  */
 const Notification = require('../models/notificationModel')
-
 
 /**
  *
@@ -54,7 +52,7 @@ class notificationService {
     * Constructs the notifications service
     * @param {*} userService
     */
-  constructor(userService) {
+  constructor (userService) {
     this.userService = userService
   }
 
@@ -65,14 +63,14 @@ class notificationService {
     * @param {String} type - The type of the device, web or android
     * @param {String} token - The new token to assign to the user
     */
-  async updateToken(authToken, type, token) {
+  async updateToken (authToken, type, token) {
     const userId = await userService.getUserId(authToken)
     if (type == 'web') {
-      await User.update({ _id: userId }, { $set: { webNotifToken: token } }) //Update Web token of user 
+      await User.update({ _id: userId }, { $set: { webNotifToken: token } }) // Update Web token of user
     } else if (type == 'android') {
-      await User.update({ _id: userId }, { $set: { androidNotifToken: token } }) //Update Web token of user 
+      await User.update({ _id: userId }, { $set: { androidNotifToken: token } }) // Update Web token of user
     } else {
-      throw new AppError("Not a valid type for the token!", 403)
+      throw new AppError('Not a valid type for the token!', 403)
     }
   }
 
@@ -82,8 +80,8 @@ class notificationService {
     * @param {String} userId - The userId of the user.
     * @returns {Array} Array of 2 strings, first one is the web token for notifications, second is the android token for notifications
     */
-  async getToken(userId) {
-    const user = await User.findOne({ "_id": userId })
+  async getToken (userId) {
+    const user = await User.findOne({ _id: userId })
     const webToken = user.webNotifToken
     const androidToken = user.androidNotifToken
     const tokenArr = [webToken, androidToken]
@@ -99,7 +97,7 @@ class notificationService {
     * @param {Object} data - The data of the notification. (URI, HREF, Images links, etc)
     * @returns {Object} - The notification JSON to send to user
     */
-  async generateNotification(title, body, userId, data) {
+  async generateNotification (title, body, userId, data) {
     const notif = new Notification()
     notif.notification.title = title
     notif.notification.body = body
@@ -107,10 +105,9 @@ class notificationService {
     notif.time = Date.now()
     notif.userId = userId
     await notif.save()
-    const message = { "notification": notif.notification, "tokens": "", "data": notif.data }
+    const message = { notification: notif.notification, tokens: '', data: notif.data }
     return message
   }
-
 
   /**
     * Sends notification to user
@@ -119,15 +116,15 @@ class notificationService {
     * @param {Object} notification - The notification to be sent
     * @returns {Object} notification - The notification sent
     */
-  async sendNotification(userId, notification) {
+  async sendNotification (userId, notification) {
     const tokens = await this.getToken(userId)
-    //Check if no tokens available, then don't send notification.
+    // Check if no tokens available, then don't send notification.
     if (tokens[0] == '' && tokens[1] == '') return null
-    let tokensToSend = []
-    //Add existing tokens only
+    const tokensToSend = []
+    // Add existing tokens only
     if (tokens[0] != '') tokensToSend.push(tokens[0])
     if (tokens[1] != '') tokensToSend.push(tokens[1])
-    notification.tokens = tokensToSend 
+    notification.tokens = tokensToSend
     await admin.messaging().sendMulticast(notification)
     return notification
   }
@@ -137,7 +134,7 @@ class notificationService {
     * @function
     * @param {Object} notification - The notification to be sent
     */
-  async sendNotificationTopic(notification) {
+  async sendNotificationTopic (notification) {
     await admin.messaging().send(notification)
   }
 
@@ -149,20 +146,17 @@ class notificationService {
     * @param {Bool} subscribe -The type of the request, if 1 then it is subscribe, if 0 then it is unsubscribe
     * @returns {Object} - The tokens used and the topic to subscribe to.
     */
-  async subscribeToTopic(userId, topic, subscribe) {
+  async subscribeToTopic (userId, topic, subscribe) {
     const tokens = await this.getToken(userId)
-    //Check if no tokens available, then don't send notification.
+    // Check if no tokens available, then don't send notification.
     if (tokens[0] == '' && tokens[1] == '') return null
-    let tokensToSend = []
+    const tokensToSend = []
     if (tokens[0] != null) tokensToSend.push(tokens[0])
     if (tokens[1] != null) tokensToSend.push(tokens[1])
-    if(subscribe)
-      await admin.messaging().subscribeToTopic(tokensToSend, topic)
-    else 
-      await admin.messaging().unsubscribeFromTopic(tokensToSend, topic)
+    if (subscribe) { await admin.messaging().subscribeToTopic(tokensToSend, topic) } else { await admin.messaging().unsubscribeFromTopic(tokensToSend, topic) }
     const subscription = {
-      'tokens': tokensToSend,
-      'topic': topic
+      tokens: tokensToSend,
+      topic: topic
     }
     return subscription
   }

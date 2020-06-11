@@ -40,9 +40,6 @@ const catchAsync = require('./../utils/catchAsync')
  */
 const AppError = require('./../utils/appError')
 
-const paginatedResults=require('./../utils/pagination')
-
-
 /**
  * A function that is used to get all categories.
  *  @alias module:controllers/category
@@ -61,7 +58,6 @@ exports.getAllCategories = catchAsync(async (req, res, next) => { //  non pagina
     }
   })
 })
-
 
 /**
  * A function that is used to get the playlists of the category.

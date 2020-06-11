@@ -77,8 +77,6 @@ router.post('/loginWithFacebook', passport.authenticate('facebookToken', { sessi
 */
 router.post('/signIn', authController.signIn)
 
-
-
 /**
 * Route for requesting to get user profile
 * @name get/getUserProfile
@@ -89,8 +87,6 @@ router.post('/signIn', authController.signIn)
 * @param {callback} middleware - get user profile middleware.
 */
 router.get('/users/:id', authController.getUserProfile)
-
-
 
 /**
 * Route for requesting to get my profile
@@ -164,7 +160,6 @@ router.get('/me/following', authController.protect, authController.getfollowedAr
 */
 router.get('/me/followers', authController.protect, authController.getUserfollowers)
 
-
 /**
 * Route for requesting to unfollow user
 * @name delete/unfollowArtistUser
@@ -213,7 +208,6 @@ router.put('/me/likeTrack', authController.protect, authController.likeTrack)
 */
 router.get('/me/likedTracks', authController.protect, authController.getLikedTracks)
 
-
 /**
 * Route for requesting to unlike track
 * @name delete/unlikeTrack
@@ -225,7 +219,6 @@ router.get('/me/likedTracks', authController.protect, authController.getLikedTra
 * @param {callback} middleware - unlike track middleware.
 */
 router.delete('/me/unlikeTrack', authController.protect, authController.unlikeTrack)
-
 
 /**
 * Route for requesting to like album
@@ -251,8 +244,6 @@ router.put('/me/likeAlbum', authController.protect, authController.likeAlbum)
 */
 router.get('/me/likedAlbums', authController.protect, authController.getLikedAlbums)
 
-
-
 /**
 * Route for requesting to unlike album
 * @name delete/unlikeAlbum
@@ -264,8 +255,6 @@ router.get('/me/likedAlbums', authController.protect, authController.getLikedAlb
 * @param {callback} middleware - unlike album middleware.
 */
 router.delete('/me/unlikeAlbum', authController.protect, authController.unlikeAlbum)
-
-
 
 /**
 * Route for requesting to like playlist
@@ -291,7 +280,6 @@ router.put('/me/likePlaylist', authController.protect, authController.likePlayli
 */
 router.get('/me/likedPlaylists', authController.protect, authController.getLikedPlaylists)
 
-
 /**
 * Route for getting created playlists
 * @name get/me/createdPlaylists
@@ -303,7 +291,6 @@ router.get('/me/likedPlaylists', authController.protect, authController.getLiked
 * @param {callback} middleware - get created playlists middleware.
 */
 router.get('/me/createdPlaylists', authController.protect, authController.getCreatedPlaylists)
-
 
 /**
 * Route for requesting to unlike playlist
@@ -317,8 +304,6 @@ router.get('/me/createdPlaylists', authController.protect, authController.getCre
 */
 router.delete('/me/unlikePlaylist', authController.protect, authController.unlikePlaylist)
 
-
-
 /**
 * Route for requesting to remove image
 * @name delete/removeImage
@@ -330,7 +315,6 @@ router.delete('/me/unlikePlaylist', authController.protect, authController.unlik
 * @param {callback} middleware - remove image middleware.
 */
 router.delete('/me/image', authController.protect, authController.removeImage)
-
 
 /**
 * Route for requesting to change image
@@ -344,8 +328,6 @@ router.delete('/me/image', authController.protect, authController.removeImage)
 */
 router.put('/me/image', authController.protect, uploadService.uploadUserImage, authController.changeImage)
 
-
-
 /**
 * Route for requesting to create a playlist
 * @name post/createPlaylist
@@ -358,7 +340,6 @@ router.put('/me/image', authController.protect, uploadService.uploadUserImage, a
 */
 router.post('/users/playlists', authController.protect, authController.createPlaylist)
 
-
 /**
 * Route for requesting to add track to a playlist
 * @name post/addTrackToPlaylist
@@ -370,8 +351,6 @@ router.post('/users/playlists', authController.protect, authController.createPla
 * @param {callback} middleware - add track to a playlist middleware.
 */
 router.post('/playlists/:playlistId/tracks', authController.protect, authController.addTrackToPlaylist)
-
-
 
 /**
  * Route for requesting to reset password

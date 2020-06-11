@@ -23,12 +23,6 @@ const Playlist = require('./../models/playlistModel')
 const Track = require('./../models/trackModel')
 
 /**
- * user object
- * @const
- */
-const User = require('../models/userModel')
-
-/**
  * API features utils file
  * @const
  */
@@ -51,8 +45,6 @@ const AppError = require('./../utils/appError')
  * @const
  */
 const recommendationService = require('./../services/recommendationService')
-
-
 
 /**
  * Get one Playlist given its ID
@@ -156,11 +148,10 @@ exports.getSortedPlaylist = catchAsync(async (req, res, next) => { //  not pagin
  * @param {Function} next - The next function in the middleware
  * @return {JSON} Returns an array of the recommended playlists.
  */
-exports.getRecommendedPlaylists = catchAsync(async (req, res, next) => { 
-
+exports.getRecommendedPlaylists = catchAsync(async (req, res, next) => {
   const playlist = await Playlist.aggregate([
-    {$sample: {size: 5}},
-    { $project: { "__v": 0 , "trackObjects":0 , "owner":0} }
+    { $sample: { size: 5 } },
+    { $project: { __v: 0, trackObjects: 0, owner: 0 } }
   ])
 
   res.status(200).json({
@@ -179,23 +170,21 @@ exports.getRecommendedPlaylists = catchAsync(async (req, res, next) => {
  * @param {Function} next - The next function in the middleware
  * @return {JSON} Returns an array of the recommended tracks for a playlist
  */
-exports.getRecommendedPlaylistTracks = catchAsync(async (req, res, next) => { 
-  let playlistId = await Playlist.findById(req.params.playlistId)
+exports.getRecommendedPlaylistTracks = catchAsync(async (req, res, next) => {
+  const playlistId = await Playlist.findById(req.params.playlistId)
 
-  if(!playlistId)
-  {
+  if (!playlistId) {
     return next(new AppError('There is no playlist with this ID', 404))
   }
 
-  let tracksArray= await recommendationService(req.params.playlistId)
-  req.query.limit=tracksArray.limit
-  req.query.page=tracksArray.page
+  const tracksArray = await recommendationService(req.params.playlistId)
+  req.query.limit = tracksArray.limit
+  req.query.page = tracksArray.page
 
   const features = new APIFeatures(Track.find().where('_id').nin(tracksArray.excludeTracks), req.query).limitFieldsTracks().paginate()
   const tracks = await features.query
 
-  if(tracks.length==0)
-  {
+  if (tracks.length === 0) {
     return next(new AppError('There is no recommended tracks for this playlist', 404))
   }
 
@@ -205,6 +194,4 @@ exports.getRecommendedPlaylistTracks = catchAsync(async (req, res, next) => {
       tracks
     }
   })
-
 })
-

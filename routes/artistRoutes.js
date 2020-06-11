@@ -83,7 +83,6 @@ router
   .route('/:id/top-tracks')
   .get(artistViewingController.getArtistTopTracks)
 
-
 /**
  * Route for requesting artist Created Playlists
  * @name /artists/:artistId/artist-created-playlists
@@ -95,7 +94,5 @@ router
 router
   .route('/:id/created-playlists')
   .get(artistViewingController.getArtistCreatedPlaylists)
-
-
 
 module.exports = router

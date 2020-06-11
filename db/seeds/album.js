@@ -3,7 +3,6 @@
  * @requires express
  */
 
-
 /**
  * Album model from the database
  * @const
@@ -72,7 +71,7 @@ createAlbums = async () => {
   user5 = (await user5).toString()
   start = user5.indexOf(':')
   const user5Id = user5.substring(start + 2, start + 26)
-  
+
   let user6 = User.find({ name: 'Hana' }).select('_id')
   user6 = (await user6).toString()
   start = user6.indexOf(':')
@@ -83,26 +82,26 @@ createAlbums = async () => {
   start = user7.indexOf(':')
   const user7Id = user7.substring(start + 2, start + 26)
 
-  let date1=new Date(2016,5,4)
-  date1.setUTCHours(0,0,0)
+  const date1 = new Date(2016, 5, 4)
+  date1.setUTCHours(0, 0, 0)
 
-  let date2=new Date(2017,1,2)
-  date2.setUTCHours(0,0,0)
+  const date2 = new Date(2017, 1, 2)
+  date2.setUTCHours(0, 0, 0)
 
-  let date3=new Date(2017,8,9)
-  date3.setUTCHours(0,0,0)
+  const date3 = new Date(2017, 8, 9)
+  date3.setUTCHours(0, 0, 0)
 
-  let date4=new Date(2018,0,2)
-  date4.setUTCHours(0,0,0)
+  const date4 = new Date(2018, 0, 2)
+  date4.setUTCHours(0, 0, 0)
 
-  let date5=new Date(2019,11,2)
-  date5.setUTCHours(0,0,0)
+  const date5 = new Date(2019, 11, 2)
+  date5.setUTCHours(0, 0, 0)
 
-  let date6= new Date(2020,0,25)
-  date6.setUTCHours(0,0,0)
-  
-  let date7= new Date(2020,1,4)
-  date7.setUTCHours(0,0,0)
+  const date6 = new Date(2020, 0, 25)
+  date6.setUTCHours(0, 0, 0)
+
+  const date7 = new Date(2020, 1, 4)
+  date7.setUTCHours(0, 0, 0)
 
   const album1 = new Album({
     name: 'Evolve',
@@ -117,7 +116,7 @@ createAlbums = async () => {
     artists: [user1Id],
     totalTracks: 2,
     popularity: 300000,
-    listensHistory:[
+    listensHistory: [
       {
         day: date1,
         numberOfListens: 200
@@ -142,20 +141,20 @@ createAlbums = async () => {
         day: date7,
         numberOfListens: 1000
       }],
-      likesHistory:[
-        {
-          day: date6,
-          userID: user7Id
-        },
-        {
-          day: date6,
-          userID: user6Id
-        },
-        {
-          day: date7,
-          userID: user5Id
-        }
-      ]
+    likesHistory: [
+      {
+        day: date6,
+        userID: user7Id
+      },
+      {
+        day: date6,
+        userID: user6Id
+      },
+      {
+        day: date7,
+        userID: user5Id
+      }
+    ]
   })
   await album1.save()
   await album1.updateOne({ href: `${process.env.API_URL}/albums/${album1._id}` })
@@ -174,7 +173,7 @@ createAlbums = async () => {
     artists: [user2Id],
     totalTracks: 1,
     popularity: 700000,
-    listensHistory:[
+    listensHistory: [
       {
         day: date2,
         numberOfListens: 5000
@@ -191,27 +190,27 @@ createAlbums = async () => {
         day: date7,
         numberOfListens: 1000
       }],
-      likesHistory:[
-        {
-          day: date5,
-          userID: user7Id
-        },
-        {
-          day: date6,
-          userID: user6Id
-        },
-        {
-          day: date7,
-          userID: user5Id
-        }
-      ]
+    likesHistory: [
+      {
+        day: date5,
+        userID: user7Id
+      },
+      {
+        day: date6,
+        userID: user6Id
+      },
+      {
+        day: date7,
+        userID: user5Id
+      }
+    ]
   })
   await album2.save()
   await album2.updateOne({ href: `${process.env.API_URL}/albums/${album2._id}` })
   await album2.updateOne({ uri: `spotify:albums:${album2._id}` })
 
   const album3 = new Album({
-    _id:"5edefb5fd1537f3f33f91340",
+    _id: '5edefb5fd1537f3f33f91340',
     name: 'Sahran',
     image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
     albumType: 'album',
@@ -224,7 +223,7 @@ createAlbums = async () => {
     artists: [user3Id],
     totalTracks: 14,
     popularity: 400000,
-    listensHistory:[
+    listensHistory: [
       {
         day: date1,
         numberOfListens: 60000
@@ -245,20 +244,20 @@ createAlbums = async () => {
         day: date7,
         numberOfListens: 1200
       }],
-      likesHistory:[
-        {
-          day: date1,
-          userID: user7Id
-        },
-        {
-          day: date7,
-          userID: user6Id
-        },
-        {
-          day: date7,
-          userID: user5Id
-        }
-      ]
+    likesHistory: [
+      {
+        day: date1,
+        userID: user7Id
+      },
+      {
+        day: date7,
+        userID: user6Id
+      },
+      {
+        day: date7,
+        userID: user5Id
+      }
+    ]
   })
   await album3.save()
   await album3.updateOne({ href: `${process.env.API_URL}/albums/${album3._id}` })
@@ -277,8 +276,8 @@ createAlbums = async () => {
     artists: [user4Id],
     totalTracks: 3,
     popularity: 100000,
-    listensHistory:[
-      
+    listensHistory: [
+
       {
         day: date2,
         numberOfListens: 50000

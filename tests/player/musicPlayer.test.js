@@ -92,13 +92,9 @@ const userServices = require('../../services/userService')
  */
 const playerServices = require('../../services/playerService')
 
-
 const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-
-
-
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Testing shufflng queue list for a user.
 describe('Shuffling player queue for a user', () => {
@@ -138,7 +134,7 @@ describe('Shuffling player queue for a user', () => {
     expect.hasAssertions()
     playerService = new playerServices()
     await playerService.shufflePlayerQueue(userId)
-    const userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     const queue = userPlayer.queueTracksIds
     expect(queue[0] != 'Track1' || queue[1] != 'Track2' || queue[2] != 'Track3' || queue[3] != 'Track4' || queue[0] == 'Track1').toBeTruthy()
   })
@@ -166,7 +162,7 @@ describe('Testing incrementing ads played and getting ad functionality', () => {
       userId: validUser._id
     })
     await userPlayer.save()
-    //Creating an ads account and ad track to test with
+    // Creating an ads account and ad track to test with
     const validArtist = new User({
       name: 'Cocacola',
       email: 'CocaCola@email.com',
@@ -175,7 +171,7 @@ describe('Testing incrementing ads played and getting ad functionality', () => {
     })
     await validArtist.save()
     artistId = validArtist._id
-    //Creating the ad to assign to the artist
+    // Creating the ad to assign to the artist
     testAd = new Track({
       name: 'Amir Eid CocaCola Ad',
       href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238c',
@@ -202,11 +198,11 @@ describe('Testing incrementing ads played and getting ad functionality', () => {
     expect.hasAssertions()
     playerService = new playerServices()
     await playerService.incrementAdsPlayed(userId)
-    const userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.adsPlayed).toEqual(1)
   })
 
-  // Testing getting a random ad for user 
+  // Testing getting a random ad for user
   it('Should return a random track object that is an ad', async () => {
     expect.hasAssertions()
     playerService = new playerServices()
@@ -217,15 +213,13 @@ describe('Testing incrementing ads played and getting ad functionality', () => {
   // Testing getting a random ad for user if no ad exist
   it('Should return message saying no ads exist upon requesting ad', async () => {
     expect.hasAssertions()
-    //Delete all tracks including ads
+    // Delete all tracks including ads
     await Track.deleteMany({})
     playerService = new playerServices()
     const adRequested = await playerService.getRandomAd()
-    expect(adRequested).toEqual(`No Ads available now`)
+    expect(adRequested).toEqual('No Ads available now')
   })
-
 })
-
 
 // Testing starting and getting context out of playlist/album/artist
 describe('Starting playing context for a user', () => {
@@ -256,7 +250,7 @@ describe('Starting playing context for a user', () => {
     })
     await validArtist.save()
     artistId = validArtist._id
-    //Creating the track to assign to the artist
+    // Creating the track to assign to the artist
     testTrack = new Track({
       _id: '5e8cfa4ffbfe6a5764b4238c',
       name: 'Believer',
@@ -334,13 +328,13 @@ describe('Starting playing context for a user', () => {
     expect.assertions(2)
     playerService = new playerServices()
     await playerService.generateContext(artistId, 'artist', userId)
-    const userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     const queue = userPlayer.queueTracksIds
     const context = await Context.findById(userPlayer.context)
-    //Expect the two tracks to return in the queue list
+    // Expect the two tracks to return in the queue list
     expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
       (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
-    //Expect context to be updated to type of artist and of artist id we passed
+    // Expect context to be updated to type of artist and of artist id we passed
     expect(context.type == 'artist' && context.id == artistId).toBeTruthy()
   })
 
@@ -349,13 +343,13 @@ describe('Starting playing context for a user', () => {
     expect.assertions(2)
     playerService = new playerServices()
     await playerService.generateContext(albumId, 'album', userId)
-    const userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     const queue = userPlayer.queueTracksIds
     const context = await Context.findById(userPlayer.context)
-    //Expect the two tracks to return in the queue list
+    // Expect the two tracks to return in the queue list
     expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
       (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
-    //Expect context to be updated to type of artist and of artist id we passed
+    // Expect context to be updated to type of artist and of artist id we passed
     expect(context.type == 'album' && context.id == albumId).toBeTruthy()
   })
 
@@ -364,17 +358,17 @@ describe('Starting playing context for a user', () => {
     expect.assertions(2)
     playerService = new playerServices()
     await playerService.generateContext(playlistId, 'playlist', userId)
-    const userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     const queue = userPlayer.queueTracksIds
     const context = await Context.findById(userPlayer.context)
-    //Expect the two tracks to return in the queue list
+    // Expect the two tracks to return in the queue list
     expect((queue[0] == '5e8cfa4ffbfe6a5764b4238c' && queue[1] == '6e8cfa4ffbfe6a5764b4238c') ||
       (queue[1] == '5e8cfa4ffbfe6a5764b4238c' && queue[0] == '6e8cfa4ffbfe6a5764b4238c')).toBeTruthy()
-    //Expect context to be updated to type of artist and of artist id we passed
+    // Expect context to be updated to type of artist and of artist id we passed
     expect(context.type == 'playlist' && context.id == playlistId).toBeTruthy()
   })
 
-  //Testing getting context from DB
+  // Testing getting context from DB
   it('Should return the context for the user', async () => {
     expect.assertions(1)
     playerService = new playerServices()
@@ -383,9 +377,8 @@ describe('Starting playing context for a user', () => {
     expect(context).not.toEqual(null)
   })
 
-  //Integration testing
+  // Integration testing
   it('Should start context successfully', async (done) => {
-
     const request = httpMocks.createRequest({
       method: 'PUT',
       url: '/me/player/play',
@@ -414,7 +407,7 @@ describe('Validating track to be played for a user', () => {
   // Add a simple user to test with
   beforeAll(async () => {
     sinon.restore()
-    //Creating artist for the tracks
+    // Creating artist for the tracks
     const validArtist = new User({
       name: 'Low Roar',
       email: 'LowRoar@email.com',
@@ -422,7 +415,7 @@ describe('Validating track to be played for a user', () => {
       role: 'artist'
     })
     await validArtist.save()
-    //Creating 2 tracks to test with it
+    // Creating 2 tracks to test with it
     testTrack = new Track({
       _id: '5e8cfa4ffbfe6a5764b4238c',
       name: 'Believer',
@@ -484,7 +477,7 @@ describe('Validating track to be played for a user', () => {
     expect(valid).toEqual(1)
   })
 
-  //Testing for a free user with no problems
+  // Testing for a free user with no problems
   it('Should return 1 for validating the track for a free user with the right track to request', async () => {
     sinon.stub(userServices.prototype, 'getUserRole').returns('user')
     expect.assertions(1)
@@ -495,7 +488,7 @@ describe('Validating track to be played for a user', () => {
     expect(valid).toEqual(1)
   })
 
-  //Testing for a free user requesting a track that isn't in the right order
+  // Testing for a free user requesting a track that isn't in the right order
   it('Should return -2 for validating the track for a free user while picking the wrong track to request', async () => {
     sinon.stub(userServices.prototype, 'getUserRole').returns('user')
     expect.assertions(1)
@@ -506,7 +499,7 @@ describe('Validating track to be played for a user', () => {
     expect(valid).toEqual(-2)
   })
 
-  //Testing for a free user requesting a track but without playing the ads
+  // Testing for a free user requesting a track but without playing the ads
   it('Should return -1 for validating the track for a free user while having ads yet to play', async () => {
     sinon.stub(userServices.prototype, 'getUserRole').returns('user')
     expect.assertions(1)
@@ -519,7 +512,6 @@ describe('Validating track to be played for a user', () => {
     const valid = await playerService.validateTrack('authToken', trackToBePlayed)
     expect(valid).toEqual(-1)
   })
-
 })
 
 // Testing finishing, skipping tracks
@@ -545,7 +537,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     // Mock the userServices get user id function to return the testing user id.
     sinon.stub(userServices.prototype, 'getUserId').returns(validUser._id)
     sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
-    //Creating an ads account and ad track to test with
+    // Creating an ads account and ad track to test with
     const validArtist = new User({
       name: 'Cocacola',
       email: 'CocaCola@email.com',
@@ -554,7 +546,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     })
     await validArtist.save()
     artistId = validArtist._id
-    //Creating the ad to assign to the artist
+    // Creating the ad to assign to the artist
     testAd = new Track({
       name: 'Amir Eid CocaCola Ad',
       href: 'http://127.0.0.1:7000/tracks/5e8cfa4ffbfe6a5764b4238c',
@@ -579,7 +571,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
   it('Should increment the queue offset', async () => {
     expect.assertions(1)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
     await playerService.finishTrack(userId, 1)
@@ -590,7 +582,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
   it('Should increment the queue offset and wrap around', async () => {
     expect.assertions(1)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 3
     await userPlayer.save()
     await playerService.finishTrack(userId, 1)
@@ -598,11 +590,10 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     expect(userPlayer.queueOffset).toEqual(0)
   })
 
-
   it('Should decrement the queue offset', async () => {
     expect.assertions(1)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 1
     await userPlayer.save()
     await playerService.finishTrack(userId, -1)
@@ -613,7 +604,7 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
   it('Should decrement the queue offset and wrap around', async () => {
     expect.assertions(1)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
     await playerService.finishTrack(userId, -1)
@@ -624,10 +615,10 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
   it('Should skip normally in the queue', async () => {
     expect.assertions(2)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1, "user")
+    await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(1)
@@ -636,55 +627,53 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
   it('Should skip normally in the queue but reach the maximum number of skips', async () => {
     expect.assertions(3)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10) - 1
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1, "user")
+    await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(parseInt(process.env.MAX_SKIPS, 10))
     expect(userPlayer.skipsRefreshAt >= Date.now()).toBeTruthy()
   })
 
-
   it('Should skip normally in the queue as 1 hour has passed since we reached the limit of the skips', async () => {
     expect.assertions(2)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1, "user")
+    await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
     expect(userPlayer.queueOffset).toEqual(1)
     expect(userPlayer.skipsMade).toEqual(1)
   })
 
-
-  it(`Shouldn't skip normally in the queue as less than 1 hour has passed since we reached the limit of the skips`, async () => {
+  it('Shouldn\'t skip normally in the queue as less than 1 hour has passed since we reached the limit of the skips', async () => {
     expect.assertions(1)
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000
     await userPlayer.save()
-    const skip = await playerService.skipTrack(userId, 1, "user")
+    const skip = await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
     expect(skip).toEqual(false)
   })
 
-  //Integration testing skipping
+  // Integration testing skipping
   it('Should skip track when finished successfully', async (done) => {
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1, "user")
+    await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
     const request = httpMocks.createRequest({
       method: 'POST',
@@ -705,12 +694,12 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
 
   it('Should skip track when requesting next track successfully', async (done) => {
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1, "user")
+    await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
 
     const request = httpMocks.createRequest({
@@ -730,9 +719,9 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     })
   })
 
-  it(`Shouldn't skip track when requesting next track successfully`, async (done) => {
+  it('Shouldn\'t skip track when requesting next track successfully', async (done) => {
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000
@@ -757,12 +746,12 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
 
   it('Should skip track when requesting previous track successfully', async (done) => {
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    let userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = 0
     await userPlayer.save()
-    await playerService.skipTrack(userId, 1, "user")
+    await playerService.skipTrack(userId, 1, 'user')
     userPlayer = await Player.findOne({ userId: userId })
 
     const request = httpMocks.createRequest({
@@ -782,9 +771,9 @@ describe('Skipping tracks either after finishing it or by skipping', () => {
     })
   })
 
-  it(`Shouldn't skip track when requesting previous track successfully`, async (done) => {
+  it('Shouldn\'t skip track when requesting previous track successfully', async (done) => {
     playerService = new playerServices()
-    let userPlayer = await Player.findOne({ 'userId': userId })
+    const userPlayer = await Player.findOne({ userId: userId })
     userPlayer.queueOffset = 0
     userPlayer.skipsMade = parseInt(process.env.MAX_SKIPS, 10)
     userPlayer.skipsRefreshAt = Date.now() + 3600 * 1000

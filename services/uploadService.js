@@ -19,7 +19,7 @@ const path = require('path')
  * fs for dealing with file systems
  * @const
  */
-const fs=require('fs')
+const fs = require('fs')
 
 /**
 * AppError class file
@@ -47,8 +47,7 @@ const userServiceClass = new userService()
  * @type {object}
  * @const
  */
-const Album=require('../models/albumModel')
-
+const Album = require('../models/albumModel')
 
 /**
 * Function that get the image full path given the URL stored in the database
@@ -56,13 +55,12 @@ const Album=require('../models/albumModel')
 * @memberof module:services/uploadService
 * @param {albumImage} - image attribute in the album object that holds image URL
 */
-const getImageAbsolutePath= function(albumImage)
-{
-  let fullPath = path.join(__dirname, '../');
-  fullPath+= "public/imgs/albums/"
-  //removes the server name and get its relative path in the imgs folder
-  const imgPath=albumImage.split('/').pop()
-  fullPath= path.join(fullPath,imgPath)
+const getImageAbsolutePath = function (albumImage) {
+  let fullPath = path.join(__dirname, '../')
+  fullPath += 'public/imgs/albums/'
+  // removes the server name and get its relative path in the imgs folder
+  const imgPath = albumImage.split('/').pop()
+  fullPath = path.join(fullPath, imgPath)
   return fullPath
 }
 
@@ -72,44 +70,38 @@ const getImageAbsolutePath= function(albumImage)
 * @memberof module:services/uploadService
 * @param {path} - Full path of the old image
 */
-const deleteImagePath=async(path)=>
-{
-  fs.unlink(path,err=>
-    {
-      if(err)
-         console.log("No image for album")
-    })
+const deleteImagePath = async (path) => {
+  fs.unlink(path, err => {
+    if (err) { console.log('No image for album') }
+  })
 }
-
 
 /**
 * A function that renames an existing image in the server with the album's new name
 * @function
 * @memberof module:services/uploadService
 * @param {name}  - The new name of the album
-* @param {albumImage} - The old url of the image to extract it's path 
+* @param {albumImage} - The old url of the image to extract it's path
 */
- exports.renameImage=async(name,albumImage)=>{
+exports.renameImage = async (name, albumImage) => {
+  oldPath = getImageAbsolutePath(albumImage)
 
-  oldPath=getImageAbsolutePath(albumImage)
-
-  //extracting the new path of the album by replacing the album name
-  let newPath=albumImage.split('-')
-  newPath[2]=name.split(' ').join('_')
-  newPath=newPath.join('-')
-  const newImagePath=newPath
-  newPath=newPath.split('/').pop()
-  let fullPath = path.join(__dirname, '../');
-  fullPath+= "public/imgs/albums/"
-  newPath=fullPath+newPath
+  // extracting the new path of the album by replacing the album name
+  let newPath = albumImage.split('-')
+  newPath[2] = name.split(' ').join('_')
+  newPath = newPath.join('-')
+  const newImagePath = newPath
+  newPath = newPath.split('/').pop()
+  let fullPath = path.join(__dirname, '../')
+  fullPath += 'public/imgs/albums/'
+  newPath = fullPath + newPath
   console.log(newPath)
 
-  //system call to rename the file
-  fs.rename(oldPath,newPath,err=>{
-    if(err)
-      console.log('cannot find img')
+  // system call to rename the file
+  fs.rename(oldPath, newPath, err => {
+    if (err) { console.log('cannot find img') }
   })
-  //return the new URL of the image so i can be updted in the database
+  // return the new URL of the image so i can be updted in the database
   return newImagePath
 }
 
@@ -135,7 +127,7 @@ const multerAlbumImageStorage = multer.diskStorage({
 })
 
 /**
-* Multer storage function for deleting old album image,setting storage path of album images to public/imgs/albums 
+* Multer storage function for deleting old album image,setting storage path of album images to public/imgs/albums
 * and naming the file with the following format:
 * artistid-album-albumname-data.fileextension
 * @function
@@ -149,19 +141,15 @@ const multerUpdateAlbumImageStorage = multer.diskStorage({
     cb(null, 'public/imgs/albums')
   },
   filename: async (req, file, cb) => {
-    const album=await Album.findById(req.params.id)
+    const album = await Album.findById(req.params.id)
     const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-    if(!(album.artists.includes(artistId)))
-      throw (new AppError('You are not allowed to delete albums that are not yours', 405))
+    if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to delete albums that are not yours', 405)) }
 
-    const path=getImageAbsolutePath(album.image)
+    const path = getImageAbsolutePath(album.image)
     await deleteImagePath(path)
     let albumName
 
-    if(req.body.name)
-      albumName = req.body.name.split(' ').join('_')
-    else
-      albumName=album.name.split(' ').join('_')
+    if (req.body.name) { albumName = req.body.name.split(' ').join('_') } else { albumName = album.name.split(' ').join('_') }
 
     const fileExtension = file.mimetype.split('/')[1]
     cb(null, `${artistId}-album-${albumName}-${Date.now()}.${fileExtension}`)
@@ -218,7 +206,6 @@ const multerTrackStorage = multer.diskStorage({
 * @param {cb} - The call back of the function
 */
 const multerFilterImage = (req, file, cb) => {
-  
   if (file.mimetype.startsWith('image')) {
     cb(null, true)
   } else {
@@ -252,9 +239,9 @@ const uploadImage = multer({
   fileFilter: multerFilterImage
 })
 
-const changeAlbumImage=multer({
-  storage:multerUpdateAlbumImageStorage,
-  fileFilter:multerFilterImage
+const changeAlbumImage = multer({
+  storage: multerUpdateAlbumImageStorage,
+  fileFilter: multerFilterImage
 })
 /**
 * A function for creating multer object and assigning it to storage and filter for the userImage
@@ -265,7 +252,6 @@ const changeImage = multer({
   storage: multerUserImageStorage,
   fileFilter: multerFilterImage
 })
-
 
 /**
 * A function for creating multer object and assigning it to storage and filter for the track
@@ -297,7 +283,6 @@ exports.updateAlbumImage = changeAlbumImage.single('image')
 * @memberof module:services/uploadService
 */
 exports.uploadUserImage = changeImage.single('image')
-
 
 /**
 * A middleware function for uploadingTrackAudio for artist
