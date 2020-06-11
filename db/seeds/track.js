@@ -415,7 +415,7 @@ createTracks = async () => {
     type: 'track',
     externalUrl: 'this should be an externalUrl',
     externalId: 'this should be an externalId',
-    trackNumber: 2,
+    trackNumber: 3,
     durationMs: 139000,
     popularity: 900000,
     album: album4Id,

@@ -243,6 +243,13 @@ describe('test getting playlist', () => {
     expect(tracks.page).toBe(1)
   })
 
+  it('Integeration Test getting recommended tracks for playlist checking that existing track will not be returned', async () => {
+    const response = await agent.get('/playlists/5e729d853d8d0a432c70b59c/tracks/recommended').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.tracks[0]._id.toString()).toMatch(testTrack2._id.toString())
+  })
+
   it('Get recommended playlists', async () => {
     const response = await agent.get('/playlists/recommended').set('Authorization', authToken)
     expect(response.status).toBe(200)

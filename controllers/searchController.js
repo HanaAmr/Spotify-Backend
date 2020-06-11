@@ -64,9 +64,6 @@ exports.getSearchedForTracks = catchAsync(async (req, res, next) => {
     
     let idArray = await searchService(req.query.q)
 
-    // if (idArray.length==0) {
-    //   return next(new AppError('No tracks found', 404))
-    // }
 
     const results=await paginatedResults(req,await Track.find().where('_id').in(idArray).countDocuments().exec())
     const features = new APIFeatures(Track.find().where('_id').in(idArray), req.query).paginate().limitFieldsTracks()
@@ -80,23 +77,3 @@ exports.getSearchedForTracks = catchAsync(async (req, res, next) => {
     })
   
 })
-
-
-// exports.getSearchedForTracks = catchAsync(async (req, res, next) => {
-//     let idArray = await searchService(req.query.q)
-
-//     if (idArray.length==0) {
-//       return next(new AppError('No tracks found', 404))
-//     }
-
-//     const features = new APIFeatures(Track.find().where('_id').in(idArray), req.query).limitFieldsTracks() 
-//     const tracks = await features.query
-
-   
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         tracks
-//       }
-//     })
-//   })

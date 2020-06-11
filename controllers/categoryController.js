@@ -62,18 +62,6 @@ exports.getAllCategories = catchAsync(async (req, res, next) => { //  non pagina
   })
 })
 
-// exports.getAllCategories =catchAsync(async (req, res, next) => {  // paginated
-
-//   const results=await paginatedResults(req,await Category.find().countDocuments().exec())
-//   const features = new APIFeatures(Category.find(), req.query).paginate()
-//   results.items = await features.query
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
 
 /**
  * A function that is used to get the playlists of the category.
@@ -100,16 +88,3 @@ exports.getCategoryPlaylist = catchAsync(async (req, res, next) => { //  non pag
     }
   })
 })
-
-// exports.getCategoryPlaylist = catchAsync(async (req, res, next) => { //  paginated
-//   const results=await paginatedResults(req,await Playlist.find({ category: req.params.categoryId }).countDocuments().exec())
-//   const features = new APIFeatures(Playlist.find({ category: req.params.categoryId }), req.query).paginate().limitFieldsPlaylist()
-//   results.items = await features.query
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })

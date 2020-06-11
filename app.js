@@ -6,9 +6,6 @@ const errorController = require('./controllers/errorController')
 
 app.use('/public', express.static('./public'))
 
-// app.get('/', (req, res) => {
-//   res.status(200).json({ message: 'get is successful el7', app: 'spotifycufe' })
-// })
 
 const userRouter = require('./routes/userRouters')
 const artistRouter = require('./routes/artistRoutes')
