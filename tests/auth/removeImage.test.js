@@ -49,11 +49,9 @@ describe('Get remove image functionality', () => {
       })
       await secondUser.save()
       id2 = secondUser._id
-      console.log(secondUser.images)
       secondUser.images = []
       await secondUser.save()
-      console.log(secondUser.images)
-
+      
 
     })
   
@@ -86,8 +84,7 @@ describe('Get remove image functionality', () => {
       const response = httpMocks.createResponse()
       authContoller.removeImage(request, response, (err) => {
         try {
-          console.log(err)
-          expect(err).toEqual(expect.anything())
+         expect(err).toEqual(expect.anything())
 
           done()
         } catch (error) {
