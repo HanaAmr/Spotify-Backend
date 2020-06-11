@@ -129,7 +129,6 @@ exports.addAlbum = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns JSON object of added track if request is successful, an error object otherwise
  */
 exports.addTracktoAlbum = catchAsync(async (req, res, next) => {
-
   //getting artist info and album for updating them latter
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
   const artist = User.findById(artistId)
