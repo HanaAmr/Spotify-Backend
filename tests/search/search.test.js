@@ -6,6 +6,7 @@ const Playlist = require('../../models/playlistModel')
 const Track = require('../../models/trackModel')
 const playlistController = require('../../controllers/playlistController')
 const trackController = require('../../controllers/trackController')
+const searchController = require('../../controllers/searchController')
 const sinon = require('sinon')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
@@ -66,6 +67,27 @@ describe('test getting playlist', () => {
   it('test searching with letter T', async () => {
     const tracks = await searchService("T")
     expect(tracks.length).toBe(0)
+  })
+
+  it('Integeration test on searching with letter "B"', async () => {
+    const response = await agent.get('/search?q=B')
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.results.items[0]._id.toString()).toMatch(testTrack._id.toString())
+  })
+
+  it('Integeration test on searching with letter "ver"', async () => {
+    const response = await agent.get('/search?q=ver')
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.results.items[0]._id.toString()).toMatch(testTrack._id.toString())
+  })
+
+  it('Integeration test on searching with letter "T"', async () => {
+    const response = await agent.get('/search?q=T')
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.results.total).toBe(0)
   })
 
 })

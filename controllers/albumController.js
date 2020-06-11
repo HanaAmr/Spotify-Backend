@@ -151,23 +151,6 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
   })
 })
 
-// exports.getAlbumTracks = catchAsync(async (req, res, next) => {  //  paginated
-
-//   const results=await paginatedResults(req,await Track.find().where('album').in(req.params.albumId).countDocuments().exec())
-//   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId), req.query).paginate()
-//   results.items= await features.query.select('-album -audioFilePath').populate('artists')
-//   if (results.items.length===0) {
-//     return next(new AppError('No album found with that ID', 404))
-//   }
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
-
 /**
  * A function that is used to get sorted albums.
  *  @alias module:controllers/album
@@ -192,20 +175,3 @@ exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  not paginat
   })
 })
 
-// exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  paginated
-
-//   const results=await paginatedResults(req,await Album.find().countDocuments().exec())
-//   const features = new APIFeatures(Album.find(), req.query).sort().paginate()
-//   results.items = await features.query.populate({
-//     path: 'artists',
-//     select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
-
-//   })
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
