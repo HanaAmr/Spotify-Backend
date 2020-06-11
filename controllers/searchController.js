@@ -46,7 +46,6 @@ const searchService = require('./../services/searchService')
  */
 const paginatedResults = require('./../utils/pagination')
 
-
 /**
  * Search for tracks
  * @alias module:controllers/search
@@ -56,47 +55,20 @@ const paginatedResults = require('./../utils/pagination')
  * @return {JSON} The details of the tracks in a json form.
  */
 exports.getSearchedForTracks = catchAsync(async (req, res, next) => {
+  if (!req.query.q) {
+    return next(new AppError('Please enter a keyword to search with', 404))
+  }
 
-    if(!req.query.q)
-    {
-        return next(new AppError('Please enter a keyword to search with', 404))
-    }
-    
-    let idArray = await searchService(req.query.q)
+  const idArray = await searchService(req.query.q)
 
-    // if (idArray.length==0) {
-    //   return next(new AppError('No tracks found', 404))
-    // }
+  const results = await paginatedResults(req, await Track.find().where('_id').in(idArray).countDocuments().exec())
+  const features = new APIFeatures(Track.find().where('_id').in(idArray), req.query).paginate().limitFieldsTracks()
+  results.items = await features.query
 
-    const results=await paginatedResults(req,await Track.find().where('_id').in(idArray).countDocuments().exec())
-    const features = new APIFeatures(Track.find().where('_id').in(idArray), req.query).paginate().limitFieldsTracks()
-    results.items = await features.query
-
-    res.status(200).json({
+  res.status(200).json({
     status: 'success',
     data: {
-        results
+      results
     }
-    })
-  
+  })
 })
-
-
-// exports.getSearchedForTracks = catchAsync(async (req, res, next) => {
-//     let idArray = await searchService(req.query.q)
-
-//     if (idArray.length==0) {
-//       return next(new AppError('No tracks found', 404))
-//     }
-
-//     const features = new APIFeatures(Track.find().where('_id').in(idArray), req.query).limitFieldsTracks() 
-//     const tracks = await features.query
-
-   
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         tracks
-//       }
-//     })
-//   })

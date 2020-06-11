@@ -44,7 +44,7 @@ const Track = require('./../models/trackModel')
  * User model from the database
  * @const
  */
-const User=require('./../models/userModel')
+const User = require('./../models/userModel')
 
 /**
  * user Service Class
@@ -52,7 +52,6 @@ const User=require('./../models/userModel')
  */
 const userService = require('./../services/userService')
 const userServiceClass = new userService()
-
 
 /**
  * A function that is used to get albums with ids.
@@ -122,19 +121,15 @@ exports.getOneAlbum = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns an array of the tracks of the album in a json form.
  */
 exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginated
-
   const album = await Album.findById(req.params.albumId)
-  if (!album)
-    return next(new AppError('No album found with that ID', 404))
+  if (!album) { return next(new AppError('No album found with that ID', 404)) }
 
-  let artist=null
-  if(req.headers.authorization)
-  {
+  let artist = null
+  if (req.headers.authorization) {
     const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-    artist = User.find({_id:artistId,role:'artist'})
+    artist = User.find({ _id: artistId, role: 'artist' })
   }
-  
-  
+
   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId).select('-__v'), req.query).paginate().limitFieldsTracks()
 
   const tracksArray = await features.query
@@ -151,23 +146,6 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
   })
 })
 
-// exports.getAlbumTracks = catchAsync(async (req, res, next) => {  //  paginated
-
-//   const results=await paginatedResults(req,await Track.find().where('album').in(req.params.albumId).countDocuments().exec())
-//   const features = new APIFeatures(Track.find().where('album').in(req.params.albumId), req.query).paginate()
-//   results.items= await features.query.select('-album -audioFilePath').populate('artists')
-//   if (results.items.length===0) {
-//     return next(new AppError('No album found with that ID', 404))
-//   }
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })
-
 /**
  * A function that is used to get sorted albums.
  *  @alias module:controllers/album
@@ -177,7 +155,7 @@ exports.getAlbumTracks = catchAsync(async (req, res, next) => { //  non paginate
  * @return {JSON} Returns an array of the top albums in a json form.
  */
 exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  not paginated
-  const features = new APIFeatures(Album.find({totalTracks: { $gt: 0 } }).select('-__v'), req.query).sort().paginate()
+  const features = new APIFeatures(Album.find({ totalTracks: { $gt: 0 } }).select('-__v'), req.query).sort().paginate()
   const albums = await features.query.populate({
     path: 'artists',
     select: '_id name uri href externalUrls images role followers userStats artistInfo' // user public data
@@ -191,21 +169,3 @@ exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  not paginat
     }
   })
 })
-
-// exports.getSortedAlbums = catchAsync(async (req, res, next) => { //  paginated
-
-//   const results=await paginatedResults(req,await Album.find().countDocuments().exec())
-//   const features = new APIFeatures(Album.find(), req.query).sort().paginate()
-//   results.items = await features.query.populate({
-//     path: 'artists',
-//     select: '_id name uri href externalUrls images type followers userStats userArtist' // user public data
-
-//   })
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       results
-//     }
-//   })
-// })

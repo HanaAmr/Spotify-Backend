@@ -22,6 +22,13 @@ const router = express.Router()
 const playerController = require('../controllers/playerController')
 
 /**
+ * Authorization controller to call when routing.
+ * @type {object}
+ * @const
+ */
+const authController = require('./../controllers/authController')
+
+/**
  * Route for adding a track to recently played
  * @name post/me/player/recentlyPlayed
  * @function
@@ -30,10 +37,7 @@ const playerController = require('../controllers/playerController')
  * @param {String} Path - The Express path
  * @param {Function} addToRecentlyPlayed - Adds currently played track to the recently played list for the user.
  */
-router
-  .route('/recentlyPlayed')
-  .post(playerController.addToRecentlyPlayed)
-
+router.post('/recentlyPlayed', authController.protect, playerController.addToRecentlyPlayed)
 
 /**
  * Route for getting recently played tracks (play history)
@@ -44,11 +48,9 @@ router
  * @param {String} Path - The Express path
  * @param {Function} getRecentlyPlayed - Gets the recently played list for the user.
  */
-router
-  .route('/recentlyPlayed')
-  .get(playerController.getRecentlyPlayed)
+router.get('/recentlyPlayed', authController.protect, playerController.getRecentlyPlayed)
 
-  /**
+/**
  * Route for starting a playing context
  * @name put/me/player/play
  * @function
@@ -58,12 +60,9 @@ router
  * @param {String} Uri - The uri of the context.
  * @param {Function} startContext - Starts a playing context for the user.
  */
-router
-.route('/play')
-.put(playerController.startContext)
+router.put('/play', authController.protect, playerController.startContext)
 
-
-  /**
+/**
  * Route when track being played is finished normally
  * @name post/me/player/finished
  * @function
@@ -71,13 +70,9 @@ router
  * @inner
  * @param {Function} finishedTrack - Skips the song in the queue without it counting to skips limit for free user.
  */
-router
-.route('/finished')
-.post(playerController.finishedTrack)
+router.post('/finished', authController.protect, playerController.finishedTrack)
 
-
-
-  /**
+/**
  * Route for skipping the track to the next one
  * @name post/me/player/next
  * @function
@@ -85,12 +80,9 @@ router
  * @inner
  * @param {Function} skipToNextTrack - Skips the song in the queue to the next track while decrementing skip limit.
  */
-router
-.route('/next')
-.post(playerController.skipToNextTrack)
+router.post('/next', authController.protect, playerController.skipToNextTrack)
 
-
-  /**
+/**
  * Route for skipping the track to the previous one
  * @name post/me/player/previous
  * @function
@@ -98,9 +90,7 @@ router
  * @inner
  * @param {Function} skipToPrevTrack - Skips the song in the queue to the previous track while decrementing skip limit.
  */
-router
-.route('/previous')
-.post(playerController.skipToPrevTrack)
+router.post('/previous', authController.protect, playerController.skipToPrevTrack)
 
 /**
  * Route for getting a random ad
@@ -110,9 +100,6 @@ router
  * @inner
  * @param {Function} getAd - Gets a random add from the db.
  */
-router
-.route('/ad')
-.get(playerController.getAd)
-
+router.get('/ad', authController.protect, playerController.getAd)
 
 module.exports = router

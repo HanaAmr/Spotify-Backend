@@ -8,7 +8,7 @@ const dotenv = require('dotenv')
  * express module
  * Mongoose to access and change the database
  * @const
- */ 
+ */
 const mongoose = require('mongoose')
 // Configuring environment variables to use them
 dotenv.config({ path: '../../.env' })
@@ -17,13 +17,13 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection
 db.once('open', url => {
-    if(process.env.DROP_DB == 1) {
-        dropDB()
-        console.log('Database dropped')
-    }
+  if (process.env.DROP_DB == 1) {
+    dropDB()
+    console.log('Database dropped')
+  }
 })
 
 dropDB = async () => {
-    await db.dropDatabase()
-    process.exit()
+  await db.dropDatabase()
+  process.exit()
 }

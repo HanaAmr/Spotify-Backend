@@ -54,7 +54,6 @@ router.use(authController.protect)
  */
 router.use(authController.restrictTo('artist'))
 
-
 /**
  * Route for artist's albums
  * @name /me/albums
@@ -67,7 +66,7 @@ router
   .post(uploadService.uploadAlbumImage, artistAlbumController.addAlbum)
   .get(artistAlbumController.getArtistAlbums)
 
-  /**
+/**
   * Route for specific album
   * @name /me/albums
   * @function
@@ -76,9 +75,9 @@ router
   * @inner
   */
 router
-.route('/:id')
-.delete(artistAlbumController.deleteAlbum)
-.patch(uploadService.updateAlbumImage,artistAlbumController.editAlbum)
+  .route('/:id')
+  .delete(artistAlbumController.deleteAlbum)
+  .patch(uploadService.updateAlbumImage, artistAlbumController.editAlbum)
 
 /**
   * Route for artist's albums tracks
@@ -92,7 +91,6 @@ router
   .route('/:id/tracks')
   .get(albumController.getAlbumTracks)
   .post(uploadService.uploadTrackAudio, artistAlbumController.addTracktoAlbum)
-
 
 /**
   * Route for specific album

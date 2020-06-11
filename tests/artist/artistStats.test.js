@@ -3,8 +3,11 @@
  * @const
  */
 const sinon = require('sinon')
-
-
+/**
+ * express module
+ * User model from the database
+ * @const
+ */
 
 /**
  * mongoose for db management
@@ -13,7 +16,12 @@ const sinon = require('sinon')
 const mongoose = require('mongoose')
 
 /**
- * express module
+ * the app
+ * @const
+ */
+const app = require('./../../app')
+
+/**
  * User model from the database
  * @const
  */
@@ -25,21 +33,23 @@ const User = require('../../models/userModel')
  */
 const Album = require('../../models/albumModel')
 
-
 /**
  * Track model from the database
  * @const
  */
 const Track = require('../../models/trackModel')
 
-
 /**
- * artist service: module to be tested
+ * jwt package to get token
  * @const
  */
-const artistService=require('../../services/artistService')
+const jwt = require('jsonwebtoken')
 
-
+/**
+ * supertest package for integration testing
+ * @const
+ */
+const supertest = require('supertest')
 /**
  * dotenv for environment variables
  * @const
@@ -49,301 +59,302 @@ const dotenv = require('dotenv')
 dotenv.config()
 const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
-  mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 
-  //Some dates that will be used later on in testing
-  let todayDate=new Date(Date.now())
-  todayDate.setUTCHours(0,0,0,0)
-  let date1=new Date(todayDate)
-  date1.setUTCDate(date1.getUTCDate()+1)
-  let date2=new Date(todayDate)
-  date2.setUTCDate(date2.getUTCDate()+2)
-  
+let server, agent
+// Dates for stats objects
+const dateApril2020 = new Date(2020, 3, 6)
+dateApril2020.setUTCHours(0, 0, 0, 0)
+const dateFeb2020 = new Date(2020, 1, 13)
+dateFeb2020.setUTCHours(0, 0, 0, 0)
+const date2Feb2020 = new Date(2020, 1, 15)
+date2Feb2020.setUTCHours(0, 0, 0, 0)
+const dateJan2020 = new Date(2020, 0, 5)
+dateJan2020.setUTCHours(0, 0, 0, 0)
+const dateDec2019 = new Date(2019, 11, 24)
+dateDec2019.setUTCHours(0, 0, 0, 0)
+const dateJune2019 = new Date(2019, 5, 4)
+dateJune2019.setUTCHours(0, 0, 0, 0)
+const dateJan2017 = new Date(2017, 0, 10)
+dateJan2017.setUTCHours(0, 0, 0, 0)
 
-  // Testing shufflng queue list for a user.
-describe('Testing adding user to empty likes/ listens object of a track or album', () => {
-    // Add a simple user to test with
-    beforeAll(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      await mongoose.connection.collection('albums').deleteMany({})
-      await mongoose.connection.collection('tracks').deleteMany({})
-      sinon.restore()
-      // Creating the valid user to assign the token to him
-      const user = new User({
-        _id:'5edeec8390345d81372ea819',
-        name: 'nada',
-        email: 'nada_@email.com',
-        password: 'password'
-      })
-      await user.save()
+describe('Testing artist stats  controller', () => {
+  let authToken
+  // Add a simple user to test with
+  beforeAll(async (done) => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+    await mongoose.connection.collection('tracks').deleteMany({})
+    sinon.restore()
 
-      //adding album without any listens or likes history
-      const album = new Album({
-        _id:"5edefb5fd1537f3f33f91340",
-        name: 'Sahran',
-        image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
-        albumType: 'album',
-        externalUrls: 'this should be an externalUrl',
-        type: 'album',
-        genre: 'Arabic',
-        totalTracks: 14,
-        popularity: 400000
+    const artist = new User({
+      _id: '5edeec8390345d81372ea819',
+      name: 'Amr Diab',
+      email: 'amr@email.com',
+      password: 'password3',
+      gender: 'male',
+      dateOfBirth: '1952-1-8',
+      role: 'artist',
+      artistInfo: {
+        biography: 'Amr Diab (Amr Abd-Albaset Abd-Alaziz Diab), born on the 11th of October 1961 in Port Said, Egypt, he is an Egyptian Singer, he is known as the Father of Mediterranean Music. ... Amr Diab has earned his bachelor degree in Arabic Music and graduated from the Cairo Academy of Arts in 1986.',
+        popularity: 1000000,
+        genres: ['Arabic pop', 'pop rock']
+      }
     })
+    await artist.save()
+    const id = '5edeec8390345d81372ea819'
+    authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+
+    const album = new Album({
+      _id: '5edefb5fd1537f3f33f91340',
+      name: 'Sahran',
+      image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
+      albumType: 'album',
+      externalUrls: 'this should be an externalUrl',
+      type: 'album',
+      genre: 'Arabic',
+      totalTracks: 14,
+      popularity: 400000,
+      likesHistory: [
+        {
+          day: dateJan2017,
+          userID: new mongoose.Types.ObjectId('5e8cfa4b1493ec60bc89c970')
+        },
+        {
+          day: dateDec2019,
+          userID: new mongoose.Types.ObjectId('5e8cfa4c1493ec60bc89c971')
+        },
+        {
+          day: dateJune2019,
+          userID: new mongoose.Types.ObjectId('5edeec8390345d81372ea819')
+        },
+        {
+          day: dateFeb2020,
+          userID: new mongoose.Types.ObjectId('5edd8e684739973be7409f8d')
+        },
+        {
+          day: date2Feb2020,
+          userID: new mongoose.Types.ObjectId('5edd0d2b97aa101fa834e42e')
+        },
+        {
+          day: dateApril2020,
+          userID: new mongoose.Types.ObjectId('5ed158909065d5711e3caf13')
+        },
+        {
+          day: dateApril2020,
+          userID: new mongoose.Types.ObjectId('5edcf97b98403513f44d2da6')
+        }
+      ],
+      listensHistory: [
+        {
+          day: dateDec2019,
+          numberOfListens: 25000
+        },
+        {
+          day: dateDec2019,
+          numberOfListens: 7000
+        },
+        {
+          day: dateJan2020,
+          numberOfListens: 5555
+        },
+        {
+          day: date2Feb2020,
+          numberOfListens: 1000
+        },
+        {
+          day: dateApril2020,
+          numberOfListens: 750
+        }]
+    })
+
+    await album.save()
+    album.artists.push('5edeec8390345d81372ea819')
     await album.save()
 
-    //adding track without any likes or listens
-    const track= new Track({
-        _id:"5edefb60f3962c3f4257708f",
-        name: 'Ana Gheir',
-        type: 'track',
-        externalUrl: 'this should be an externalUrl',
-        externalId: 'this should be an externalId',
-        trackNumber: 4,
-        durationMs: 222000,
-        popularity: 600000,
-        album: "5edefb5fd1537f3f33f91340",
-        audioFilePath: 'tracks/track10.mp3'
-    
-      })
-      await track.save()
-    })
-
-    // Drop the whole users, playHistory collection after finishing testing
-    afterAll(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      await mongoose.connection.collection('albums').deleteMany({})
-      await mongoose.connection.collection('tracks').deleteMany({})
-    })
-    
-    
-
-    // Testing adding like whe user haven't likes album before
-    it('Should add the user id and cuurent date to 1st object in album likes array', async () => {
-      //expect.hasAssertions()
-      artistServiceClass = new artistService()
-      let albumObject=await Album.findById("5edefb5fd1537f3f33f91340")
-      await artistServiceClass.alterTrackorAlbumObjectLikes(albumObject,'5edeec8390345d81372ea819')
-      albumObject=await Album.findById("5edefb5fd1537f3f33f91340")
-      expect(albumObject.likesHistory[0].userID.toString()).toMatch('5edeec8390345d81372ea819')
-      expect(albumObject.likesHistory[0].day.getTime()).toEqual(todayDate.getTime())
-      
-    })
-
-    
-    it('Should add cuurent date to 1st object in track listens array, and number of likes =1', async () => {
-        artistServiceClass = new artistService()
-        let track=await Track.findById("5edefb60f3962c3f4257708f")
-        await artistServiceClass.altertrackOrAlbumObjectListens(track,'5edeec8390345d81372ea819')
-        track=await Track.findById("5edefb60f3962c3f4257708f")
-        expect(track.listensHistory[0].numberOfListens).toEqual(1)
-        expect(track.listensHistory[0].day.getTime()).toEqual(todayDate.getTime())
-        
-      })
-  })
-  
-
-    //Testing adding Like of user for a non empty likes/listens object in track or album
-describe('Testing adding user to likes object of a track or album', () => {
-    // Add a simple user to test with
-    beforeAll(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      await mongoose.connection.collection('albums').deleteMany({})
-      await mongoose.connection.collection('tracks').deleteMany({})
-      sinon.restore()
-      // Creating the valid user to assign the token to him
-      const user = new User({
-        _id:'5edeec8390345d81372ea819',
-        name: 'nada',
-        email: 'nada_@email.com',
-        password: 'password'
-      })
-      await user.save()
-
-    //adding track with 1 one likes object of user
-    const track= new Track({
-        _id:"5edefb60f3962c3f4257708f",
-        name: 'Ana Gheir',
-        type: 'track',
-        externalUrl: 'this should be an externalUrl',
-        externalId: 'this should be an externalId',
-        trackNumber: 4,
-        durationMs: 222000,
-        popularity: 600000,
-        album: "5edefb5fd1537f3f33f91340",
-        audioFilePath: 'tracks/track10.mp3',
-        listensHistory:[
-            {
-              day: todayDate,
-              numberOfListens: 99
-            }],
-            likesHistory:[
-                {
-                  day: todayDate,
-                  userID: new mongoose.Types.ObjectId('5edeec8390345d81372ea819')
-                }]
-    
-      })
-      await track.save()
-    })
-
-    // Drop the whole users, playHistory collection after finishing testing
-    afterAll(async () => {
-      await mongoose.connection.collection('users').deleteMany({})
-      await mongoose.connection.collection('tracks').deleteMany({})
-    })
-    
-    //Testing alter likes object in track with the user already liking it, so length of likes array should equal 1
-    it('Testing ater likes for a track when user liked the track before, should not add a new likes object to like history array', async () => {
-        artistServiceClass = new artistService()
-        let track=await Track.findById("5edefb60f3962c3f4257708f")
-        await artistServiceClass.alterTrackorAlbumObjectLikes(track,'5edeec8390345d81372ea819')
-        track=await Track.findById("5edefb60f3962c3f4257708f")
-        expect(track.likesHistory.length).toEqual(1)
-      })
-   
-      //Testing alter listens object in track where date already exists in listensHistory, should add number of listens instead of creating a new listens object
-    it('Testing ater listens for a track when date already exists in listensHistory, number of listens should be incremented', async () => {
-        artistServiceClass = new artistService()
-        let track=await Track.findById("5edefb60f3962c3f4257708f")
-        await artistServiceClass.altertrackOrAlbumObjectListens(track,'5edeec8390345d81372ea819')
-        track=await Track.findById("5edefb60f3962c3f4257708f")
-        expect(track.listensHistory[0].numberOfListens).toEqual(100)
-      })
-  })
-
-
-    //Testing Getting track and album getting daily likes stats
-describe('Testing calculating daily listens and likes statitics for albums and tracks', () => {
-    // Add a simple user to test with
-    beforeAll(async () => {
-      await mongoose.connection.collection('albums').deleteMany({})
-      await mongoose.connection.collection('tracks').deleteMany({})
-      sinon.restore()
-    
-      
-
-    //adding track with 1 one likes object of user
-    const track= new Track({
-        _id:"5edefb60f3962c3f4257708f",
-        name: 'Ana Gheir',
-        type: 'track',
-        externalUrl: 'this should be an externalUrl',
-        externalId: 'this should be an externalId',
-        trackNumber: 4,
-        durationMs: 222000,
-        popularity: 600000,
-        album: "5edefb5fd1537f3f33f91340",
-        audioFilePath: 'tracks/track10.mp3',
-        listensHistory:[
-            {
-              day: todayDate,
-              numberOfListens: 99
-            }],
-            likesHistory:[
-                {
-                  day: todayDate,
-                  userID: new mongoose.Types.ObjectId('5edeec8390345d81372ea819')
-                },
-                {
-                    day: todayDate,
-                    userID: new mongoose.Types.ObjectId('5edd8e684739973be7409f8d')
-                  },
-                  {
-                    day: todayDate,
-                    userID: new mongoose.Types.ObjectId('5edd0d2b97aa101fa834e42e')
-                  },
-                  {
-                    day: todayDate,
-                    userID: new mongoose.Types.ObjectId('5ed158909065d5711e3caf13')
-                  },
-                  {
-                    day: date2,
-                    userID: new mongoose.Types.ObjectId('5edcf97b98403513f44d2da6')
-                  }
-                ]
-      })
-      await track.save()
-
-      //adding album without any listens or likes history
-      const album = new Album({
-        _id:"5edefb5fd1537f3f33f91340",
-        name: 'Sahran',
-        image: `${process.env.API_URL}/public/imgs/albums/Sahran.jpg`,
-        albumType: 'album',
-        externalUrls: 'this should be an externalUrl',
-        type: 'album',
-        genre: 'Arabic',
-        totalTracks: 14,
-        popularity: 400000,
-        listensHistory:[
-            {
-              day: todayDate,
-              numberOfListens: 60000
-            },
-            {
-              day: date1,
-              numberOfListens: 50000
-            },
-            {
-              day: date2,
-              numberOfListens: 230
-            }
-            ]
-    })
-    await album.save()
-
-    })
-
-    // Drop the whole users, playHistory collection after finishing testing
-    afterAll(async () => {
-      await mongoose.connection.collection('albums').deleteMany({})
-      await mongoose.connection.collection('tracks').deleteMany({})
-    })
-    
-    //Testing getting daily likes statistics for track, dates should be sequential
-    it('Testing getting daily likes stats for track, likes object should have sequential ', async () => {
-        artistServiceClass = new artistService()
-        let track=await Track.findById("5edefb60f3962c3f4257708f")
-        const dailyStats=await artistServiceClass.getDalyLikesStats(track)
-        let dateTobeChecked= new Date(date2)
-        expect(dailyStats[29].numberOfLikes).toEqual(1)
-        expect(dailyStats[27].numberOfLikes).toEqual(4)
-        for(var i=29;i>-1;i--)
+    const track = new Track({
+      _id: '5edefb60f3962c3f4257708f',
+      name: 'Ana Gheir',
+      type: 'track',
+      externalUrl: 'this should be an externalUrl',
+      externalId: 'this should be an externalId',
+      trackNumber: 4,
+      durationMs: 222000,
+      popularity: 600000,
+      album: '5edefb5fd1537f3f33f91340',
+      audioFilePath: 'tracks/track10.mp3',
+      listensHistory: [
         {
-            expect(dailyStats[i].day.getTime()).toEqual(dateTobeChecked.getTime())
-            dateTobeChecked.setUTCDate(dateTobeChecked.getUTCDate()-1)
-        }
-      })
-
-      
-     //Testing getting daily listens statistics for album, dates should be sequential
-    it('Testing getting daily listens stats for album, likes object should have sequential dates', async () => {
-        artistServiceClass = new artistService()
-        album=await Album.findById("5edefb5fd1537f3f33f91340")
-        const dailyStats=await artistServiceClass.getDailyListensStats(album)
-        let dateTobeChecked= new Date(date2)
-        for(var i=29;i>-1;i--)
+          day: dateDec2019,
+          numberOfListens: 25000
+        },
         {
-            expect(dailyStats[i].day.getTime()).toEqual(dateTobeChecked.getTime())
-            dateTobeChecked.setUTCDate(dateTobeChecked.getUTCDate()-1)
+          day: dateDec2019,
+          numberOfListens: 7000
+        },
+        {
+          day: dateJan2020,
+          numberOfListens: 5555
+        },
+        {
+          day: date2Feb2020,
+          numberOfListens: 1000
+        },
+        {
+          day: dateApril2020,
+          numberOfListens: 750
+        }],
+      likesHistory: [
+        {
+          day: dateJan2017,
+          userID: new mongoose.Types.ObjectId('5e8cfa4b1493ec60bc89c970')
+        },
+        {
+          day: dateDec2019,
+          userID: new mongoose.Types.ObjectId('5e8cfa4c1493ec60bc89c971')
+        },
+        {
+          day: dateJune2019,
+          userID: new mongoose.Types.ObjectId('5edeec8390345d81372ea819')
+        },
+        {
+          day: dateFeb2020,
+          userID: new mongoose.Types.ObjectId('5edd8e684739973be7409f8d')
+        },
+        {
+          day: date2Feb2020,
+          userID: new mongoose.Types.ObjectId('5edd0d2b97aa101fa834e42e')
+        },
+        {
+          day: dateApril2020,
+          userID: new mongoose.Types.ObjectId('5ed158909065d5711e3caf13')
+        },
+        {
+          day: dateApril2020,
+          userID: new mongoose.Types.ObjectId('5edcf97b98403513f44d2da6')
         }
-      })
-  })
-
-   ///////////////////////////////
-   /*
-  //Testing Date related functions
-describe('Testing intializing dates', () => {
-
-    beforeAll(async () => {
-      sinon.restore()
+      ],
+      listensHistory: [
+        {
+          day: dateDec2019,
+          numberOfListens: 25000
+        },
+        {
+          day: dateDec2019,
+          numberOfListens: 7000
+        },
+        {
+          day: dateJan2020,
+          numberOfListens: 5555
+        },
+        {
+          day: date2Feb2020,
+          numberOfListens: 1000
+        },
+        {
+          day: dateApril2020,
+          numberOfListens: 750
+        }]
     })
+    await track.save()
+    track.artists.push('5edeec8390345d81372ea819')
+    await track.save()
 
-    //Testing intializing date for monnthly listens
-    it('Testing gintializing date for monnthly listens, should return day a date with same month, and day =1', async () => {
-        let date=new Date(2020,4,5)
-
-
-      })
+    server = app.listen(5010, (err) => {
+      if (err) return done(err)
+      agent = supertest.agent(server)
+      done()
+    })
   })
-  */
+
+  afterAll(async (done) => {
+    await mongoose.connection.collection('users').deleteMany({})
+    await mongoose.connection.collection('tracks').deleteMany({})
+    await mongoose.connection.collection('albums').deleteMany({})
+    return server && server.close(done)
+  })
+
+  it('Testing get daily likes stats for album, returns data of length 30', async () => {
+    const response = await agent.get('/me/stats/likes/daily/albums/5edefb5fd1537f3f33f91340').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(30)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get daily listens stats for album, returns data of length 30 ', async () => {
+    const response = await agent.get('/me/stats/listens/daily/albums/5edefb5fd1537f3f33f91340').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(30)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get monthly likes stats for album, returns data of length 12 ', async () => {
+    const response = await agent.get('/me/stats/likes/monthly/albums/5edefb5fd1537f3f33f91340').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(12)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get monthly listens stats for album, returns data of length 12 ', async () => {
+    const response = await agent.get('/me/stats/listens/monthly/albums/5edefb5fd1537f3f33f91340').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(12)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get yearly likes stats for album, returns data of length 5 ', async () => {
+    const response = await agent.get('/me/stats/likes/yearly/albums/5edefb5fd1537f3f33f91340').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(5)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get yearly likes stats for album, returns data of length 5 ', async () => {
+    const response = await agent.get('/me/stats/listens/yearly/albums/5edefb5fd1537f3f33f91340').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(5)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get daily likes stats for track, returns data of length 30 ', async () => {
+    const response = await agent.get('/me/stats/likes/daily/tracks/5edefb60f3962c3f4257708f').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(30)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get daily listens stats for track, returns data of length 30 ', async () => {
+    const response = await agent.get('/me/stats/listens/daily/tracks/5edefb60f3962c3f4257708f').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(30)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get monthly likes stats for track, returns data of length 12 ', async () => {
+    const response = await agent.get('/me/stats/likes/monthly/tracks/5edefb60f3962c3f4257708f').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(12)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get monthly listens stats for track, returns data of length 12 ', async () => {
+    const response = await agent.get('/me/stats/listens/monthly/tracks/5edefb60f3962c3f4257708f').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(12)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get yearly likes stats for track, returns data of length 12 ', async () => {
+    const response = await agent.get('/me/stats/likes/yearly/tracks/5edefb60f3962c3f4257708f').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(5)
+    expect(response.body.status).toEqual('success')
+  })
+
+  it('Testing get yearly listens stats for track, returns data of length 12 ', async () => {
+    const response = await agent.get('/me/stats/listens/yearly/tracks/5edefb60f3962c3f4257708f').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.data.length).toEqual(5)
+    expect(response.body.status).toEqual('success')
+  })
+})

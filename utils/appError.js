@@ -1,6 +1,5 @@
 
 class AppError extends Error {
-
 /**
  * App error class for handling errors
  * @class appError

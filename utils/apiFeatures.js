@@ -1,9 +1,9 @@
 
 class APIFeatures {
- /**
+  /**
  * APIFeatures class for modifying responses
  * @class apiFeatures
- * @classdesc The apiFeatures class to modify the responses 
+ * @classdesc The apiFeatures class to modify the responses
  * @param {String} query The query to be modified
  * @param {String} queryString Query String of the request
  */

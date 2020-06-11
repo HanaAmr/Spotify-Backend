@@ -10,7 +10,7 @@
  */
 const mongoose = require('mongoose')
 
- /**
+/**
  * Album model from the database
  * @const
  */
@@ -40,7 +40,6 @@ const catchAsync = require('./../utils/catchAsync')
  */
 const moment = require('moment')
 
-
 /**
  * user Service Class used to get artist ID from token
  * @const
@@ -53,7 +52,7 @@ const userServiceClass = new userService()
  * @const
  */
 const artistService = require('./../services/artistService')
-const artistServiceClass = new artistService()
+const artistServiceClass = new artistService.artistService()
 
 /**
  * A middleware function for getting last 30 days listens statitics for track uploaded by artist
@@ -64,23 +63,19 @@ const artistServiceClass = new artistService()
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of objects containing the day and number of listens per day
  */
-exports.getTrackDailyListensStats=catchAsync(async (req, res, next) => {
-
+exports.getTrackDailyListensStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  if(!track)
-      throw (new AppError('No track with this ID', 404))
+  const track = await Track.findById(req.params.id)
+  if (!track) { throw (new AppError('No track with this ID', 404)) }
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401)) }
 
-  listensDailyStats=await artistServiceClass.getDailyListensStats(track)
-  
+  listensDailyStats = await artistServiceClass.getDailyListensStats(track)
+
   res.status(200).json({
     status: 'success',
     data: listensDailyStats
   })
-
 })
 
 /**
@@ -92,23 +87,19 @@ exports.getTrackDailyListensStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of objects containing the day and number of listens per day
  */
-exports.getAlbumDailyListensStats=catchAsync(async (req, res, next) => {
-
+exports.getAlbumDailyListensStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.findById(req.params.id)
-  if(!album)
-      throw (new AppError('No album with this ID', 404))
+  const album = await Album.findById(req.params.id)
+  if (!album) { throw (new AppError('No album with this ID', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401)) }
 
-  listensDailyStats=await artistServiceClass.getDailyListensStats(album)
-  
+  listensDailyStats = await artistServiceClass.getDailyListensStats(album)
+
   res.status(200).json({
     status: 'success',
     data: listensDailyStats
   })
-
 })
 
 /**
@@ -120,23 +111,19 @@ exports.getAlbumDailyListensStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of objects containing the day and number of listens per day
  */
-exports.getTrackDailyLikesStats=catchAsync(async (req, res, next) => {
-
+exports.getTrackDailyLikesStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  if(!track)
-      throw (new AppError('No track with this ID', 404))
+  const track = await Track.findById(req.params.id)
+  if (!track) { throw (new AppError('No track with this ID', 404)) }
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401)) }
 
-  likesDailyStats=await artistServiceClass.getDalyLikesStats(track)
-  
+  likesDailyStats = await artistServiceClass.getDalyLikesStats(track)
+
   res.status(200).json({
     status: 'success',
     data: likesDailyStats
   })
-
 })
 
 /**
@@ -148,23 +135,19 @@ exports.getTrackDailyLikesStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of objects containing the day and number of listens per day
  */
-exports.getAlbumDailyLikesStats=catchAsync(async (req, res, next) => {
-
+exports.getAlbumDailyLikesStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.findById(req.params.id)
-  if(!album)
-      throw (new AppError('No album with this ID', 404))
+  const album = await Album.findById(req.params.id)
+  if (!album) { throw (new AppError('No album with this ID', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401)) }
 
-  likesDailyStats=await artistServiceClass.getDalyLikesStats(album)
-  
+  likesDailyStats = await artistServiceClass.getDalyLikesStats(album)
+
   res.status(200).json({
     status: 'success',
     data: likesDailyStats
   })
-
 })
 
 /**
@@ -176,23 +159,19 @@ exports.getAlbumDailyLikesStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of 12 objects containing the day and number of listens per month
  */
-exports.getTrackMonthlyListensStats=catchAsync(async (req, res, next) => {
-
+exports.getTrackMonthlyListensStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  if(!track)
-      throw (new AppError('No track with this ID', 404))
+  const track = await Track.findById(req.params.id)
+  if (!track) { throw (new AppError('No track with this ID', 404)) }
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401)) }
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"monthly","listens")
-  
+  listensMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(track, 'monthly', 'listens')
+
   res.status(200).json({
     status: 'success',
     data: listensMonthlyStats
   })
-
 })
 
 /**
@@ -204,23 +183,19 @@ exports.getTrackMonthlyListensStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of 12 objects containing the day and number of listens per month
  */
-exports.getAlbumMonthlyListensStats=catchAsync(async (req, res, next) => {
-
+exports.getAlbumMonthlyListensStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.findById(req.params.id)
-  if(!album)
-      throw (new AppError('No album with this ID', 404))
+  const album = await Album.findById(req.params.id)
+  if (!album) { throw (new AppError('No album with this ID', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401)) }
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"monthly","listens")
-  
+  listensMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(album, 'monthly', 'listens')
+
   res.status(200).json({
     status: 'success',
     data: listensMonthlyStats
   })
-
 })
 
 /**
@@ -232,23 +207,19 @@ exports.getAlbumMonthlyListensStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of objects containing the day and number of likes per month
  */
-exports.getTrackMonthlyLikesStats=catchAsync(async (req, res, next) => {
-
+exports.getTrackMonthlyLikesStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  if(!track)
-      throw (new AppError('No track with this ID', 404))
+  const track = await Track.findById(req.params.id)
+  if (!track) { throw (new AppError('No track with this ID', 404)) }
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401)) }
 
-  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"monthly","likes")
-  
+  likesMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(track, 'monthly', 'likes')
+
   res.status(200).json({
     status: 'success',
     data: likesMonthlyStats
   })
-
 })
 
 /**
@@ -260,23 +231,19 @@ exports.getTrackMonthlyLikesStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of objects containing the day and number of likes per month
  */
-exports.getAlbumMonthlyLikesStats=catchAsync(async (req, res, next) => {
-
+exports.getAlbumMonthlyLikesStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.findById(req.params.id)
-  if(!album)
-      throw (new AppError('No album with this ID', 404))
+  const album = await Album.findById(req.params.id)
+  if (!album) { throw (new AppError('No album with this ID', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401)) }
 
-  likesMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"monthly","likes")
-  
+  likesMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(album, 'monthly', 'likes')
+
   res.status(200).json({
     status: 'success',
     data: likesMonthlyStats
   })
-
 })
 
 /**
@@ -288,23 +255,19 @@ exports.getAlbumMonthlyLikesStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of 12 objects containing the day and number of listens per year
  */
-exports.getTrackYearlyListensStats=catchAsync(async (req, res, next) => {
-
+exports.getTrackYearlyListensStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  if(!track)
-      throw (new AppError('No track with this ID', 404))
+  const track = await Track.findById(req.params.id)
+  if (!track) { throw (new AppError('No track with this ID', 404)) }
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401)) }
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"yearly","listens")
-  
+  listensMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(track, 'yearly', 'listens')
+
   res.status(200).json({
     status: 'success',
     data: listensMonthlyStats
   })
-
 })
 
 /**
@@ -316,23 +279,19 @@ exports.getTrackYearlyListensStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of 12 objects containing the day and number of listens per year
  */
-exports.getAlbumYearlyListensStats=catchAsync(async (req, res, next) => {
-
+exports.getAlbumYearlyListensStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.findById(req.params.id)
-  if(!album)
-      throw (new AppError('No album with this ID', 404))
+  const album = await Album.findById(req.params.id)
+  if (!album) { throw (new AppError('No album with this ID', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401)) }
 
-  const listensYearlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"yearly","listens")
-  
+  const listensYearlyStats = await artistServiceClass.getMonthlyOrYearlyStats(album, 'yearly', 'listens')
+
   res.status(200).json({
     status: 'success',
     data: listensYearlyStats
   })
-
 })
 
 /**
@@ -344,23 +303,19 @@ exports.getAlbumYearlyListensStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of 12 objects containing the day and number of listens per year
  */
-exports.getTrackYearlyLikesStats=catchAsync(async (req, res, next) => {
-
+exports.getTrackYearlyLikesStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const track= await Track.findById(req.params.id)
-  if(!track)
-      throw (new AppError('No track with this ID', 404))
+  const track = await Track.findById(req.params.id)
+  if (!track) { throw (new AppError('No track with this ID', 404)) }
 
-  if(!(track.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401))
+  if (!(track.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of tracks that are not yours', 401)) }
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(track,"yearly","likes")
-  
+  listensMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(track, 'yearly', 'likes')
+
   res.status(200).json({
     status: 'success',
     data: listensMonthlyStats
   })
-
 })
 /**
  * A middleware function for getting last 5 years likes statitics for album uploaded by artist
@@ -371,21 +326,17 @@ exports.getTrackYearlyLikesStats=catchAsync(async (req, res, next) => {
  * @param {String} token - userArtist Token passed in header
  * @return {JSON} Returns an array of 12 objects containing the day and number of listens per year
  */
-exports.getAlbumYearlyLikesStats=catchAsync(async (req, res, next) => {
-
+exports.getAlbumYearlyLikesStats = catchAsync(async (req, res, next) => {
   const artistId = await (userServiceClass.getUserId(req.headers.authorization))
-  const album= await Album.findById(req.params.id)
-  if(!album)
-      throw (new AppError('No album with this ID', 404))
+  const album = await Album.findById(req.params.id)
+  if (!album) { throw (new AppError('No album with this ID', 404)) }
 
-  if(!(album.artists.includes(artistId)))
-    throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401))
+  if (!(album.artists.includes(artistId))) { throw (new AppError('You are not allowed to view statitics of albums that are not yours', 401)) }
 
-  listensMonthlyStats=await artistServiceClass.getMonthlyOrYearlyListensStats(album,"yearly","likes")
-  
+  listensMonthlyStats = await artistServiceClass.getMonthlyOrYearlyStats(album, 'yearly', 'likes')
+
   res.status(200).json({
     status: 'success',
     data: listensMonthlyStats
   })
-
 })

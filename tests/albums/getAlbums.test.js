@@ -10,8 +10,7 @@ const sinon = require('sinon')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.DATABASE_LOCAL
-let server, agent;
-
+let server, agent
 
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -22,7 +21,6 @@ if (process.env.TEST === '1') {
 let testPlaylist
 describe('test getting albums', () => {
   beforeEach(async (done) => {
-    
     sinon.restore()
 
     await mongoose.connection.collection('albums').deleteMany({})
@@ -36,26 +34,25 @@ describe('test getting albums', () => {
       type: 'album',
       albumType: 'single',
       releaseDate: '2018-01-01',
-      totalTracks:2
+      totalTracks: 2
     })
 
     await testAlbum.save()
 
     testAlbum2 = new Album({
-        _id: '5e8cfa4c1493ec60bc89c971',
-        name: 'Divide',
-        href: 'http://127.0.0.1:7000/albums/5e8cfa4c1493ec60bc89c971',
-        uri: 'spotify:albums:5e8cfa4c1493ec60bc89c971',
-        popularity: 20,
-        releaseDate: '2015-01-01',
-        type: 'album',
-        albumType: 'single',
-        releaseDate: '2020-01-01',
-        totalTracks: 1
-      })
-  
-      await testAlbum2.save()
+      _id: '5e8cfa4c1493ec60bc89c971',
+      name: 'Divide',
+      href: 'http://127.0.0.1:7000/albums/5e8cfa4c1493ec60bc89c971',
+      uri: 'spotify:albums:5e8cfa4c1493ec60bc89c971',
+      popularity: 20,
+      releaseDate: '2015-01-01',
+      type: 'album',
+      albumType: 'single',
+      releaseDate: '2020-01-01',
+      totalTracks: 1
+    })
 
+    await testAlbum2.save()
 
     await mongoose.connection.collection('tracks').deleteMany({})
     testTrack = new Track({
@@ -70,22 +67,19 @@ describe('test getting albums', () => {
 
     await testTrack.save()
 
-
     server = app.listen(5010, (err) => {
-    if (err) return done(err);
+      if (err) return done(err)
 
-    agent = supertest.agent(server); 
-    done();
-    });
-   
+      agent = supertest.agent(server)
+      done()
+    })
   })
-
 
   afterEach(async (done) => {
     sinon.restore()
-    //await mongoose.connection.collection('albums').deleteMany({})
+    // await mongoose.connection.collection('albums').deleteMany({})
     await mongoose.connection.collection('tracks').deleteMany({})
-    return server && server.close(done);
+    return server && server.close(done)
   })
 
   it('tests the get albums endpoint and have the same ids returned', async () => {
@@ -126,7 +120,6 @@ describe('test getting albums', () => {
     expect(response.body.data.album._id.toString()).toMatch(testAlbum._id.toString())
   })
 
-
   it('Get album given wrong id --> it should return error', done => {
     const request = httpMocks.createRequest({
       method: 'GET',
@@ -148,8 +141,6 @@ describe('test getting albums', () => {
     })
   })
 
-
-
   it('Get album tracks', async () => {
     const response = await agent.get('/albums/5e8cfa4b1493ec60bc89c970/tracks')
     expect(response.status).toBe(200)
@@ -159,7 +150,6 @@ describe('test getting albums', () => {
   })
 
   it('Get album tracks given wrong id --> it should return error', done => {
-
     const request = httpMocks.createRequest({
       method: 'GET',
       url: '/albums/5e8cfa4b1493ec60bc89c971/tracks'
@@ -172,8 +162,6 @@ describe('test getting albums', () => {
         expect(err.statusCode).toEqual(404)
         expect(err.status).toEqual('fail')
         expect(err.message).toEqual('No album found with that ID')
-
-
 
         done()
       } catch (error) {
@@ -199,5 +187,4 @@ describe('test getting albums', () => {
     expect(response.body.data.albums[0]._id.toString()).toMatch(testAlbum2._id.toString())
     expect(response.body.data.albums[1]._id.toString()).toMatch(testAlbum._id.toString())
   })
-
 })

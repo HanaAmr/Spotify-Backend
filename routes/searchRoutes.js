@@ -28,5 +28,4 @@ router
   .route('/')
   .get(searchController.getSearchedForTracks)
 
-
-module.exports = router  
+module.exports = router

@@ -10,8 +10,7 @@ const sinon = require('sinon')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.DATABASE_LOCAL
-let server, agent;
-
+let server, agent
 
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -22,15 +21,13 @@ if (process.env.TEST === '1') {
 let testCategory
 describe('test getting categories', () => {
   beforeEach(async (done) => {
-    
     sinon.restore()
 
-    
     await mongoose.connection.collection('categories').deleteMany({})
     testCategory = new Category({
       _id: '5e8cfa46e91336067498160f',
       name: 'Pop',
-      href: 'http://127.0.0.1:7000/browse/categories/5e8cfa46e91336067498160f/playlists',
+      href: 'http://127.0.0.1:7000/browse/categories/5e8cfa46e91336067498160f/playlists'
     })
 
     await testCategory.save()
@@ -53,25 +50,20 @@ describe('test getting categories', () => {
 
     await testPlaylist.save()
 
-
     server = app.listen(5010, (err) => {
-    if (err) return done(err);
+      if (err) return done(err)
 
-    agent = supertest.agent(server); 
-    done();
-    });
-   
+      agent = supertest.agent(server)
+      done()
+    })
   })
 
   afterEach(async (done) => {
     sinon.restore()
     await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('categories').deleteMany({})
-    return server && server.close(done);
+    return server && server.close(done)
   })
-
-
- 
 
   it('tests the get categories ', async (done) => {
     const response = await agent.get('/browse/categories')
@@ -90,8 +82,6 @@ describe('test getting categories', () => {
     expect(response.body.data.playlists[0].category.toString()).toMatch(testCategory._id.toString())
   })
 
-
-  
   it('Get categories\'s playlists given wrong id --> it should return error', done => {
     const request = httpMocks.createRequest({
       method: 'GET',
@@ -112,5 +102,4 @@ describe('test getting categories', () => {
       }
     })
   })
-
 })

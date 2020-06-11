@@ -3,7 +3,6 @@
  * @requires mongoose
  */
 
-
 const mongoose = require('mongoose')
 
 /**
@@ -20,7 +19,6 @@ const bcrypt = require('bcryptjs')
 
 const dotenv = require('dotenv')
 dotenv.config({ path: './../.env' })
-
 
 /**
  * User schema
@@ -53,7 +51,6 @@ dotenv.config({ path: './../.env' })
  * @property {String} androidNotifToken The token used for push notifications on Android
  * @const
  */
-
 
 const Schema = mongoose.Schema
 const userSchema = new Schema({
@@ -104,7 +101,7 @@ const userSchema = new Schema({
   },
   images: {
     type: [String],
-    default: `https://totallynotspotify.codes/public/imgs/users/default.jpg`
+    default: 'https://totallynotspotify.codes/public/imgs/users/default.jpg'
   },
   followers: {
     type: [String]
@@ -142,9 +139,14 @@ const userSchema = new Schema({
       popularity: Number,
       genres: [String], // Array of genres
       albums: [String] // Contains Albums IDs
-      // popularSong: [String] // contains songs IDs
 
-    }
+    },
+    default:
+      {
+        biography: '',
+        popularity: 0,
+        genres: ['']
+      }
   },
   trackObjects: [
     {
@@ -165,8 +167,8 @@ const userSchema = new Schema({
     type: String,
     enum: ['premium', 'artist', 'user']
   },
-  webNotifToken: {type: String, default: ''},
-  androidNotifToken: {type: String, default: ''}
+  webNotifToken: { type: String, default: '' },
+  androidNotifToken: { type: String, default: '' }
 })
 
 /**

@@ -10,7 +10,6 @@
  * @const
  */
 
-
 /**
  * util to handle query parameters
  * @const
@@ -60,7 +59,6 @@ const catchAsync = require('./../utils/catchAsync')
 const userService = require('./../services/userService')
 const userServiceClass = new userService()
 
-
 /**
  * A middleware function for Returning An array of Artists (with only public fields)
  * @alias module:controllers/artistViewingController
@@ -81,7 +79,7 @@ exports.getArtists = catchAsync(async (req, res, next) => {
       type: 1,
       followers: 1,
       artistInfo: 1,
-      role:1
+      role: 1
     }), req.query)
     .filter()
     .sort()
@@ -104,10 +102,8 @@ exports.getArtists = catchAsync(async (req, res, next) => {
  * @return {JSON} Returns JSON object of artist if id is valid or an error object Otherwise
  */
 exports.getArtist = catchAsync(async (req, res, next) => {
-
-  let userid=null
-  if(req.headers.authorization)
-    userid = await (userServiceClass.getUserId(req.headers.authorization))
+  let userid = null
+  if (req.headers.authorization) { userid = await (userServiceClass.getUserId(req.headers.authorization)) }
 
   const artist = await User.findById(req.params.id,
     {
@@ -123,15 +119,14 @@ exports.getArtist = catchAsync(async (req, res, next) => {
     })
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
-  let following=false
-  if(artist.followers && userid)
-    if(artist.followers.includes(userid))
-      following=true
-  
+  let following = false
+  if (artist.followers && userid) {
+    if (artist.followers.includes(userid)) { following = true }
+  }
 
   res.status(200).json({
     status: 'success',
-    data: {artist,following}
+    data: { artist, following }
   })
 })
 
@@ -174,7 +169,6 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
   })
 })
 
-
 /**
  * A middleware function for Returning albums of artist whose id is passed in the query
  *  @alias module:controllers/artistViewingController
@@ -185,7 +179,6 @@ exports.getRelatedArtists = catchAsync(async (req, res) => {
  * @return {JSON} Returns JSON array of album objects if id is valid and artist have albums. Otherwise, returns an error object
  */
 exports.getArtistAlbums = catchAsync(async (req, res, next) => {
-
   const artist = await User.findById(req.params.id)
   if (artist == null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
 
@@ -206,7 +199,6 @@ exports.getArtistAlbums = catchAsync(async (req, res, next) => {
     data: albums
   })
 })
-
 
 /**
  * A middleware function for returning TopTracks for artist whose id is passed in the query
@@ -238,7 +230,6 @@ exports.getArtistTopTracks = catchAsync(async (req, res, next) => {
   })
 })
 
-
 /**
  * A middleware function for returning CreatedPlaylists for artist whose id is passed in the query
  *  @alias module:controllers/artistViewingController
@@ -252,7 +243,6 @@ exports.getArtistCreatedPlaylists = catchAsync(async (req, res, next) => {
   const artist = await User.findById(req.params.id)
 
   if (artist === null || artist.role !== 'artist') { throw (new AppError('No artist with such an ID', 404)) }
-
 
   const playlists = await Playlist.find({ owner: req.params.id })
   if (playlists.length === 0) { throw (new AppError('No created playlists for artist', 404)) }

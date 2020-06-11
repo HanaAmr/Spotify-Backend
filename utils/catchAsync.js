@@ -10,7 +10,6 @@
  * @const
  */
 
-
 /**
 * For catching errors in asynchronous functions
 * @alias module:utils/catchAsync

@@ -11,12 +11,11 @@ const sinon = require('sinon')
 const dotenv = require('dotenv')
 dotenv.config({ path: '.env' })
 const mongoDB = process.env.TEST_DATABASE
-let server, agent;
+let server, agent
 const recommendationService = require('./../../services/recommendationService')
 const authController = require('./../../controllers/authController')
 const jwt = require('jsonwebtoken')
 let authToken = 'token'
-
 
 if (process.env.TEST === '1') {
   mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -27,7 +26,6 @@ if (process.env.TEST === '1') {
 let testPlaylist
 describe('test getting playlist', () => {
   beforeEach(async (done) => {
-    
     sinon.restore()
 
     await mongoose.connection.collection('tracks').deleteMany({})
@@ -77,7 +75,7 @@ describe('test getting playlist', () => {
         '5e729e8b3d8d0a432c70b59d'
       ],
       images: ['21_pilots.jpg'],
-      popularity :100,
+      popularity: 100,
       createdAt: '2012-01-01'
     })
 
@@ -86,35 +84,32 @@ describe('test getting playlist', () => {
 
     await mongoose.connection.collection('users').deleteMany({})
     const firstUser = new User({
-        _id:'5e8cfa4b1493ec60bc89c971',
-        name: 'omar',
-        email: 'omar@email.com',
-        password: 'password',
+      _id: '5e8cfa4b1493ec60bc89c971',
+      name: 'omar',
+      email: 'omar@email.com',
+      password: 'password'
     })
     await firstUser.save()
 
     await User.findOne({}, (err, user) => {
-      id='5e8cfa4b1493ec60bc89c971'
-      authToken = 'Bearer ' + jwt.sign({id}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
-    }) 
-    
+      id = '5e8cfa4b1493ec60bc89c971'
+      authToken = 'Bearer ' + jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+    })
 
     server = app.listen(5010, (err) => {
-    if (err) return done(err);
+      if (err) return done(err)
 
-    agent = supertest.agent(server); 
-    done();
-    });
-   
+      agent = supertest.agent(server)
+      done()
+    })
   })
-
 
   afterEach(async (done) => {
     sinon.restore()
     await mongoose.connection.collection('playlists').deleteMany({})
     await mongoose.connection.collection('tracks').deleteMany({})
     await mongoose.connection.collection('users').deleteMany({})
-    return server && server.close(done);
+    return server && server.close(done)
   })
 
   it('tests the get playlist endpoint and have the same id returned', async () => {
@@ -124,7 +119,6 @@ describe('test getting playlist', () => {
     expect(response.body.data.playlist).not.toEqual(null)
     expect(response.body.data.playlist._id.toString()).toMatch(testPlaylist._id.toString())
   })
-
 
   it('Get playlist given wrong id --> it should return error', done => {
     const request = httpMocks.createRequest({
@@ -147,7 +141,6 @@ describe('test getting playlist', () => {
     })
   })
 
-
   it('Get playlist image', async () => {
     const response = await agent.get('/playlists/5e729d853d8d0a432c70b59c/image')
     expect(response.status).toBe(200)
@@ -157,7 +150,6 @@ describe('test getting playlist', () => {
   })
 
   it('Get playlist image given wrong id --> it should return error', done => {
-
     const request = httpMocks.createRequest({
       method: 'GET',
       url: '/playlists/5e729d853d8d0a432c70b59g/image'
@@ -170,7 +162,6 @@ describe('test getting playlist', () => {
         expect(err.statusCode).toEqual(404)
         expect(err.status).toEqual('fail')
         expect(err.message).toEqual('No playlist found with that ID')
-
 
         done()
       } catch (error) {
@@ -188,7 +179,6 @@ describe('test getting playlist', () => {
   })
 
   it('Get playlist tracks given wrong id --> it should return error', done => {
-
     const request = httpMocks.createRequest({
       method: 'GET',
       url: '/playlists/5e729d853d8d0a432c70b59g/tracks'
@@ -201,7 +191,6 @@ describe('test getting playlist', () => {
         expect(err.statusCode).toEqual(404)
         expect(err.status).toEqual('fail')
         expect(err.message).toEqual('No playlist found with that ID')
-
 
         done()
       } catch (error) {
@@ -228,19 +217,25 @@ describe('test getting playlist', () => {
     expect(response.body.data.playlist[1]._id.toString()).toMatch(testPlaylist2._id.toString())
   })
 
-
   it('Test getting recommended tracks for playlist checking that existing track will not be returned', async () => {
-    const tracks = await recommendationService("5e729d853d8d0a432c70b59c")
+    const tracks = await recommendationService('5e729d853d8d0a432c70b59c')
     expect(tracks.excludeTracks[0]._id.toString()).toMatch(testTrack._id.toString())
     expect(tracks.limit).toBe(3)
     expect(tracks.page).toBe(1)
   })
 
   it('Test getting recommended tracks for an empty playlist', async () => {
-    const tracks = await recommendationService("5e8cfa54b90c6060e809d649")
+    const tracks = await recommendationService('5e8cfa54b90c6060e809d649')
     expect(tracks.excludeTracks.length).toBe(0)
     expect(tracks.limit).toBe(3)
     expect(tracks.page).toBe(1)
+  })
+
+  it('Integeration Test getting recommended tracks for playlist checking that existing track will not be returned', async () => {
+    const response = await agent.get('/playlists/5e729d853d8d0a432c70b59c/tracks/recommended').set('Authorization', authToken)
+    expect(response.status).toBe(200)
+    expect(response.body.status).toBe('success')
+    expect(response.body.data.tracks[0]._id.toString()).toMatch(testTrack2._id.toString())
   })
 
   it('Get recommended playlists', async () => {
@@ -250,5 +245,4 @@ describe('test getting playlist', () => {
     expect(response.body.data.playlist).not.toEqual(null)
     expect(response.body.data.playlist.length).toBe(2)
   })
-  
 })

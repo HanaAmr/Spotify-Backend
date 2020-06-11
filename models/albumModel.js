@@ -4,7 +4,6 @@
  * @requires mongoose
  */
 
-
 const mongoose = require('mongoose')
 
 /**
@@ -104,14 +103,14 @@ const albumSchema = new mongoose.Schema({
   ],
   listensHistory:
   [{
-      day: Date,
-      numberOfListens: Number
+    day: Date,
+    numberOfListens: Number
 
-    }],
+  }],
   likesHistory:
   [{
     userID: mongoose.Schema.ObjectId,
-    day:  Date
+    day: Date
   }]
 })
 

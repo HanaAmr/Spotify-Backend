@@ -207,7 +207,7 @@ class userService {
 
   /**
  * Checks if the confirmation code is valid and thus make the user a premium/artist one.
- * @function 
+ * @function
  * @param {string} authToken - The authorization token for the user.
  * @param {string} confirmationCode - The confirmation code for the upgrade.
  */

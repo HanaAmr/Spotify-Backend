@@ -53,11 +53,9 @@ exports.getOneTrack = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(Track.findById(req.params.trackId), req.query).limitFieldsTracks()
   const track = await features.query
 
-  
   if (!track) {
     return next(new AppError('No track found with that ID', 404))
   }
-
 
   res.status(200).json({
     status: 'success',
@@ -106,15 +104,19 @@ exports.getOneTrackAudioFile = catchAsync(async (req, res, next) => {
   const track = await Track.findById(req.params.trackId)
   // Check authorization first
   const authorized = await playerService.validateTrack(req.headers.authorization, req.params.trackId)
-  if (track.isAd || authorized == 1) { // Send file if authorize
+  if (track.isAd || authorized === 1) { // Send file if authorize
     res.download(track.audioFilePath)
-  } else if(authorized == -1) {
+  } else if (authorized === -1) {
     res.status(403).json({
-      'reason': 'ad'
+      reason: 'ad'
     })
-  } else if(authorized == -2) {
+  } else if (authorized === -2) {
     res.status(403).json({
-      'reason': 'queue'
+      reason: 'queue'
+    })
+  } else {
+    res.status(500).json({
+      reason: 'unkown'
     })
   }
 })

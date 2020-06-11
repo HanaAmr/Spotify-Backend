@@ -80,8 +80,8 @@ const notificationService = new NotificationServices()
  * Artist services
  * @const
  */
-const ArtistServices=require('../services/artistService')
-const artistService= new ArtistServices()
+const ArtistServices = require('../services/artistService')
+const artistService = new ArtistServices.artistService()
 
 // generating token using user id
 const signToken = id => {
@@ -105,7 +105,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
     gender: req.body.gender
   })
 
-  //Create the player for the user
+  // Create the player for the user
   await Player.create({
     userId: newUser._id
   })
@@ -250,8 +250,6 @@ exports.getMyProfile = catchAsync(async (req, res, next) => {
   })
 })
 
-
-
 /**
 * A function to get user profile
 * @alias module:controllers/auth
@@ -263,7 +261,7 @@ exports.getUserProfile = catchAsync(async (req, res, next) => {
   // get the user from database and send his data
   const newUser = await User.findById(req.params.id)
 
-  if(!newUser) {
+  if (!newUser) {
     return next(new AppError('Please enter a valid id', 400))
   }
 
@@ -282,11 +280,6 @@ exports.getUserProfile = catchAsync(async (req, res, next) => {
     role: newUser.role
   })
 })
-
-
-
-
-
 
 /**
 * A function to change user password
@@ -371,26 +364,23 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
   await user.save()
   await followedUser.save()
 
-  //Send followed notification to followedUser
+  // Send followed notification to followedUser
   const title = 'You have been followed!'
   const body = `${user.name} has followed you!`
   const followedUserId = await followedUser._id.toString()
   const userId = await user._id.toString()
   const images = user.images[0]
-  const data = {'uri': user.uri, 'id': userId, 'href':user.href, 'images':images}
-  const notif = await notificationService.generateNotification(title,body,followedUserId,data)
-  await notificationService.sendNotification(followedUserId,notif)
+  const data = { uri: user.uri, id: userId, href: user.href, images: images }
+  const notif = await notificationService.generateNotification(title, body, followedUserId, data)
+  await notificationService.sendNotification(followedUserId, notif)
 
-  //Subscribe to the artist
-  await notificationService.subscribeToTopic(user._id,followedUserId,1)
+  // Subscribe to the artist
+  await notificationService.subscribeToTopic(user._id, followedUserId, 1)
 
   res.status(204).json({
     status: 'Success'
   })
 })
-
-
-
 
 /**
 * A function to like a track
@@ -400,11 +390,9 @@ exports.followArtistUser = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.likeTrack = catchAsync(async (req, res, next) => {
-
   // get the user and the track
   const user = await User.findById(req.user.id)
-  let track = await Track.findById(req.body.id)
-
+  const track = await Track.findById(req.body.id)
 
   // check if the id of the track is given
   if (!track) {
@@ -415,8 +403,8 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
   if (user.likedTracks.includes(req.body.id)) {
     return next(new AppError('Already like this track', 400))
   }
-  
-  await artistService.alterTrackorAlbumObjectLikes(track,req.user.id)
+
+  await artistService.alterTrackorAlbumObjectLikes(track, req.user.id)
   user.likedTracks.push(req.body.id)
 
   await user.save()
@@ -426,11 +414,6 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
   })
 })
 
-
-
-
-
-
 /**
 * A function to like an album
 * @alias module:controllers/auth
@@ -439,11 +422,9 @@ exports.likeTrack = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.likeAlbum = catchAsync(async (req, res, next) => {
-
   // get the user and the album
   const user = await User.findById(req.user.id)
   const album = await Album.findById(req.body.id)
-
 
   // check if the id of the album is given
   if (!album) {
@@ -455,22 +436,18 @@ exports.likeAlbum = catchAsync(async (req, res, next) => {
     return next(new AppError('Already like this album', 400))
   }
 
-  //adding like to artist stats
-  await artistService.alterTrackorAlbumObjectLikes(album,req.user.id)
+  // adding like to artist stats
+  await artistService.alterTrackorAlbumObjectLikes(album, req.user.id)
 
   // user like the album
   user.likedAlbums.push(req.body.id)
 
   await user.save()
 
-
   res.status(204).json({
     status: 'Success'
   })
 })
-
-
-
 
 /**
 * A function to like a playlist
@@ -480,7 +457,6 @@ exports.likeAlbum = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.likePlaylist = catchAsync(async (req, res, next) => {
-
   // get the user and the playlist
   const user = await User.findById(req.user.id)
   const playlist = await Playlist.findById(req.body.id)
@@ -499,26 +475,20 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
   user.likedPlaylists.push(req.body.id)
   await user.save()
 
-  //Send like notification to playlist owner
+  // Send like notification to playlist owner
   const title = 'Someone liked a playlist you own!'
   const body = `${user.name} has liked the playlist ${playlist.name}!`
   const ownerId = playlist.owner.toString()
   const userId = user._id.toString()
   const images = user.images[0]
-  const data = {'uri': user.uri, 'id': userId, 'href':user.href, 'images':images}
-  const notif = await notificationService.generateNotification(title,body,ownerId,data)
-  await notificationService.sendNotification(ownerId,notif)
-
+  const data = { uri: user.uri, id: userId, href: user.href, images: images }
+  const notif = await notificationService.generateNotification(title, body, ownerId, data)
+  await notificationService.sendNotification(ownerId, notif)
 
   res.status(204).json({
     status: 'Success'
   })
 })
-
-
-
-
-
 
 /**
 * A function to get created playlists
@@ -527,11 +497,10 @@ exports.likePlaylist = catchAsync(async (req, res, next) => {
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getCreatedPlaylists=catchAsync(async (req, res, next) => {
-
+exports.getCreatedPlaylists = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
 
-  if (user.createdPlaylists.length==0) {
+  if (user.createdPlaylists.length === 0) {
     return next(new AppError('You did not create any playlist', 404))
   }
 
@@ -544,10 +513,7 @@ exports.getCreatedPlaylists=catchAsync(async (req, res, next) => {
       playlists
     }
   })
-
 })
-
-
 
 /**
 * A function to unfollow artist or user
@@ -571,29 +537,24 @@ exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
     return next(new AppError('You are not following this user', 400))
   }
 
-
   // user unfollows the unfollowed user
-  const toBeRemoved = (element) => element == req.body.id;
+  const toBeRemoved = (element) => element === req.body.id
   user.following.splice(user.following.findIndex(toBeRemoved), 1)
 
-  const toBeRemoved1 = (element) => element == req.user.id;
+  const toBeRemoved1 = (element) => element === req.user.id
   unfollowedUser.followers.splice(unfollowedUser.followers.findIndex(toBeRemoved1), 1)
 
   await user.save()
   await unfollowedUser.save()
 
-
-  //UnSubscribe to the artist
+  // UnSubscribe to the artist
   const unfollowedUserId = await unfollowedUser._id.toString()
-  await notificationService.subscribeToTopic(user._id,unfollowedUserId,0)
-  
-
+  await notificationService.subscribeToTopic(user._id, unfollowedUserId, 0)
 
   res.status(204).json({
     status: 'Success'
   })
 })
-
 
 /**
 * A function to unlike a track
@@ -603,27 +564,22 @@ exports.unfollowArtistUser = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.unlikeTrack = catchAsync(async (req, res, next) => {
-
   // get the user and the track
   const user = await User.findById(req.user.id)
-  
-  if(!req.body.id || !user.likedTracks.includes(req.body.id)) {
+
+  if (!req.body.id || !user.likedTracks.includes(req.body.id)) {
     return next(new AppError("User doesn't like this track", 400))
   }
 
-  const toBeRemoved = (element) => element == req.body.id;
-  
+  const toBeRemoved = (element) => element === req.body.id
+
   user.likedTracks.splice(user.likedTracks.findIndex(toBeRemoved), 1)
   await user.save()
-
 
   res.status(204).json({
     status: 'Success'
   })
 })
-
-
-
 
 /**
 * A function to unlike a album
@@ -633,26 +589,22 @@ exports.unlikeTrack = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.unlikeAlbum = catchAsync(async (req, res, next) => {
-
   // get the user and the alvum
   const user = await User.findById(req.user.id)
-  
-  if(!req.body.id || !user.likedAlbums.includes(req.body.id)) {
+
+  if (!req.body.id || !user.likedAlbums.includes(req.body.id)) {
     return next(new AppError("User doesn't like this album", 400))
   }
 
-  const toBeRemoved = (element) => element == req.body.id;
-  
+  const toBeRemoved = (element) => element === req.body.id
+
   user.likedAlbums.splice(user.likedAlbums.findIndex(toBeRemoved), 1)
   await user.save()
-
 
   res.status(204).json({
     status: 'Success'
   })
 })
-
-
 
 /**
 * A function to unlike a Playlist
@@ -662,26 +614,22 @@ exports.unlikeAlbum = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.unlikePlaylist = catchAsync(async (req, res, next) => {
-
   // get the user and the playlist
   const user = await User.findById(req.user.id)
-  
-  if(!req.body.id || !user.likedPlaylists.includes(req.body.id)) {
+
+  if (!req.body.id || !user.likedPlaylists.includes(req.body.id)) {
     return next(new AppError("User doesn't like this Playlist", 400))
   }
 
-  const toBeRemoved = (element) => element == req.body.id;
-  
+  const toBeRemoved = (element) => element === req.body.id
+
   user.likedPlaylists.splice(user.likedPlaylists.findIndex(toBeRemoved), 1)
   await user.save()
-
 
   res.status(204).json({
     status: 'Success'
   })
 })
-
-
 
 /**
 * A function to remove image
@@ -691,27 +639,22 @@ exports.unlikePlaylist = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.removeImage = catchAsync(async (req, res, next) => {
-
-  // get the user 
+  // get the user
   const user = await User.findById(req.user.id)
-  
-  //check if he doesn't has an image
-  if(!user.images[0]) {
+
+  // check if he doesn't has an image
+  if (!user.images[0]) {
     return next(new AppError("User doesn't has an image", 400))
   }
 
-  //remove image
+  // remove image
   user.images = []
   await user.save()
 
-  
   res.status(200).json({
     status: 'Image removed successfully'
   })
 })
-
-
-
 
 /**
 * A function to change image
@@ -721,25 +664,18 @@ exports.removeImage = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.changeImage = catchAsync(async (req, res, next) => {
-
-  // get the user 
+  // get the user
   const user = await User.findById(req.user.id)
 
   if (req.file) {
-  user.images = `${process.env.API_URL}/public/imgs/users/${req.file.filename} `
-  await user.save()
+    user.images = `${process.env.API_URL}/public/imgs/users/${req.file.filename} `
+    await user.save()
   }
-  
 
   res.status(200).json({
     status: 'Image updated'
   })
 })
-
-
-
-
-
 
 /**
 * A function to create playlist
@@ -749,8 +685,7 @@ exports.changeImage = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.createPlaylist = catchAsync(async (req, res, next) => {
-
-  // get the user 
+  // get the user
   const user = await User.findById(req.user.id)
 
   // create a new playlist with the input data
@@ -758,7 +693,7 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
     name: req.body.name,
     description: req.body.description,
     public: req.body.public,
-    collaborative: req.body.collaborative    
+    collaborative: req.body.collaborative
   })
 
   playlist.owner = user
@@ -772,9 +707,6 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
   })
 })
 
-
-
-
 /**
 * A function to add track to a playlist
 * @alias module:controllers/auth
@@ -783,22 +715,19 @@ exports.createPlaylist = catchAsync(async (req, res, next) => {
 * @param {next} - The next function in the middleware
 */
 exports.addTrackToPlaylist = catchAsync(async (req, res, next) => {
- 
   const playlist = await Playlist.findById(req.params.playlistId)
   const track = await Track.findById(req.body.id)
 
-
-
-  if(!playlist) {
-    return next(new AppError("There is no playlist with this id", 400))
+  if (!playlist) {
+    return next(new AppError('There is no playlist with this id', 400))
   }
 
-  if(!track) {
-    return next(new AppError("Enter the track id", 400))
+  if (!track) {
+    return next(new AppError('Enter the track id', 400))
   }
 
-  if(playlist.trackObjects.includes(req.body.id)) {
-    return next(new AppError("This track is already in the playlist", 400))
+  if (playlist.trackObjects.includes(req.body.id)) {
+    return next(new AppError('This track is already in the playlist', 400))
   }
 
   playlist.trackObjects.push(req.body.id)
@@ -809,8 +738,6 @@ exports.addTrackToPlaylist = catchAsync(async (req, res, next) => {
   })
 })
 
-
-
 /**
 * A function to get followed artist or user
 * @alias module:controllers/auth
@@ -818,10 +745,9 @@ exports.addTrackToPlaylist = catchAsync(async (req, res, next) => {
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getfollowedArtistUser= catchAsync(async (req, res, next) => {
-
+exports.getfollowedArtistUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
-  if (user.following.length==0) {
+  if (user.following.length === 0) {
     return next(new AppError('You did not follow any artist/user', 404))
   }
 
@@ -833,22 +759,20 @@ exports.getfollowedArtistUser= catchAsync(async (req, res, next) => {
       users
     }
   })
-
 })
 
 /**
-* A function to get followed artists 
+* A function to get followed artists
 * @alias module:controllers/auth
 * @param {Request}  - The function takes the request as a parameter to access its body.
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getfollowedArtists= catchAsync(async (req, res, next) => {
-
+exports.getfollowedArtists = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
-  const users = await User.find({role:'artist'}).where('_id').in(user.following).select('_id name uri href externalUrls images role followers userStats artistInfo')
+  const users = await User.find({ role: 'artist' }).where('_id').in(user.following).select('_id name uri href externalUrls images role followers userStats artistInfo')
 
-  if (users.length==0) {
+  if (users.length === 0) {
     return next(new AppError('You did not follow any artist', 404))
   }
 
@@ -858,20 +782,18 @@ exports.getfollowedArtists= catchAsync(async (req, res, next) => {
       users
     }
   })
-
 })
 
 /**
-* A function to get user's followers 
+* A function to get user's followers
 * @alias module:controllers/auth
 * @param {Request}  - The function takes the request as a parameter to access its body.
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getUserfollowers= catchAsync(async (req, res, next) => {
-
+exports.getUserfollowers = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
-  if (user.followers.length==0) {
+  if (user.followers.length == 0) {
     return next(new AppError('You do not have any followers', 404))
   }
 
@@ -883,7 +805,6 @@ exports.getUserfollowers= catchAsync(async (req, res, next) => {
       users
     }
   })
-
 })
 
 /**
@@ -893,11 +814,10 @@ exports.getUserfollowers= catchAsync(async (req, res, next) => {
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getLikedPlaylists=catchAsync(async (req, res, next) => {
-
+exports.getLikedPlaylists = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
 
-  if (user.likedPlaylists.length==0) {
+  if (user.likedPlaylists.length == 0) {
     return next(new AppError('You did not like any playlist', 404))
   }
 
@@ -910,7 +830,6 @@ exports.getLikedPlaylists=catchAsync(async (req, res, next) => {
       playlists
     }
   })
-
 })
 
 /**
@@ -920,11 +839,10 @@ exports.getLikedPlaylists=catchAsync(async (req, res, next) => {
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getLikedAlbums=catchAsync(async (req, res, next) => {
-
+exports.getLikedAlbums = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
 
-  if (user.likedAlbums.length==0) {
+  if (user.likedAlbums.length === 0) {
     return next(new AppError('You did not like any album', 404))
   }
 
@@ -940,10 +858,7 @@ exports.getLikedAlbums=catchAsync(async (req, res, next) => {
       albums
     }
   })
-
 })
-
-
 
 /**
 * A function to get liked tracks
@@ -952,11 +867,10 @@ exports.getLikedAlbums=catchAsync(async (req, res, next) => {
 * @param {Respond} - The respond sent
 * @param {next} - The next function in the middleware
 */
-exports.getLikedTracks=catchAsync(async (req, res, next) => {
-
+exports.getLikedTracks = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id)
 
-  if (user.likedTracks.length==0) {
+  if (user.likedTracks.length === 0) {
     return next(new AppError('You did not like any track', 404))
   }
 
@@ -969,5 +883,4 @@ exports.getLikedTracks=catchAsync(async (req, res, next) => {
       tracks
     }
   })
-
 })

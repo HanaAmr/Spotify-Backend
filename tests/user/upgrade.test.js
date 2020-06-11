@@ -34,7 +34,6 @@ const mongoose = require('mongoose')
  */
 const jwt = require('jsonwebtoken')
 
-
 /**
  * express module
  * User model from the database
@@ -57,7 +56,7 @@ const userController = require('../../controllers/userController')
 const userServices = require('../../services/userService')
 
 /**
- * Mailer services 
+ * Mailer services
  * @const
  */
 const mailerServices = require('../../services/mailerService')
@@ -72,7 +71,6 @@ const appError = require('../../utils/appError')
 const mongoDB = process.env.TEST_DATABASE
 // Connecting to the database
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
-
 
 // Testing assigning the config code for upgrade to user
 describe('userService assigning config code to user functionality', () => {
@@ -103,7 +101,6 @@ describe('userService assigning config code to user functionality', () => {
 
   // Testing successfully assigning the config code to a user
   it('Should assign the confiramtion code to an existing user successfully', async () => {
-
     expect.assertions(1)
     const userService = new userServices()
     const token = 'a random token'
@@ -215,7 +212,7 @@ describe('userService change user role to normal after confirming cancellation c
   })
 })
 
-//Integration testing
+// Integration testing
 
 // Testing requesting for upgrading to become premium/artist
 describe('User can request to upgrade', () => {
@@ -232,11 +229,11 @@ describe('User can request to upgrade', () => {
     })
     await validUser.save()
     userId = validUser._id
-    //Stub the functions that uses authorization
+    // Stub the functions that uses authorization
     sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
     sinon.stub(userServices.prototype, 'getUserId').returns(userId)
     sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
-    //stubbing mailing functions
+    // stubbing mailing functions
     sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
@@ -248,7 +245,6 @@ describe('User can request to upgrade', () => {
 
   // Testing requesting to become premium
   it('Should request to become premium successfully', done => {
-
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/premium',
@@ -256,7 +252,7 @@ describe('User can request to upgrade', () => {
         email: 'omar@email.com'
       },
       headers: {
-        'authorization': jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+        authorization: jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
       }
     })
 
@@ -264,7 +260,7 @@ describe('User can request to upgrade', () => {
     userController.requestBecomePremium(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({ 'email': 'omar@email.com' })
+        const user = await User.findOne({ email: 'omar@email.com' })
         expect(user.upgradeRole).toEqual('premium')
         expect(response.statusCode).toEqual(204)
         done()
@@ -276,7 +272,6 @@ describe('User can request to upgrade', () => {
 
   // Testing requesting to become artist
   it('Should request to become artist successfully', done => {
-
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/artist',
@@ -284,7 +279,7 @@ describe('User can request to upgrade', () => {
         email: 'omar@email.com'
       },
       headers: {
-        'authorization': jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+        authorization: jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
       }
     })
 
@@ -292,7 +287,7 @@ describe('User can request to upgrade', () => {
     userController.requestBecomeArtist(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({ 'email': 'omar@email.com' })
+        const user = await User.findOne({ email: 'omar@email.com' })
         expect(user.upgradeRole).toEqual('artist')
         expect(response.statusCode).toEqual(204)
         done()
@@ -301,7 +296,6 @@ describe('User can request to upgrade', () => {
       }
     })
   })
-
 })
 
 // Testing confirming the upgrading to become premium/artist
@@ -322,7 +316,7 @@ describe('User can confirm that he/she wants to upgrade', () => {
     })
     await validUser.save()
     userId = validUser._id
-    //Stub the functions that uses authorization
+    // Stub the functions that uses authorization
     sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
     sinon.stub(userServices.prototype, 'getUserId').returns(userId)
     sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
@@ -330,7 +324,7 @@ describe('User can confirm that he/she wants to upgrade', () => {
       const user = User.findOne({ email: 'omar@email.com' })
       return user.role
     })
-    //stubbing mailing functions
+    // stubbing mailing functions
     sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
@@ -342,7 +336,6 @@ describe('User can confirm that he/she wants to upgrade', () => {
 
   // Testing confirming to upgrade to premium
   it('Should confirm upgrading to become premium successfully', done => {
-
     const request = httpMocks.createRequest({
       method: 'POST',
       url: '/me/upgrade',
@@ -350,7 +343,7 @@ describe('User can confirm that he/she wants to upgrade', () => {
         email: 'omar@email.com'
       },
       headers: {
-        'authorization': jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+        authorization: jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
       },
       params: {
         confirmationCode: 'atoken'
@@ -361,7 +354,7 @@ describe('User can confirm that he/she wants to upgrade', () => {
     userController.confirmUpgrade(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({ 'email': 'omar@email.com' })
+        const user = await User.findOne({ email: 'omar@email.com' })
         expect(user.role).toEqual('premium')
         expect(response.statusCode).toEqual(204)
         done()
@@ -388,7 +381,7 @@ describe('User can request to cancel upgrade', () => {
     })
     await validUser.save()
     userId = validUser._id
-    //Stub the functions that uses authorization
+    // Stub the functions that uses authorization
     sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
     sinon.stub(userServices.prototype, 'getUserId').returns(userId)
     sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
@@ -396,7 +389,7 @@ describe('User can request to cancel upgrade', () => {
       const user = User.findOne({ email: 'omar@email.com' })
       return user.role
     })
-    //stubbing mailing functions
+    // stubbing mailing functions
     sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
@@ -408,7 +401,6 @@ describe('User can request to cancel upgrade', () => {
 
   // Testing requesting to cancel premium
   it('Should request to cancel premium successfully', done => {
-
     const request = httpMocks.createRequest({
       method: 'DELETE',
       url: '/me/premium',
@@ -416,7 +408,7 @@ describe('User can request to cancel upgrade', () => {
         email: 'omar@email.com'
       },
       headers: {
-        'authorization': jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+        authorization: jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
       }
     })
 
@@ -424,7 +416,7 @@ describe('User can request to cancel upgrade', () => {
     userController.cancelUpgrade(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({ 'email': 'omar@email.com' })
+        const user = await User.findOne({ email: 'omar@email.com' })
         expect(user.upgradeRole).toEqual('user')
         expect(response.statusCode).toEqual(204)
         done()
@@ -433,7 +425,6 @@ describe('User can request to cancel upgrade', () => {
       }
     })
   })
-
 })
 
 // Testing confirming cancelling the upgrad
@@ -455,7 +446,7 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
     })
     await validUser.save()
     userId = validUser._id
-    //Stub the functions that uses authorization
+    // Stub the functions that uses authorization
     sinon.stub(require('../../controllers/authController'), 'protect').returns(() => { })
     sinon.stub(userServices.prototype, 'getUserId').returns(userId)
     sinon.stub(userServices.prototype, 'getUserMail').returns(validUser.email)
@@ -463,7 +454,7 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
       const user = User.findOne({ email: 'omar@email.com' })
       return user.role
     })
-    //stubbing mailing functions
+    // stubbing mailing functions
     sinon.stub(mailerServices.prototype, 'sendMail').returns()
   })
 
@@ -475,7 +466,6 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
 
   // Testing confirming to cancel the upgrade
   it('Should confirm cancelling the upgrade', done => {
-
     const request = httpMocks.createRequest({
       method: 'DELETE',
       url: '/me/upgrade',
@@ -483,7 +473,7 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
         email: 'omar@email.com'
       },
       headers: {
-        'authorization': jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
+        authorization: jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_IN })
       },
       params: {
         confirmationCode: 'atoken'
@@ -494,7 +484,7 @@ describe('User can confirm that he/she wants to cancel the upgrade', () => {
     userController.confirmCancelUpgrade(request, response)
     response.on('end', async () => {
       try {
-        const user = await User.findOne({ 'email': 'omar@email.com' })
+        const user = await User.findOne({ email: 'omar@email.com' })
         expect(user.role).toEqual('user')
         expect(response.statusCode).toEqual(204)
         done()
