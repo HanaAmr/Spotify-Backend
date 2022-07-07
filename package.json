@@ -38,7 +38,7 @@
     "jsonwebtoken": "^8.5.1",
     "minimist": "^1.2.5",
     "mockgoose": "^8.0.4",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.4",
     "multer": "^1.4.2",
