@@ -35,7 +35,7 @@
     "get-audio-duration": "^1.0.0",
     "jest": "^25.1.0",
     "jsdoc": "^3.6.3",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "minimist": "^1.2.5",
     "mockgoose": "^8.0.4",
     "moment": "^2.26.0",
